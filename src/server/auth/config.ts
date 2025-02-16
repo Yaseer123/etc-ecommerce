@@ -3,6 +3,9 @@ import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
 import { db } from "@/server/db";
+import { getUserById } from "@/utils/getUser";
+import { type UserRole } from "@prisma/client";
+import { JWT } from "next-auth/jwt";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -15,7 +18,7 @@ declare module "next-auth" {
     user: {
       id: string;
       // ...other properties
-      // role: UserRole;
+      role: UserRole;
     } & DefaultSession["user"];
   }
 
@@ -23,6 +26,14 @@ declare module "next-auth" {
   //   // ...other properties
   //   // role: UserRole;
   // }
+}
+
+declare module "next-auth/jwt" {
+  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
+  interface JWT {
+    /** OpenID ID Token */
+    role?: "ADMIN" | "USER";
+  }
 }
 
 /**
@@ -44,13 +55,36 @@ export const authConfig = {
      */
   ],
   adapter: PrismaAdapter(db),
+  session: { strategy: "jwt" },
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async session({ session, token }) {
+      if (!session.user) return session;
+
+      if (token.sub) {
+        session.user.id = token.sub;
+      }
+
+      if (token.role) {
+        session.user.role = token.role;
+      }
+
+      return session;
+    },
+
+    async jwt({ token }) {
+      if (!token.sub) {
+        return token;
+      }
+
+      const existingUser = await getUserById(token.sub);
+
+      if (!existingUser) {
+        return token;
+      }
+
+      token.role = existingUser.role;
+
+      return token;
+    },
   },
 } satisfies NextAuthConfig;
