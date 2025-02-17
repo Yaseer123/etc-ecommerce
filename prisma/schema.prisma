@@ -31,6 +31,28 @@ model Post {
     @@index([name])
 }
 
+model Product {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String?
+    price       Float
+    categoryId  Int // Foreign key to Category
+    category    Category @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: Cascade)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model Category {
+    id            Int        @id @default(autoincrement())
+    name          String
+    parentId      Int? // Optional parent category ID
+    parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id]) // Self-relation for parent category
+    subcategories Category[] @relation("CategoryToParent") // Self-relation for subcategories
+    products      Product[]  @relation("CategoryToProduct") // One-to-many relationship with Product
+    createdAt     DateTime   @default(now())
+    updatedAt     DateTime   @updatedAt
+}
+
 // Necessary for Next auth
 model Account {
     id                       String  @id @default(cuid())

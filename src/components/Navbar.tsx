@@ -9,7 +9,10 @@ export default async function Navbar() {
       <p className="text-lg font-bold">Admin Panel</p>
       <div className="flex items-center gap-x-4">
         <Button asChild variant="outline">
-          <Link href="/admin/user-list">User List</Link>
+          <Link href="/admin/user-list">Users</Link>
+        </Button>
+        <Button asChild variant="outline">
+          <Link href="/admin/categories">Categories</Link>
         </Button>
         {session && (
           <Button asChild variant="default">
