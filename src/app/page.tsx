@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { LatestPost } from "@/app/_components/post";
+import { LatestPost } from "@/components/post";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
 
@@ -52,12 +52,22 @@ export default async function Home() {
               <p className="text-center text-2xl text-white">
                 {session && <span>Logged in as {session.user?.name}</span>}
               </p>
-              <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-              >
-                {session ? "Sign out" : "Sign in"}
-              </Link>
+              <div className="flex gap-x-2">
+                {session && (
+                  <Link
+                    href="/admin"
+                    className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+                  >
+                    Admin Dashboard
+                  </Link>
+                )}
+                <Link
+                  href={session ? "/api/auth/signout" : "/api/auth/signin"}
+                  className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+                >
+                  {session ? "Sign out" : "Sign in"}
+                </Link>
+              </div>
             </div>
           </div>
 

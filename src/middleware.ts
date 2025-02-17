@@ -1,19 +1,24 @@
 import { auth } from "@/server/auth";
 import { NextResponse } from "next/server";
+// import { getToken } from "next-auth/jwt";
+
 import {
+  adminPrefix,
   apiAuthPrefix,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from "./routes";
 
-export default auth((req) => {
+export default auth(async (req) => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
+  // const token = await getToken({ req, secret: process.env.AUTH_SECRET });
 
   const isApiAuthRoutes = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoutes = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoutes = authRoutes.includes(nextUrl.pathname);
+  const isAdminRoutes = nextUrl.pathname.startsWith(adminPrefix);
 
   if (isApiAuthRoutes) {
     return NextResponse.next();
@@ -25,6 +30,14 @@ export default auth((req) => {
     }
 
     return NextResponse.next();
+  }
+
+  if (isAdminRoutes) {
+    console.log(req.auth?.user?.role);
+    if (isLoggedIn && req.auth?.user?.role === "ADMIN") {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
   if (!isLoggedIn && !isPublicRoutes) {

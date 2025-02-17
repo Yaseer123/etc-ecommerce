@@ -1,14 +1,9 @@
-import { auth } from "@/server/auth";
+import AdminDashboard from "@/components/AdminDashboard";
 
 export default async function AdminPage() {
-  const session = await auth();
-  if (!session) {
-    return <div>Not authorized</div>;
-  }
-
-  if (session.user.role !== "ADMIN") {
-    return <div>Not authorized</div>;
-  }
-
-  return <div>Admin&apos;s secret message</div>;
+  return (
+    <div className="flex min-h-[90vh] items-center justify-center">
+      <AdminDashboard />
+    </div>
+  );
 }
