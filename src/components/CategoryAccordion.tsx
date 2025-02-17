@@ -11,16 +11,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 interface Category {
-  id: number;
+  id: string;
   name: string;
   subcategories: Category[];
 }
 
 interface CategoryAccordionProps {
   categories: Category[];
-  onAddCategory: (parentId: number, name: string) => void;
-  openAccordions: Record<number, boolean>;
-  setOpenAccordions: (id: number) => void;
+  onAddCategory: (parentId: string, name: string) => void;
+  openAccordions: Record<string, boolean>;
+  setOpenAccordions: (id: string) => void;
 }
 
 export function CategoryAccordion({
@@ -51,9 +51,9 @@ function CategoryItem({
   setOpenAccordions,
 }: {
   category: Category;
-  onAddCategory: (parentId: number, name: string) => void;
-  openAccordions: Record<number, boolean>;
-  setOpenAccordions: (id: number) => void;
+  onAddCategory: (parentId: string, name: string) => void;
+  openAccordions: Record<string, boolean>;
+  setOpenAccordions: (id: string) => void;
 }) {
   const [newCategoryName, setNewCategoryName] = useState("");
 

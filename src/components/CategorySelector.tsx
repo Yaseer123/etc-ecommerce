@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 
 interface Category {
-  id: number;
+  id: string;
   name: string;
   subcategories: Category[];
 }
@@ -17,7 +17,7 @@ export default function CategoryManager({
 }: {
   categories: Category[];
 }) {
-  const [openAccordions, setOpenAccordions] = useState<Record<number, boolean>>(
+  const [openAccordions, setOpenAccordions] = useState<Record<string, boolean>>(
     {},
   );
 
@@ -29,14 +29,14 @@ export default function CategoryManager({
   });
 
   // Function to open only one accordion at each level
-  const handleAccordionToggle = (id: number) => {
+  const handleAccordionToggle = (id: string) => {
     setOpenAccordions((prev) => {
       const newState = Object.keys(prev).reduce(
         (acc, key) => {
           acc[parseInt(key)] = false; // Close all
           return acc;
         },
-        {} as Record<number, boolean>,
+        {} as Record<string, boolean>,
       );
       newState[id] = !prev[id]; // Toggle only the clicked one
       return newState;
@@ -44,7 +44,7 @@ export default function CategoryManager({
   };
 
   // Function to add a new category under a parent
-  const handleAddCategory = (parentId: number | null, name: string) => {
+  const handleAddCategory = (parentId: string | null, name: string) => {
     addCategory.mutate({ parentId, name });
   };
 

@@ -12,7 +12,7 @@ export interface CategoryTree extends Category {
 
 const buildCategoryTree = (
   categories: Category[],
-  parentId: number | null = null,
+  parentId: string | null = null,
 ): CategoryTree[] => {
   return categories
     .filter((category) => category.parentId === parentId)
@@ -34,7 +34,7 @@ export const categoryRouter = createTRPCRouter({
   add: protectedProcedure
     .input(
       z.object({
-        parentId: z.number().nullable(),
+        parentId: z.string().nullable(),
         name: z.string(),
       }),
     )
