@@ -32,20 +32,20 @@ model Post {
 }
 
 model Product {
-    id          Int      @id @default(autoincrement())
+    id          String   @id @default(cuid())
     name        String
     description String?
     price       Float
-    categoryId  Int // Foreign key to Category
+    categoryId  String   // Foreign key to Category
     category    Category @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: Cascade)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
 
 model Category {
-    id            Int        @id @default(autoincrement())
+    id            String     @id @default(cuid())
     name          String
-    parentId      Int? // Optional parent category ID
+    parentId      String?    // Optional parent category ID
     parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id]) // Self-relation for parent category
     subcategories Category[] @relation("CategoryToParent") // Self-relation for subcategories
     products      Product[]  @relation("CategoryToProduct") // One-to-many relationship with Product
