@@ -33,11 +33,16 @@ import Link from "next/link";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  addButton?: {
+    name: string;
+    href: string;
+  };
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  addButton,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -75,9 +80,11 @@ export function DataTable<TData, TValue>({
           className="max-w-sm"
         />
         <DataTableViewOptions table={table} />
-        <Button asChild variant="default" className="ml-5">
-          <Link href="/admin/products/add">Add Product</Link>
-        </Button>
+        {addButton && (
+          <Button asChild variant="default" className="ml-5">
+            <Link href={addButton.href}>{addButton.name}</Link>
+          </Button>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

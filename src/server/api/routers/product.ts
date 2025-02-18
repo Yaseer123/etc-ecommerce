@@ -1,5 +1,5 @@
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { productSchema, updateProductSchema } from "@/utils/schema";
+import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 
 export const productRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {

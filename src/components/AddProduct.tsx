@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import { type Product, productSchema } from "@/utils/schema";
 import { useRef, useState } from "react";
-import { type CategoryTree } from "@/server/api/routers/category";
+import { Product, productSchema } from "@/schemas/productSchema";
+import { CategoryTree } from "@/schemas/categorySchema";
 
 export default function AddProductForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);

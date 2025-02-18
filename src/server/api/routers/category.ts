@@ -1,14 +1,10 @@
+import type { Category, CategoryTree } from "@/schemas/categorySchema";
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { type Category } from "@prisma/client";
 import { z } from "zod";
-
-export interface CategoryTree extends Category {
-  subcategories: CategoryTree[];
-}
 
 const buildCategoryTree = (
   categories: Category[],

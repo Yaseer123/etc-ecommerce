@@ -1,6 +1,5 @@
 "use client";
 
-import { type ProductWithCategory } from "@/schemas/productSchema";
 import { type ColumnDef } from "@tanstack/react-table";
 
 import { MoreHorizontal } from "lucide-react";
@@ -14,44 +13,34 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
+import { type User } from "@/schemas/userSchema";
+import { api } from "@/trpc/react";
 
-interface ProductColumns extends ProductWithCategory {
-  category: {
-    name: string;
-  };
-}
-
-export const columns: ColumnDef<ProductColumns>[] = [
+export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "name",
     header: "Name",
   },
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Price" />;
-    },
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price")).toFixed(2);
-      // const formatted = new Intl.NumberFormat("en-US", {
-      //   style: "currency",
-      //   currency: "BDT",
-      //   currencySign: "accounting",
-      // }).format(price);
 
-      return <div className="text-right font-medium">{price}</div>;
-    },
+  {
+    accessorKey: "email",
+    header: "Email",
   },
   {
-    accessorKey: "category.name",
-    header: "Category",
+    accessorKey: "role",
+    header: "Role",
   },
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const product = row.original;
+      const user = row.original;
+      const utils = api.useUtils();
+      const makeAdmin = api.user.makeAdmin.useMutation({
+        onSuccess: async () => {
+          await utils.user.getAll.invalidate();
+        },
+      });
 
       return (
         <DropdownMenu>
