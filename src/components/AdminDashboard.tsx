@@ -10,5 +10,5 @@ export default async function AdminDashboard() {
     return <div>Not authorized</div>;
   }
 
-  return <div>Admin&apos;s secret message</div>;
+  return <div>Admin&apos;s home page</div>;
 }
