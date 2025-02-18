@@ -1,11 +1,10 @@
-import AddProductForm from "@/components/AddProduct";
-import ProductList from "@/components/ProductList";
+import ProductDataTable from "./ProductDataTable";
 
 export default function ProductPage() {
   return (
-    <div>
-      <ProductList />
-      <AddProductForm />
+    <div className="p-8">
+      <p className="text-center text-2xl font-semibold">Product Information</p>
+      <ProductDataTable />
     </div>
   );
 }
