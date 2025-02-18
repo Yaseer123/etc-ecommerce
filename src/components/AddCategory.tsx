@@ -1,50 +1,58 @@
 "use client";
 
-import { useForm, type UseFormSetValue } from "react-hook-form";
+import {
+  type NewCategory,
+  newCategorySchema,
+  type CategoryTree,
+} from "@/schemas/categorySchema";
+import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { useRef, useState } from "react";
+import { useForm, type UseFormSetValue } from "react-hook-form";
+import { toast } from "sonner";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { toast } from "sonner";
-import { api } from "@/trpc/react";
-import { useRef, useState } from "react";
-import { type Product, productSchema } from "@/schemas/productSchema";
-import { type CategoryTree } from "@/schemas/categorySchema";
+} from "./ui/select";
 
-export default function AddProductForm() {
+export default function AddCategoryForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
   const {
     register,
-    handleSubmit,
     reset,
     setValue,
+    handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(productSchema),
-  });
-
-  const addProduct = api.product.add.useMutation({
-    onSuccess: () => {
-      toast.success("Product added successfully");
-      reset();
-      selectedCategoriesRef.current = [];
-    },
-    onError: (error) => {
-      toast.error(error.message || "Failed to add product");
+    resolver: zodResolver(newCategorySchema),
+    defaultValues: {
+      name: "",
+      parentId: null,
     },
   });
 
   const [categories] = api.category.getAll.useSuspenseQuery();
 
-  const onSubmit = (data: Product) => {
-    addProduct.mutate(data);
+  const utils = api.useUtils();
+  const addCategory = api.category.add.useMutation({
+    onSuccess: async () => {
+      await utils.category.getAll.invalidate();
+      toast.success("Category added successfully");
+      reset();
+      selectedCategoriesRef.current = [];
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to add category");
+    },
+  });
+
+  const onSubmit = (data: NewCategory) => {
+    addCategory.mutate(data);
   };
 
   return (
@@ -52,39 +60,14 @@ export default function AddProductForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-md space-y-4 rounded-lg shadow-sm"
     >
-      <h2 className="text-xl font-bold">Add New Product</h2>
+      <h2 className="text-xl font-bold">Add New Category</h2>
 
-      {/* Product Name */}
+      {/* Category Name */}
       <div>
-        <label className="text-sm font-medium">Product Name</label>
-        <Input {...register("name")} placeholder="Enter product name" />
+        <label className="text-sm font-medium">Category Name</label>
+        <Input {...register("name")} placeholder="Enter category name" />
         {errors.name && (
           <p className="text-sm text-red-500">{errors.name.message}</p>
-        )}
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="text-sm font-medium">Description</label>
-        <Textarea
-          {...register("description")}
-          placeholder="Enter product description"
-        />
-      </div>
-
-      {/* Price */}
-      <div>
-        <label className="text-sm font-medium">Price (BDT)</label>
-        <Input
-          type="number"
-          {...register("price", {
-            setValueAs: (value) => (value === "" ? undefined : Number(value)), // Convert to number
-            valueAsNumber: true, // Ensures input is treated as a number
-          })}
-          placeholder="Enter product price"
-        />
-        {errors.price && (
-          <p className="text-sm text-red-500">{errors.price.message}</p>
         )}
       </div>
 
@@ -103,14 +86,14 @@ export default function AddProductForm() {
             );
           }}
         />
-        {errors.categoryId && (
-          <p className="text-sm text-red-500">{errors.categoryId.message}</p>
+        {errors.parentId && (
+          <p className="text-sm text-red-500">{errors.parentId.message}</p>
         )}
       </div>
 
       {/* Submit Button */}
       <Button type="submit" disabled={isSubmitting} className="w-96">
-        {isSubmitting ? "Adding..." : "Add Product"}
+        {isSubmitting ? "Adding..." : "Add Category"}
       </Button>
     </form>
   );
@@ -124,7 +107,7 @@ function CategorySelector({
   selectedCategoriesRef, // Ref to store the category selection path
   onCategoryChange, // Function to reset child selection
 }: {
-  setValue: UseFormSetValue<Product>;
+  setValue: UseFormSetValue<NewCategory>;
   categories: CategoryTree[];
   placeholder: string;
   depth?: number;
@@ -137,7 +120,7 @@ function CategorySelector({
     <>
       <Select
         onValueChange={(value) => {
-          setValue("categoryId", value);
+          setValue("parentId", value);
 
           // Find selected category
           const category = categories.find((cat) => cat.id === value);

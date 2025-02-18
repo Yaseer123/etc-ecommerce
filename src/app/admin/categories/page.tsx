@@ -1,17 +1,11 @@
-"use client";
-
-import CategorySelector from "@/components/CategorySelector";
-import { api } from "@/trpc/react";
+import AddCategoryForm from "@/components/AddCategory";
+import CategoryAccordionManager from "@/components/CategoryAccordionManager";
 
 export default function Categories() {
-  const [categories] = api.category.getAll.useSuspenseQuery();
   return (
-    <div>
-      <form action="">
-        {/* {JSON.stringify(categories)} */}
-        <CategorySelector categories={categories} />
-        {/* <button type="submit">Search</button> */}
-      </form>
+    <div className="flex flex-wrap min-h-[80vh] items-center justify-center gap-x-10 gap-y-5 p-10">
+      <CategoryAccordionManager />
+      <AddCategoryForm />
     </div>
   );
 }
