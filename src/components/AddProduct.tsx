@@ -20,12 +20,13 @@ import { type CategoryTree } from "@/schemas/categorySchema";
 
 export default function AddProductForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
     reset,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(productSchema),
   });
@@ -39,11 +40,15 @@ export default function AddProductForm() {
     onError: (error) => {
       toast.error(error.message || "Failed to add product");
     },
+    onSettled: () => {
+      setIsSubmitting(false);
+    },
   });
 
   const [categories] = api.category.getAll.useSuspenseQuery();
 
   const onSubmit = (data: Product) => {
+    setIsSubmitting(true);
     addProduct.mutate(data);
   };
 

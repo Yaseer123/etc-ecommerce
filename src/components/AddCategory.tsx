@@ -22,12 +22,14 @@ import {
 
 export default function AddCategoryForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     register,
     reset,
     setValue,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm({
     resolver: zodResolver(newCategorySchema),
     defaultValues: {
@@ -49,9 +51,13 @@ export default function AddCategoryForm() {
     onError: (error) => {
       toast.error(error.message || "Failed to add category");
     },
+    onSettled: () => {
+      setIsSubmitting(false);
+    },
   });
 
   const onSubmit = (data: NewCategory) => {
+    setIsSubmitting(true);
     addCategory.mutate(data);
   };
 
@@ -73,7 +79,7 @@ export default function AddCategoryForm() {
 
       {/* Category Selection */}
       <div>
-        <label className="text-sm font-medium">Category</label>
+        <label className="text-sm font-medium">Select parent category</label>
         <CategorySelector
           setValue={setValue}
           categories={categories}
