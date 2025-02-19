@@ -1,9 +1,12 @@
 import AddProductForm from "@/components/AddProduct";
+import { HydrateClient } from "@/trpc/server";
 
 export default function AddProduct() {
   return (
-    <div className="flex min-h-[80vh] items-center justify-center p-10">
-      <AddProductForm />
-    </div>
+    <HydrateClient>
+      <div className="flex min-h-[80vh] items-center justify-center p-10">
+        <AddProductForm />
+      </div>
+    </HydrateClient>
   );
 }

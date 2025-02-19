@@ -1,11 +1,14 @@
 import AddCategoryForm from "@/components/AddCategory";
 import CategoryAccordionManager from "@/components/CategoryAccordionManager";
+import { HydrateClient } from "@/trpc/server";
 
 export default function Categories() {
   return (
-    <div className="flex flex-wrap min-h-[80vh] items-center justify-center gap-x-10 gap-y-5 p-10">
-      <CategoryAccordionManager />
-      <AddCategoryForm />
-    </div>
+    <HydrateClient>
+      <div className="flex min-h-[80vh] flex-wrap items-start justify-center gap-x-10 gap-y-5 p-10">
+        <CategoryAccordionManager />
+        <AddCategoryForm />
+      </div>
+    </HydrateClient>
   );
 }
