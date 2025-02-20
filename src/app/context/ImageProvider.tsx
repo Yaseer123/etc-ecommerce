@@ -1,0 +1,51 @@
+"use client";
+
+import {
+  createContext,
+  type FC,
+  type ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { readAllImages } from "../actions/file";
+
+interface Props {
+  children: ReactNode;
+}
+
+interface InitialImageContext {
+  images: string[];
+  updateImages(images: string[]): void;
+  removeOldImage(src: string): void;
+}
+
+const Context = createContext<InitialImageContext | null>(null);
+
+const ImageProvider: FC<Props> = ({ children }) => {
+  const [images, setImages] = useState<string[]>([]);
+
+  const updateImages = (data: string[]) => {
+    setImages([...data, ...images]);
+  };
+
+  const removeOldImage = (src: string) => {
+    setImages((old) => old.filter((img) => src !== img));
+  };
+
+  useEffect(() => {
+    readAllImages()
+      .then(setImages)
+      .catch((error) => console.error('Failed to load images:', error));
+  }, []);
+
+  return (
+    <Context.Provider value={{ images, updateImages, removeOldImage }}>
+      {children}
+    </Context.Provider>
+  );
+};
+
+export const useImages = () => useContext(Context);
+
+export default ImageProvider;

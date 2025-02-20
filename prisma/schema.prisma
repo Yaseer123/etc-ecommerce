@@ -20,15 +20,18 @@ enum UserRole {
 }
 
 model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+    id        String   @id @default(cuid())
+    title     String
+    slug      String
+    content   String
+    published Boolean  @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
 
-    @@index([name])
+    @@index([slug, createdAt])
 }
 
 model Product {
@@ -36,7 +39,7 @@ model Product {
     name        String
     description String?
     price       Float
-    categoryId  String   // Foreign key to Category
+    categoryId  String // Foreign key to Category
     category    Category @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: Cascade)
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
@@ -45,7 +48,7 @@ model Product {
 model Category {
     id            String     @id @default(cuid())
     name          String
-    parentId      String?    // Optional parent category ID
+    parentId      String? // Optional parent category ID
     parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id]) // Self-relation for parent category
     subcategories Category[] @relation("CategoryToParent") // Self-relation for subcategories
     products      Product[]  @relation("CategoryToProduct") // One-to-many relationship with Product

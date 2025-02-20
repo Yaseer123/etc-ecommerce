@@ -1,12 +1,9 @@
-import ContentForm from "@/components/BlogEditor";
+import AllBlogPosts from "@/components/AllPosts";
 
-export default function BlogPage() {
+export default function BlogPosts() {
   return (
-    <div className="min-h-50 flex flex-col items-center justify-center gap-4 p-4 md:p-10">
-      <h2 className="text-2xl font-bold">Blog page</h2>
-      <div className="prose">
-        <ContentForm />
-      </div>
+    <div>
+      <AllBlogPosts />
     </div>
   );
 }
