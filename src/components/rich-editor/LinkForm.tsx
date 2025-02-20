@@ -1,11 +1,11 @@
 "use client";
 
-import { FC, useState } from "react";
+import { type FC, useState } from "react";
 import ToolButton from "./ToolButton";
 import { BiLink } from "react-icons/bi";
 
 interface Props {
-  onSubmit(link: string): void;
+  onSubmit: (link: string) => void;
 }
 
 const LinkForm: FC<Props> = ({ onSubmit }) => {
@@ -18,7 +18,7 @@ const LinkForm: FC<Props> = ({ onSubmit }) => {
         <BiLink size={20} />
       </ToolButton>
       {showForm && (
-        <div className="absolute top-10 z-50 ring-1 ring-black p-2 rounded flex items-center shadow-sm bg-white outline-none">
+        <div className="absolute top-10 z-50 flex items-center rounded bg-white p-2 shadow-sm outline-none ring-1 ring-black">
           <input
             value={link}
             onChange={({ target }) => setLink(target.value)}
@@ -35,7 +35,7 @@ const LinkForm: FC<Props> = ({ onSubmit }) => {
             onMouseDown={() => {
               onSubmit(link);
             }}
-            className="bg-white ml-1"
+            className="ml-1 bg-white"
           >
             ok
           </button>

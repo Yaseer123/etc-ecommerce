@@ -6,7 +6,7 @@ import {
 } from "@/server/api/trpc";
 import { z } from "zod";
 
-const buildCategoryTree = (
+export const buildCategoryTree = (
   categories: Category[],
   parentId: string | null = null,
 ): CategoryTree[] => {
@@ -43,5 +43,11 @@ export const categoryRouter = createTRPCRouter({
       });
 
       return category;
+    }),
+
+  delete: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.category.delete({ where: { id: input.id } });
     }),
 });

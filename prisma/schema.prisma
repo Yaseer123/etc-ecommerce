@@ -48,10 +48,10 @@ model Product {
 model Category {
     id            String     @id @default(cuid())
     name          String
-    parentId      String? // Optional parent category ID
-    parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id]) // Self-relation for parent category
-    subcategories Category[] @relation("CategoryToParent") // Self-relation for subcategories
-    products      Product[]  @relation("CategoryToProduct") // One-to-many relationship with Product
+    parentId      String?
+    parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade) // Cascade deletion
+    subcategories Category[] @relation("CategoryToParent")
+    products      Product[]  @relation("CategoryToProduct") // Optional: Cascade delete products if needed
     createdAt     DateTime   @default(now())
     updatedAt     DateTime   @updatedAt
 }

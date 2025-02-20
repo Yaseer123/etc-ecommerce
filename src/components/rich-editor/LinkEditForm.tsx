@@ -1,11 +1,11 @@
 "use client";
 
-import { FC, useEffect, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { BiUnlink } from "react-icons/bi";
 
 interface Props {
   initialState?: string;
-  onSubmit(link: string): void;
+  onSubmit: (link: string) => void;
 }
 
 const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
@@ -17,7 +17,7 @@ const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
 
   return (
     <div>
-      <div className="absolute top-10 z-50 ring-1 ring-black p-2 rounded flex items-center shadow-sm bg-white outline-none">
+      <div className="absolute top-10 z-50 flex items-center rounded bg-white p-2 shadow-sm outline-none ring-1 ring-black">
         <input
           value={link}
           onChange={({ target }) => setLink(target.value)}
@@ -29,7 +29,7 @@ const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
           onMouseDown={() => {
             onSubmit(link);
           }}
-          className="bg-black text-white w-8 aspect-square flex justify-center items-center"
+          className="flex aspect-square w-8 items-center justify-center bg-black text-white"
         >
           ok
         </button>
@@ -37,7 +37,7 @@ const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
           onMouseDown={() => {
             onSubmit("");
           }}
-          className="bg-red-400 text-white w-8 aspect-square flex justify-center items-center"
+          className="flex aspect-square w-8 items-center justify-center bg-red-400 text-white"
         >
           <BiUnlink />
         </button>

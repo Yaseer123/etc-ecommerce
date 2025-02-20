@@ -9,8 +9,8 @@ import { useImages } from "@/app/context/ImageProvider";
 
 interface ImageGalleryProps {
   visible: boolean;
-  onClose(state: boolean): void;
-  onSelect?(src: string): void;
+  onClose: (state: boolean) => void;
+  onSelect?: (src: string) => void;
 }
 
 const ImageGallery: FC<ImageGalleryProps> = ({
@@ -21,8 +21,8 @@ const ImageGallery: FC<ImageGalleryProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const image = useImages();
   const images = image?.images;
-  const updateImages = image?.updateImages;
-  const removeOldImage = image?.removeOldImage;
+  const updateImages = image?.updateImages?.bind(image);
+  const removeOldImage = image?.removeOldImage?.bind(image);
 
   const handleClose = () => {
     onClose(!visible);
@@ -106,7 +106,9 @@ const ImageGallery: FC<ImageGalleryProps> = ({
                       .slice(-2)
                       .join("/")
                       .split(".")[0];
-                    await removeImage(id);
+                    if (id) {
+                      await removeImage(id);
+                    }
                     if (removeOldImage) {
                       removeOldImage(item);
                     }

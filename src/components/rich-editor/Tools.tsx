@@ -1,4 +1,4 @@
-import { ChangeEventHandler, FC } from "react";
+import { type ChangeEventHandler, type FC } from "react";
 import {
   BiAlignLeft,
   BiAlignMiddle,
@@ -14,13 +14,13 @@ import {
   BiUnderline,
 } from "react-icons/bi";
 import ToolButton from "./ToolButton";
-import { BubbleMenu, ChainedCommands, Editor } from "@tiptap/react";
+import { BubbleMenu, type ChainedCommands, type Editor } from "@tiptap/react";
 import LinkForm from "./LinkForm";
 import LinkEditForm from "./LinkEditForm";
 
 interface Props {
   editor: Editor | null;
-  onImageSelection?(): void;
+  onImageSelection: (state: boolean) => void;
 }
 
 const tools = [
@@ -83,7 +83,7 @@ const headingOptions = [
 
 const chainMethods = (
   editor: Editor | null,
-  command: (chain: ChainedCommands) => ChainedCommands
+  command: (chain: ChainedCommands) => ChainedCommands,
 ) => {
   if (!editor) return;
 
@@ -118,7 +118,7 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
       case "right":
         return chainMethods(editor, (chain) => chain.setTextAlign("right"));
       case "image":
-        return onImageSelection && onImageSelection();
+        return onImageSelection(true);
     }
   };
 
@@ -144,23 +144,26 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
         return chainMethods(editor, (chain) => chain.setParagraph());
       case "h1":
         return chainMethods(editor, (chain) =>
-          chain.toggleHeading({ level: 1 })
+          chain.toggleHeading({ level: 1 }),
         );
       case "h2":
         return chainMethods(editor, (chain) =>
-          chain.toggleHeading({ level: 2 })
+          chain.toggleHeading({ level: 2 }),
         );
       case "h3":
         return chainMethods(editor, (chain) =>
-          chain.toggleHeading({ level: 3 })
+          chain.toggleHeading({ level: 3 }),
         );
     }
   };
 
-  const getInitialLink = () => {
-    const attributes = editor?.getAttributes("link");
+  const getInitialLink = (): string | undefined => {
+    const attributes = editor?.getAttributes("link") as
+      | { href: string }
+      | undefined;
 
     if (attributes) return attributes.href;
+    return undefined;
   };
 
   const getSelectedHeading = (): HeadingType => {
@@ -209,7 +212,7 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
             key={task}
             onClick={() => handleOnClick(task)}
             active={
-              editor?.isActive(task) || editor?.isActive({ textAlign: task })
+              editor?.isActive(task) ?? editor?.isActive({ textAlign: task })
             }
           >
             {icon}

@@ -1,27 +1,34 @@
+import Image from "next/image";
 import type { FC } from "react";
 import { BiCheck, BiSolidTrash } from "react-icons/bi";
 
 interface Props {
   src: string;
-  onDeleteClick?(): void;
-  onSelectClick?(): void;
+  onDeleteClick?: () => void;
+  onSelectClick?: () => void;
 }
 
 const GalleryImage: FC<Props> = ({ src, onDeleteClick, onSelectClick }) => {
   return (
-    <div className="group relative w-full aspect-square overflow-hidden rounded">
-      <img src={src} alt="" className="w-full h-full object-cover" />
+    <div className="group relative aspect-square w-full overflow-hidden rounded">
+      <Image
+        height={400}
+        width={400}
+        src={src}
+        alt=""
+        className="h-full w-full object-cover"
+      />
 
-      <div className="hidden absolute group-hover:flex bottom-0 left-0 right-0 ">
+      <div className="absolute bottom-0 left-0 right-0 hidden group-hover:flex">
         <button
           onClick={onDeleteClick}
-          className="bg-red-400 text-white flex-1 flex items-center justify-center p-2"
+          className="flex flex-1 items-center justify-center bg-red-400 p-2 text-white"
         >
           <BiSolidTrash />
         </button>
         <button
           onClick={onSelectClick}
-          className=" bg-blue-400 text-white flex-1 flex items-center justify-center p-2"
+          className="flex flex-1 items-center justify-center bg-blue-400 p-2 text-white"
         >
           <BiCheck />
         </button>
