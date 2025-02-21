@@ -126,7 +126,7 @@ export default function RichEditor({
             onChange={(e) => setSlug(e.target.value)}
           />
         </div>
-        <div className="flex min-h-[65vh] flex-col space-y-4 rounded-md border p-5">
+        <div className="flex min-h-[65vh] flex-col justify-center items-center space-y-4 rounded-md border p-5">
           <div className="sticky top-0 z-50 bg-white">
             <Tools editor={editor} onImageSelection={handleShowImageGallery} />
           </div>

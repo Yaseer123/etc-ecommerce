@@ -50,4 +50,30 @@ export const blogPostRouter = createTRPCRouter({
 
       return post;
     }),
+
+  edit: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid("Invalid post ID"),
+        title: z.string().min(3, "Title must be at least 3 characters"),
+        slug: z.string().min(1, "Slug field can't be empty"),
+        content: z.string(),
+        createdBy: z.string(),
+        imageId: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const post = await ctx.db.post.update({
+        where: { id: input.id },
+        data: {
+          imageId: input.imageId,
+          title: input.title,
+          slug: input.slug,
+          content: input.content,
+          createdById: input.createdBy,
+        },
+      });
+
+      return post;
+    }),
 });

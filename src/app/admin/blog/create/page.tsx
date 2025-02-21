@@ -9,7 +9,7 @@ export default async function BlogPage() {
   }
 
   return (
-    <div className="min-h-50 flex flex-col items-center justify-center gap-4 p-4 md:p-10">
+    <div className="min-h-50 flex flex-col items-center justify-center p-4 md:p-10">
       <AddBlogForm userId={session.user.id} />
     </div>
   );
