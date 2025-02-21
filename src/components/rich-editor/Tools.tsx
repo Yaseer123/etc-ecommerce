@@ -81,6 +81,19 @@ const headingOptions = [
   { task: "h3", value: "Heading 3" },
 ] as const;
 
+const fontSizeOptions = [
+  { task: "12", value: "12pt" },
+  { task: "14", value: "14pt" },
+  { task: "16", value: "16pt" },
+  { task: "18", value: "18pt" },
+  { task: "20", value: "20pt" },
+  { task: "24", value: "24pt" },
+  { task: "28", value: "28pt" },
+  { task: "32", value: "32pt" },
+  { task: "36", value: "36pt" },
+  { task: "40", value: "40pt" },
+] as const;
+
 const chainMethods = (
   editor: Editor | null,
   command: (chain: ChainedCommands) => ChainedCommands,
@@ -92,6 +105,7 @@ const chainMethods = (
 
 type TaskType = (typeof tools)[number]["task"];
 type HeadingType = (typeof headingOptions)[number]["task"];
+type FontSizeType = (typeof fontSizeOptions)[number]["task"];
 const Tools: FC<Props> = ({ editor, onImageSelection }) => {
   const handleOnClick = (task: TaskType) => {
     switch (task) {
@@ -176,6 +190,25 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
     return result;
   };
 
+  const getSelectedFontSize = (): FontSizeType => {
+    const fontSize =
+      (editor?.getAttributes("textStyle") as { fontSize?: string })?.fontSize ??
+      "14pt"; // Default to 14pt
+    const numericSize = fontSize.replace("pt", "");
+
+    const validSize = fontSizeOptions.find(
+      (option) => option.task === numericSize,
+    );
+    return validSize ? validSize.task : "14"; // Default to 14 if invalid
+  };
+
+  const handleFontSizeSelection: ChangeEventHandler<HTMLSelectElement> = ({
+    target,
+  }) => {
+    const { value } = target as { value: FontSizeType };
+    chainMethods(editor, (chain) => chain.setFontSize(`${value}pt`));
+  };
+
   return (
     <div className="flex items-start space-x-1">
       <select
@@ -184,6 +217,20 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
         onChange={handleHeadingSelection}
       >
         {headingOptions.map((item) => {
+          return (
+            <option key={item.task} value={item.task}>
+              {item.value}
+            </option>
+          );
+        })}
+      </select>
+
+      <select
+        value={getSelectedFontSize()}
+        className="p-2"
+        onChange={handleFontSizeSelection}
+      >
+        {fontSizeOptions.map((item) => {
           return (
             <option key={item.task} value={item.task}>
               {item.value}

@@ -59,6 +59,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.21.2
         version: 8.21.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@tiptap/core':
+        specifier: ^2.11.5
+        version: 2.11.5(@tiptap/pm@2.11.5)
       '@tiptap/extension-image':
         specifier: ^2.6.6
         version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
@@ -68,8 +71,14 @@ importers:
       '@tiptap/extension-placeholder':
         specifier: ^2.6.6
         version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-text':
+        specifier: ^2.11.5
+        version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
       '@tiptap/extension-text-align':
         specifier: ^2.6.6
+        version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-text-style':
+        specifier: ^2.11.5
         version: 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
       '@tiptap/extension-underline':
         specifier: ^2.6.6
@@ -117,7 +126,7 @@ importers:
         specifier: ^5.1.15
         version: 5.2.2(@types/react@18.3.18)(react@18.3.1)
       lowlight:
-        specifier: ^3.1.0
+        specifier: ^3.3.0
         version: 3.3.0
       lucide-react:
         specifier: ^0.475.0

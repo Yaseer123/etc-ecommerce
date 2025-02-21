@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -12,6 +12,9 @@ import ImageGallery from "./ImageGallery";
 import Link from "@tiptap/extension-link";
 import { api } from "@/trpc/react";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import TextStyle from "@tiptap/extension-text-style";
+import { FontSize } from "./extensions/fontSize";
 
 const extensions = [
   StarterKit,
@@ -36,10 +39,25 @@ const extensions = [
   Placeholder.configure({
     placeholder: "Write something...",
   }),
+  TextStyle,
+  FontSize.configure({ defaultSize: "14pt" }), // Set default size here,
 ];
 
 export default function RichEditor({ userId }: { userId: string }) {
   const [showImageGallery, setShowImageGallery] = useState(false);
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [pending, setPending] = useState(false);
+
+  useEffect(() => {
+    const name = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+
+    setSlug(name);
+  }, [title]);
+
   const addPost = api.post.add.useMutation();
 
   const editor = useEditor({
@@ -65,33 +83,47 @@ export default function RichEditor({ userId }: { userId: string }) {
     setShowImageGallery(state);
   };
 
+  const handleSubmit = () => {
+    setPending(true);
+
+    addPost.mutate({
+      title: title,
+      content: editor?.getHTML() ?? "",
+      slug: slug,
+      createdBy: userId,
+    });
+
+    setPending(false);
+  };
+
   return (
     <>
-      <div className="flex flex-col space-y-6">
-        <div className="flex min-h-[70vh] flex-col space-y-4 rounded-md border p-5">
+      <div className="flex flex-col space-y-4">
+        <div className="flex gap-4">
+          <Input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <Input
+            type="text"
+            placeholder="Slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+          />
+        </div>
+        <div className="flex min-h-[65vh] flex-col space-y-4 rounded-md border p-5">
           <div className="sticky top-0 z-50 bg-white">
-            <Tools
-              editor={editor}
-              onImageSelection={handleShowImageGallery}
-            />
+            <Tools editor={editor} onImageSelection={handleShowImageGallery} />
           </div>
-          <div className="flex-1">
+          <div className="flex-1 text-sm">
             <EditorContent editor={editor} className="h-full" />
           </div>
         </div>
         <div className="p-4 text-right">
-          <Button
-            onClick={() => {
-              addPost.mutate({
-                title: "demo",
-                content: editor?.getHTML() ?? "",
-                slug: "demo",
-                createdBy: userId,
-              });
-            }}
-            className="bg-black p-2 text-white"
-          >
-            Create New Post
+          <Button onClick={handleSubmit} disabled={pending}>
+            {pending ? "Submitting..." : "Create New Post"}
           </Button>
         </div>
       </div>
