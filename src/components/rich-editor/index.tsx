@@ -1,5 +1,6 @@
 "use client";
 
+import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -10,14 +11,11 @@ import Image from "@tiptap/extension-image";
 import Tools from "./Tools";
 import ImageGallery from "./ImageGallery";
 import Link from "@tiptap/extension-link";
-import { api } from "@/trpc/react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./extensions/fontSize";
 import { useImageStore } from "@/app/context/ImageProvider";
-import { v4 as uuid } from "uuid";
-import { useRouter } from "next/navigation";
 
 const extensions = [
   StarterKit,
@@ -46,14 +44,27 @@ const extensions = [
   FontSize.configure({ defaultSize: "14pt" }), // Set default size here,
 ];
 
-export default function RichEditor({ userId }: { userId: string }) {
+export default function RichEditor({
+  title,
+  setTitle,
+  slug,
+  setSlug,
+  content,
+  imageId,
+  handleSubmit,
+  pending,
+}: {
+  title: string;
+  setTitle: Dispatch<SetStateAction<string>>;
+  slug: string;
+  setSlug: Dispatch<SetStateAction<string>>;
+  content: string;
+  imageId: string;
+  handleSubmit: (content: string) => void;
+  pending: boolean;
+}) {
   const [showImageGallery, setShowImageGallery] = useState(false);
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [pending, setPending] = useState(false);
   const { loadImages } = useImageStore();
-  const [imageId] = useState(uuid());
-  const router = useRouter();
 
   useEffect(() => {
     void (async () => {
@@ -72,22 +83,7 @@ export default function RichEditor({ userId }: { userId: string }) {
       .replace(/(^-|-$)+/g, "");
 
     setSlug(name);
-  }, [title]);
-
-  const addPost = api.post.add.useMutation({
-    onSuccess: () => {
-      setTitle("");
-      setSlug("");
-      editor?.commands.clearContent();
-      router.push("/admin/blog");
-    },
-    onError: ({ message }) => {
-      console.log(message);
-    },
-    onSettled: () => {
-      setPending(false);
-    },
-  });
+  }, [setSlug, title]);
 
   const editor = useEditor({
     extensions,
@@ -98,6 +94,7 @@ export default function RichEditor({ userId }: { userId: string }) {
           "prose prose-sm sm:prose-base lg:prose-lg xl:prose-2xl outline-none",
       },
     },
+    content: content,
   });
 
   const onImageSelect = (image: string) => {
@@ -110,18 +107,6 @@ export default function RichEditor({ userId }: { userId: string }) {
 
   const handleShowImageGallery = (state: boolean) => {
     setShowImageGallery(state);
-  };
-
-  const handleSubmit = () => {
-    setPending(true);
-
-    addPost.mutate({
-      imageId: imageId,
-      title: title,
-      content: editor?.getHTML() ?? "",
-      slug: slug,
-      createdBy: userId,
-    });
   };
 
   return (
@@ -150,7 +135,13 @@ export default function RichEditor({ userId }: { userId: string }) {
           </div>
         </div>
         <div className="p-4 text-right">
-          <Button onClick={handleSubmit} disabled={pending}>
+          <Button
+            onClick={() => {
+              handleSubmit(editor?.getHTML() ?? "");
+              // editor?.commands.clearContent();
+            }}
+            disabled={pending}
+          >
             {pending ? "Submitting..." : "Create New Post"}
           </Button>
         </div>
