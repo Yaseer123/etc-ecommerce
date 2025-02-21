@@ -10,15 +10,16 @@ cloud.config({
 });
 
 export const uploadFile = async (
-  data: FormData
+  data: FormData,
+  filter: string,
 ): Promise<UploadApiResponse | undefined> => {
   const file = data.get("file");
   if (file instanceof File && file.type.startsWith("image")) {
     const buffer = Buffer.from(await file.arrayBuffer());
     return new Promise((resolve, reject) => {
       cloud.uploader
-        .upload_stream({ folder: "rich-editor" }, (error, result) => {
-          if (error) reject(new Error(error.message ?? 'Upload failed'));
+        .upload_stream({ folder: filter }, (error, result) => {
+          if (error) reject(new Error(error.message ?? "Upload failed"));
           else resolve(result);
         })
         .end(buffer);
@@ -26,10 +27,10 @@ export const uploadFile = async (
   }
 };
 
-export const readAllImages = async () => {
+export const readAllImages = async (filter: string) => {
   try {
     const { resources } = (await cloud.api.resources({
-      prefix: "rich-editor",
+      prefix: filter,
       resource_type: "image",
       type: "upload",
     })) as { resources: UploadApiResponse[] };

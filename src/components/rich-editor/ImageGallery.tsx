@@ -5,24 +5,23 @@ import { FileUploader } from "react-drag-drop-files";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../GalleryImage";
 import { removeImage, uploadFile } from "@/app/actions/file";
-import { useImages } from "@/app/context/ImageProvider";
+import { useImageStore } from "@/app/context/ImageProvider";
 
 interface ImageGalleryProps {
   visible: boolean;
+  imageId: string;
   onClose: (state: boolean) => void;
   onSelect?: (src: string) => void;
 }
 
 const ImageGallery: FC<ImageGalleryProps> = ({
   visible,
+  imageId,
   onSelect,
   onClose,
 }) => {
   const [isUploading, setIsUploading] = useState(false);
-  const image = useImages();
-  const images = image?.images;
-  const updateImages = image?.updateImages?.bind(image);
-  const removeOldImage = image?.removeOldImage?.bind(image);
+  const { images, updateImages, removeOldImage } = useImageStore();
 
   const handleClose = () => {
     onClose(!visible);
@@ -55,7 +54,7 @@ const ImageGallery: FC<ImageGalleryProps> = ({
             try {
               const formData = new FormData();
               formData.append("file", file);
-              const res = await uploadFile(formData);
+              const res = await uploadFile(formData, imageId);
               if (res && updateImages) {
                 updateImages([res.secure_url]);
               }

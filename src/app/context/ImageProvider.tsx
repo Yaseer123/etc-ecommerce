@@ -1,51 +1,37 @@
 "use client";
 
-import {
-  createContext,
-  type FC,
-  type ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { create } from "zustand";
 import { readAllImages } from "../actions/file";
 
-interface Props {
-  children: ReactNode;
-}
-
-interface InitialImageContext {
+interface ImageStore {
   images: string[];
-  updateImages(images: string[]): void;
-  removeOldImage(src: string): void;
+  loadImages: (filter: string) => Promise<void>; // Load images with optional filter
+  updateImages: (images: string[]) => void;
+  removeOldImage: (src: string) => void;
 }
 
-const Context = createContext<InitialImageContext | null>(null);
+export const useImageStore = create<ImageStore>((set) => ({
+  images: [],
 
-const ImageProvider: FC<Props> = ({ children }) => {
-  const [images, setImages] = useState<string[]>([]);
+  // Load images from API (optionally with filter)
+  loadImages: async (filter: string) => {
+    try {
+      const images = await readAllImages(filter);
+      set({ images });
+    } catch (error) {
+      console.error("Failed to load images:", error);
+    }
+  },
 
-  const updateImages = (data: string[]) => {
-    setImages([...data, ...images]);
-  };
+  // Add new images
+  updateImages: (newImages) => {
+    set((state) => ({ images: [...newImages, ...state.images] }));
+  },
 
-  const removeOldImage = (src: string) => {
-    setImages((old) => old.filter((img) => src !== img));
-  };
-
-  useEffect(() => {
-    readAllImages()
-      .then(setImages)
-      .catch((error) => console.error('Failed to load images:', error));
-  }, []);
-
-  return (
-    <Context.Provider value={{ images, updateImages, removeOldImage }}>
-      {children}
-    </Context.Provider>
-  );
-};
-
-export const useImages = () => useContext(Context);
-
-export default ImageProvider;
+  // Remove image by source
+  removeOldImage: (src) => {
+    set((state) => ({
+      images: state.images.filter((img) => img !== src),
+    }));
+  },
+}));

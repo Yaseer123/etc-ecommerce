@@ -15,6 +15,9 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./extensions/fontSize";
+import { useImageStore } from "@/app/context/ImageProvider";
+import { v4 as uuid } from "uuid";
+import { useRouter } from "next/navigation";
 
 const extensions = [
   StarterKit,
@@ -48,6 +51,19 @@ export default function RichEditor({ userId }: { userId: string }) {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [pending, setPending] = useState(false);
+  const { loadImages } = useImageStore();
+  const [imageId] = useState(uuid());
+  const router = useRouter();
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        await loadImages(imageId);
+      } catch (error) {
+        console.error("Failed to load images:", error);
+      }
+    })();
+  }, [loadImages, imageId]);
 
   useEffect(() => {
     const name = title
@@ -58,7 +74,20 @@ export default function RichEditor({ userId }: { userId: string }) {
     setSlug(name);
   }, [title]);
 
-  const addPost = api.post.add.useMutation();
+  const addPost = api.post.add.useMutation({
+    onSuccess: () => {
+      setTitle("");
+      setSlug("");
+      editor?.commands.clearContent();
+      router.push("/admin/blog");
+    },
+    onError: ({ message }) => {
+      console.log(message);
+    },
+    onSettled: () => {
+      setPending(false);
+    },
+  });
 
   const editor = useEditor({
     extensions,
@@ -87,13 +116,12 @@ export default function RichEditor({ userId }: { userId: string }) {
     setPending(true);
 
     addPost.mutate({
+      imageId: imageId,
       title: title,
       content: editor?.getHTML() ?? "",
       slug: slug,
       createdBy: userId,
     });
-
-    setPending(false);
   };
 
   return (
@@ -131,6 +159,7 @@ export default function RichEditor({ userId }: { userId: string }) {
         onSelect={onImageSelect}
         visible={showImageGallery}
         onClose={handleShowImageGallery}
+        imageId={imageId}
       />
     </>
   );
