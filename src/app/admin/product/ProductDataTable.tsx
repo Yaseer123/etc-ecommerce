@@ -11,7 +11,7 @@ export default function ProductDataTable() {
     <DataTable
       columns={columns}
       data={productsWithCategory}
-      addButton={{ name: "Add Product", href: "/admin/products/add" }}
+      addButton={{ name: "Add Product", href: "/admin/product/add" }}
     />
   );
 }
