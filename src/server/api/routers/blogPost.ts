@@ -76,4 +76,17 @@ export const blogPostRouter = createTRPCRouter({
 
       return post;
     }),
+
+  delete: protectedProcedure
+    .input(
+      z.object({
+        userId: z.string().cuid("Invalid user id"),
+        blogId: z.string().cuid("Invalid blog id"),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db.post.delete({
+        where: { createdById: input.userId, id: input.blogId },
+      });
+    }),
 });

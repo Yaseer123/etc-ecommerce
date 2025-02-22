@@ -130,7 +130,7 @@ export default function RichEditor({
           <div className="sticky top-0 z-50 bg-white">
             <Tools editor={editor} onImageSelection={handleShowImageGallery} />
           </div>
-          <div className="flex-1 text-sm">
+          <div className="flex-1 text-sm mr-auto">
             <EditorContent editor={editor} className="h-full" />
           </div>
         </div>
