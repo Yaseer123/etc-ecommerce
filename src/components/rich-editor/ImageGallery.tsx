@@ -4,7 +4,7 @@ import { IoMdClose } from "react-icons/io";
 import { FileUploader } from "react-drag-drop-files";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../GalleryImage";
-import { removeImage, uploadFile } from "@/app/actions/file";
+import { removeImage, uploadFile } from "@/lib/actions/file";
 import { useImageStore } from "@/app/context/ImageProvider";
 
 interface ImageGalleryProps {
