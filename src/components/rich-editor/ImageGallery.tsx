@@ -6,6 +6,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../GalleryImage";
 import { removeImage, uploadFile } from "@/app/actions/file";
 import { useImageStore } from "@/app/context/ImageProvider";
+import Image from "next/image";
 
 interface ImageGalleryProps {
   visible: string;
@@ -49,6 +50,7 @@ const ImageGallery: FC<ImageGalleryProps> = ({
           </button>
         </div>
         <FileUploader
+          multiple={true}
           handleChange={async (file: File) => {
             setIsUploading(true);
             try {
@@ -108,13 +110,18 @@ const ImageGallery: FC<ImageGalleryProps> = ({
                     if (id) {
                       await removeImage(id);
                     }
-                    if (removeOldImage) {
-                      removeOldImage(item);
-                    }
+                    removeOldImage(item);
                   }
                 }}
-                src={item}
-              />
+              >
+                <Image
+                  height={400}
+                  width={400}
+                  src={item}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              </GalleryImage>
             );
           })}
         </div>

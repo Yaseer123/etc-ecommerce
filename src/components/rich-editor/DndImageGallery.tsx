@@ -16,8 +16,9 @@ import {
 import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { FileUploader } from "react-drag-drop-files";
-import { uploadFile } from "@/app/actions/file";
+import { removeImage, uploadFile } from "@/app/actions/file";
 import Image from "next/image";
+import GalleryImage from "../GalleryImage";
 
 export default function DndImageGallery({
   imageId,
@@ -26,7 +27,8 @@ export default function DndImageGallery({
   imageId: string;
   onClose: (state: string) => void;
 }) {
-  const { images, setImages, updateImages } = useProductImageStore();
+  const { images, setImages, updateImages, removeOldImage } =
+    useProductImageStore();
   const [isUploading, setIsUploading] = useState(false);
   //   const [images, setImages] = useState<ImageItem[]>(initialImages);
 
@@ -113,7 +115,24 @@ export default function DndImageGallery({
             <SortableContext items={images} strategy={rectSortingStrategy}>
               {/* <div className="grid grid-cols-2 gap-4 md:grid-cols-4"> */}
               {images.map((image) => (
-                <SortableImage key={image.id} image={image} />
+                <GalleryImage
+                  key={image.id}
+                  onDeleteClick={async () => {
+                    if (confirm("Are you sure?")) {
+                      const id = image.src
+                        .split("/")
+                        .slice(-2)
+                        .join("/")
+                        .split(".")[0];
+                      if (id) {
+                        await removeImage(id);
+                      }
+                      removeOldImage(image.src);
+                    }
+                  }}
+                >
+                  <SortableImage key={image.id} image={image} />
+                </GalleryImage>
               ))}
               {/* </div> */}
             </SortableContext>

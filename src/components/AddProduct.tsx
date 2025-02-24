@@ -21,7 +21,7 @@ import { type CategoryTree } from "@/schemas/categorySchema";
 import RichEditor from "./rich-editor";
 import { v4 as uuid } from "uuid";
 import { Label } from "./ui/label";
-import DndImageGallery from "./DndImageGallery";
+import DndImageGallery from "./rich-editor/DndImageGallery";
 import { useProductImageStore } from "@/app/context/ProductImageProvider";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
@@ -83,6 +83,7 @@ export default function AddProductForm() {
   const [categories] = api.category.getAll.useSuspenseQuery();
 
   const handleSubmit = (content: string) => {
+    setPending(true);
     addProduct.mutate({
       imageId,
       descriptionImageId,
