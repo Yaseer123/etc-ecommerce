@@ -20,7 +20,7 @@ import LinkEditForm from "./LinkEditForm";
 
 interface Props {
   editor: Editor | null;
-  onImageSelection: (state: boolean) => void;
+  onImageSelection: () => void;
 }
 
 const tools = [
@@ -132,7 +132,7 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
       case "right":
         return chainMethods(editor, (chain) => chain.setTextAlign("right"));
       case "image":
-        return onImageSelection(true);
+        return onImageSelection();
     }
   };
 

@@ -8,9 +8,9 @@ import { removeImage, uploadFile } from "@/app/actions/file";
 import { useImageStore } from "@/app/context/ImageProvider";
 
 interface ImageGalleryProps {
-  visible: boolean;
+  visible: string;
   imageId: string;
-  onClose: (state: boolean) => void;
+  onClose: (state: string) => void;
   onSelect?: (src: string) => void;
 }
 
@@ -24,7 +24,7 @@ const ImageGallery: FC<ImageGalleryProps> = ({
   const { images, updateImages, removeOldImage } = useImageStore();
 
   const handleClose = () => {
-    onClose(!visible);
+    onClose("");
   };
 
   const handleSelection = (image: string) => {

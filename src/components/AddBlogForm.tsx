@@ -2,9 +2,10 @@
 
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import RichEditor from "./rich-editor";
+import { Input } from "./ui/input";
 
 export default function AddBlogForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("");
@@ -12,6 +13,15 @@ export default function AddBlogForm({ userId }: { userId: string }) {
   const [pending, setPending] = useState(false);
   const [imageId] = useState(uuid());
   const router = useRouter();
+
+  useEffect(() => {
+    const name = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+
+    setSlug(name);
+  }, [setSlug, title]);
 
   const addPost = api.post.add.useMutation({
     onSuccess: () => {
@@ -37,14 +47,26 @@ export default function AddBlogForm({ userId }: { userId: string }) {
   };
   return (
     <RichEditor
-      title={title}
       content=""
       handleSubmit={handleSubmit}
       imageId={imageId}
       pending={pending}
-      setSlug={setSlug}
-      setTitle={setTitle}
-      slug={slug}
-    />
+      submitButtonText="Create New Post"
+    >
+      <div className="flex gap-4">
+        <Input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Slug"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+        />
+      </div>
+    </RichEditor>
   );
 }

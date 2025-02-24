@@ -2,10 +2,19 @@ import { z } from "zod";
 
 // Product Schema for validation
 export const productSchema = z.object({
-  name: z.string().min(2, "Product name must be at least 2 characters"),
+  title: z.string().min(2, "Product name must be at least 2 characters"),
+  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  shortDescription: z
+    .string()
+    .min(2, "Short description must be at least 2 characters"),
   description: z.string().nullable(),
   price: z.number().positive("Price must be a positive number"),
   categoryId: z.string().cuid("Invalid category ID"),
+  imageId: z.string().uuid("Invalid image ID"),
+  descriptionImageId: z
+    .string()
+    .uuid("Invalid description image ID")
+    .optional(),
 });
 
 export type Product = z.infer<typeof productSchema>;

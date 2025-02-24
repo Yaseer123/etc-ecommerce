@@ -24,8 +24,8 @@ interface ProductColumns extends ProductWithCategory {
 
 export const columns: ColumnDef<ProductColumns>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "title",
+    header: "Title",
   },
   {
     accessorKey: "price",

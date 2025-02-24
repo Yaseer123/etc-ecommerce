@@ -4,6 +4,7 @@ import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import RichEditor from "./rich-editor";
+import { Input } from "./ui/input";
 
 export default function EditBlogForm({
   userId,
@@ -55,14 +56,26 @@ export default function EditBlogForm({
   };
   return (
     <RichEditor
-      title={title}
       content={post.content}
       handleSubmit={handleSubmit}
       imageId={post.imageId}
       pending={pending}
-      setSlug={setSlug}
-      setTitle={setTitle}
-      slug={slug}
-    />
+      submitButtonText="Update Post"
+    >
+      <div className="flex gap-4">
+        <Input
+          type="text"
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <Input
+          type="text"
+          placeholder="Slug"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+        />
+      </div>
+    </RichEditor>
   );
 }

@@ -9,21 +9,33 @@ cloud.config({
   secure: true,
 });
 
+
 export const uploadFile = async (
   data: FormData,
-  filter: string,
+  filter: string
 ): Promise<UploadApiResponse | undefined> => {
   const file = data.get("file");
+
   if (file instanceof File && file.type.startsWith("image")) {
     const buffer = Buffer.from(await file.arrayBuffer());
+
     return new Promise((resolve, reject) => {
       cloud.uploader
-        .upload_stream({ folder: filter }, (error, result) => {
-          if (error) reject(new Error(error.message ?? "Upload failed"));
-          else resolve(result);
-        })
+        .upload_stream(
+          { folder: filter, timeout: 60000 }, // Increased timeout
+          (error, result) => {
+            if (error) {
+              console.error("Upload Error:", error);
+              reject(new Error(error.message ?? "Upload failed"));
+            } else {
+              resolve(result);
+            }
+          }
+        )
         .end(buffer);
     });
+  } else {
+    throw new Error("Invalid file type. Only images are allowed.");
   }
 };
 
@@ -45,4 +57,19 @@ export const readAllImages = async (filter: string) => {
 
 export const removeImage = async (id: string) => {
   await cloud.uploader.destroy(id);
+};
+
+// remove image with prefix
+export const removeImageByPrefix = async (prefix: string) => {
+  const { resources } = (await cloud.api.resources({
+    type: "upload",
+    prefix: prefix,
+    max_results: 100,
+  })) as { resources: UploadApiResponse[] };
+
+  // 2. Extract public IDs
+  const publicIds = resources.map((resource) => resource.public_id);
+
+  // 3. Delete images by public ID
+  await cloud.api.delete_resources(publicIds);
 };

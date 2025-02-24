@@ -9,6 +9,11 @@ const config = {
   images: {
     domains: ["res.cloudinary.com"],
   },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "5mb",
+    },
+  },
 };
 
 export default config;

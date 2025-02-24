@@ -27,6 +27,16 @@ export const categoryRouter = createTRPCRouter({
     return buildCategoryTree(categories);
   }),
 
+  getOne: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const category = await ctx.db.category.findUnique({
+        where: { id: input.id },
+      });
+
+      return category;
+    }),
+
   add: protectedProcedure
     .input(
       z.object({
@@ -40,6 +50,22 @@ export const categoryRouter = createTRPCRouter({
           name: input.name,
           parentId: input.parentId ?? null,
         },
+      });
+
+      return category;
+    }),
+
+  edit: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const category = await ctx.db.category.update({
+        where: { id: input.id },
+        data: { name: input.name },
       });
 
       return category;
