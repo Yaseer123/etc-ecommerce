@@ -1,43 +1,57 @@
-'use client'
+"use client";
 
-// ModalQuickviewContext.tsx
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { ProductType } from '@/type/ProductType';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+} from "react";
+import { type ProductType } from "@/type/ProductType";
 
-interface ModalQuickviewContextProps {
-    children: ReactNode;
+interface ModalQuickViewContextProps {
+  children: ReactNode;
 }
 
-interface ModalQuickviewContextValue {
-    selectedProduct: ProductType | null;
-    openQuickview: (product: ProductType) => void;
-    closeQuickview: () => void;
+interface ModalQuickViewContextValue {
+  selectedProduct: ProductType | null;
+  openQuickView: (product: ProductType) => void;
+  closeQuickView: () => void;
 }
 
-const ModalQuickviewContext = createContext<ModalQuickviewContextValue | undefined>(undefined);
+const ModalQuickViewContext = createContext<
+  ModalQuickViewContextValue | undefined
+>(undefined);
 
-export const ModalQuickviewProvider: React.FC<ModalQuickviewContextProps> = ({ children }) => {
-    const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
+export const ModalQuickViewProvider: React.FC<ModalQuickViewContextProps> = ({
+  children,
+}) => {
+  const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
+    null,
+  );
 
-    const openQuickview = (product: ProductType) => {
-        setSelectedProduct(product);
-    };
+  const openQuickView = (product: ProductType) => {
+    setSelectedProduct(product);
+  };
 
-    const closeQuickview = () => {
-        setSelectedProduct(null);
-    };
+  const closeQuickView = () => {
+    setSelectedProduct(null);
+  };
 
-    return (
-        <ModalQuickviewContext.Provider value={{ selectedProduct, openQuickview, closeQuickview }}>
-            {children}
-        </ModalQuickviewContext.Provider>
-    );
+  return (
+    <ModalQuickViewContext.Provider
+      value={{ selectedProduct, openQuickView, closeQuickView }}
+    >
+      {children}
+    </ModalQuickViewContext.Provider>
+  );
 };
 
-export const useModalQuickviewContext = () => {
-    const context = useContext(ModalQuickviewContext);
-    if (!context) {
-        throw new Error('useModalQuickviewContext must be used within a ModalQuickviewProvider');
-    }
-    return context;
+export const useModalQuickViewContext = () => {
+  const context = useContext(ModalQuickViewContext);
+  if (!context) {
+    throw new Error(
+      "useModalQuickViewContext must be used within a ModalQuickViewProvider",
+    );
+  }
+  return context;
 };

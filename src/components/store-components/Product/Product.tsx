@@ -9,7 +9,7 @@ import { useWishlist } from "@/context/store-context/WishlistContext";
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import { useCompare } from "@/context/store-context/CompareContext";
 import { useModalCompareContext } from "@/context/store-context/ModalCompareContext";
-import { useModalQuickviewContext } from "@/context/store-context/ModalQuickviewContext";
+import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 import { useRouter } from "next/navigation";
 import Marquee from "react-fast-marquee";
 import Rate from "../Rate";
@@ -29,7 +29,7 @@ export default function Product({ data, type, style }: ProductProps) {
   const { openModalWishlist } = useModalWishlistContext();
   const { addToCompare, removeFromCompare, compareState } = useCompare();
   const { openModalCompare } = useModalCompareContext();
-  const { openQuickview } = useModalQuickviewContext();
+  const { openQuickView } = useModalQuickViewContext();
   const router = useRouter();
 
   const handleActiveColor = (item: string) => {
@@ -78,7 +78,7 @@ export default function Product({ data, type, style }: ProductProps) {
   };
 
   const handleQuickviewOpen = () => {
-    openQuickview(data);
+    openQuickView(data);
   };
 
   const handleDetailProduct = (productId: string) => {
@@ -98,12 +98,12 @@ export default function Product({ data, type, style }: ProductProps) {
           >
             <div className="product-thumb relative overflow-hidden rounded-2xl bg-white">
               {data.new && (
-                <div className="product-tag text-button-uppercase bg-green absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5">
+                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green px-3 py-0.5">
                   New
                 </div>
               )}
               {data.sale && (
-                <div className="product-tag text-button-uppercase bg-red absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5 text-white">
+                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red px-3 py-0.5 text-white">
                   Sale
                 </div>
               )}
@@ -313,7 +313,7 @@ export default function Product({ data, type, style }: ProductProps) {
                         <div className="list-size flex flex-wrap items-center justify-center gap-2">
                           {data.sizes.map((item, index) => (
                             <div
-                              className={`size-item text-button border-line flex h-10 w-10 items-center justify-center rounded-full border bg-white ${activeSize === item ? "active" : ""}`}
+                              className={`size-item text-button flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
                               key={index}
                               onClick={() => handleActiveSize(item)}
                             >
@@ -417,7 +417,7 @@ export default function Product({ data, type, style }: ProductProps) {
                         <div className="list-size flex flex-wrap items-center justify-center gap-2">
                           {data.sizes.map((item, index) => (
                             <div
-                              className={`size-item text-button border-line flex h-10 w-10 items-center justify-center rounded-full border bg-white ${activeSize === item ? "active" : ""}`}
+                              className={`size-item text-button flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
                               key={index}
                               onClick={() => handleActiveSize(item)}
                             >
@@ -464,9 +464,9 @@ export default function Product({ data, type, style }: ProductProps) {
             </div>
             <div className="product-infor mt-4 lg:mb-7">
               <div className="product-sold pb-2 sm:pb-4">
-                <div className="progress bg-line relative h-1.5 w-full overflow-hidden rounded-full">
+                <div className="progress relative h-1.5 w-full overflow-hidden rounded-full bg-line">
                   <div
-                    className={`progress-sold bg-red absolute left-0 top-0 h-full`}
+                    className={`progress-sold absolute left-0 top-0 h-full bg-red`}
                     style={{ width: `${percentSold}%` }}
                   ></div>
                 </div>
@@ -542,7 +542,7 @@ export default function Product({ data, type, style }: ProductProps) {
                     <div className="product-origin-price caption1 text-secondary2">
                       <del>${data.originPrice}.00</del>
                     </div>
-                    <div className="product-sale caption1 bg-green inline-block rounded-full px-3 py-0.5 font-medium">
+                    <div className="product-sale caption1 inline-block rounded-full bg-green px-3 py-0.5 font-medium">
                       -{percentSale}%
                     </div>
                   </>
@@ -588,12 +588,12 @@ export default function Product({ data, type, style }: ProductProps) {
                     className="product-thumb relative block overflow-hidden rounded-2xl bg-white max-sm:w-1/2"
                   >
                     {data.new && (
-                      <div className="product-tag text-button-uppercase bg-green absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5">
+                      <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green px-3 py-0.5">
                         New
                       </div>
                     )}
                     {data.sale && (
-                      <div className="product-tag text-button-uppercase bg-red absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5 text-white">
+                      <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red px-3 py-0.5 text-white">
                         Sale
                       </div>
                     )}
@@ -620,7 +620,7 @@ export default function Product({ data, type, style }: ProductProps) {
                         <div className="list-size flex flex-wrap items-center justify-center gap-2">
                           {data.sizes.map((item, index) => (
                             <div
-                              className={`size-item ${item !== "freesize" ? "h-10 w-10" : "h-10 px-4"} text-button border-line flex items-center justify-center rounded-full border bg-white ${activeSize === item ? "active" : ""}`}
+                              className={`size-item ${item !== "freesize" ? "h-10 w-10" : "h-10 px-4"} text-button flex items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
                               key={index}
                               onClick={() => handleActiveSize(item)}
                             >
@@ -656,7 +656,7 @@ export default function Product({ data, type, style }: ProductProps) {
                           <del>${data.originPrice}.00</del>
                         </div>
                         {data.originPrice && (
-                          <div className="product-sale caption1 bg-green inline-block rounded-full px-3 py-0.5 font-medium">
+                          <div className="product-sale caption1 inline-block rounded-full bg-green px-3 py-0.5 font-medium">
                             -{percentSale}%
                           </div>
                         )}
@@ -797,7 +797,7 @@ export default function Product({ data, type, style }: ProductProps) {
 
       {type === "marketplace" ? (
         <div
-          className="product-item style-marketplace border-line rounded-2xl border p-4"
+          className="product-item style-marketplace rounded-2xl border border-line p-4"
           onClick={() => handleDetailProduct(data.id)}
         >
           <div className="bg-img relative w-full">
@@ -805,7 +805,7 @@ export default function Product({ data, type, style }: ProductProps) {
               className="aspect-square w-full"
               width={5000}
               height={5000}
-              src={data.thumbImage[0] ?? ''}
+              src={data.thumbImage[0] ?? ""}
               alt="img"
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">

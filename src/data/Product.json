@@ -14,12 +14,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "red",
@@ -63,14 +58,7 @@
     "sold": 23,
     "quantity": 200,
     "quantityPurchase": 1,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "white",
@@ -114,9 +102,7 @@
     "sold": 15,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "pink",
@@ -166,11 +152,7 @@
     "sold": 14,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["M", "L", "XL"],
     "variation": [
       {
         "color": "red",
@@ -220,12 +202,7 @@
     "sold": 21,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "black",
@@ -274,14 +251,7 @@
     "sold": 19,
     "quantity": 200,
     "quantityPurchase": 1,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -331,9 +301,7 @@
     "sold": 22,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "green",
@@ -389,12 +357,7 @@
     "sold": 45,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -450,12 +413,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -505,14 +463,7 @@
     "sold": 12,
     "quantity": 200,
     "quantityPurchase": 1,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -568,9 +519,7 @@
     "sold": 14,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "green",
@@ -620,12 +569,7 @@
     "sold": 17,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -681,11 +625,7 @@
     "sold": 39,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -741,14 +681,7 @@
     "sold": 9,
     "quantity": 200,
     "quantityPurchase": 1,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -804,9 +737,7 @@
     "sold": 8,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "green",
@@ -862,12 +793,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -923,12 +849,7 @@
     "sold": 41,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -984,13 +905,7 @@
     "sold": 15,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1046,12 +961,7 @@
     "sold": 22,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -1107,14 +1017,7 @@
     "sold": 46,
     "quantity": 200,
     "quantityPurchase": 1,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1170,9 +1073,7 @@
     "sold": 42,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "green",
@@ -1228,12 +1129,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "green",
@@ -1289,13 +1185,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1351,13 +1241,7 @@
     "sold": 32,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1413,13 +1297,7 @@
     "sold": 32,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "white",
@@ -1461,13 +1339,7 @@
     "sold": 22,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1523,13 +1395,7 @@
     "sold": 15,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1585,13 +1451,7 @@
     "sold": 36,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "green",
@@ -1647,12 +1507,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "yellow",
@@ -1708,12 +1563,7 @@
     "sold": 22,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "yellow",
@@ -1769,14 +1619,7 @@
     "sold": 11,
     "quantity": 200,
     "quantityPurchase": 1,
-    "sizes": [
-      "XS",
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["XS", "S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "yellow",
@@ -1832,9 +1675,7 @@
     "sold": 5,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "yellow",
@@ -1890,12 +1731,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "yellow",
@@ -1951,13 +1787,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "yellow",
@@ -2013,13 +1843,7 @@
     "sold": 21,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "red",
@@ -2068,13 +1892,7 @@
     "sold": 15,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "yellow",
@@ -2124,13 +1942,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "yellow",
@@ -2174,13 +1986,7 @@
     "sold": 20,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "white",
@@ -2230,13 +2036,7 @@
     "sold": 15,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "red",
@@ -2280,13 +2080,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL",
-      "2XL"
-    ],
+    "sizes": ["S", "M", "L", "XL", "2XL"],
     "variation": [
       {
         "color": "yellow",
@@ -2349,9 +2143,7 @@
       "/images/product/1000x1000.png",
       "/images/product/1000x1000.png"
     ],
-    "images": [
-      "/images/product/1000x1000.png"
-    ],
+    "images": ["/images/product/1000x1000.png"],
     "description": "Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. Traditionally designed, they are perfect to be used in the any place where you need to store.",
     "action": "quick shop",
     "slug": "sunglasses"
@@ -2384,9 +2176,7 @@
       "/images/product/1000x1000.png",
       "/images/product/1000x1000.png"
     ],
-    "images": [
-      "/images/product/1000x1000.png"
-    ],
+    "images": ["/images/product/1000x1000.png"],
     "description": "Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. Traditionally designed, they are perfect to be used in the any place where you need to store.",
     "action": "add to cart",
     "slug": "handbag"
@@ -2419,9 +2209,7 @@
       "/images/product/1000x1000.png",
       "/images/product/1000x1000.png"
     ],
-    "images": [
-      "/images/product/1000x1000.png"
-    ],
+    "images": ["/images/product/1000x1000.png"],
     "description": "Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. Traditionally designed, they are perfect to be used in the any place where you need to store.",
     "action": "quick shop",
     "slug": "sunglasses"
@@ -2454,9 +2242,7 @@
       "/images/product/1000x1000.png",
       "/images/product/1000x1000.png"
     ],
-    "images": [
-      "/images/product/1000x1000.png"
-    ],
+    "images": ["/images/product/1000x1000.png"],
     "description": "Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. Traditionally designed, they are perfect to be used in the any place where you need to store.",
     "action": "add to cart",
     "slug": "handbag"
@@ -2489,9 +2275,7 @@
       "/images/product/1000x1000.png",
       "/images/product/1000x1000.png"
     ],
-    "images": [
-      "/images/product/1000x1000.png"
-    ],
+    "images": ["/images/product/1000x1000.png"],
     "description": "Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. Traditionally designed, they are perfect to be used in the any place where you need to store.",
     "action": "quick shop",
     "slug": "sunglasses"
@@ -2524,9 +2308,7 @@
       "/images/product/1000x1000.png",
       "/images/product/1000x1000.png"
     ],
-    "images": [
-      "/images/product/1000x1000.png"
-    ],
+    "images": ["/images/product/1000x1000.png"],
     "description": "Keep your home organized, yet elegant with storage cabinets by Onita Patio Furniture. Traditionally designed, they are perfect to be used in the any place where you need to store.",
     "action": "add to cart",
     "slug": "handbag"
@@ -2546,11 +2328,7 @@
     "sold": 18,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "150"
-    ],
+    "sizes": ["50", "100", "150"],
     "variation": [
       {
         "color": "yellow",
@@ -2593,11 +2371,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "150",
-      "200",
-      "300"
-    ],
+    "sizes": ["150", "200", "300"],
     "variation": [
       {
         "color": "yellow",
@@ -2640,11 +2414,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "150",
-      "200",
-      "300"
-    ],
+    "sizes": ["150", "200", "300"],
     "variation": [
       {
         "color": "yellow",
@@ -2686,11 +2456,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "200"
-    ],
+    "sizes": ["50", "100", "200"],
     "variation": [
       {
         "color": "yellow",
@@ -2732,11 +2498,7 @@
     "sold": 15,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "200"
-    ],
+    "sizes": ["50", "100", "200"],
     "variation": [
       {
         "color": "red",
@@ -2778,11 +2540,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "150",
-      "200"
-    ],
+    "sizes": ["100", "150", "200"],
     "variation": [
       {
         "color": "red",
@@ -2824,11 +2582,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "150"
-    ],
+    "sizes": ["50", "100", "150"],
     "variation": [
       {
         "color": "green",
@@ -2865,11 +2619,7 @@
     "sold": 10,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "150"
-    ],
+    "sizes": ["50", "100", "150"],
     "variation": [
       {
         "color": "purple",
@@ -2913,11 +2663,7 @@
     "sold": 18,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300"
-    ],
+    "sizes": ["100", "200", "300"],
     "variation": [
       {
         "color": "red",
@@ -2959,11 +2705,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "150"
-    ],
+    "sizes": ["50", "100", "150"],
     "variation": [
       {
         "color": "yellow",
@@ -3005,11 +2747,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300"
-    ],
+    "sizes": ["100", "200", "300"],
     "variation": [
       {
         "color": "red",
@@ -3053,11 +2791,7 @@
     "sold": 12,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "50",
-      "100",
-      "150"
-    ],
+    "sizes": ["50", "100", "150"],
     "variation": [
       {
         "color": "red",
@@ -3101,11 +2835,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300"
-    ],
+    "sizes": ["100", "200", "300"],
     "variation": [
       {
         "color": "pink",
@@ -3148,11 +2878,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "150",
-      "200",
-      "300"
-    ],
+    "sizes": ["150", "200", "300"],
     "variation": [
       {
         "color": "white",
@@ -3195,11 +2921,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "200",
-      "300",
-      "500"
-    ],
+    "sizes": ["200", "300", "500"],
     "variation": [
       {
         "color": "red",
@@ -3236,11 +2958,7 @@
     "sold": 16,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300"
-    ],
+    "sizes": ["100", "200", "300"],
     "variation": [
       {
         "color": "red",
@@ -3277,10 +2995,7 @@
     "sold": 12,
     "quantity": 40,
     "quantityPurchase": 1,
-    "sizes": [
-      "2",
-      "3"
-    ],
+    "sizes": ["2", "3"],
     "variation": [
       {
         "color": "yellow",
@@ -3323,12 +3038,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "1",
-      "2",
-      "3",
-      "4"
-    ],
+    "sizes": ["1", "2", "3", "4"],
     "variation": [
       {
         "color": "yellow",
@@ -3371,11 +3081,7 @@
     "sold": 24,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "200",
-      "300",
-      "500"
-    ],
+    "sizes": ["200", "300", "500"],
     "variation": [
       {
         "color": "red",
@@ -3412,11 +3118,7 @@
     "sold": 16,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300"
-    ],
+    "sizes": ["100", "200", "300"],
     "variation": [
       {
         "color": "red",
@@ -3453,12 +3155,7 @@
     "sold": 12,
     "quantity": 40,
     "quantityPurchase": 1,
-    "sizes": [
-      "2",
-      "3",
-      "4",
-      "5"
-    ],
+    "sizes": ["2", "3", "4", "5"],
     "variation": [
       {
         "color": "yellow",
@@ -3501,12 +3198,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "1",
-      "2",
-      "3",
-      "4"
-    ],
+    "sizes": ["1", "2", "3", "4"],
     "variation": [
       {
         "color": "red",
@@ -3549,12 +3241,7 @@
     "sold": 12,
     "quantity": 40,
     "quantityPurchase": 1,
-    "sizes": [
-      "2",
-      "3",
-      "4",
-      "5"
-    ],
+    "sizes": ["2", "3", "4", "5"],
     "variation": [
       {
         "color": "yellow",
@@ -3597,12 +3284,7 @@
     "sold": 12,
     "quantity": 40,
     "quantityPurchase": 1,
-    "sizes": [
-      "2",
-      "3",
-      "4",
-      "5"
-    ],
+    "sizes": ["2", "3", "4", "5"],
     "variation": [
       {
         "color": "yellow",
@@ -3645,12 +3327,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "2",
-      "3",
-      "4",
-      "5"
-    ],
+    "sizes": ["2", "3", "4", "5"],
     "variation": [
       {
         "color": "yellow",
@@ -3693,12 +3370,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "2",
-      "3",
-      "4",
-      "5"
-    ],
+    "sizes": ["2", "3", "4", "5"],
     "variation": [
       {
         "color": "yellow",
@@ -3741,12 +3413,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "yellow",
@@ -3782,12 +3449,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "13",
-      "14",
-      "15",
-      "16"
-    ],
+    "sizes": ["13", "14", "15", "16"],
     "variation": [
       {
         "color": "yellow",
@@ -3830,12 +3492,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "silver",
@@ -3871,12 +3528,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "35",
-      "40",
-      "45",
-      "50"
-    ],
+    "sizes": ["35", "40", "45", "50"],
     "variation": [
       {
         "color": "silver",
@@ -3912,12 +3564,7 @@
     "sold": 24,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "yellow",
@@ -3959,12 +3606,7 @@
     "sold": 21,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "silver",
@@ -4000,12 +3642,7 @@
     "sold": 3,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "silver",
@@ -4041,12 +3678,7 @@
     "sold": 2,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "35",
-      "40",
-      "45",
-      "50"
-    ],
+    "sizes": ["35", "40", "45", "50"],
     "variation": [
       {
         "color": "silver",
@@ -4082,12 +3714,7 @@
     "sold": 4,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "yellow",
@@ -4129,12 +3756,7 @@
     "sold": 8,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "10",
-      "11",
-      "12",
-      "13"
-    ],
+    "sizes": ["10", "11", "12", "13"],
     "variation": [
       {
         "color": "silver",
@@ -4809,12 +4431,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -4857,12 +4474,7 @@
     "sold": 21,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -4899,12 +4511,7 @@
     "sold": 35,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -4941,12 +4548,7 @@
     "sold": 65,
     "quantity": 180,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "blue",
@@ -4983,12 +4585,7 @@
     "sold": 14,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -5031,12 +4628,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -5073,12 +4665,7 @@
     "sold": 34,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -5115,12 +4702,7 @@
     "sold": 73,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "blue",
@@ -5157,12 +4739,7 @@
     "sold": 65,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -5200,12 +4777,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "green",
@@ -5261,12 +4833,7 @@
     "sold": 23,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -5303,12 +4870,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "5",
-      "8",
-      "10",
-      "12"
-    ],
+    "sizes": ["5", "8", "10", "12"],
     "variation": [
       {
         "color": "yellow",
@@ -5344,12 +4906,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5386,12 +4943,7 @@
     "sold": 54,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5428,12 +4980,7 @@
     "sold": 21,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "0.5",
-      "1",
-      "1.5",
-      "2"
-    ],
+    "sizes": ["0.5", "1", "1.5", "2"],
     "variation": [
       {
         "color": "yellow",
@@ -5471,12 +5018,7 @@
     "sold": 58,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "red",
@@ -5526,12 +5068,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5568,12 +5105,7 @@
     "sold": 54,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5610,12 +5142,7 @@
     "sold": 21,
     "quantity": 100,
     "quantityPurchase": 1,
-    "sizes": [
-      "0.5",
-      "1",
-      "1.5",
-      "2"
-    ],
+    "sizes": ["0.5", "1", "1.5", "2"],
     "variation": [
       {
         "color": "yellow",
@@ -5653,12 +5180,7 @@
     "sold": 58,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "blue",
@@ -5707,12 +5229,7 @@
     "sold": 28,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5749,12 +5266,7 @@
     "sold": 54,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5829,12 +5341,7 @@
     "sold": 54,
     "quantity": 120,
     "quantityPurchase": 1,
-    "sizes": [
-      "100",
-      "200",
-      "300",
-      "400"
-    ],
+    "sizes": ["100", "200", "300", "400"],
     "variation": [
       {
         "color": "yellow",
@@ -5871,10 +5378,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "red",
@@ -5918,10 +5422,7 @@
     "sold": 15,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "14",
-      "16"
-    ],
+    "sizes": ["14", "16"],
     "variation": [
       {
         "color": "red",
@@ -5965,10 +5466,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "red",
@@ -6010,10 +5508,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "black",
@@ -6049,10 +5544,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "black",
@@ -6088,10 +5580,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "black",
@@ -6127,10 +5616,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "blue",
@@ -6179,10 +5665,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "black",
@@ -6224,10 +5707,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "red",
@@ -6271,10 +5751,7 @@
     "sold": 24,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "18",
-      "20"
-    ],
+    "sizes": ["18", "20"],
     "variation": [
       {
         "color": "red",
@@ -6898,12 +6375,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "grey",
@@ -6945,12 +6417,7 @@
     "sold": 26,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "red",
@@ -6992,12 +6459,7 @@
     "sold": 16,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "yellow",
@@ -7039,12 +6501,7 @@
     "sold": 26,
     "quantity": 64,
     "quantityPurchase": 1,
-    "sizes": [
-      "S",
-      "M",
-      "L",
-      "XL"
-    ],
+    "sizes": ["S", "M", "L", "XL"],
     "variation": [
       {
         "color": "black",
@@ -7086,9 +6543,7 @@
     "sold": 42,
     "quantity": 80,
     "quantityPurchase": 1,
-    "sizes": [
-      "freesize"
-    ],
+    "sizes": ["freesize"],
     "variation": [
       {
         "color": "green",
@@ -7132,10 +6587,7 @@
     "sold": 8,
     "quantity": 70,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7185,10 +6637,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7238,10 +6687,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7291,10 +6737,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7344,10 +6787,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7397,10 +6837,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7450,10 +6887,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7503,10 +6937,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7556,10 +6987,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7609,10 +7037,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "purple",
@@ -7662,10 +7087,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "white",
@@ -7707,10 +7129,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "white",
@@ -7752,10 +7171,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "black",
@@ -7791,10 +7207,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "black",
@@ -7830,10 +7243,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "black",
@@ -7870,10 +7280,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "black",
@@ -7910,10 +7317,7 @@
     "sold": 4,
     "quantity": 50,
     "quantityPurchase": 1,
-    "sizes": [
-      "64GB",
-      "128GB"
-    ],
+    "sizes": ["64GB", "128GB"],
     "variation": [
       {
         "color": "black",
