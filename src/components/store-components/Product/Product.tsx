@@ -805,7 +805,7 @@ export default function Product({ data, type, style }: ProductProps) {
               className="aspect-square w-full"
               width={5000}
               height={5000}
-              src={data.thumbImage[0]}
+              src={data.thumbImage[0] ?? ''}
               alt="img"
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
