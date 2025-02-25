@@ -2,7 +2,6 @@
 
 import { create } from "zustand";
 import { readAllImages } from "../actions/file";
-import { v4 as uuid } from "uuid";
 
 export interface ProductImage {
   id: string;
@@ -12,8 +11,8 @@ export interface ProductImage {
 interface ProductImageStore {
   images: ProductImage[];
   loadImages: (filter: string) => Promise<void>; // Load images with optional filter
-  setImages: (images: { id: string; src: string }[]) => void;
-  updateImages: (images: string[]) => void;
+  setImages: (images: ProductImage[]) => void;
+  updateImages: (images: ProductImage[]) => void;
   removeOldImage: (src: string) => void;
 }
 
@@ -24,12 +23,11 @@ export const useProductImageStore = create<ProductImageStore>((set) => ({
   loadImages: async (filter: string) => {
     try {
       const images = await readAllImages(filter);
-      images.map((image) => {
-        set((state) => ({
-          images: [...state.images, { id: uuid(), src: image }],
-        }));
-      });
-      //   set({ images });
+      const imagesWithId = images.map((image) => ({
+        id: image.public_id,
+        src: image.secure_url,
+      }));
+      set({ images: imagesWithId });
     } catch (error) {
       console.error("Failed to load images:", error);
     }
@@ -43,7 +41,7 @@ export const useProductImageStore = create<ProductImageStore>((set) => ({
   updateImages: (newImages) => {
     newImages.map((image) => {
       set((state) => ({
-        images: [...state.images, { id: uuid(), src: image }],
+        images: [...state.images, image],
       }));
     });
     // set((state) => ({ images: [...state.images, ] }));

@@ -8,11 +8,12 @@ import RichEditor from "./rich-editor";
 import { v4 as uuid } from "uuid";
 import { Label } from "./ui/label";
 import DndImageGallery from "./rich-editor/DndImageGallery";
-import { useProductImageStore } from "@/app/context/ProductImageProvider";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "./ui/textarea";
 import PreSelectedCategory from "./PreSelectedCategory";
+import { useProductImageStore } from "@/app/context/ProductImageProvider";
+import { renameImages } from "@/app/actions/file";
 
 export default function EditProductForm({ productId }: { productId: string }) {
   const [product] = api.product.getProductById.useSuspenseQuery({
@@ -35,12 +36,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
     product?.categoryId ?? "",
   );
 
-  const [showImageGallery, setShowImageGallery] = useState("");
-  const { loadImages } = useProductImageStore();
+  const { loadImages, images } = useProductImageStore();
 
-  const handleShowImageGallery = (state: string) => {
-    setShowImageGallery(state);
-  };
+  const [showImageGallery, setShowImageGallery] = useState("");
 
   useEffect(() => {
     void (async () => {
@@ -51,6 +49,10 @@ export default function EditProductForm({ productId }: { productId: string }) {
       }
     })();
   }, [loadImages, imageId]);
+
+  const handleShowImageGallery = (state: string) => {
+    setShowImageGallery(state);
+  };
 
   useEffect(() => {
     const name = title
@@ -75,8 +77,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
     },
   });
 
-  const handleSubmit = (content: string) => {
+  const handleSubmit = async (content: string) => {
     setPending(true);
+    await renameImages(images)
     addProduct.mutate({
       id: productId,
       imageId,

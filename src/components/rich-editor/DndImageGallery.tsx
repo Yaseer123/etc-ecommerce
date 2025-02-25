@@ -30,7 +30,6 @@ export default function DndImageGallery({
   const { images, setImages, updateImages, removeOldImage } =
     useProductImageStore();
   const [isUploading, setIsUploading] = useState(false);
-  //   const [images, setImages] = useState<ImageItem[]>(initialImages);
 
   const handleClose = () => {
     onClose("");
@@ -68,7 +67,7 @@ export default function DndImageGallery({
               formData.append("file", file);
               const res = await uploadFile(formData, imageId);
               if (res && updateImages) {
-                updateImages([res.secure_url]);
+                updateImages([{ src: res.secure_url, id: res.public_id }]);
               }
             } catch (error) {
               console.log(error);

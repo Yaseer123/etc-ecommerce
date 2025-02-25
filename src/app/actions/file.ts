@@ -46,7 +46,9 @@ export const readAllImages = async (filter: string) => {
       type: "upload",
     })) as { resources: UploadApiResponse[] };
 
-    return resources.map(({ secure_url }) => secure_url);
+    return resources
+      .sort((a, b) => a.public_id.localeCompare(b.public_id))
+      .map(({ secure_url, public_id }) => ({ secure_url, public_id }));
   } catch (error) {
     console.log(error);
   }
@@ -56,6 +58,17 @@ export const readAllImages = async (filter: string) => {
 
 export const removeImage = async (id: string) => {
   await cloud.uploader.destroy(id);
+};
+
+export const renameImages = async (images: { id: string; src: string }[]) => {
+  for (let i = 0; i < images.length; i++) {
+    const publicId = images[i]?.id;
+    if (!publicId) continue;
+    const parts = publicId.split("/");
+    const prefix = parts.slice(0, -1).join("/");
+    const newPublicId = `${prefix}/${String(i + 1).padStart(3, "0")}_${parts.pop()}`;
+    await cloud.uploader.rename(publicId, newPublicId);
+  }
 };
 
 // remove image with prefix

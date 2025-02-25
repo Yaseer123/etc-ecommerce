@@ -26,6 +26,7 @@ import { useProductImageStore } from "@/app/context/ProductImageProvider";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "./ui/textarea";
+import { renameImages } from "@/app/actions/file";
 
 export default function AddProductForm() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function AddProductForm() {
   const [categoryId, setCategoryId] = useState<string>("");
 
   const [showImageGallery, setShowImageGallery] = useState("");
-  const { loadImages } = useProductImageStore();
+  const { loadImages, images } = useProductImageStore();
 
   const handleShowImageGallery = (state: string) => {
     setShowImageGallery(state);
@@ -82,8 +83,9 @@ export default function AddProductForm() {
 
   const [categories] = api.category.getAll.useSuspenseQuery();
 
-  const handleSubmit = (content: string) => {
+  const handleSubmit = async (content: string) => {
     setPending(true);
+    await renameImages(images);
     addProduct.mutate({
       imageId,
       descriptionImageId,
