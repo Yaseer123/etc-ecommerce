@@ -14,8 +14,10 @@ import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
-
-export default function Menu() {
+interface Props {
+    props?: string;
+}
+export default function Menu({ props }: Props) {
   const pathname = usePathname();
   const { openLoginPopup, handleLoginPopup } = useLoginPopup();
   const { openShopDepartmentPopup, handleShopDepartmentPopup } =
@@ -71,7 +73,7 @@ export default function Menu() {
   return (
     <>
       <div
-        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500`}
+        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 ${props}`}
       >
         <div
           className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px]`}
@@ -1474,7 +1476,7 @@ export default function Menu() {
         </div>
       </div>
 
-      <div id="menu-mobile" className={`${openMenuMobile ? "open" : ""}`}>
+      {/* <div id="menu-mobile" className={`${openMenuMobile ? "open" : ""}`}>
         <div className="menu-container h-full bg-white">
           <div className="container h-full">
             <div className="menu-main h-full overflow-hidden">
@@ -2683,7 +2685,7 @@ export default function Menu() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

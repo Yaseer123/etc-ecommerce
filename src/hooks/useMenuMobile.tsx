@@ -4,6 +4,7 @@ const useMenuMobile = () => {
   const [openMenuMobile, setOpenMenuMobile] = useState(false);
 
   const handleMenuMobile = () => {
+    
     setOpenMenuMobile((toggleOpen) => !toggleOpen);
   };
 
