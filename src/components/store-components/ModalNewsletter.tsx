@@ -33,8 +33,8 @@ export default function ModalNewsletter() {
             e.stopPropagation();
           }}
         >
-          <div className="main-content bg-white flex w-full overflow-hidden rounded-[20px]">
-            <div className="left flex flex-col items-center justify-center gap-5 bg-green py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
+          <div className="main-content flex w-full overflow-hidden rounded-[20px]">
+            <div className="left bg-green_custom flex flex-col items-center justify-center gap-5 py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
               <div className="text-center text-xs font-semibold uppercase">
                 Special Offer
               </div>
@@ -47,7 +47,7 @@ export default function ModalNewsletter() {
                 New customers save <span className="text-red">30%</span>
                 with the code
               </div>
-              <div className="text-button-uppercase rounded-lg bg-white px-4 py-2 text-red">
+              <div className="text-button-uppercase text-red rounded-lg bg-white px-4 py-2">
                 GET20off
               </div>
               <div className="button-main w-fit bg-black uppercase text-white hover:bg-white">
@@ -67,7 +67,7 @@ export default function ModalNewsletter() {
                   <>
                     <div
                       className="product-item item flex items-center justify-between gap-3 border-b border-line pb-5"
-                      key={index + item.id}
+                      key={index}
                     >
                       <div
                         className="infor flex cursor-pointer items-center gap-5"
@@ -95,7 +95,7 @@ export default function ModalNewsletter() {
                         </div>
                       </div>
                       <button
-                        className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-green sm:px-5 sm:py-3"
+                        className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-green_custom sm:px-5 sm:py-3"
                         onClick={() => openQuickView(item)}
                       >
                         QUICK VIEW

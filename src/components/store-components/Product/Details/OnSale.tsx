@@ -836,7 +836,7 @@ const OnSale: React.FC<Props> = ({ data, productId }) => {
                   <del>${productMain.originPrice}.00</del>
                 </div>
                 {productMain.originPrice && (
-                  <div className="product-sale caption2 bg-green inline-block rounded-full px-3 py-0.5 font-semibold">
+                  <div className="product-sale caption2 inline-block rounded-full bg-green_custom px-3 py-0.5 font-semibold">
                     -{percentSale}%
                   </div>
                 )}
@@ -894,7 +894,7 @@ const OnSale: React.FC<Props> = ({ data, productId }) => {
                   <div className="right w-3/4">
                     <div className="progress relative h-2 overflow-hidden rounded-full bg-line">
                       <div
-                        className={`percent-sold bg-red absolute left-0 top-0 h-full`}
+                        className={`percent-sold absolute left-0 top-0 h-full bg-red_custom`}
                         style={{
                           width: `${Math.floor((productMain.sold / productMain.quantity) * 100)}%`,
                         }}

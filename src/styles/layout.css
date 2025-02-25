@@ -112,7 +112,7 @@
 }
 
 .image-comparison__figure::before {
-  @apply bg-basePale absolute left-0 top-0 h-full w-full content-[''];
+  @apply absolute left-0 top-0 h-full w-full bg-basePale content-[''];
 }
 
 .image-comparison__figure:not(.image-comparison__figure--overlay) {
@@ -623,14 +623,13 @@
   @apply flex flex-col justify-between bg-surface;
 }
 
-
 /* Text has line before style */
 .has-line-before {
   @apply relative;
 }
 
 .has-line-before::before {
-  @apply absolute left-0 bottom-0 h-[1px] w-0 bg-black transition-all duration-300 ease-in-out content-[''];
+  @apply absolute bottom-0 left-0 h-[1px] w-0 bg-black transition-all duration-300 ease-in-out content-[''];
 }
 
 .has-line-before.before-white::before {

@@ -62,20 +62,20 @@
     @apply -right-[11px] left-auto border-l border-r-0 border-[var(--line)];
   }
 
-  .cart-block .list-voucher .item.bg-green {
+  .cart-block .list-voucher .item.bg-green_custom {
     @apply border-[var(--green)];
   }
 
-  .cart-block .list-voucher .item.bg-green .border-line {
+  .cart-block .list-voucher .item.bg-green_custom .border-line {
     @apply border-[var(--white)];
   }
 
-  .cart-block .list-voucher .item.bg-green .button-main {
+  .cart-block .list-voucher .item.bg-green_custom .button-main {
     @apply bg-[var(--surface)] text-[var(--black)];
   }
 
-  .cart-block .list-voucher .item.bg-green .top::before,
-  .cart-block .list-voucher .item.bg-green .top::after {
+  .cart-block .list-voucher .item.bg-green_custom .top::before,
+  .cart-block .list-voucher .item.bg-green_custom .top::after {
     @apply border-[var(--green)];
   }
 
@@ -165,7 +165,7 @@
   }
 
   .top-nav .choose-type .list-option {
-    @apply duration-300 invisible absolute left-[-16px] top-full z-[102] translate-y-5 opacity-0 shadow-[0px_4px_10px_3px_rgba(0,0,0,0.15)] transition;
+    @apply invisible absolute left-[-16px] top-full z-[102] translate-y-5 opacity-0 shadow-[0px_4px_10px_3px_rgba(0,0,0,0.15)] transition duration-300;
   }
 
   .top-nav .choose-type .list-option::before {
@@ -214,7 +214,7 @@
   }
 
   .menu-main ul li .sub-menu {
-    @apply duration-300 invisible absolute left-0 top-full z-[100] translate-y-5 whitespace-nowrap bg-[var(--white)] opacity-0 shadow-[0px_4px_10px_3px_rgba(0,0,0,0.15)] transition-all;
+    @apply invisible absolute left-0 top-full z-[100] translate-y-5 whitespace-nowrap bg-[var(--white)] opacity-0 shadow-[0px_4px_10px_3px_rgba(0,0,0,0.15)] transition-all duration-300;
   }
 
   .menu-main ul li:hover > .sub-menu {
@@ -248,7 +248,7 @@
 
   /* Search */
   .search-block {
-    @apply duration-300 invisible fixed inset-0 z-[200] flex items-center justify-center bg-black/40 opacity-0 transition-all;
+    @apply invisible fixed inset-0 z-[200] flex items-center justify-center bg-black/40 opacity-0 transition-all duration-300;
   }
 
   .search-block.open {
@@ -256,7 +256,7 @@
   }
 
   .search-block .search-main {
-    @apply duration-300 invisible relative -translate-y-10 bg-[var(--white)] opacity-0 transition-all;
+    @apply invisible relative -translate-y-10 bg-[var(--white)] opacity-0 transition-all duration-300;
   }
 
   .search-block.open .search-main {
@@ -264,7 +264,7 @@
   }
 
   .search-block .search-main .result {
-    @apply duration-300 invisible absolute left-0 top-full max-h-96 w-full translate-y-4 overflow-y-auto bg-[var(--white)] opacity-0 transition-all;
+    @apply invisible absolute left-0 top-full max-h-96 w-full translate-y-4 overflow-y-auto bg-[var(--white)] opacity-0 transition-all duration-300;
   }
 
   .search-block .search-main .result.open {
@@ -273,7 +273,7 @@
 
   /* Cart header */
   .header-middle .cart-block {
-    @apply duration-300 invisible absolute right-0 top-full translate-y-4 opacity-0 transition-all;
+    @apply invisible absolute right-0 top-full translate-y-4 opacity-0 transition-all duration-300;
   }
 
   .header-middle .cart-block.open {
@@ -286,7 +286,7 @@
 
   /* Menu mobile */
   .menu-mobile {
-    @apply duration-300 invisible fixed inset-0 z-[200] bg-black/40 opacity-0 transition-all;
+    @apply invisible fixed inset-0 z-[200] bg-black/40 opacity-0 transition-all duration-300;
   }
 
   .menu-mobile.open {
@@ -294,7 +294,7 @@
   }
 
   .menu-mobile .menu-main {
-    @apply duration-300 invisible -translate-x-full opacity-0 transition-all;
+    @apply invisible -translate-x-full opacity-0 transition-all duration-300;
   }
 
   .menu-mobile.open .menu-main {
@@ -311,7 +311,7 @@
   }
 
   .menu-mobile .menu-main ul li .sub-menu {
-    @apply duration-300 max-h-0 overflow-hidden transition-all;
+    @apply max-h-0 overflow-hidden transition-all duration-300;
   }
 
   .menu-mobile .menu-main ul li.open > .sub-menu {
@@ -334,8 +334,6 @@
   .swiper.overflow-unset {
     @apply overflow-visible;
   }
-
-
 
   /* Slider - Swiper Pagination */
   .swiper {
@@ -396,7 +394,7 @@
   /* Swiper Navigation */
   .section-swiper-navigation .swiper-button-prev,
   .section-swiper-navigation .swiper-button-next {
-    @apply duration-300 h-[60px] w-[60px] rounded-full bg-baseLight text-baseDark transition-all;
+    @apply h-[60px] w-[60px] rounded-full bg-baseLight text-baseDark transition-all duration-300;
   }
 
   .section-swiper-navigation .swiper-button-prev::after {
@@ -484,7 +482,7 @@
 
   /* Modal classes */
   .login-popup {
-    @apply duration-300 invisible z-[11] translate-y-[30px] opacity-0 transition-all ease-in-out;
+    @apply invisible z-[11] translate-y-[30px] opacity-0 transition-all duration-300 ease-in-out;
   }
 
   .login-popup.open {
@@ -511,7 +509,7 @@
   .modal-cart-block,
   .modal-wishlist-block,
   .modal-search-block {
-    @apply duration-300 invisible fixed inset-0 z-[101] bg-black/60 opacity-0 transition-all ease-in-out;
+    @apply invisible fixed inset-0 z-[101] bg-black/60 opacity-0 transition-all duration-300 ease-in-out;
   }
 
   .modal-newsletter:has(.modal-newsletter-main.open),
@@ -526,7 +524,7 @@
   }
 
   .modal-newsletter-main {
-    @apply duration-500 invisible w-full -translate-y-full opacity-0 transition-all ease-in-out;
+    @apply invisible w-full -translate-y-full opacity-0 transition-all duration-500 ease-in-out;
   }
 
   .modal-newsletter-main .right {
@@ -643,7 +641,7 @@
 
   /* Compare modal styles */
   .modal-compare-block {
-    @apply duration-300 invisible fixed bottom-0 left-0 z-[101] h-[200px] w-full bg-black/60 opacity-0 transition-all ease-in-out;
+    @apply invisible fixed bottom-0 left-0 z-[101] h-[200px] w-full bg-black/60 opacity-0 transition-all duration-300 ease-in-out;
   }
 
   .modal-compare-block:has(.modal-compare-main.open) {
@@ -746,168 +744,176 @@
   }
 }
 
-
 /* Shop */
 @layer components {
-    /* Sidebar */
-    .sidebar.style-dropdown {
-        @apply absolute left-0 top-10 z-[3] w-full origin-top scale-y-0 py-5 opacity-0 invisible transition-all duration-300 ease-in-out;
-    }
+  /* Sidebar */
+  .sidebar.style-dropdown {
+    @apply invisible absolute left-0 top-10 z-[3] w-full origin-top scale-y-0 py-5 opacity-0 transition-all duration-300 ease-in-out;
+  }
 
-    .sidebar.style-canvas {
-        @apply fixed left-0 top-0 z-[102] h-screen w-screen overflow-hidden bg-black/50 opacity-0 invisible transition-all duration-300 ease-in-out delay-200;
-    }
+  .sidebar.style-canvas {
+    @apply invisible fixed left-0 top-0 z-[102] h-screen w-screen overflow-hidden bg-black/50 opacity-0 transition-all delay-200 duration-300 ease-in-out;
+  }
 
-    .sidebar.style-canvas .sidebar-main {
-        @apply  h-screen max-h-screen w-80 overflow-x-auto bg-[var(--white)] p-6 transition-all duration-500 ease-in-out;
-    }
+  .sidebar.style-canvas .sidebar-main {
+    @apply h-screen max-h-screen w-80 overflow-x-auto bg-[var(--white)] p-6 transition-all duration-500 ease-in-out;
+  }
 
-    .sidebar.open {
-        @apply visible opacity-100;
-    }
+  .sidebar.open {
+    @apply visible opacity-100;
+  }
 
-    .sidebar.open.style-dropdown {
-        @apply scale-y-100;
-    }
+  .sidebar.open.style-dropdown {
+    @apply scale-y-100;
+  }
 
-    .sidebar.open.style-canvas .sidebar-main {
-        @apply ml-0;
-    }
+  .sidebar.open.style-canvas .sidebar-main {
+    @apply ml-0;
+  }
 
-    /* Choose Layout */
-    .choose-layout .item {
-        @apply transition-all duration-300 ease-in-out hover:border-[var(--black)];
-    }
+  /* Choose Layout */
+  .choose-layout .item {
+    @apply transition-all duration-300 ease-in-out hover:border-[var(--black)];
+  }
 
-    .choose-layout .item.active {
-        @apply bg-[var(--black)] border-[var(--black)];
-    }
+  .choose-layout .item.active {
+    @apply border-[var(--black)] bg-[var(--black)];
+  }
 
-    .choose-layout .item.active > div > span {
-        @apply bg-[var(--white)];
-    }
+  .choose-layout .item.active > div > span {
+    @apply bg-[var(--white)];
+  }
 
-    /* Check Sale */
-    .check-sale input {
-        @apply hidden;
-    }
+  /* Check Sale */
+  .check-sale input {
+    @apply hidden;
+  }
 
-    .check-sale label {
-        @apply relative pl-7;
-    }
+  .check-sale label {
+    @apply relative pl-7;
+  }
 
-    .check-sale label::before {
-        @apply absolute left-0 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-sm border border-[var(--line)] content-[''];
-    }
+  .check-sale label::before {
+    @apply absolute left-0 top-1/2 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-sm border border-[var(--line)] content-[''];
+  }
 
-    .check-sale input[type="checkbox"]:checked + label::before {
-        @apply border-[var(--black)] content-['✔'];
-    }
+  .check-sale input[type="checkbox"]:checked + label::before {
+    @apply border-[var(--black)] content-['✔'];
+  }
 
-    /* List Types & Brands */
-    .list-type .item:not(:first-child),
-    .list-brand .brand-item:not(:first-child) {
-        @apply mt-3;
-    }
+  /* List Types & Brands */
+  .list-type .item:not(:first-child),
+  .list-brand .brand-item:not(:first-child) {
+    @apply mt-3;
+  }
 
-    .list-type .item.active .text-secondary,
-    .list-type .item:hover .text-secondary,
-    .list-type .item.active .text-secondary2,
-    .list-type .item:hover .text-secondary2,
-    .list-brand .brand-item.active .text-secondary,
-    .list-brand .brand-item:hover .text-secondary,
-    .list-brand .brand-item.active .text-secondary2,
-    .list-brand .brand-item:hover .text-secondary2 {
-        @apply text-[var(--black)] transition-all duration-300 ease-in-out;
-    }
+  .list-type .item.active .text-secondary,
+  .list-type .item:hover .text-secondary,
+  .list-type .item.active .text-secondary2,
+  .list-type .item:hover .text-secondary2,
+  .list-brand .brand-item.active .text-secondary,
+  .list-brand .brand-item:hover .text-secondary,
+  .list-brand .brand-item.active .text-secondary2,
+  .list-brand .brand-item:hover .text-secondary2 {
+    @apply text-[var(--black)] transition-all duration-300 ease-in-out;
+  }
 
-    /* RC Slider */
-    .rc-slider .rc-slider-rail {
-        @apply bg-[var(--line)];
-    }
+  /* RC Slider */
+  .rc-slider .rc-slider-rail {
+    @apply bg-[var(--line)];
+  }
 
-    .rc-slider .rc-slider-track,
-    .rc-slider .rc-slider-tracks {
-        @apply bg-[var(--black)];
-    }
+  .rc-slider .rc-slider-track,
+  .rc-slider .rc-slider-tracks {
+    @apply bg-[var(--black)];
+  }
 
-    .rc-slider .rc-slider-handle,
-    .rc-slider .rc-slider-handle:hover,
-    .rc-slider .rc-slider-handle.active {
-        @apply border-[3px] border-[var(--black)] bg-[var(--white)] opacity-100;
-    }
+  .rc-slider .rc-slider-handle,
+  .rc-slider .rc-slider-handle:hover,
+  .rc-slider .rc-slider-handle.active {
+    @apply border-[3px] border-[var(--black)] bg-[var(--white)] opacity-100;
+  }
 
-    .rc-slider .rc-slider-handle-dragging {
-        @apply border-[var(--black)] shadow-none;
-    }
+  .rc-slider .rc-slider-handle-dragging {
+    @apply border-[var(--black)] shadow-none;
+  }
 
-    /* Block Input */
-    .block-input {
-        @apply relative h-5 w-5 rounded border border-[var(--secondary2)];
-    }
+  /* Block Input */
+  .block-input {
+    @apply relative h-5 w-5 rounded border border-[var(--secondary2)];
+  }
 
-    .block-input input {
-        @apply absolute inset-0 z-[1] cursor-pointer opacity-0;
-    }
+  .block-input input {
+    @apply absolute inset-0 z-[1] cursor-pointer opacity-0;
+  }
 
-    .block-input .icon-checkbox {
-        @apply absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 opacity-0;
-    }
+  .block-input .icon-checkbox {
+    @apply absolute left-1/2 top-1/2 h-6 w-6 -translate-x-1/2 -translate-y-1/2 opacity-0;
+  }
 
-    .block-input input:checked + .icon-checkbox {
-        @apply opacity-100;
-    }
+  .block-input input:checked + .icon-checkbox {
+    @apply opacity-100;
+  }
 
-    /* Pagination */
-    .list-pagination .pagination {
-        @apply flex items-center gap-[10px];
-    }
+  /* Pagination */
+  .list-pagination .pagination {
+    @apply flex items-center gap-[10px];
+  }
 
-    .list-pagination .pagination li {
-        @apply h-11 w-11 rounded-md border border-[var(--line)] transition-all duration-300 ease-in-out;
-    }
+  .list-pagination .pagination li {
+    @apply h-11 w-11 rounded-md border border-[var(--line)] transition-all duration-300 ease-in-out;
+  }
 
-    .list-pagination .pagination li a {
-        @apply flex h-full w-full items-center justify-center text-base font-medium leading-[26px];
-    }
+  .list-pagination .pagination li a {
+    @apply flex h-full w-full items-center justify-center text-base font-medium leading-[26px];
+  }
 
-    .list-pagination .pagination li:hover,
-    .list-pagination .pagination li.active {
-        @apply bg-[var(--black)] text-[var(--white)];
-    }
+  .list-pagination .pagination li:hover,
+  .list-pagination .pagination li.active {
+    @apply bg-[var(--black)] text-[var(--white)];
+  }
 
-    .list-pagination .pagination li.disabled {
-        @apply hidden;
-    }
+  .list-pagination .pagination li.disabled {
+    @apply hidden;
+  }
 
-    /* Shop Layout */
-    .shop-square .product-item .product-thumb .product-img {
-        @apply aspect-[unset];
-    }
+  /* Shop Layout */
+  .shop-square .product-item .product-thumb .product-img {
+    @apply aspect-[unset];
+  }
 
-    .list-product-block:has(.active.five-col) .list-product .product-item .product-thumb .list-action {
-        @apply grid-cols-1;
-    }
+  .list-product-block:has(.active.five-col)
+    .list-product
+    .product-item
+    .product-thumb
+    .list-action {
+    @apply grid-cols-1;
+  }
 
-    .list-product-block:has(.active.five-col) .list-product .product-item .product-thumb .list-action .button-main {
-        @apply whitespace-nowrap px-0;
-    }
+  .list-product-block:has(.active.five-col)
+    .list-product
+    .product-item
+    .product-thumb
+    .list-action
+    .button-main {
+    @apply whitespace-nowrap px-0;
+  }
 }
 
 @screen sm {
-    @media (max-width: 400px) {
-        .sidebar.style-canvas .sidebar-main {
-            @apply w-[280px];
-        }
+  @media (max-width: 400px) {
+    .sidebar.style-canvas .sidebar-main {
+      @apply w-[280px];
     }
+  }
 }
 
 @screen md {
-    .list-pagination .pagination li {
-        @apply h-9 w-9;
-    }
-    
-    .list-pagination .pagination li a {
-        @apply text-sm leading-6;
-    }
+  .list-pagination .pagination li {
+    @apply h-9 w-9;
+  }
+
+  .list-pagination .pagination li a {
+    @apply text-sm leading-6;
+  }
 }

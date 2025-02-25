@@ -33,7 +33,7 @@ export default function BlogItem({ data, type }: BlogProps) {
               />
             </div>
             <div className="blog-infor mt-7">
-              <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green px-2.5 py-1">
+              <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green_custom px-2.5 py-1">
                 {data.tag}
               </div>
               <div className="heading6 blog-title mt-3 duration-300">
@@ -69,7 +69,7 @@ export default function BlogItem({ data, type }: BlogProps) {
                   />
                 </div>
                 <div className="blog-infor">
-                  <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green px-2.5 py-1">
+                  <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green_custom px-2.5 py-1">
                     {data.tag}
                   </div>
                   <div className="heading6 blog-title mt-3 duration-300">
@@ -109,7 +109,7 @@ export default function BlogItem({ data, type }: BlogProps) {
                       />
                     </div>
                     <div className="blog-infor mt-7">
-                      <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green px-2.5 py-1">
+                      <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green_custom px-2.5 py-1">
                         {data.tag}
                       </div>
                       <div className="heading6 blog-title mt-3 duration-300">

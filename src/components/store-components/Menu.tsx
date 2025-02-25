@@ -99,7 +99,7 @@ export default function Menu() {
                 <div className="flex h-full w-full items-center">
                   <input
                     type="text"
-                    className="search-input border-line h-full w-full border px-4"
+                    className="search-input h-full w-full border border-line px-4"
                     placeholder="What are you looking for today?"
                     value={searchKeyword}
                     onChange={(e) => setSearchKeyword(e.target.value)}
@@ -149,7 +149,7 @@ export default function Menu() {
                       >
                         Dashboard
                       </Link>
-                      <div className="bottom border-line mt-4 border-t pt-4"></div>
+                      <div className="bottom mt-4 border-t border-line pt-4"></div>
                       <Link href={"#!"} className="body1 hover:underline">
                         Support
                       </Link>
@@ -176,7 +176,7 @@ export default function Menu() {
           </div>
         </div>
 
-        <div className="top-nav-menu border-line relative z-10 h-[44px] border-b border-t bg-white max-lg:hidden">
+        <div className="top-nav-menu relative z-10 h-[44px] border-b border-t border-line bg-white max-lg:hidden">
           <div className="container h-full">
             <div className="top-nav-menu-main flex h-full items-center justify-between">
               <div className="left flex h-full items-center">
@@ -851,7 +851,7 @@ export default function Menu() {
                                 onClick={() => handleTypeClick("swimwear")}
                               >
                                 <div className="text-content relative z-[1] py-14 pl-8">
-                                  <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                                  <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
                                     Save $10
                                   </div>
                                   <div className="heading6 mt-2">
@@ -876,7 +876,7 @@ export default function Menu() {
                                 onClick={() => handleTypeClick("accessories")}
                               >
                                 <div className="text-content relative z-[1] py-14 pl-8">
-                                  <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                                  <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
                                     Save $10
                                   </div>
                                   <div className="heading6 mt-2">
@@ -1480,7 +1480,7 @@ export default function Menu() {
             <div className="menu-main h-full overflow-hidden">
               <div className="heading relative flex items-center justify-center py-2">
                 <div
-                  className="close-menu-mobile-btn bg-surface absolute left-0 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full"
+                  className="close-menu-mobile-btn absolute left-0 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-surface"
                   onClick={handleMenuMobile}
                 >
                   <Icon.X size={14} />
@@ -1500,7 +1500,7 @@ export default function Menu() {
                 <input
                   type="text"
                   placeholder="What are you looking for?"
-                  className="border-line h-12 w-full rounded-lg border pl-10 pr-4 text-sm"
+                  className="h-12 w-full rounded-lg border border-line pl-10 pr-4 text-sm"
                 />
               </div>
               <div className="list-nav mt-6">
@@ -2063,7 +2063,7 @@ export default function Menu() {
                             onClick={() => handleTypeClick("accessories")}
                           >
                             <div className="text-content relative z-[1] py-14 pl-8">
-                              <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                              <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
                                 Save $10
                               </div>
                               <div className="heading6 mt-2">

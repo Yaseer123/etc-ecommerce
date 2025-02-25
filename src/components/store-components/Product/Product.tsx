@@ -98,12 +98,12 @@ export default function Product({ data, type, style }: ProductProps) {
           >
             <div className="product-thumb relative overflow-hidden rounded-2xl bg-white">
               {data.new && (
-                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green px-3 py-0.5">
+                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green_custom px-3 py-0.5">
                   New
                 </div>
               )}
               {data.sale && (
-                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red px-3 py-0.5 text-white">
+                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red_custom px-3 py-0.5 text-white">
                   Sale
                 </div>
               )}
@@ -466,7 +466,7 @@ export default function Product({ data, type, style }: ProductProps) {
               <div className="product-sold pb-2 sm:pb-4">
                 <div className="progress relative h-1.5 w-full overflow-hidden rounded-full bg-line">
                   <div
-                    className={`progress-sold absolute left-0 top-0 h-full bg-red`}
+                    className={`progress-sold bg-red absolute left-0 top-0 h-full`}
                     style={{ width: `${percentSold}%` }}
                   ></div>
                 </div>
@@ -542,7 +542,7 @@ export default function Product({ data, type, style }: ProductProps) {
                     <div className="product-origin-price caption1 text-secondary2">
                       <del>${data.originPrice}.00</del>
                     </div>
-                    <div className="product-sale caption1 inline-block rounded-full bg-green px-3 py-0.5 font-medium">
+                    <div className="product-sale caption1 inline-block rounded-full bg-green_custom px-3 py-0.5 font-medium">
                       -{percentSale}%
                     </div>
                   </>
@@ -588,12 +588,12 @@ export default function Product({ data, type, style }: ProductProps) {
                     className="product-thumb relative block overflow-hidden rounded-2xl bg-white max-sm:w-1/2"
                   >
                     {data.new && (
-                      <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green px-3 py-0.5">
+                      <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green_custom px-3 py-0.5">
                         New
                       </div>
                     )}
                     {data.sale && (
-                      <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red px-3 py-0.5 text-white">
+                      <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red_custom px-3 py-0.5 text-white">
                         Sale
                       </div>
                     )}
@@ -656,7 +656,7 @@ export default function Product({ data, type, style }: ProductProps) {
                           <del>${data.originPrice}.00</del>
                         </div>
                         {data.originPrice && (
-                          <div className="product-sale caption1 inline-block rounded-full bg-green px-3 py-0.5 font-medium">
+                          <div className="product-sale caption1 inline-block rounded-full bg-green_custom px-3 py-0.5 font-medium">
                             -{percentSale}%
                           </div>
                         )}

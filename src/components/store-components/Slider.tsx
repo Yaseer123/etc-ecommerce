@@ -125,7 +125,7 @@ export default function Slider() {
               onClick={() => handleTypeClick("swimwear")}
             >
               <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="text-button-uppercase inline-block rounded-sm bg-red px-2 py-0.5 text-white">
+                <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
                   Save $10
                 </div>
                 <div className="heading6 mt-2">
@@ -150,7 +150,7 @@ export default function Slider() {
               onClick={() => handleTypeClick("accessories")}
             >
               <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="text-button-uppercase inline-block rounded-sm bg-red px-2 py-0.5 text-white">
+                <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
                   Save $10
                 </div>
                 <div className="heading6 mt-2">

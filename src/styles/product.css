@@ -232,7 +232,7 @@
 }
 
 .add-wishlist-btn.active {
-  @apply bg-red-500;
+  @apply bg-red_custom;
 }
 
 .add-wishlist-btn.active svg {
@@ -339,7 +339,7 @@
 .tab-features-block.style-watch
   .section-swiper-navigation
   .swiper-button-next:hover {
-  @apply bg-green-500 text-black;
+  @apply bg-green_custom text-black;
 }
 
 .bg-black.style-watch .color-item.bg-black {
