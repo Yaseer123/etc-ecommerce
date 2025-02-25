@@ -19,6 +19,7 @@ import { FileUploader } from "react-drag-drop-files";
 import { removeImage, uploadFile } from "@/app/actions/file";
 import Image from "next/image";
 import { BiSolidTrash } from "react-icons/bi";
+import { Button } from "../ui/button";
 
 export default function DndImageGallery({
   imageId,
@@ -156,26 +157,31 @@ function SortableImage({
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="group relative overflow-hidden rounded-lg bg-white shadow-md"
-    >
-      <button
-        onClick={onDeleteClick}
-        className="absolute bottom-0 left-0 right-0 hidden flex-1 items-center justify-center bg-red-400 p-2 text-white group-hover:flex"
+    <div className="group relative">
+      <Button
+        onClick={(e) => {
+          e.stopPropagation();
+          onDeleteClick();
+        }}
+        className="absolute bottom-0 left-0 right-0 z-50 hidden flex-1 items-center justify-center p-2 text-white group-hover:flex group-active:opacity-0"
       >
         <BiSolidTrash />
-      </button>
-      <Image
-        src={image.src}
-        alt={`Image ${image.id}`}
-        className="h-40 w-full rounded-lg object-cover"
-        height={400}
-        width={400}
-      />
+      </Button>
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className="group relative overflow-hidden rounded-lg bg-white shadow-md"
+      >
+        <Image
+          src={image.src}
+          alt={`Image ${image.id}`}
+          className="h-40 w-full rounded-lg object-cover"
+          height={400}
+          width={400}
+        />
+      </div>
     </div>
   );
 }
