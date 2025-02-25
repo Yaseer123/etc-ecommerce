@@ -28,10 +28,19 @@ export type ProductWithCategory = Product & {
 // Update Product Schema
 export const updateProductSchema = z.object({
   id: z.string().cuid("Invalid product ID"),
-  name: z.string().min(2).optional(),
-  description: z.string().optional(),
-  price: z.number().positive().optional(),
-  categoryId: z.string().cuid().optional(),
+  title: z.string().min(2, "Product name must be at least 2 characters"),
+  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  shortDescription: z
+    .string()
+    .min(2, "Short description must be at least 2 characters"),
+  description: z.string().nullable(),
+  price: z.number().positive("Price must be a positive number"),
+  categoryId: z.string().cuid("Invalid category ID"),
+  imageId: z.string().uuid("Invalid image ID"),
+  descriptionImageId: z
+    .string()
+    .uuid("Invalid description image ID")
+    .optional(),
 });
 
 export type UpdateProduct = z.infer<typeof updateProductSchema>;

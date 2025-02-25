@@ -4,6 +4,7 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
+import { z } from "zod";
 
 export const productRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
@@ -13,6 +14,19 @@ export const productRouter = createTRPCRouter({
 
     return products;
   }),
+  getProductById: publicProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const product = await ctx.db.product.findUnique({
+        where: { id: input.id },
+      });
+
+      return product;
+    }),
   getProductWithCategoryName: publicProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.product.findMany({
       include: {

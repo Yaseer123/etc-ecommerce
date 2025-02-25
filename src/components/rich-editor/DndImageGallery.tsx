@@ -18,7 +18,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { FileUploader } from "react-drag-drop-files";
 import { removeImage, uploadFile } from "@/app/actions/file";
 import Image from "next/image";
-import GalleryImage from "../GalleryImage";
+import { BiSolidTrash } from "react-icons/bi";
 
 export default function DndImageGallery({
   imageId,
@@ -113,11 +113,12 @@ export default function DndImageGallery({
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={images} strategy={rectSortingStrategy}>
-              {/* <div className="grid grid-cols-2 gap-4 md:grid-cols-4"> */}
               {images.map((image) => (
-                <GalleryImage
+                <SortableImage
                   key={image.id}
+                  image={image}
                   onDeleteClick={async () => {
+                    console.log("test");
                     if (confirm("Are you sure?")) {
                       const id = image.src
                         .split("/")
@@ -130,11 +131,8 @@ export default function DndImageGallery({
                       removeOldImage(image.src);
                     }
                   }}
-                >
-                  <SortableImage key={image.id} image={image} />
-                </GalleryImage>
+                />
               ))}
-              {/* </div> */}
             </SortableContext>
           </DndContext>
         </div>
@@ -143,7 +141,13 @@ export default function DndImageGallery({
   );
 }
 
-function SortableImage({ image }: { image: ProductImage }) {
+function SortableImage({
+  image,
+  onDeleteClick,
+}: {
+  image: ProductImage;
+  onDeleteClick: () => void;
+}) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: image.id });
 
@@ -160,6 +164,12 @@ function SortableImage({ image }: { image: ProductImage }) {
       {...listeners}
       className="group relative overflow-hidden rounded-lg bg-white shadow-md"
     >
+      <button
+        onClick={onDeleteClick}
+        className="absolute bottom-0 left-0 right-0 hidden flex-1 items-center justify-center bg-red-400 p-2 text-white group-hover:flex"
+      >
+        <BiSolidTrash />
+      </button>
       <Image
         src={image.src}
         alt={`Image ${image.id}`}

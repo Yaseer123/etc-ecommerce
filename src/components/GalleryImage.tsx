@@ -23,14 +23,13 @@ const GalleryImage: FC<Props> = ({
         >
           <BiSolidTrash />
         </button>
-        {onSelectClick && (
-          <button
-            onClick={onSelectClick}
-            className="flex flex-1 items-center justify-center bg-blue-400 p-2 text-white"
-          >
-            <BiCheck />
-          </button>
-        )}
+
+        <button
+          onClick={onSelectClick}
+          className="flex flex-1 items-center justify-center bg-blue-400 p-2 text-white"
+        >
+          <BiCheck />
+        </button>
       </div>
     </div>
   );

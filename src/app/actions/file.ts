@@ -9,10 +9,9 @@ cloud.config({
   secure: true,
 });
 
-
 export const uploadFile = async (
   data: FormData,
-  filter: string
+  filter: string,
 ): Promise<UploadApiResponse | undefined> => {
   const file = data.get("file");
 
@@ -22,7 +21,7 @@ export const uploadFile = async (
     return new Promise((resolve, reject) => {
       cloud.uploader
         .upload_stream(
-          { folder: filter, timeout: 60000 }, // Increased timeout
+          { folder: filter, timeout: 120000 }, // Increased timeout
           (error, result) => {
             if (error) {
               console.error("Upload Error:", error);
@@ -30,7 +29,7 @@ export const uploadFile = async (
             } else {
               resolve(result);
             }
-          }
+          },
         )
         .end(buffer);
     });
