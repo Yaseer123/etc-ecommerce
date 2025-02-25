@@ -3,24 +3,24 @@
 import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ProductType } from '@/type/ProductType'
+import {type ProductType } from '@/type/ProductType'
 import Product from '../Product'
-import Rate from '@/components/Other/Rate'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Thumbs, Scrollbar } from 'swiper/modules';
+import { Navigation, Thumbs } from 'swiper/modules';
 import 'swiper/css/bundle';
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import SwiperCore from 'swiper/core';
-import { useCart } from '@/context/CartContext'
-import { useModalCartContext } from '@/context/ModalCartContext'
-import { useWishlist } from '@/context/WishlistContext'
-import { useModalWishlistContext } from '@/context/ModalWishlistContext'
-import { useCompare } from '@/context/CompareContext'
-import { useModalCompareContext } from '@/context/ModalCompareContext'
-import { useRouter } from 'next/navigation';
-import ModalSizeguide from '@/components/Modal/ModalSizeguide'
+import { useCart } from '@/context/store-context/CartContext'
+import { useCompare } from '@/context/store-context/CompareContext'
+import { useModalCartContext } from '@/context/store-context/ModalCartContext'
+import { useModalCompareContext } from '@/context/store-context/ModalCompareContext'
+import { useModalWishlistContext } from '@/context/store-context/ModalWishlistContext'
+import useWishlist from '@/hooks/useWishlist'
+import { useRouter } from 'next/router'
+import Rate from '../../Rate'
 
-SwiperCore.use([Navigation, Thumbs]);
+
+
 
 interface Props {
     data: Array<ProductType>
@@ -28,6 +28,7 @@ interface Props {
 }
 
 const Sidebar: React.FC<Props> = ({ data, productId }) => {
+    SwiperCore.use([Navigation, Thumbs]);
     const swiperRef: any = useRef();
     const [photoIndex, setPhotoIndex] = useState(0)
     const [openPopupImg, setOpenPopupImg] = useState(false)
@@ -42,7 +43,7 @@ const Sidebar: React.FC<Props> = ({ data, productId }) => {
     const { openModalWishlist } = useModalWishlistContext()
     const { addToCompare, removeFromCompare, compareState } = useCompare();
     const { openModalCompare } = useModalCompareContext()
-    let productMain = data.find(product => product.id === productId) as ProductType
+    let productMain = data.find(product => product.id === productId)!
     if (productMain === undefined) {
         productMain = data[0]
     }

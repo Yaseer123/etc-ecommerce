@@ -33,7 +33,7 @@ export default function ModalNewsletter() {
             e.stopPropagation();
           }}
         >
-          <div className="main-content flex w-full overflow-hidden rounded-[20px]">
+          <div className="main-content bg-white flex w-full overflow-hidden rounded-[20px]">
             <div className="left flex flex-col items-center justify-center gap-5 bg-green py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
               <div className="text-center text-xs font-semibold uppercase">
                 Special Offer

@@ -19,6 +19,7 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      
       colors: {
         transparent: "transparent",
         green_custom: "#D2EF9A",
