@@ -51,19 +51,20 @@ const ImageGallery: FC<ImageGalleryProps> = ({
         </div>
         <FileUploader
           multiple={true}
-          handleChange={async (file: File) => {
+          handleChange={async (files: File[]) => {
             setIsUploading(true);
             try {
-              const formData = new FormData();
-              formData.append("file", file);
-              const res = await uploadFile(formData, imageId);
-              if (res && updateImages) {
-                updateImages([res.secure_url]);
+              for (const file of files) {
+                const formData = new FormData();
+                formData.append("file", file);
+                const res = await uploadFile(formData, imageId);
+                if (res && updateImages) {
+                  updateImages([res.secure_url]);
+                }
               }
             } catch (error) {
               console.log(error);
             }
-
             setIsUploading(false);
           }}
           name="file"

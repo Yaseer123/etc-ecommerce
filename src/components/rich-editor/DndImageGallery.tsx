@@ -61,19 +61,21 @@ export default function DndImageGallery({
           </button>
         </div>
         <FileUploader
-          handleChange={async (file: File) => {
+          multiple={true}
+          handleChange={async (files: File[]) => {
             setIsUploading(true);
             try {
-              const formData = new FormData();
-              formData.append("file", file);
-              const res = await uploadFile(formData, imageId);
-              if (res && updateImages) {
-                updateImages([{ src: res.secure_url, id: res.public_id }]);
+              for (const file of files) {
+                const formData = new FormData();
+                formData.append("file", file);
+                const res = await uploadFile(formData, imageId);
+                if (res && updateImages) {
+                  updateImages([{ src: res.secure_url, id: res.public_id }]);
+                }
               }
             } catch (error) {
               console.log(error);
             }
-
             setIsUploading(false);
           }}
           name="file"
@@ -157,7 +159,7 @@ function SortableImage({
   };
 
   return (
-    <div className="group relative">
+    <div className="group relative active:z-50">
       <Button
         onClick={(e) => {
           e.stopPropagation();

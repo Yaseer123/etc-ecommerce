@@ -10,7 +10,7 @@ export default function ProductDataTable() {
 
   const mappedData = productsWithCategory.map((product) => ({
     ...product,
-    descriptionImageId: product.descriptionImageId as string | undefined,
+    descriptionImageId: product.descriptionImageId ?? null,
   }));
 
   return (
