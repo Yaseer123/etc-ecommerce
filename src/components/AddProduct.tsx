@@ -1,10 +1,6 @@
 "use client";
 
-import { useForm, type UseFormSetValue } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -14,122 +10,177 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
-import { useRef, useState } from "react";
-import { type Product, productSchema } from "@/schemas/productSchema";
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { type CategoryTree } from "@/schemas/categorySchema";
+import RichEditor from "./rich-editor";
+import { v4 as uuid } from "uuid";
+import { Label } from "./ui/label";
+import DndImageGallery from "./rich-editor/DndImageGallery";
+import { useProductImageStore } from "@/app/context/ProductImageProvider";
+import { Button } from "./ui/button";
+import { useRouter } from "next/navigation";
+import { Textarea } from "./ui/textarea";
+import { renameImages } from "@/app/actions/file";
 
 export default function AddProductForm() {
+  const router = useRouter();
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(productSchema),
-  });
+
+  const [title, setTitle] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [slug, setSlug] = useState("");
+  const [pending, setPending] = useState(false);
+  const [imageId] = useState(uuid());
+  const [descriptionImageId] = useState(uuid());
+  const [categoryId, setCategoryId] = useState<string>("");
+
+  const [showImageGallery, setShowImageGallery] = useState("");
+  const { loadImages, images } = useProductImageStore();
+
+  const handleShowImageGallery = (state: string) => {
+    setShowImageGallery(state);
+  };
+
+  useEffect(() => {
+    void (async () => {
+      try {
+        await loadImages(imageId);
+      } catch (error) {
+        console.error("Failed to load images:", error);
+      }
+    })();
+  }, [loadImages, imageId]);
+
+  useEffect(() => {
+    const name = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
+
+    setSlug(name);
+  }, [setSlug, title]);
 
   const addProduct = api.product.add.useMutation({
     onSuccess: () => {
       toast.success("Product added successfully");
-      reset();
       selectedCategoriesRef.current = [];
+      router.push("/admin/product");
     },
     onError: (error) => {
       toast.error(error.message || "Failed to add product");
     },
     onSettled: () => {
-      setIsSubmitting(false);
+      setPending(false);
     },
   });
 
   const [categories] = api.category.getAll.useSuspenseQuery();
 
-  const onSubmit = (data: Product) => {
-    setIsSubmitting(true);
-    addProduct.mutate(data);
+  const handleSubmit = async (content: string) => {
+    setPending(true);
+    await renameImages(images);
+    addProduct.mutate({
+      imageId,
+      descriptionImageId,
+      title,
+      shortDescription,
+      price,
+      slug,
+      categoryId: categoryId,
+      description: content,
+    });
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="max-w-md space-y-4 rounded-lg shadow-sm"
+    <RichEditor
+      content=""
+      handleSubmit={handleSubmit}
+      imageId={descriptionImageId}
+      pending={pending}
+      submitButtonText="Add New Product"
     >
-      <h2 className="text-xl font-bold">Add New Product</h2>
-
-      {/* Product Name */}
-      <div>
-        <label className="text-sm font-medium">Product Name</label>
-        <Input {...register("name")} placeholder="Enter product name" />
-        {errors.name && (
-          <p className="text-sm text-red-500">{errors.name.message}</p>
-        )}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label>Product Title</Label>
+          <Input
+            type="text"
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label>Slug</Label>
+          <Input
+            type="text"
+            placeholder="Slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label>Short Description</Label>
+          <Textarea
+            placeholder="Short Description"
+            value={shortDescription}
+            onChange={(e) => setShortDescription(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label className="text-sm font-medium">Category</Label>
+          <CategorySelector
+            setCategoryId={setCategoryId}
+            categories={categories}
+            placeholder="Select Category"
+            selectedCategoriesRef={selectedCategoriesRef}
+            onCategoryChange={(level) => {
+              selectedCategoriesRef.current =
+                selectedCategoriesRef.current.slice(0, level + 1);
+            }}
+          />
+        </div>
+        <div>
+          <Label>Price</Label>
+          <Input
+            type="number"
+            placeholder="Price"
+            value={price}
+            onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </div>
+        <div className="mt-auto flex flex-col gap-y-1">
+          <Label>Images</Label>
+          <Button onClick={() => handleShowImageGallery(imageId)}>
+            Show Image Gallery
+          </Button>
+          {showImageGallery && (
+            <DndImageGallery
+              imageId={imageId}
+              onClose={handleShowImageGallery}
+            />
+          )}
+        </div>
       </div>
-
-      {/* Description */}
-      <div>
-        <label className="text-sm font-medium">Description</label>
-        <Textarea
-          {...register("description")}
-          placeholder="Enter product description"
-        />
-      </div>
-
-      {/* Price */}
-      <div>
-        <label className="text-sm font-medium">Price (BDT)</label>
-        <Input
-          type="number"
-          {...register("price", {
-            setValueAs: (value) => (value === "" ? undefined : Number(value)), // Convert to number
-            valueAsNumber: true, // Ensures input is treated as a number
-          })}
-          placeholder="Enter product price"
-        />
-        {errors.price && (
-          <p className="text-sm text-red-500">{errors.price.message}</p>
-        )}
-      </div>
-
-      {/* Category Selection */}
-      <div>
-        <label className="text-sm font-medium">Category</label>
-        <CategorySelector
-          setValue={setValue}
-          categories={categories}
-          placeholder="Select Category"
-          selectedCategoriesRef={selectedCategoriesRef}
-          onCategoryChange={(level) => {
-            selectedCategoriesRef.current = selectedCategoriesRef.current.slice(
-              0,
-              level + 1,
-            );
-          }}
-        />
-        {errors.categoryId && (
-          <p className="text-sm text-red-500">{errors.categoryId.message}</p>
-        )}
-      </div>
-
-      {/* Submit Button */}
-      <Button type="submit" disabled={isSubmitting} className="w-96">
-        {isSubmitting ? "Adding..." : "Add Product"}
-      </Button>
-    </form>
+    </RichEditor>
   );
 }
 
 function CategorySelector({
-  setValue,
+  setCategoryId,
   categories,
   placeholder,
   depth = 0, // Tracks category level
   selectedCategoriesRef, // Ref to store the category selection path
   onCategoryChange, // Function to reset child selection
 }: {
-  setValue: UseFormSetValue<Product>;
+  setCategoryId: Dispatch<SetStateAction<string>>;
   categories: CategoryTree[];
   placeholder: string;
   depth?: number;
@@ -142,7 +193,7 @@ function CategorySelector({
     <>
       <Select
         onValueChange={(value) => {
-          setValue("categoryId", value);
+          setCategoryId(value);
 
           // Find selected category
           const category = categories.find((cat) => cat.id === value);
@@ -173,7 +224,7 @@ function CategorySelector({
         <div className="my-4">
           <CategorySelector
             placeholder="Select subcategory"
-            setValue={setValue}
+            setCategoryId={setCategoryId}
             categories={subCategories}
             depth={depth + 1}
             selectedCategoriesRef={selectedCategoriesRef}

@@ -33,7 +33,6 @@ export default auth(async (req) => {
   }
 
   if (isAdminRoutes) {
-    console.log(req.auth?.user?.role);
     if (isLoggedIn && req.auth?.user?.role === "ADMIN") {
       return NextResponse.next();
     }

@@ -6,11 +6,12 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../GalleryImage";
 import { removeImage, uploadFile } from "@/lib/actions/file";
 import { useImageStore } from "@/app/context/ImageProvider";
+import Image from "next/image";
 
 interface ImageGalleryProps {
-  visible: boolean;
+  visible: string;
   imageId: string;
-  onClose: (state: boolean) => void;
+  onClose: (state: string) => void;
   onSelect?: (src: string) => void;
 }
 
@@ -24,7 +25,7 @@ const ImageGallery: FC<ImageGalleryProps> = ({
   const { images, updateImages, removeOldImage } = useImageStore();
 
   const handleClose = () => {
-    onClose(!visible);
+    onClose("");
   };
 
   const handleSelection = (image: string) => {
@@ -49,19 +50,21 @@ const ImageGallery: FC<ImageGalleryProps> = ({
           </button>
         </div>
         <FileUploader
-          handleChange={async (file: File) => {
+          multiple={true}
+          handleChange={async (files: File[]) => {
             setIsUploading(true);
             try {
-              const formData = new FormData();
-              formData.append("file", file);
-              const res = await uploadFile(formData, imageId);
-              if (res && updateImages) {
-                updateImages([res.secure_url]);
+              for (const file of files) {
+                const formData = new FormData();
+                formData.append("file", file);
+                const res = await uploadFile(formData, imageId);
+                if (res && updateImages) {
+                  updateImages([res.secure_url]);
+                }
               }
             } catch (error) {
               console.log(error);
             }
-
             setIsUploading(false);
           }}
           name="file"
@@ -108,13 +111,18 @@ const ImageGallery: FC<ImageGalleryProps> = ({
                     if (id) {
                       await removeImage(id);
                     }
-                    if (removeOldImage) {
-                      removeOldImage(item);
-                    }
+                    removeOldImage(item);
                   }
                 }}
-                src={item}
-              />
+              >
+                <Image
+                  height={400}
+                  width={400}
+                  src={item}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              </GalleryImage>
             );
           })}
         </div>

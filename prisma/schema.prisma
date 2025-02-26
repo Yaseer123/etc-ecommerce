@@ -36,14 +36,18 @@ model Post {
 }
 
 model Product {
-    id          String   @id @default(cuid())
-    name        String
-    description String?
-    price       Float
-    categoryId  String // Foreign key to Category
-    category    Category @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: Cascade)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    id                 String   @id @default(cuid())
+    title               String
+    slug                String
+    shortDescription   String
+    description        String?
+    price              Float
+    categoryId         String? // Foreign key to Category
+    category           Category? @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
+    createdAt          DateTime @default(now())
+    updatedAt          DateTime @updatedAt
+    imageId            String
+    descriptionImageId String?
 }
 
 model Category {

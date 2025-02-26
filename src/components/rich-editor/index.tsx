@@ -1,6 +1,5 @@
 "use client";
 
-import type { Dispatch, SetStateAction } from "react";
 import { useEffect, useState } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -12,7 +11,6 @@ import Tools from "./Tools";
 import ImageGallery from "./ImageGallery";
 import Link from "@tiptap/extension-link";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./extensions/fontSize";
 import { useImageStore } from "@/app/context/ImageProvider";
@@ -45,25 +43,21 @@ const extensions = [
 ];
 
 export default function RichEditor({
-  title,
-  setTitle,
-  slug,
-  setSlug,
   content,
   imageId,
   handleSubmit,
   pending,
+  submitButtonText,
+  children,
 }: {
-  title: string;
-  setTitle: Dispatch<SetStateAction<string>>;
-  slug: string;
-  setSlug: Dispatch<SetStateAction<string>>;
   content: string;
   imageId: string;
   handleSubmit: (content: string) => void;
   pending: boolean;
+  submitButtonText: string;
+  children: React.ReactNode;
 }) {
-  const [showImageGallery, setShowImageGallery] = useState(false);
+  const [showImageGallery, setShowImageGallery] = useState("");
   const { loadImages } = useImageStore();
 
   useEffect(() => {
@@ -75,15 +69,6 @@ export default function RichEditor({
       }
     })();
   }, [loadImages, imageId]);
-
-  useEffect(() => {
-    const name = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
-
-    setSlug(name);
-  }, [setSlug, title]);
 
   const editor = useEditor({
     extensions,
@@ -105,32 +90,22 @@ export default function RichEditor({
       .run();
   };
 
-  const handleShowImageGallery = (state: boolean) => {
+  const handleShowImageGallery = (state: string) => {
     setShowImageGallery(state);
   };
 
   return (
     <>
       <div className="flex flex-col space-y-4">
-        <div className="flex gap-4">
-          <Input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <Input
-            type="text"
-            placeholder="Slug"
-            value={slug}
-            onChange={(e) => setSlug(e.target.value)}
-          />
-        </div>
-        <div className="flex min-h-[65vh] flex-col justify-center items-center space-y-4 rounded-md border p-5">
-          <div className="sticky top-0 z-50 bg-white">
-            <Tools editor={editor} onImageSelection={handleShowImageGallery} />
+        {children}
+        <div className="flex min-h-[65vh] flex-col items-center justify-center space-y-4 rounded-md border p-5">
+          <div className="sticky top-0 z-30 bg-white">
+            <Tools
+              editor={editor}
+              onImageSelection={() => handleShowImageGallery(imageId)}
+            />
           </div>
-          <div className="flex-1 text-sm mr-auto">
+          <div className="mr-auto flex-1 text-sm">
             <EditorContent editor={editor} className="h-full" />
           </div>
         </div>
@@ -142,7 +117,7 @@ export default function RichEditor({
             }}
             disabled={pending}
           >
-            {pending ? "Submitting..." : "Create New Post"}
+            {pending ? "Submitting..." : submitButtonText}
           </Button>
         </div>
       </div>

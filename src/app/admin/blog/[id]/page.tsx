@@ -7,7 +7,7 @@ export default async function BlogPage({
 }) {
   const id = (await params).id;
   return (
-    <div className="min-h-50 flex flex-col items-center justify-center gap-4 p-4 md:p-10">
+    <div className="min-h-50 mx-auto w-full p-4 md:w-3/5 md:p-10">
       <RenderBlog id={id} />
     </div>
   );

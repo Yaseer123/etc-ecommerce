@@ -11,9 +11,9 @@ export default async function BlogPosts() {
   }
 
   return (
-    <div className="space-y-7 p-4 md:p-10">
+    <div className="space-y-14 p-4 md:p-10">
       <div className="mx-auto flex max-w-[600px] gap-5">
-        <Input type="text" />
+        <Input type="text" placeholder="Search blogs by title" />
         <Button asChild>
           <Link href="/admin/blog/create">Create new</Link>
         </Button>

@@ -30,20 +30,24 @@ import { DataTableViewOptions } from "./DataTableViewOptions";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData> {
+  columns: ColumnDef<TData>[];
   data: TData[];
   addButton?: {
     name: string;
     href: string;
   };
+  filterBy?: string;
+  searchPlaceHolder: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData>({
   columns,
   data,
   addButton,
-}: DataTableProps<TData, TValue>) {
+  filterBy = "name",
+  searchPlaceHolder,
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
@@ -72,10 +76,10 @@ export function DataTable<TData, TValue>({
     <div className="space-y-3">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter products..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          placeholder={searchPlaceHolder}
+          value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn(filterBy)?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
