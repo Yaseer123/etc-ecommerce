@@ -21,7 +21,7 @@ export const buildCategoryTree = (
 export const categoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
-      orderBy: { createdAt: "asc" },
+      orderBy: { updatedAt: "desc" },
     });
 
     return buildCategoryTree(categories);
