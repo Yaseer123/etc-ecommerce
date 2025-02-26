@@ -23,8 +23,10 @@ export default function AddBlogForm({ userId }: { userId: string }) {
     setSlug(name);
   }, [setSlug, title]);
 
+  const utils = api.useUtils();
   const addPost = api.post.add.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
+      await utils.post.getAll.invalidate();
       router.push("/admin/blog");
     },
     onError: ({ message }) => {

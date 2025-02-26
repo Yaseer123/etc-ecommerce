@@ -7,5 +7,11 @@ import { DataTable } from "@/components/DataTable";
 export default function UserDataTable() {
   const [users] = api.user.getAll.useSuspenseQuery();
 
-  return <DataTable columns={columns} data={users} />;
+  return (
+    <DataTable
+      columns={columns}
+      data={users}
+      searchPlaceHolder="Filter users by name"
+    />
+  );
 }

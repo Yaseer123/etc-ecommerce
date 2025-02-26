@@ -4,6 +4,17 @@ import { api } from "@/trpc/react";
 import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "./ui/alert-dialog";
 
 interface BlogBannerProps {
   userId: string;
@@ -28,32 +39,47 @@ const BlogBanner: React.FC<BlogBannerProps> = ({
     },
   });
 
-  const handleEdit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
+  const handleEdit = () => {
     router.push(`/admin/blog/edit/${blogId}`);
   };
 
-  const handleDelete = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.stopPropagation();
+  const handleDelete = () => {
     deleteBlog.mutate({ userId, blogId });
   };
 
   return (
-    <Link
-      href={`/admin/blog/${blogId}`}
-      className="w-full max-w-[400px] space-y-3 rounded-md bg-gray-100 p-4 shadow"
-    >
+    <div className="w-full max-w-[400px] space-y-3 rounded-md bg-gray-100 p-4 shadow">
       <div className="flex items-center justify-between">
-        <div className="flex flex-col">
+        <Link href={`/admin/blog/${blogId}`} className="flex flex-col pr-10">
           <p>{title}</p>
           <p>{createdAt}</p>
-        </div>
+        </Link>
         <div className="space-x-3">
           <Button onClick={handleEdit}>Edit</Button>
-          <Button onClick={handleDelete}>Delete</Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button>Delete</Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete the
+                  blog from the database.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleDelete}>
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

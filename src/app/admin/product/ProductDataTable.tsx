@@ -19,6 +19,7 @@ export default function ProductDataTable() {
       data={mappedData}
       addButton={{ name: "Add Product", href: "/admin/product/add" }}
       filterBy="title"
+      searchPlaceHolder="Filter products by title"
     />
   );
 }

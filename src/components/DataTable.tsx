@@ -38,6 +38,7 @@ interface DataTableProps<TData> {
     href: string;
   };
   filterBy?: string;
+  searchPlaceHolder: string;
 }
 
 export function DataTable<TData>({
@@ -45,6 +46,7 @@ export function DataTable<TData>({
   data,
   addButton,
   filterBy = "name",
+  searchPlaceHolder,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -74,7 +76,7 @@ export function DataTable<TData>({
     <div className="space-y-3">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter products..."
+          placeholder={searchPlaceHolder}
           value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn(filterBy)?.setFilterValue(event.target.value)
