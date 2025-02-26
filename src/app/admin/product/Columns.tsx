@@ -45,8 +45,9 @@ export const columns: ColumnDef<ProductColumns>[] = [
     },
   },
   {
-    accessorKey: "category.name",
+    accessorKey: "category",
     header: "Category",
+    accessorFn: (row) => row.category?.name ?? "No Category",
   },
   {
     id: "actions",
