@@ -14,10 +14,13 @@ const Checkout = () => {
   const ship = searchParams.get("ship");
 
   const { cartState } = useCart();
-  let [totalCart, setTotalCart] = useState<number>(0);
+  const [totalCart, setTotalCart] = useState<number>(0);
   const [activePayment, setActivePayment] = useState<string>("credit-card");
 
-  cartState.cartArray.map((item) => (totalCart += item.price * item.quantity));
+  React.useEffect(() => {
+    const sum = cartState.cartArray.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    setTotalCart(sum);
+  }, [cartState.cartArray]);
 
   const handlePayment = (item: string) => {
     setActivePayment(item);
@@ -490,7 +493,7 @@ const Checkout = () => {
                         <div className="item mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5">
                           <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
                             <Image
-                              src={product.thumbImage[0]}
+                              src={product.thumbImage[0] ?? ''}
                               width={500}
                               height={500}
                               alt="img"
@@ -508,8 +511,8 @@ const Checkout = () => {
                                 </span>
                                 <span>/</span>
                                 <span className="color capitalize">
-                                  {product.selectedColor ||
-                                    product.variation[0].color}
+                                  {product.selectedColor ??
+                                    product.variation?.[0]?.color ?? 'default' }
                                 </span>
                               </div>
                             </div>

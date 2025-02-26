@@ -43,12 +43,15 @@ const Cart = () => {
   };
 
   const moneyForFreeship = 150;
-  let [totalCart, setTotalCart] = useState<number>(0);
-  let [discountCart, setDiscountCart] = useState<number>(0);
-  let [shipCart, setShipCart] = useState<number>(30);
-  let [applyCode, setApplyCode] = useState<number>(0);
+  const [totalCart, setTotalCart] = useState<number>(0);
+  const [discountCart, setDiscountCart] = useState<number>(0);
+  const [shipCart, setShipCart] = useState<number>(30);
+  const [applyCode, setApplyCode] = useState<number>(0);
 
-  cartState.cartArray.map((item) => (totalCart += item.price * item.quantity));
+  useEffect(() => {
+    const total = cartState.cartArray.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    setTotalCart(total);
+  }, [cartState.cartArray]);
 
   const handleApplyCode = (minValue: number, discount: number) => {
     if (totalCart > minValue) {
@@ -60,16 +63,16 @@ const Cart = () => {
   };
 
   if (totalCart < applyCode) {
-    applyCode = 0;
-    discountCart = 0;
+    setApplyCode(0);
+    setDiscountCart(0);
   }
 
   if (totalCart < moneyForFreeship) {
-    shipCart = 30;
+    setShipCart(30);
   }
 
   if (cartState.cartArray.length === 0) {
-    shipCart = 0;
+    setShipCart(0);
   }
 
   const redirectToCheckout = () => {
@@ -170,7 +173,7 @@ const Cart = () => {
                             <div className="flex items-center gap-6">
                               <div className="bg-img aspect-[3/4] w-20 md:w-[100px]">
                                 <Image
-                                  src={product.thumbImage[0]}
+                                  src={product.thumbImage[0] ?? ""}
                                   width={1000}
                                   height={1000}
                                   alt={product.name}

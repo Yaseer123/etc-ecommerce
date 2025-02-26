@@ -108,7 +108,7 @@ const External: React.FC<Props> = ({ data, productId }) => {
       removeFromWishlist(productMain.id);
     } else {
       // else, add to wishlist and set state to true
-      addToWishlist([productMain]);
+      addToWishlist(productMain);
     }
     openModalWishlist();
   };
@@ -206,12 +206,10 @@ const External: React.FC<Props> = ({ data, productId }) => {
                   <div className="heading4 mt-1">{productMain.name}</div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlistState.wishlistArray.some((item) => item.id === productMain.id) ? "active" : ""}`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
                   onClick={handleAddToWishlist}
                 >
-                  {wishlistState.wishlistArray.some(
-                    (item) => item.id === productMain.id,
-                  ) ? (
+                  {wishlist.some((item) => item.id === productMain.id) ? (
                     <>
                       <Icon.Heart
                         size={24}
@@ -286,7 +284,7 @@ const External: React.FC<Props> = ({ data, productId }) => {
                     >
                       Size Guide
                     </div>
-                    <ModalSizeguide
+                    <ModalSizeGuide
                       data={productMain}
                       isOpen={openSizeGuide}
                       onClose={handleCloseSizeGuide}

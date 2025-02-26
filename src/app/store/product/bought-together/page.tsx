@@ -1,34 +1,19 @@
-"use client";
-import React from "react";
-import { useSearchParams } from "next/navigation";
+import BoughtTogether from "@/components/store-components/Product/Details/BoughtTogether";
 import productData from "@/data/Product.json";
 import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
-import BoughtTogether from "@/components/store-components/Product/Details/BoughtTogether";
-import TopNav from "@/components/store-components/TopNav";
-import Menu from "@/components/store-components/Menu";
-
-const ProductBoughtTogether = () => {
-  const searchParams = useSearchParams();
-  let productId = searchParams.get("id");
-
-  if (productId === null) {
-    productId = "1";
-  }
-
+const ProductBoughtTogether = ({
+  searchParams,
+}: {
+  searchParams: { id?: string };
+}) => {
+  const productId = searchParams?.id ?? "1";
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
+      <BreadcrumbProduct
+        data={productData}
+        productPage="bought-together"
+        productId={productId}
       />
-      <div id="header" className="relative w-full">
-        <Menu props="bg-white" />
-        <BreadcrumbProduct
-          data={productData}
-          productPage="bought-together"
-          productId={productId}
-        />
-      </div>
       <BoughtTogether data={productData} productId={productId} />
     </>
   );

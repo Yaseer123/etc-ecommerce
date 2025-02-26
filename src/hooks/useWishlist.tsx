@@ -1,34 +1,26 @@
-// useWishlist.ts
-import { useState } from 'react';
-import { type ProductType } from '@/type/ProductType';
-
-interface WishlistItem {
-    product: Array<ProductType>
-}
+import { useState } from "react";
+import { type ProductType } from "@/type/ProductType";
 
 const useWishlist = () => {
-    const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [wishlist, setWishlist] = useState<ProductType[]>([]);
 
-    const addToWishlist = (product: Array<ProductType>) => {
-        const newItem: WishlistItem = {
-            product,
-        };
-        setWishlist((prevWishlist) => [...prevWishlist, newItem]);
-    };
+  // Add a product to wishlist
+  const addToWishlist = (product: ProductType) => {
+    setWishlist((prevWishlist) => [...prevWishlist, product]);
+  };
 
-    const removeFromWishlist = (productId: string) => {
-        setWishlist((prevWishlist) =>
-            prevWishlist.map(item => ({
-                product: item.product.filter(prd => prd.id !== productId)
-            }))
-        );
-    };
+  // Remove a product from wishlist by ID
+  const removeFromWishlist = (productId: string) => {
+    setWishlist((prevWishlist) =>
+      prevWishlist.filter((item) => item.id !== productId),
+    );
+  };
 
-    return {
-        wishlist,
-        addToWishlist,
-        removeFromWishlist,
-    };
+  return {
+    wishlist,
+    addToWishlist,
+    removeFromWishlist,
+  };
 };
 
 export default useWishlist;

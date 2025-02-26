@@ -5,7 +5,7 @@ import Product from "@/components/store-components/Product/Product";
 import TopNav from "@/components/store-components/TopNav";
 import useWishlist from "@/hooks/useWishlist";
 import { type ProductType } from "@/type/ProductType";
-import { Icon } from "lucide-react";
+import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 
 export default function Page() {
@@ -172,7 +172,7 @@ export default function Page() {
                     name="select-type"
                     id="select-type"
                     onChange={(e) => handleType(e.target.value)}
-                    value={type === undefined ? "Type" : type}
+                    value={type ?? "Type"}
                   >
                     <option value="Type" disabled>
                       Type
@@ -274,7 +274,7 @@ export default function Page() {
                     No products match the selected criteria.
                   </div>
                 ) : (
-                  <Product key={item.id} data={item} type="grid" />
+                  <Product key={item.id} data={item} type="grid" style="" />
                 ),
               )}
             </div>

@@ -1,37 +1,18 @@
-"use client";
-import React from "react";
-import { useSearchParams } from "next/navigation";
-import productData from "@/data/Product.json";
-import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
 import VariableProduct from "@/components/store-components/Product/Details/VariableProduct";
-import TopNav from "@/components/store-components/TopNav";
-import Menu from "@/components/store-components/Menu";
+import ProductLayout from "../layout";
+import productData from "@/data/Product.json";
 
-const ProductCombinedOne = () => {
-  const searchParams = useSearchParams();
-  let productId = searchParams.get("id");
-
-  if (productId === null) {
-    productId = "1";
-  }
-
+const ProductCombined = ({
+  searchParams,
+}: {
+  searchParams: { id?: string };
+}) => {
+  const productId = searchParams?.id ?? "1";
   return (
-    <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
-      <div id="header" className="relative w-full">
-        <Menu props="bg-white" />
-        <BreadcrumbProduct
-          data={productData}
-          productPage="variable"
-          productId={productId}
-        />
-      </div>
+    <ProductLayout productPage="variable">
       <VariableProduct data={productData} productId={productId} />
-    </>
+    </ProductLayout>
   );
 };
 
-export default ProductCombinedOne;
+export default ProductCombined;

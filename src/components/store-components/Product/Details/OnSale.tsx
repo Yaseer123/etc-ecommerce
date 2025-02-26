@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, Pagination } from "swiper/modules";
 import "swiper/css/bundle";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import SwiperCore from "swiper/core";
+import type SwiperCore from "swiper/core";
 import { useCart } from "@/context/store-context/CartContext";
 import { useCompare } from "@/context/store-context/CompareContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
@@ -18,6 +18,7 @@ import { useModalWishlistContext } from "@/context/store-context/ModalWishlistCo
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
 import { countdownTime } from "@/utils/countdownTime";
+import ModalSizeGuide from "../../ModalSizeGuide";
 
 interface Props {
   data: Array<ProductType>;
@@ -25,8 +26,7 @@ interface Props {
 }
 
 const OnSale: React.FC<Props> = ({ data, productId }) => {
-  SwiperCore.use([Navigation, Thumbs]);
-  const swiperRef: any = useRef();
+  const swiperRef = useRef<SwiperCore | null>(null);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
@@ -803,12 +803,10 @@ const OnSale: React.FC<Props> = ({ data, productId }) => {
                   <div className="heading4 mt-1">{productMain.name}</div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.wishlistArray.some((item) => item.id === productMain.id) ? "active" : ""}`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
                   onClick={handleAddToWishlist}
                 >
-                  {wishlist.wishlistArray.some(
-                    (item) => item.id === productMain.id,
-                  ) ? (
+                  {wishlist.some((item) => item.id === productMain.id) ? (
                     <>
                       <Icon.Heart
                         size={24}
@@ -953,7 +951,7 @@ const OnSale: React.FC<Props> = ({ data, productId }) => {
                     >
                       Size Guide
                     </div>
-                    <ModalSizeguide
+                    <ModalSizeGuide
                       data={productMain}
                       isOpen={openSizeGuide}
                       onClose={handleCloseSizeGuide}

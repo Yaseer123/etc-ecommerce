@@ -7,6 +7,7 @@ import { type ProductType } from "@/type/ProductType";
 import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
+import type { Swiper as SwiperCore } from "swiper";
 import "swiper/css/bundle";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useCart } from "@/context/store-context/CartContext";
@@ -16,15 +17,15 @@ import { useModalCompareContext } from "@/context/store-context/ModalCompareCont
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
+import ModalSizeGuide from "../../ModalSizeGuide";
 
 interface Props {
   data: Array<ProductType>;
   productId: string | number | null;
 }
-
 const BoughtTogether: React.FC<Props> = ({ data, productId }) => {
-  const swiperRef: any = useRef();
-  const [photoIndex, setPhotoIndex] = useState(0);
+  const swiperRef = useRef<SwiperCore | null>(null);
+
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
   const [activeColor, setActiveColor] = useState<string>("");
@@ -36,10 +37,8 @@ const BoughtTogether: React.FC<Props> = ({ data, productId }) => {
   const { openModalWishlist } = useModalWishlistContext();
   const { addToCompare, removeFromCompare, compareState } = useCompare();
   const { openModalCompare } = useModalCompareContext();
-  let productMain = data.find((product) => product.id === productId)!;
-  if (productMain === undefined) {
-    productMain = data[0];
-  }
+  const productMain =
+    data.find((product) => product.id === productId)! || data[0];
 
   const percentSale = Math.floor(
     100 - (productMain.price / productMain.originPrice) * 100,
@@ -103,12 +102,10 @@ const BoughtTogether: React.FC<Props> = ({ data, productId }) => {
     openModalCart();
   };
   const handleAddToWishlist = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
     if (wishlist.some((item) => item.id === productMain.id)) {
       removeFromWishlist(productMain.id);
     } else {
-      // else, add to wishlist and set state to true
-      addToWishlist(productMain);
+      addToWishlist(productMain); // ✅ Pass a single product, no need for an array
     }
     openModalWishlist();
   };
@@ -206,23 +203,17 @@ const BoughtTogether: React.FC<Props> = ({ data, productId }) => {
                   <div className="heading4 mt-1">{productMain.name}</div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.wishlistArray.some((item) => item.id === productMain.id) ? "active" : ""}`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
                   onClick={handleAddToWishlist}
                 >
-                  {wishlist.wishlistArray.some(
-                    (item) => item.id === productMain.id,
-                  ) ? (
-                    <>
-                      <Icon.Heart
-                        size={24}
-                        weight="fill"
-                        className="text-white"
-                      />
-                    </>
+                  {wishlist.some((item) => item.id === productMain.id) ? (
+                    <Icon.Heart
+                      size={24}
+                      weight="fill"
+                      className="text-white"
+                    />
                   ) : (
-                    <>
-                      <Icon.Heart size={24} />
-                    </>
+                    <Icon.Heart size={24} />
                   )}
                 </div>
               </div>
@@ -286,7 +277,7 @@ const BoughtTogether: React.FC<Props> = ({ data, productId }) => {
                     >
                       Size Guide
                     </div>
-                    <ModalSizeguide
+                    <ModalSizeGuide
                       data={productMain}
                       isOpen={openSizeGuide}
                       onClose={handleCloseSizeGuide}
@@ -496,10 +487,10 @@ const BoughtTogether: React.FC<Props> = ({ data, productId }) => {
                     .map((item) => (
                       <Image
                         key={item.id}
-                        src={item.thumbImage[1]}
+                        src={item.thumbImage[1] ?? ""}
                         width={300}
                         height={330}
-                        alt={item.thumbImage[1]}
+                        alt={item.thumbImage[1] ?? ""}
                         className="aspect-[3/4] w-[100px] rounded-lg object-cover"
                       />
                     ))}

@@ -1,35 +1,21 @@
-"use client";
-import React from "react";
-import { useSearchParams } from "next/navigation";
-
-import productData from "@/data/Product.json";
-import Menu from "@/components/store-components/Menu";
-import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
 import Sale from "@/components/store-components/Product/Details/Sale";
-import TopNav from "@/components/store-components/TopNav";
+import productData from "@/data/Product.json";
+import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
 
-const ProductThumbnailBottom = () => {
-  const searchParams = useSearchParams();
-  let productId = searchParams.get("id");
-
-  if (productId === null) {
-    productId = "1";
-  }
+const ProductThumbnailBottom = ({
+  searchParams,
+}: {
+  searchParams: { id?: string };
+}) => {
+  const productId = searchParams?.id ?? "1";
 
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
+      <BreadcrumbProduct
+        data={productData}
+        productPage="thumbnail-bottom"
+        productId={productId}
       />
-      <div id="header" className="relative w-full">
-        <Menu props="bg-white" />
-        <BreadcrumbProduct
-          data={productData}
-          productPage="sale"
-          productId={productId}
-        />
-      </div>
       <Sale data={productData} productId={productId} />
     </>
   );

@@ -11,7 +11,7 @@ export default function BlogDetailsPage() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  let blogId = searchParams.get("slug");
+  let blogId = searchParams.get("id");
   if (blogId === null) {
     blogId = "14";
   }

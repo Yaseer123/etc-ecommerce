@@ -16,6 +16,7 @@ import { useModalCompareContext } from "@/context/store-context/ModalCompareCont
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
+import ModalSizeGuide from "../../ModalSizeGuide";
 
 interface Props {
   data: Array<ProductType>;
@@ -33,7 +34,7 @@ const VariableProduct: React.FC<Props> = ({ data, productId }) => {
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
   const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
-  const { addToWishlist, removeFromWishlist, wishlistState } = useWishlist();
+  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const { openModalWishlist } = useModalWishlistContext();
   const { addToCompare, removeFromCompare, compareState } = useCompare();
   const { openModalCompare } = useModalCompareContext();
@@ -109,9 +110,7 @@ const VariableProduct: React.FC<Props> = ({ data, productId }) => {
   };
   const handleAddToWishlist = () => {
     // if product existed in wishlit, remove from wishlist and set state to false
-    if (
-      wishlistState.wishlistArray.some((item) => item.id === productMain.id)
-    ) {
+    if (wishlist.some((item) => item.id === productMain.id)) {
       removeFromWishlist(productMain.id);
     } else {
       // else, add to wishlist and set state to true
@@ -247,12 +246,10 @@ const VariableProduct: React.FC<Props> = ({ data, productId }) => {
                   <div className="heading4 mt-1">{productMain.name}</div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlistState.wishlistArray.some((item) => item.id === productMain.id) ? "active" : ""}`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
                   onClick={handleAddToWishlist}
                 >
-                  {wishlistState.wishlistArray.some(
-                    (item) => item.id === productMain.id,
-                  ) ? (
+                  {wishlist.some((item) => item.id === productMain.id) ? (
                     <>
                       <Icon.Heart
                         size={24}
@@ -327,7 +324,7 @@ const VariableProduct: React.FC<Props> = ({ data, productId }) => {
                     >
                       Size Guide
                     </div>
-                    <ModalSizeguide
+                    <ModalSizeGuide
                       data={productMain}
                       isOpen={openSizeGuide}
                       onClose={handleCloseSizeGuide}

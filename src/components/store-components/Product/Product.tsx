@@ -25,7 +25,7 @@ export default function Product({ data, type, style }: ProductProps) {
   const [openQuickShop, setOpenQuickShop] = useState<boolean>(false);
   const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
-  const { addToWishlist, removeFromWishlist, wishlistState } = useWishlist();
+  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const { openModalWishlist } = useModalWishlistContext();
   const { addToCompare, removeFromCompare, compareState } = useCompare();
   const { openModalCompare } = useModalCompareContext();
@@ -52,7 +52,7 @@ export default function Product({ data, type, style }: ProductProps) {
 
   const handleAddToWishlist = () => {
     // if product existed in wishlit, remove from wishlist and set state to false
-    if (wishlistState.wishlistArray.some((item) => item.id === data.id)) {
+    if (wishlist.wishlistArray.some((item) => item.id === data.id)) {
       removeFromWishlist(data.id);
     } else {
       // else, add to wishlist and set state to true
@@ -126,7 +126,7 @@ export default function Product({ data, type, style }: ProductProps) {
                     </div>
                   )}
                   <div
-                    className={`add-wishlist-btn relative flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white duration-300 ${wishlistState.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
+                    className={`add-wishlist-btn relative flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white duration-300 ${wishlist.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToWishlist();
@@ -135,7 +135,7 @@ export default function Product({ data, type, style }: ProductProps) {
                     <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                       Add To Wishlist
                     </div>
-                    {wishlistState.wishlistArray.some(
+                    {wishlist.wishlistArray.some(
                       (item) => item.id === data.id,
                     ) ? (
                       <>
@@ -357,7 +357,7 @@ export default function Product({ data, type, style }: ProductProps) {
                       </div>
                     )}
                     <div
-                      className={`add-wishlist-btn relative flex h-9 w-9 items-center justify-center rounded-full bg-white duration-300 ${wishlistState.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
+                      className={`add-wishlist-btn relative flex h-9 w-9 items-center justify-center rounded-full bg-white duration-300 ${wishlist.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
                       onClick={(e) => {
                         e.stopPropagation();
                         handleAddToWishlist();
@@ -366,7 +366,7 @@ export default function Product({ data, type, style }: ProductProps) {
                       <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                         Add To Wishlist
                       </div>
-                      {wishlistState.wishlistArray.some(
+                      {wishlist.wishlistArray.some(
                         (item) => item.id === data.id,
                       ) ? (
                         <>
@@ -727,7 +727,7 @@ export default function Product({ data, type, style }: ProductProps) {
                       </div>
                       <div className="list-action-right mt-4 flex items-center justify-center gap-3">
                         <div
-                          className={`add-wishlist-btn relative flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white duration-300 ${wishlistState.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
+                          className={`add-wishlist-btn relative flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white duration-300 ${wishlist.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleAddToWishlist();
@@ -736,7 +736,7 @@ export default function Product({ data, type, style }: ProductProps) {
                           <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                             Add To Wishlist
                           </div>
-                          {wishlistState.wishlistArray.some(
+                          {wishlist.wishlistArray.some(
                             (item) => item.id === data.id,
                           ) ? (
                             <>
@@ -810,15 +810,13 @@ export default function Product({ data, type, style }: ProductProps) {
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
               <span
-                className={`add-wishlist-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${wishlistState.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
+                className={`add-wishlist-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${wishlist.wishlistArray.some((item) => item.id === data.id) ? "active" : ""}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToWishlist();
                 }}
               >
-                {wishlistState.wishlistArray.some(
-                  (item) => item.id === data.id,
-                ) ? (
+                {wishlist.wishlistArray.some((item) => item.id === data.id) ? (
                   <>
                     <Icon.Heart
                       size={18}

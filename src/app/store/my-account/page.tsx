@@ -4,9 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import Footer from "@/components/store-components/Footer";
 import TopNav from "@/components/store-components/TopNav";
-import { Menu } from "lucide-react";
+import Menu from "@/components/store-components/Menu";
 
 const MyAccount = () => {
   const [activeTab, setActiveTab] = useState<string | undefined>("dashboard");
