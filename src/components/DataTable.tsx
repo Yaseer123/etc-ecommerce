@@ -30,8 +30,8 @@ import { DataTableViewOptions } from "./DataTableViewOptions";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
+interface DataTableProps<TData> {
+  columns: ColumnDef<TData>[];
   data: TData[];
   addButton?: {
     name: string;
@@ -40,12 +40,12 @@ interface DataTableProps<TData, TValue> {
   filterBy?: string;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData>({
   columns,
   data,
   addButton,
   filterBy = "name",
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],

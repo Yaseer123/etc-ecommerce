@@ -17,10 +17,10 @@ import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
 import { type Product } from "@prisma/client";
 import Link from "next/link";
 
-interface ProductColumns extends Product {
+export interface ProductColumns extends Product {
   category: {
     name: string;
-  };
+  } | null;
 }
 
 export const columns: ColumnDef<ProductColumns>[] = [

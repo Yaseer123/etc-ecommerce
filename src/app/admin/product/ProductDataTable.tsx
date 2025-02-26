@@ -1,7 +1,7 @@
 "use client";
 
 import { DataTable } from "@/components/DataTable";
-import { columns } from "./Columns";
+import { columns, type ProductColumns } from "./Columns";
 import { api } from "@/trpc/react";
 
 export default function ProductDataTable() {
@@ -14,7 +14,7 @@ export default function ProductDataTable() {
   }));
 
   return (
-    <DataTable
+    <DataTable<ProductColumns>
       columns={columns}
       data={mappedData}
       addButton={{ name: "Add Product", href: "/admin/product/add" }}
