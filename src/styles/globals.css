@@ -1,6 +1,7 @@
 @import "./layout.css";
 @import "./component.css";
 @import "./product.css";
+@import "./header.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

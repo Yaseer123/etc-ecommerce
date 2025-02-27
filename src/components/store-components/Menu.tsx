@@ -14,8 +14,6 @@ import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
-import { HiMenuAlt1, HiSearchCircle } from "react-icons/hi";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Menu() {
   const pathname = usePathname();
@@ -23,6 +21,7 @@ export default function Menu() {
   const { openShopDepartmentPopup, handleShopDepartmentPopup } =
     useShopDepartmentPopup();
   const { openMenuMobile, handleMenuMobile } = useMenuMobile();
+  const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const [openSubNavMobile, setOpenSubNavMobile] = useState<number | null>(null);
   const { openModalCart } = useModalCartContext();
   const { cartState } = useCart();
@@ -30,6 +29,9 @@ export default function Menu() {
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
+const handleMouseEnter = (menu: string) => {
+  setActiveMegaMenu(menu);
+};
 
   const handleSearch = (value: string) => {
     router.push(`/search-result?query=${value}`);
