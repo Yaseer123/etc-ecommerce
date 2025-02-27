@@ -64,7 +64,7 @@ export default function ModalNewsletter() {
               <div className="heading5 pb-5">You May Also Like</div>
               <div className="list flex flex-col gap-5 overflow-x-auto sm:pr-6">
                 {productData.slice(11, 16).map((item, index) => (
-                  <>
+           
                     <div
                       className="product-item item flex items-center justify-between gap-3 border-b border-line pb-5"
                       key={index}
@@ -101,7 +101,7 @@ export default function ModalNewsletter() {
                         QUICK VIEW
                       </button>
                     </div>
-                  </>
+                
                 ))}
               </div>
             </div>
