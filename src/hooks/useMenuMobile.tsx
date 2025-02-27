@@ -4,33 +4,33 @@ const useMenuMobile = () => {
   const [openMenuMobile, setOpenMenuMobile] = useState(false);
 
   const handleMenuMobile = () => {
-    
-    setOpenMenuMobile((toggleOpen) => !toggleOpen);
+    console.log("Toggling Menu:", !openMenuMobile);
+    setOpenMenuMobile((prevState) => !prevState);
   };
 
-  const handleClickOutsideMenuMobile = useCallback(
-    (event: Event) => {
-      const targetElement = event.target as Element;
+  const handleClickOutsideMenuMobile = useCallback((event: Event) => {
+    const targetElement = event.target as Element;
 
-      if (openMenuMobile && !targetElement.closest("#menu-mobile")) {
-        setOpenMenuMobile(false);
-      }
-    },
-    [openMenuMobile],
-  );
+    if (
+      !targetElement.closest("#menu-mobile") &&
+      !targetElement.closest(".menu-mobile-icon")
+    ) {
+      setOpenMenuMobile(false);
+    }
+  }, []);
 
   useEffect(() => {
     document.addEventListener("click", handleClickOutsideMenuMobile);
-
     return () => {
       document.removeEventListener("click", handleClickOutsideMenuMobile);
     };
-  }, [handleClickOutsideMenuMobile, openMenuMobile]);
+  }, [handleClickOutsideMenuMobile]);
 
-  return {
-    openMenuMobile,
-    handleMenuMobile,
-  };
+  useEffect(() => {
+    console.log("Menu Open State:", openMenuMobile);
+  }, [openMenuMobile]);
+
+  return { openMenuMobile, handleMenuMobile };
 };
 
 export default useMenuMobile;

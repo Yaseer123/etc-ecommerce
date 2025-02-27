@@ -197,12 +197,12 @@ pre {
 }
 @font-face {
   font-family: "icomoon";
-  src: url("/src/fonts/icomoon.eot?iv703h");
+  src: url("/fonts/icomoon.eot?iv703h");
   src:
-    url("/src/fonts/icomoon.eot?iv703h#iefix") format("embedded-opentype"),
-    url("/src/fonts/icomoon.ttf?iv703h") format("truetype"),
-    url("/src/fonts/icomoon.woff?iv703h") format("woff"),
-    url("/src/fonts/icomoon.svg?iv703h#icomoon") format("svg");
+    url("/fonts/icomoon.eot?iv703h#iefix") format("embedded-opentype"),
+    url("/fonts/icomoon.ttf?iv703h") format("truetype"),
+    url("/fonts/icomoon.woff?iv703h") format("woff"),
+    url("/fonts/icomoon.svg?iv703h#icomoon") format("svg");
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -544,24 +544,20 @@ input[type="file"] {
   display: inline-block;
   cursor: pointer;
   transition: all ease 0.4s;
+}
 
-  &:hover {
-    background-color: var(--green);
-    color: var(--black);
+.button-main:hover {
+  background-color: var(--green);
+  color: var(--black);
+}
 
-    svg {
-      path {
-        fill: var(--black);
-      }
-    }
-  }
+.button-main:hover svg path {
+  fill: var(--black);
+}
 
-  &.bg-white {
-    &:hover {
-      background-color: var(--black);
-      color: var(--white);
-    }
-  }
+.button-main.bg-white:hover {
+  background-color: var(--black);
+  color: var(--white);
 }
 
 @media (max-width: 1023.99px) {
