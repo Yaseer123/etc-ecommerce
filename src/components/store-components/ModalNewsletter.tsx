@@ -101,7 +101,7 @@ export default function ModalNewsletter() {
                         QUICK VIEW
                       </button>
                     </div>
-                
+  
                 ))}
               </div>
             </div>

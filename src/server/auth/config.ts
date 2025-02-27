@@ -57,6 +57,16 @@ export const authConfig = {
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
   callbacks: {
+    // async authorized({ auth, request }) {
+    //   console.log(auth?.user.role);
+    //   const isLoggedIn = Boolean(auth?.user);
+    //   if (isLoggedIn && auth?.user.role === "ADMIN") {
+    //     return NextResponse.redirect(new URL("/admin", request.nextUrl));
+    //   }
+
+    //   return true;
+    // },
+
     async session({ session, token }) {
       if (!session.user) return session;
 
