@@ -17,6 +17,7 @@ import { useModalCompareContext } from "@/context/store-context/ModalCompareCont
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
+import ModalSizeGuide from "../../ModalSizeGuide";
 
 interface Props {
   data: Array<ProductType>;
@@ -25,7 +26,7 @@ interface Props {
 
 const Default: React.FC<Props> = ({ data, productId }) => {
   SwiperCore.use([Navigation, Thumbs]);
-  const swiperRef: any = useRef();
+  const swiperRef = useRef<SwiperCore | null>(null);
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
@@ -41,7 +42,10 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   const { openModalCompare } = useModalCompareContext();
   let productMain = data.find((product) => product.id === productId)!;
   if (productMain === undefined) {
-    productMain = data[0];
+    if (data.length === 0) {
+      throw new Error("No products available");
+    }
+    productMain = data[0]!;
   }
 
   const percentSale = Math.floor(
@@ -134,20 +138,25 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   };
 
   const handleAddToCompare = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
+    console.log("Compare Button Clicked");
+
     if (compareState.compareArray.length < 3) {
       if (
-        compareState.compareArray.some((item) => item.id === productMain.id)
+        compareState.compareArray.some(
+          (item) => item.id === productMain.id,
+        )
       ) {
+        console.log("Removing from Compare");
         removeFromCompare(productMain.id);
       } else {
-        // else, add to wishlist and set state to true
+        console.log("Adding to Compare");
         addToCompare(productMain);
       }
     } else {
       alert("Compare up to 3 products");
     }
 
+    console.log("Opening Compare Modal");
     openModalCompare();
   };
 
@@ -198,7 +207,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 className="mySwiper"
               >
                 {productMain.images.map((item, index) => (
-                  <SwiperSlide key={index}>
+                  <SwiperSlide key={index} className="!w-[60px]">
                     <Image
                       src={item}
                       width={1000}

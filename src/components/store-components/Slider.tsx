@@ -8,8 +8,14 @@ import { Autoplay, Pagination } from "swiper/modules";
 import { motion } from "motion/react";
 import "swiper/css/bundle";
 import "swiper/css/effect-fade";
+import { useRouter } from "next/navigation";
 
 const Slider = () => {
+  const router = useRouter();
+
+  const handleTypeClick = (type: string) => {
+    router.push(`/shop/breadcrumb1?type=${type}`);
+  };
   return (
     <>
       <div className="slider-block style-two w-full">

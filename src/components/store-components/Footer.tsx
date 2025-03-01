@@ -12,7 +12,7 @@ export default function Footer() {
             <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
               <div className="company-infor basis-1/4 pr-7 max-lg:basis-full">
                 <Link href={"/"} className="logo">
-                  <div className="heading4">Anvogue</div>
+                  <div className="heading4">Rinors</div>
                 </Link>
                 <div className="mt-3 flex gap-3">
                   <div className="flex flex-col">

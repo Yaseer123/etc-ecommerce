@@ -2,6 +2,7 @@
 @import "./component.css";
 @import "./product.css";
 @import "./header.css";
+@import "./custom-slider.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
