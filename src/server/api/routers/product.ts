@@ -1,6 +1,6 @@
 import {
+  adminProcedure,
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
@@ -14,6 +14,7 @@ export const productRouter = createTRPCRouter({
 
     return products;
   }),
+
   getProductById: publicProcedure
     .input(
       z.object({
@@ -27,6 +28,7 @@ export const productRouter = createTRPCRouter({
 
       return product;
     }),
+
   getProductWithCategoryName: publicProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.product.findMany({
       include: {
@@ -38,28 +40,26 @@ export const productRouter = createTRPCRouter({
 
     return products;
   }),
-  // Add a new product
-  add: protectedProcedure
-    .input(productSchema)
-    .mutation(async ({ ctx, input }) => {
-      const product = await ctx.db.product.create({
-        data: {
-          title: input.title,
-          shortDescription: input.shortDescription,
-          slug: input.slug,
-          description: input.description,
-          price: input.price,
-          categoryId: input.categoryId,
-          imageId: input.imageId,
-          descriptionImageId: input.descriptionImageId,
-        },
-      });
 
-      return product;
-    }),
+  add: adminProcedure.input(productSchema).mutation(async ({ ctx, input }) => {
+    const product = await ctx.db.product.create({
+      data: {
+        title: input.title,
+        shortDescription: input.shortDescription,
+        slug: input.slug,
+        description: input.description,
+        price: input.price,
+        categoryId: input.categoryId,
+        imageId: input.imageId,
+        descriptionImageId: input.descriptionImageId,
+        stock: 0, // Add default stock value
+      },
+    });
 
-  // Update an existing product
-  update: protectedProcedure
+    return product;
+  }),
+
+  update: adminProcedure
     .input(updateProductSchema)
     .mutation(async ({ ctx, input }) => {
       const { id, ...updateData } = input;

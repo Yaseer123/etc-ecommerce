@@ -1,6 +1,6 @@
 import {
+  adminProcedure,
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 import { z } from "zod";
@@ -27,7 +27,7 @@ export const blogPostRouter = createTRPCRouter({
     }),
 
   // Add a new blog post
-  add: protectedProcedure
+  add: adminProcedure
     .input(
       z.object({
         title: z.string().min(3, "Title must be at least 3 characters"),
@@ -51,7 +51,7 @@ export const blogPostRouter = createTRPCRouter({
       return post;
     }),
 
-  edit: protectedProcedure
+  edit: adminProcedure
     .input(
       z.object({
         id: z.string().cuid("Invalid post ID"),
@@ -77,7 +77,7 @@ export const blogPostRouter = createTRPCRouter({
       return post;
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(
       z.object({
         userId: z.string().cuid("Invalid user id"),

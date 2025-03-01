@@ -19,6 +19,14 @@ enum UserRole {
     ADMIN
 }
 
+enum OrderStatus {
+    PENDING
+    PROCESSING
+    SHIPPED
+    DELIVERED
+    CANCELLED
+}
+
 model Post {
     id        String   @id @default(cuid())
     title     String
@@ -36,18 +44,50 @@ model Post {
 }
 
 model Product {
-    id                 String   @id @default(cuid())
-    title               String
-    slug                String
+    id                 String    @id @default(cuid())
+    title              String
+    slug               String
     shortDescription   String
     description        String?
     price              Float
+    stock              Int
     categoryId         String? // Foreign key to Category
     category           Category? @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
-    createdAt          DateTime @default(now())
-    updatedAt          DateTime @updatedAt
+    createdAt          DateTime  @default(now())
+    updatedAt          DateTime  @updatedAt
     imageId            String
     descriptionImageId String?
+
+    reviews   Review[]
+    orders    OrderItem[]
+    CartItem  CartItem[]
+    questions Question[]
+}
+
+model Question {
+    id        String   @id @default(cuid())
+    userId    String
+    productId String
+    question  String
+    answer    String?
+    createdAt DateTime @default(now())
+
+    // Relationships
+    user    User    @relation(fields: [userId], references: [id])
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model Review {
+    id        String   @id @default(cuid())
+    userId    String
+    productId String
+    rating    Int // Rating out of 5
+    comment   String?
+    createdAt DateTime @default(now())
+
+    // Relationships
+    user    User    @relation(fields: [userId], references: [id])
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Category {
@@ -89,8 +129,13 @@ model User {
     image         String?
     role          UserRole  @default(USER)
 
-    accounts Account[]
-    posts    Post[]
+    accounts  Account[]
+    posts     Post[]
+    address   Address?
+    orders    Order[]
+    reviews   Review[]
+    cart      Cart?
+    questions Question[]
 }
 
 model VerificationToken {
@@ -99,4 +144,72 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Address {
+    id        String  @id @default(cuid())
+    userId    String  @unique
+    street    String
+    city      String
+    state     String
+    zipCode   String
+    country   String
+    isDefault Boolean @default(false)
+
+    // Relationships
+    user  User    @relation(fields: [userId], references: [id])
+    Order Order[]
+}
+
+model Cart {
+    id        String     @id @default(cuid())
+    userId    String     @unique
+    items     CartItem[]
+    createdAt DateTime   @default(now())
+    updatedAt DateTime   @updatedAt
+
+    // Relationships
+    user User @relation(fields: [userId], references: [id])
+}
+
+model CartItem {
+    id        String   @id @default(cuid())
+    cartId    String
+    productId String
+    quantity  Int
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    cart    Cart    @relation(fields: [cartId], references: [id])
+    product Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+    id        String      @id @default(cuid())
+    userId    String
+    status    OrderStatus @default(PENDING)
+    total     Float
+    createdAt DateTime    @default(now())
+    updatedAt DateTime    @updatedAt
+
+    // Relationships
+    user      User        @relation(fields: [userId], references: [id])
+    items     OrderItem[]
+    address   Address?    @relation(fields: [addressId], references: [id])
+    addressId String?
+}
+
+model OrderItem {
+    id        String   @id @default(cuid())
+    orderId   String
+    productId String
+    quantity  Int
+    price     Float // Price at the time of purchase
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Relationships
+    order   Order   @relation(fields: [orderId], references: [id])
+    product Product @relation(fields: [productId], references: [id])
 }

@@ -1,7 +1,7 @@
 import type { Category, CategoryTree } from "@/schemas/categorySchema";
 import {
+  adminProcedure,
   createTRPCRouter,
-  protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 import { z } from "zod";
@@ -37,7 +37,7 @@ export const categoryRouter = createTRPCRouter({
       return category;
     }),
 
-  add: protectedProcedure
+  add: adminProcedure
     .input(
       z.object({
         parentId: z.string().nullable(),
@@ -55,7 +55,7 @@ export const categoryRouter = createTRPCRouter({
       return category;
     }),
 
-  edit: protectedProcedure
+  edit: adminProcedure
     .input(
       z.object({
         id: z.string(),
@@ -71,7 +71,7 @@ export const categoryRouter = createTRPCRouter({
       return category;
     }),
 
-  delete: protectedProcedure
+  delete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.category.delete({ where: { id: input.id } });
