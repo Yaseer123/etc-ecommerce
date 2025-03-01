@@ -1291,7 +1291,7 @@ export default function Menu() {
                     href={"/"}
                     className="logo text-center text-3xl font-semibold"
                   >
-                    Anvogue
+                    Rinors
                   </Link>
                 </div>
                 <div className="form-search relative mt-2">

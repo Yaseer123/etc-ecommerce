@@ -12,6 +12,7 @@ export default function Footer() {
             <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
               <div className="company-infor basis-1/4 pr-7 max-lg:basis-full">
                 <Link href={"/"} className="logo">
+                  
                   <div className="heading4">Rinors</div>
                 </Link>
                 <div className="mt-3 flex gap-3">
@@ -169,7 +170,7 @@ export default function Footer() {
             <div className="footer-bottom flex items-center justify-between gap-5 border-t border-line py-3 max-lg:flex-col max-lg:justify-center">
               <div className="left flex items-center gap-8">
                 <div className="copyright caption1 text-secondary">
-                  ©2023 Anvogue. All Rights Reserved.
+                  ©{new Date().getFullYear()} Rinors. All Rights Reserved.
                 </div>
                 <div className="select-block flex items-center gap-5 max-md:hidden">
                   <div className="choose-language flex items-center gap-1.5">

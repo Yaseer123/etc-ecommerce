@@ -11,7 +11,7 @@ export default function Instagram() {
     <>
       <div className="instagram-block pt-10 md:pt-20">
         <div className="heading">
-          <div className="heading3 text-center">Anvogue On Instagram</div>
+          <div className="heading3 text-center">Rinors On Instagram</div>
           <div className="mt-3 text-center">#Anvougetheme</div>
         </div>
         <div className="list-instagram mt-4 md:mt-7">

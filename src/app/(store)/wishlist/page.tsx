@@ -2,7 +2,6 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Menu from "@/components/store-components/Menu";
 import Product from "@/components/store-components/Product/Product";
-import TopNav from "@/components/store-components/TopNav";
 import useWishlist from "@/hooks/useWishlist";
 import { type ProductType } from "@/type/ProductType";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
@@ -116,10 +115,6 @@ export default function Page() {
 
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb heading="Wish list" subHeading="Wish list" />

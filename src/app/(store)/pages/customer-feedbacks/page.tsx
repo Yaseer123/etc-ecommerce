@@ -4,15 +4,12 @@ import reviewData from "@/data/Testimonial.json";
 import Menu from "@/components/store-components/Menu";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import TestimonialItem from "@/components/store-components/TestimonialItem";
-import TopNav from "@/components/store-components/TopNav";
+
 
 const CustomerFeedbacks = () => {
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
+     
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb

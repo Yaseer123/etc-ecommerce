@@ -18,6 +18,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           props="style-one bg-black"
           slogan="New customers save 10% with the code GET10"
         />
+
         {children}
         <Footer />
         <ModalCart serverTimeLeft={serverTimeLeft} />
