@@ -213,14 +213,24 @@
     @apply w-full;
   }
 
-  .menu-main ul li .sub-menu {
-    @apply invisible absolute left-0 top-full z-[100] translate-y-5 whitespace-nowrap bg-[var(--white)] opacity-0 shadow-[0px_4px_10px_3px_rgba(0,0,0,0.15)] transition-all duration-300;
-  }
+.menu-main ul li .sub-menu,
+.menu-main ul li .mega-menu {
+    @apply invisible absolute left-0 top-full z-[100] translate-y-5 bg-[var(--white)] opacity-0 shadow-[0px_4px_10px_3px_rgba(0,0,0,0.15)] transition-all duration-300;
+}
+
+/* Ensure mega menu appears on hover */
+.menu-main ul li:hover > .sub-menu,
+.menu-main ul li:hover > .mega-menu {
+    @apply visible translate-y-0 opacity-100;
+}
+
 
   .menu-main ul li:hover > .sub-menu {
     @apply visible translate-y-0 opacity-100;
   }
-
+  .menu-main ul li:hover > .mega-menu {
+    @apply visible translate-y-0 opacity-100;
+  }
   .menu-main ul li .sub-menu.mega-menu {
     @apply left-1/2 -translate-x-1/2;
   }

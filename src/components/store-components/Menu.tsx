@@ -29,9 +29,9 @@ export default function Menu() {
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
-const handleMouseEnter = (menu: string) => {
-  setActiveMegaMenu(menu);
-};
+  const handleMouseEnter = (menu: string) => {
+    setActiveMegaMenu(menu);
+  };
 
   const handleSearch = (value: string) => {
     router.push(`/search-result?query=${value}`);
@@ -703,7 +703,7 @@ const handleMouseEnter = (menu: string) => {
                         </div>
                       </div>
                     </li>
-                    <li className="h-full">
+                    <li className=" h-full">
                       <Link
                         href="#!"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"
@@ -943,7 +943,7 @@ const handleMouseEnter = (menu: string) => {
                         </div>
                       </div>
                     </li>
-                    <li className="h-full">
+                    <li className=" h-full">
                       <Link
                         href="#!"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"
