@@ -89,7 +89,7 @@ export default function Menu() {
                 <i className="icon-category text-2xl"></i>
               </div>
               <Link href={"/"} className="flex items-center">
-                <div className="heading4">Anvogue</div>
+                <div className="heading4">Rinors</div>
               </Link>
               <div className="form-search flex h-[44px] w-2/3 items-center pl-8 max-lg:hidden">
                 <div className="category-block relative h-full">
@@ -703,7 +703,7 @@ export default function Menu() {
                         </div>
                       </div>
                     </li>
-                    <li className=" h-full">
+                    <li className="h-full">
                       <Link
                         href="#!"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"
@@ -943,7 +943,7 @@ export default function Menu() {
                         </div>
                       </div>
                     </li>
-                    <li className=" h-full">
+                    <li className="h-full">
                       <Link
                         href="#!"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"

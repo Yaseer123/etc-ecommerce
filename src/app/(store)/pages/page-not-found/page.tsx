@@ -4,15 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Menu from "@/components/store-components/Menu";
-import TopNav from "@/components/store-components/TopNav";
 
 const PageNotFound = () => {
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
+     
       <div id="header" className="relative w-full">
         <Menu props="bg-white" />
       </div>

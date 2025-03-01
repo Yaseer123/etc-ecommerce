@@ -2,16 +2,11 @@
 import React from "react";
 import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import TopNav from "@/components/store-components/TopNav";
 import Menu from "@/components/store-components/Menu";
 
 const OrderTracking = () => {
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb heading="Order Tracking" subHeading="Order Tracking" />
