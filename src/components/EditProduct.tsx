@@ -12,7 +12,7 @@ import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "./ui/textarea";
 import PreSelectedCategory from "./PreSelectedCategory";
-import { useProductImageStore } from "@/app/context/ProductImageProvider";
+import { useProductImageStore } from "@/context/ProductImageProvider";
 import { renameImages } from "@/app/actions/file";
 
 export default function EditProductForm({ productId }: { productId: string }) {

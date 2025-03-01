@@ -22,7 +22,7 @@ import RichEditor from "./rich-editor";
 import { v4 as uuid } from "uuid";
 import { Label } from "./ui/label";
 import DndImageGallery from "./rich-editor/DndImageGallery";
-import { useProductImageStore } from "@/app/context/ProductImageProvider";
+import { useProductImageStore } from "@/context/ProductImageProvider";
 import { Button } from "./ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "./ui/textarea";

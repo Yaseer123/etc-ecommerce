@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Image from 'next/image';
 import Link from 'next/link'
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { ProductType } from '@/type/ProductType'
+import { type ProductType } from '@/type/ProductType'
 import Product from '../Product/Product';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css'
-import HandlePagination from '../Other/HandlePagination';
+import HandlePagination from '../HandlePagination';
+// import HandlePagination from '../Other/HandlePagination';
 
 interface Props {
     data: Array<ProductType>;
@@ -119,7 +120,7 @@ const ShopBreadCrumbImg: React.FC<Props> = ({ data, productPerPage, dataType }) 
     })
 
     // Create a copy array filtered to sort
-    let sortedData = [...filteredData];
+    const sortedData = [...filteredData];
 
     if (sortOption === 'soldQuantityHighToLow') {
         filteredData = sortedData.sort((a, b) => b.sold - a.sold)

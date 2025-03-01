@@ -1,3 +1,5 @@
+"use client"
+
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Menu from "@/components/store-components/Menu";

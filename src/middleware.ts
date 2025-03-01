@@ -9,7 +9,6 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from "./routes";
-import { getToken } from "next-auth/jwt";
 
 export default auth(async (req) => {
   const { nextUrl } = req;
@@ -34,8 +33,7 @@ export default auth(async (req) => {
   }
 
   if (isAdminRoutes) {
-    const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-    if (isLoggedIn && token?.role === "ADMIN") {
+    if (isLoggedIn && req.auth?.user?.role === "ADMIN") {
       return NextResponse.next();
     }
     return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));

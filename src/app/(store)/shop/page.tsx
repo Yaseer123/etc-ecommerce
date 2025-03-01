@@ -1,3 +1,5 @@
+"use client"
+
 import Menu from "@/components/store-components/Menu";
 import ShopBreadCrumbImg from "@/components/store-components/Shop/ShopBreadCrumbImg";
 import TopNav from "@/components/store-components/TopNav";
