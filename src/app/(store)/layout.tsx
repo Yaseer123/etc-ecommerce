@@ -1,3 +1,5 @@
+import "@/styles/styles.css";
+
 import Footer from "@/components/store-components/Footer";
 import Menu from "@/components/store-components/Menu";
 import ModalCart from "@/components/store-components/Modal/ModalCart";
