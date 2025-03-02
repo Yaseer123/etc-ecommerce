@@ -12,20 +12,26 @@ export default function Footer() {
             <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
               <div className="company-infor basis-1/4 pr-7 max-lg:basis-full">
                 <Link href={"/"} className="logo">
-                  
                   <div className="heading4">Rinors</div>
                 </Link>
                 <div className="mt-3 flex gap-3">
                   <div className="flex flex-col">
-                    <span className="text-button">Mail:</span>
+                    <Link
+                      href="mailto:rinorscorporation@gmail.com"
+                      className="text-button"
+                    >
+                      Mail:
+                    </Link>
                     <span className="text-button mt-3">Phone:</span>
                     <span className="text-button mt-3">Address:</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="">hi.avitex@gmail.com</span>
-                    <span className="mt-3">1-333-345-6868</span>
+                    <span className="">rinorscorporation@gmail.com</span>
+                    <span className="mt-3">+8801312223452</span>
                     <span className="mt-3 pt-px">
-                      549 Oak St.Crystal Lake, IL 60014
+                      41/5, East Badda,
+                      Dhaka 1212,
+                      Bangladesh
                     </span>
                   </div>
                 </div>

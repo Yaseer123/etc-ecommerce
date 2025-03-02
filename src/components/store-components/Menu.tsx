@@ -112,7 +112,7 @@ export default function Menu() {
                     }
                   />
                   <button
-                    className="search-button button-main flex h-full items-center rounded-none rounded-r bg-black px-7"
+                    className="search-button button-main !flex h-full !items-center !justify-center !rounded-none !rounded-r bg-black px-7"
                     onClick={() => {
                       handleSearch(searchKeyword);
                     }}
