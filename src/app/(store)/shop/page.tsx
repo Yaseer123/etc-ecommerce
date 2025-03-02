@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import Menu from "@/components/store-components/Menu";
-import ShopBreadCrumbImg from "@/components/store-components/Shop/ShopBreadCrumbImg";
-import { useSearchParams } from "next/navigation";
 import productData from "@/data/Product.json";
-export default function Page() {
+import ShopFilterCanvas from "@/components/store-components/Shop/ShopFilterCanvas";
+import { useSearchParams } from "next/navigation";
+import Footer from "@/components/store-components/Footer";
+
+export default function Fullwidth() {
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
+
   return (
     <>
-     
-      <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-      </div>
-      <ShopBreadCrumbImg
+      <ShopFilterCanvas
         data={productData}
         productPerPage={12}
         dataType={type}
+        productStyle="grid"
       />
+      <Footer />
     </>
   );
 }

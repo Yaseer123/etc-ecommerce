@@ -18,14 +18,14 @@ import {
   useState,
 } from "react";
 import { type CategoryTree } from "@/schemas/categorySchema";
-import RichEditor from "./rich-editor";
+import RichEditor from "../rich-editor";
 import { v4 as uuid } from "uuid";
-import { Label } from "./ui/label";
-import DndImageGallery from "./rich-editor/DndImageGallery";
-import { useProductImageStore } from "@/context/ProductImageProvider";
-import { Button } from "./ui/button";
+import { Label } from "../ui/label";
+import DndImageGallery from "../rich-editor/DndImageGallery";
+import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
-import { Textarea } from "./ui/textarea";
+import { Textarea } from "../ui/textarea";
 import { renameImages } from "@/app/actions/file";
 
 export default function AddProductForm() {

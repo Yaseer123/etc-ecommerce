@@ -19,7 +19,6 @@ export default {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      
       colors: {
         transparent: "transparent",
         green_custom: "#D2EF9A",
@@ -33,14 +32,11 @@ export default {
         yellow_custom: "#ECB018",
         pink_custom: "#F4407D",
         line: "#E9E9E9",
-        // banner colors start
         brandBlueCore: "#0091df",
         brandBlueMid: "#00617f",
         baseLight: "#fff",
         baseDark: "#000",
         basePale: "#f2f2f2",
-        // brand colors end
-
         outline: "rgba(0, 0, 0, 0.15)",
         surface2: "rgba(255, 255, 255, 0.2)",
         surface1: "rgba(255, 255, 255, 0.1)",
@@ -109,5 +105,6 @@ export default {
       },
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config;

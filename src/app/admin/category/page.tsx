@@ -1,5 +1,5 @@
-import AddCategoryForm from "@/components/AddCategory";
-import CategoryAccordionManager from "@/components/CategoryAccordionManager";
+import AddCategoryForm from "@/components/admin-components/AddCategory";
+import CategoryAccordionManager from "@/components/admin-components/CategoryAccordionManager";
 import { HydrateClient } from "@/trpc/server";
 
 export default function Categories() {

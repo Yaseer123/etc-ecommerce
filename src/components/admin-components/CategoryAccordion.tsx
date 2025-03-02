@@ -18,9 +18,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "./ui/alert-dialog";
+} from "../ui/alert-dialog";
 import { useState } from "react";
-import { Input } from "./ui/input";
+import { Input } from "../ui/input";
 import { useClickAway } from "@uidotdev/usehooks";
 import { api } from "@/trpc/react";
 

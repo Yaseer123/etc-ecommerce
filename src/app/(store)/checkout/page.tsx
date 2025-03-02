@@ -4,7 +4,6 @@ import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useSearchParams } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import TopNav from "@/components/store-components/TopNav";
 import { useCart } from "@/context/store-context/CartContext";
 import Menu from "@/components/store-components/Menu";
 

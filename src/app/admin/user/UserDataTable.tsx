@@ -2,7 +2,7 @@
 
 import { api } from "@/trpc/react";
 import { columns } from "@/app/admin/user/Columns";
-import { DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/admin-components/DataTable";
 
 export default function UserDataTable() {
   const [users] = api.user.getAll.useSuspenseQuery();

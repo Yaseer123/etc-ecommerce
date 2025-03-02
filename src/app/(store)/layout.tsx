@@ -1,8 +1,6 @@
 import Footer from "@/components/store-components/Footer";
+import Menu from "@/components/store-components/Menu";
 import ModalCart from "@/components/store-components/Modal/ModalCart";
-import ModalCompare from "@/components/store-components/Modal/ModalCompare";
-import ModalQuickView from "@/components/store-components/Modal/ModalQuickview";
-import ModalSearch from "@/components/store-components/Modal/ModalSearch";
 import ModalWishlist from "@/components/store-components/Modal/ModalWishlist";
 import TopNav from "@/components/store-components/TopNav";
 import GlobalProvider from "@/providers/GlobalProvider";
@@ -18,14 +16,14 @@ export default function layout({ children }: { children: React.ReactNode }) {
           props="style-one bg-black"
           slogan="New customers save 10% with the code GET10"
         />
-
+        <Menu />
         {children}
         <Footer />
         <ModalCart serverTimeLeft={serverTimeLeft} />
         <ModalWishlist />
-        <ModalSearch />
-        <ModalQuickView />
-        <ModalCompare />
+        {/* <ModalSearch /> */}
+        {/* <ModalQuickView /> */}
+        {/* <ModalCompare /> */}
       </GlobalProvider>
     </>
   );

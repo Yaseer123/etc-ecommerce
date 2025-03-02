@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { auth } from "@/server/auth";
 
 export default async function Navbar() {

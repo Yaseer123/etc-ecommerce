@@ -1,7 +1,7 @@
 "use client";
 
+import { readAllImages } from "@/app/actions/file";
 import { create } from "zustand";
-import { readAllImages } from "../lib/actions/file";
 
 export interface ProductImage {
   id: string;

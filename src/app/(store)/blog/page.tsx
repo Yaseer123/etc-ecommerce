@@ -3,16 +3,18 @@ import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import blogData from "@/data/Blog.json";
+import Footer from "@/components/store-components/Footer";
 import { useRouter } from "next/navigation";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
+import TopNav from "@/components/store-components/TopNav";
 import Menu from "@/components/store-components/Menu";
-import BlogItem from "@/components/store-components/BlogItem";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import BlogItem from "@/components/store-components/Blog/BlogItem";
 import HandlePagination from "@/components/store-components/HandlePagination";
 
-const BlogDefault = () => {
+const BlogList = () => {
   const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 3;
+  const productsPerPage = 4;
   const offset = currentPage * productsPerPage;
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -35,6 +37,8 @@ const BlogDefault = () => {
     if (category) {
       isCategoryMatched =
         blog.category === category && blog.category !== "underwear";
+    } else {
+      isCategoryMatched = blog.category !== "underwear";
     }
 
     return isCategoryMatched;
@@ -75,21 +79,17 @@ const BlogDefault = () => {
 
   return (
     <>
-      <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-        <Breadcrumb heading="Blog Default" subHeading="Blog Default" />
-      </div>
-      <div className="blog default py-10 md:py-20">
+      <div className="blog list py-10 md:py-20">
         <div className="container">
-          <div className="flex justify-between gap-y-12 max-md:flex-col">
-            <div className="left pr-2 md:w-2/3 xl:w-3/4">
-              <div className="list-blog flex flex-col gap-8 md:gap-10">
+          <div className="flex justify-between gap-y-12 max-xl:flex-col">
+            <div className="left xl:w-3/4 xl:pr-2">
+              <div className="list-blog flex flex-col gap-8 xl:gap-10">
                 {currentProducts.map((item) => (
-                  <BlogItem key={item.id} data={item} type="style-default" />
+                  <BlogItem key={item.id} data={item} type="style-list" />
                 ))}
               </div>
               {pageCount > 1 && (
-                <div className="list-pagination mt-6 flex w-full items-center justify-center md:mt-10">
+                <div className="list-pagination mt-6 flex w-full items-center md:mt-10">
                   <HandlePagination
                     pageCount={pageCount}
                     onPageChange={handlePageChange}
@@ -97,7 +97,7 @@ const BlogDefault = () => {
                 </div>
               )}
             </div>
-            <div className="right md:w-1/3 md:pl-8 xl:w-1/4 xl:pl-[52px]">
+            <div className="right xl:w-1/4 xl:pl-[52px]">
               <form className="form-search relative h-12 w-full">
                 <input
                   className="h-full w-full rounded-lg border border-line px-4 py-2"
@@ -263,8 +263,9 @@ const BlogDefault = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </>
   );
 };
 
-export default BlogDefault;
+export default BlogList;

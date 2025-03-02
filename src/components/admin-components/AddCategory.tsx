@@ -10,15 +10,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import { useForm, type UseFormSetValue } from "react-hook-form";
 import { toast } from "sonner";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
+} from "../ui/select";
 
 export default function AddCategoryForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);

@@ -1,4 +1,4 @@
-import EditBlogForm from "@/components/EditBlogForm";
+import EditBlogForm from "@/components/admin-components/EditBlogForm";
 import { auth } from "@/server/auth";
 
 export default async function EditBlogPage({
