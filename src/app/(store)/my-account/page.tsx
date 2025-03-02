@@ -23,10 +23,7 @@ const MyAccount = () => {
 
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
+    
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb heading="My Account" subHeading="My Account" />

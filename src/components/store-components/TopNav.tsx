@@ -1,16 +1,23 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
-import * as Icon from "@phosphor-icons/react";
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaPinterestP,
+  FaXTwitter,
+  FaYoutube,
+} from "react-icons/fa6";
+import * as Icon from "@phosphor-icons/react/dist/ssr";
 interface Props {
   props: string;
   slogan: string;
 }
 export default function TopNav({ props, slogan }: Props) {
   const [isOpenLanguage, setIsOpenLanguage] = useState(false);
-  const [isOpenCurrence, setIsOpenCurrence] = useState(false);
+  const [isOpenCurrency, setIsOpenCurrency] = useState(false);
   const [language, setLanguage] = useState("English");
-  const [currence, setCurrence] = useState("USD");
+  const [Currency, setCurrency] = useState("USD");
 
   return (
     <>
@@ -22,7 +29,7 @@ export default function TopNav({ props, slogan }: Props) {
                 className="choose-type choose-language flex items-center gap-1.5"
                 onClick={() => {
                   setIsOpenLanguage(!isOpenLanguage);
-                  setIsOpenCurrence(false);
+                  setIsOpenCurrency(false);
                 }}
               >
                 <div className="select relative">
@@ -46,20 +53,20 @@ export default function TopNav({ props, slogan }: Props) {
               <div
                 className="choose-type choose-currency flex items-center gap-1.5"
                 onClick={() => {
-                  setIsOpenCurrence(!isOpenCurrence);
+                  setIsOpenCurrency(!isOpenCurrency);
                   setIsOpenLanguage(false);
                 }}
               >
                 <div className="select relative">
-                  <p className="selected caption2 text-white">{currence}</p>
+                  <p className="selected caption2 text-white">{Currency}</p>
                   <ul
-                    className={`list-option bg-white ${isOpenCurrence ? "open" : ""}`}
+                    className={`list-option bg-white ${isOpenCurrency ? "open" : ""}`}
                   >
                     {["USD", "EUR", "GBP"].map((item, index) => (
                       <li
                         key={index}
                         className="caption2"
-                        onClick={() => setCurrence(item)}
+                        onClick={() => setCurrency(item)}
                       >
                         {item}
                       </li>
@@ -72,21 +79,21 @@ export default function TopNav({ props, slogan }: Props) {
             <div className="text-button-uppercase flex items-center text-center text-white">
               {slogan}
             </div>
-            <div className="right-content flex items-center gap-5 max-md:hidden">
+            <div className="right-content flex items-center gap-5 text-white max-md:hidden">
               <Link href={"https://www.facebook.com/"} target="_blank">
-                <i className="icon-facebook text-white"></i>
+                <FaFacebookF />
               </Link>
               <Link href={"https://www.instagram.com/"} target="_blank">
-                <i className="icon-instagram text-white"></i>
+                <FaInstagram />
               </Link>
               <Link href={"https://www.youtube.com/"} target="_blank">
-                <i className="icon-youtube text-white"></i>
+                <FaYoutube />
               </Link>
               <Link href={"https://twitter.com/"} target="_blank">
-                <i className="icon-twitter text-white"></i>
+                <FaXTwitter />
               </Link>
               <Link href={"https://pinterest.com/"} target="_blank">
-                <i className="icon-pinterest text-white"></i>
+                <FaPinterestP />
               </Link>
             </div>
           </div>

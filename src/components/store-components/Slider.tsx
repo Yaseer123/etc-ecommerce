@@ -1,19 +1,21 @@
 "use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
+import { Autoplay, Pagination } from "swiper/modules";
+import { motion } from "motion/react";
 import "swiper/css/bundle";
 import "swiper/css/effect-fade";
-export default function Slider() {
+import { useRouter } from "next/navigation";
+
+const Slider = () => {
   const router = useRouter();
 
   const handleTypeClick = (type: string) => {
     router.push(`/shop/breadcrumb1?type=${type}`);
   };
-
   return (
     <>
       <div className="slider-block style-two w-full">
@@ -125,7 +127,7 @@ export default function Slider() {
               onClick={() => handleTypeClick("swimwear")}
             >
               <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
+                <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
                   Save $10
                 </div>
                 <div className="heading6 mt-2">
@@ -150,7 +152,7 @@ export default function Slider() {
               onClick={() => handleTypeClick("accessories")}
             >
               <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="text-button-uppercase inline-block rounded-sm bg-red_custom px-2 py-0.5 text-white">
+                <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
                   Save $10
                 </div>
                 <div className="heading6 mt-2">
@@ -175,4 +177,6 @@ export default function Slider() {
       </div>
     </>
   );
-}
+};
+
+export default Slider;

@@ -3,16 +3,12 @@ import React from "react";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Menu from "@/components/store-components/Menu";
-import TopNav from "@/components/store-components/TopNav";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 
 export default function register() {
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
+     
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb
