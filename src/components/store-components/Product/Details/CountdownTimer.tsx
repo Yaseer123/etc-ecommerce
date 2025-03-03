@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";

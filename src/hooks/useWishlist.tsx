@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 
 const useWishlist = () => {
   const [wishlist, setWishlist] = useState<ProductType[]>([]);

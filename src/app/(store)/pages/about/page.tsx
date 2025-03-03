@@ -5,14 +5,10 @@ import Menu from "@/components/store-components/Menu";
 import Benefit from "@/components/store-components/Benefit";
 import Brand from "@/components/store-components/Brand";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import Newsletter from "@/components/store-components/Newsletter";
-import TopNav from "@/components/store-components/TopNav";
 import Instagram from "@/components/store-components/Instagram";
-
 const AboutUs = () => {
   return (
     <>
-    
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb heading="About Us" subHeading="About Us" />

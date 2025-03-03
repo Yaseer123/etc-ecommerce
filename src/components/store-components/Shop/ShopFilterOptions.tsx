@@ -12,24 +12,16 @@ import HandlePagination from "../Other/HandlePagination";
 interface Props {
   data: Array<ProductType>;
   productPerPage: number;
-  dataType: string | null;
-  productStyle: string;
 }
 
-const ShopFilterCanvas: React.FC<Props> = ({
-  data,
-  productPerPage,
-  dataType,
-  productStyle,
-}) => {
+const ShopFilterOptions: React.FC<Props> = ({ data, productPerPage }) => {
   const [layoutCol, setLayoutCol] = useState<number | null>(4);
-  const [showOnlySale, setShowOnlySale] = useState(false);
   const [sortOption, setSortOption] = useState("");
-  const [openSidebar, setOpenSidebar] = useState(false);
-  const [type, setType] = useState<string | null>(dataType);
-  const [size, setSize] = useState<string | null>();
-  const [color, setColor] = useState<string | null>();
-  const [brand, setBrand] = useState<string | null>();
+  const [showOnlySale, setShowOnlySale] = useState(false);
+  const [type, setType] = useState<string | undefined>();
+  const [size, setSize] = useState<string | undefined>();
+  const [color, setColor] = useState<string | undefined>();
+  const [brand, setBrand] = useState<string | undefined>();
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: 0,
     max: 100,
@@ -52,17 +44,13 @@ const ShopFilterCanvas: React.FC<Props> = ({
     setCurrentPage(0);
   };
 
-  const handleOpenSidebar = () => {
-    setOpenSidebar((toggleOpen) => !toggleOpen);
-  };
-
   const handleType = (type: string) => {
-    setType((prevType) => (prevType === type ? null : type));
+    setType((prevType) => (prevType === type ? undefined : type));
     setCurrentPage(0);
   };
 
   const handleSize = (size: string) => {
-    setSize((prevSize) => (prevSize === size ? null : size));
+    setSize((prevSize) => (prevSize === size ? undefined : size));
     setCurrentPage(0);
   };
 
@@ -74,12 +62,12 @@ const ShopFilterCanvas: React.FC<Props> = ({
   };
 
   const handleColor = (color: string) => {
-    setColor((prevColor) => (prevColor === color ? null : color));
+    setColor((prevColor) => (prevColor === color ? undefined : color));
     setCurrentPage(0);
   };
 
   const handleBrand = (brand: string) => {
-    setBrand((prevBrand) => (prevBrand === brand ? null : brand));
+    setBrand((prevBrand) => (prevBrand === brand ? undefined : brand));
     setCurrentPage(0);
   };
 
@@ -90,14 +78,8 @@ const ShopFilterCanvas: React.FC<Props> = ({
       isShowOnlySaleMatched = product.sale;
     }
 
-    let isDataTypeMatched = true;
-    if (dataType) {
-      isDataTypeMatched = product.type === dataType;
-    }
-
     let isTypeMatched = true;
     if (type) {
-      dataType = type;
       isTypeMatched = product.type === type;
     }
 
@@ -124,7 +106,6 @@ const ShopFilterCanvas: React.FC<Props> = ({
 
     return (
       isShowOnlySaleMatched &&
-      isDataTypeMatched &&
       isTypeMatched &&
       isSizeMatched &&
       isColorMatched &&
@@ -213,14 +194,12 @@ const ShopFilterCanvas: React.FC<Props> = ({
   };
 
   const handleClearAll = () => {
-    setType(null);
-    setSize(null);
-    setColor(null);
-    setBrand(null);
+    setType(undefined);
+    setSize(undefined);
+    setColor(undefined);
+    setBrand(undefined);
     setPriceRange({ min: 0, max: 100 });
     setCurrentPage(0);
-    dataType = null;
-    setType(dataType);
   };
 
   return (
@@ -231,13 +210,13 @@ const ShopFilterCanvas: React.FC<Props> = ({
             <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
               <div className="text-content">
                 <div className="heading2 text-center">
-                  {dataType === null ? "Shop" : dataType}
+                  {type === undefined ? "Shop" : type}
                 </div>
                 <div className="link caption1 mt-3 flex items-center justify-center gap-1">
                   <Link href={"/"}>Homepage</Link>
                   <Icon.CaretRight size={14} className="text-secondary2" />
                   <div className="capitalize text-secondary2">
-                    {dataType === null ? "Shop" : dataType}
+                    {type === undefined ? "Shop" : type}
                   </div>
                 </div>
               </div>
@@ -246,7 +225,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                   (item, index) => (
                     <div
                       key={index}
-                      className={`tab-item text-button-uppercase has-line-before line-2px cursor-pointer ${dataType === item ? "active" : ""}`}
+                      className={`tab-item text-button-uppercase has-line-before line-2px cursor-pointer ${type === item ? "active" : ""}`}
                       onClick={() => handleType(item)}
                     >
                       {item}
@@ -259,292 +238,11 @@ const ShopFilterCanvas: React.FC<Props> = ({
         </div>
       </div>
 
-      <div
-        className={`sidebar style-canvas ${openSidebar ? "open" : ""}`}
-        onClick={handleOpenSidebar}
-      >
-        <div
-          className="sidebar-main"
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        >
-          <div className="heading flex items-center justify-between">
-            <div className="heading5">Filters</div>
-            <Icon.X
-              size={20}
-              weight="bold"
-              onClick={handleOpenSidebar}
-              className="cursor-pointer"
-            />
-          </div>
-          <div className="filter-type mt-7 border-b border-line pb-8">
-            <div className="heading6">Products Type</div>
-            <div className="list-type mt-4">
-              {[
-                "t-shirt",
-                "dress",
-                "top",
-                "swimwear",
-                "shirt",
-                "underwear",
-                "sets",
-                "accessories",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className={`item flex cursor-pointer items-center justify-between ${dataType === item ? "active" : ""}`}
-                  onClick={() => handleType(item)}
-                >
-                  <div className="has-line-before capitalize text-secondary hover:text-black">
-                    {item}
-                  </div>
-                  <div className="text-secondary2">
-                    (
-                    {
-                      data.filter(
-                        (dataItem) =>
-                          dataItem.type === item &&
-                          dataItem.category === "fashion",
-                      ).length
-                    }
-                    )
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="filter-size mt-8 border-b border-line pb-8">
-            <div className="heading6">Size</div>
-            <div className="list-size mt-4 flex flex-wrap items-center gap-3 gap-y-4">
-              {["XS", "S", "M", "L", "XL", "2XL", "3XL"].map((item, index) => (
-                <div
-                  key={index}
-                  className={`size-item text-button flex h-[44px] w-[44px] items-center justify-center rounded-full border border-line ${size === item ? "active" : ""}`}
-                  onClick={() => handleSize(item)}
-                >
-                  {item}
-                </div>
-              ))}
-              <div
-                className={`size-item text-button flex items-center justify-center rounded-full border border-line px-4 py-2 ${size === "freesize" ? "active" : ""}`}
-                onClick={() => handleSize("freesize")}
-              >
-                Freesize
-              </div>
-            </div>
-          </div>
-          <div className="filter-price mt-8 border-b border-line pb-8">
-            <div className="heading6">Price Range</div>
-            <Slider
-              range
-              defaultValue={[0, 100]}
-              min={0}
-              max={100}
-              onChange={handlePriceChange}
-              className="mt-5"
-            />
-            <div className="price-block mt-4 flex flex-wrap items-center justify-between">
-              <div className="min flex items-center gap-1">
-                <div>Min price:</div>
-                <div className="price-min">
-                  $<span>{priceRange.min}</span>
-                </div>
-              </div>
-              <div className="min flex items-center gap-1">
-                <div>Max price:</div>
-                <div className="price-max">
-                  $<span>{priceRange.max}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="filter-color mt-8 border-b border-line pb-8">
-            <div className="heading6">colors</div>
-            <div className="list-color mt-4 flex flex-wrap items-center gap-3 gap-y-4">
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "pink" ? "active" : ""}`}
-                onClick={() => handleColor("pink")}
-              >
-                <div className="color h-5 w-5 rounded-full bg-[#F4C5BF]"></div>
-                <div className="caption1 capitalize">pink</div>
-              </div>
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "red" ? "active" : ""}`}
-                onClick={() => handleColor("red")}
-              >
-                <div className="color bg-red h-5 w-5 rounded-full"></div>
-                <div className="caption1 capitalize">red</div>
-              </div>
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "green" ? "active" : ""}`}
-                onClick={() => handleColor("green")}
-              >
-                <div className="color bg-green h-5 w-5 rounded-full"></div>
-                <div className="caption1 capitalize">green</div>
-              </div>
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "yellow" ? "active" : ""}`}
-                onClick={() => handleColor("yellow")}
-              >
-                <div className="color bg-yellow h-5 w-5 rounded-full"></div>
-                <div className="caption1 capitalize">yellow</div>
-              </div>
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "purple" ? "active" : ""}`}
-                onClick={() => handleColor("purple")}
-              >
-                <div className="color bg-purple h-5 w-5 rounded-full"></div>
-                <div className="caption1 capitalize">purple</div>
-              </div>
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "black" ? "active" : ""}`}
-                onClick={() => handleColor("black")}
-              >
-                <div className="color h-5 w-5 rounded-full bg-black"></div>
-                <div className="caption1 capitalize">black</div>
-              </div>
-              <div
-                className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "white" ? "active" : ""}`}
-                onClick={() => handleColor("white")}
-              >
-                <div className="color h-5 w-5 rounded-full bg-[#F6EFDD]"></div>
-                <div className="caption1 capitalize">white</div>
-              </div>
-            </div>
-          </div>
-          <div className="filter-brand mt-8 pb-8">
-            <div className="heading6">Brands</div>
-            <div className="list-brand mt-4">
-              {["adidas", "hermes", "zara", "nike", "gucci"].map(
-                (item, index) => (
-                  <div
-                    key={index}
-                    className="brand-item flex items-center justify-between"
-                  >
-                    <div className="left flex cursor-pointer items-center">
-                      <div className="block-input">
-                        <input
-                          type="checkbox"
-                          name={item}
-                          id={item}
-                          checked={brand === item}
-                          onChange={() => handleBrand(item)}
-                        />
-                        <Icon.CheckSquare
-                          size={20}
-                          weight="fill"
-                          className="icon-checkbox"
-                        />
-                      </div>
-                      <label
-                        htmlFor={item}
-                        className="brand-name cursor-pointer pl-2 capitalize"
-                      >
-                        {item}
-                      </label>
-                    </div>
-                    <div className="text-secondary2">
-                      (
-                      {
-                        data.filter(
-                          (dataItem) =>
-                            dataItem.brand === item &&
-                            dataItem.category === "fashion",
-                        ).length
-                      }
-                      )
-                    </div>
-                  </div>
-                ),
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
         <div className="container">
           <div className="list-product-block relative">
             <div className="filter-heading flex flex-wrap items-center justify-between gap-5">
-              <div className="left has-line flex flex-wrap items-center gap-5">
-                <div
-                  className="filter-sidebar-btn flex cursor-pointer items-center gap-2"
-                  onClick={handleOpenSidebar}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M4 21V14"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M4 10V3"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12 21V12"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M12 8V3"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M20 21V16"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M20 12V3"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M1 14H7"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M9 8H15"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M17 16H23"
-                      stroke="#1F1F1F"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  <span>Filters</span>
-                </div>
+              <div className="left flex flex-wrap items-center gap-5">
                 <div className="choose-layout flex items-center gap-2">
                   <div
                     className={`item three-col flex cursor-pointer items-center justify-center rounded border border-line p-2 ${layoutCol === 3 ? "active" : ""}`}
@@ -580,7 +278,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                     </div>
                   </div>
                 </div>
-                <div className="check-sale flex items-center gap-2">
+                <div className="check-sale flex cursor-pointer items-center gap-2">
                   <input
                     type="checkbox"
                     name="filterSale"
@@ -596,10 +294,128 @@ const ShopFilterCanvas: React.FC<Props> = ({
                   </label>
                 </div>
               </div>
-              <div className="right flex items-center gap-3">
-                <label htmlFor="select-filter" className="caption1 capitalize">
-                  Sort by
-                </label>
+              <div className="right flex flex-wrap items-center gap-5 gap-y-3">
+                <div className="select-block filter-type relative">
+                  <select
+                    className="caption1 rounded-lg border border-line py-2 pl-3 pr-8 capitalize md:pr-12"
+                    name="select-type"
+                    id="select-type"
+                    onChange={(e) => handleType(e.target.value)}
+                    value={type === undefined ? "Type" : type}
+                  >
+                    <option value="Type" disabled>
+                      Type
+                    </option>
+                    {[
+                      "t-shirt",
+                      "dress",
+                      "top",
+                      "swimwear",
+                      "shirt",
+                      "underwear",
+                      "sets",
+                      "accessories",
+                    ].map((item, index) => (
+                      <option
+                        key={index}
+                        className={`item cursor-pointer ${type === item ? "active" : ""}`}
+                      >
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                  <Icon.CaretDown
+                    size={12}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                  />
+                </div>
+                <div className="select-block filter-size relative">
+                  <select
+                    className="caption1 rounded-lg border border-line py-2 pl-3 pr-8 capitalize md:pr-12"
+                    name="select-size"
+                    id="select-size"
+                    onChange={(e) => handleSize(e.target.value)}
+                    value={size === undefined ? "Size" : size}
+                  >
+                    <option value="Size" disabled>
+                      Size
+                    </option>
+                    {["XS", "S", "M", "L", "XL", "2XL", "freesize"].map(
+                      (item, index) => (
+                        <option
+                          key={index}
+                          className={`item cursor-pointer ${size === item ? "active" : ""}`}
+                        >
+                          {item}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                  <Icon.CaretDown
+                    size={12}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                  />
+                </div>
+                <div className="select-block filter-color relative">
+                  <select
+                    className="caption1 rounded-lg border border-line py-2 pl-3 pr-8 capitalize md:pr-12"
+                    name="select-color"
+                    id="select-color"
+                    onChange={(e) => handleColor(e.target.value)}
+                    value={color === undefined ? "Color" : color}
+                  >
+                    <option value="Color" disabled>
+                      Color
+                    </option>
+                    {[
+                      "red",
+                      "green",
+                      "yellow",
+                      "purple",
+                      "black",
+                      "pink",
+                      "white",
+                    ].map((item, index) => (
+                      <option
+                        key={index}
+                        className={`item cursor-pointer ${color === item ? "active" : ""}`}
+                      >
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                  <Icon.CaretDown
+                    size={12}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                  />
+                </div>
+                <div className="select-block filter-brand relative">
+                  <select
+                    className="caption1 rounded-lg border border-line py-2 pl-3 pr-8 capitalize md:pr-12"
+                    name="select-brand"
+                    id="select-brand"
+                    onChange={(e) => handleBrand(e.target.value)}
+                    value={brand === undefined ? "Brand" : brand}
+                  >
+                    <option value="Brand" disabled>
+                      Brand
+                    </option>
+                    {["adidas", "hermes", "zara", "nike", "gucci"].map(
+                      (item, index) => (
+                        <option
+                          key={index}
+                          className={`item cursor-pointer ${brand === item ? "active" : ""}`}
+                        >
+                          {item}
+                        </option>
+                      ),
+                    )}
+                  </select>
+                  <Icon.CaretDown
+                    size={12}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                  />
+                </div>
                 <div className="select-block relative">
                   <select
                     id="select-filter"
@@ -642,7 +458,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                       <div
                         className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
                         onClick={() => {
-                          setType(null);
+                          setType(undefined);
                         }}
                       >
                         <Icon.X className="cursor-pointer" />
@@ -653,7 +469,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                       <div
                         className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
                         onClick={() => {
-                          setSize(null);
+                          setSize(undefined);
                         }}
                       >
                         <Icon.X className="cursor-pointer" />
@@ -664,7 +480,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                       <div
                         className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
                         onClick={() => {
-                          setColor(null);
+                          setColor(undefined);
                         }}
                       >
                         <Icon.X className="cursor-pointer" />
@@ -675,7 +491,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                       <div
                         className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
                         onClick={() => {
-                          setBrand(null);
+                          setBrand(undefined);
                         }}
                       >
                         <Icon.X className="cursor-pointer" />
@@ -708,12 +524,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                     No products match the selected criteria.
                   </div>
                 ) : (
-                  <Product
-                    key={item.id}
-                    data={item}
-                    type="grid"
-                    style={productStyle}
-                  />
+                  <Product key={item.id} data={item} type="grid" />
                 ),
               )}
             </div>
@@ -733,4 +544,4 @@ const ShopFilterCanvas: React.FC<Props> = ({
   );
 };
 
-export default ShopFilterCanvas;
+export default ShopFilterOptions;

@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, Scrollbar } from "swiper/modules";
@@ -142,9 +142,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
 
     if (compareState.compareArray.length < 3) {
       if (
-        compareState.compareArray.some(
-          (item) => item.id === productMain.id,
-        )
+        compareState.compareArray.some((item) => item.id === productMain.id)
       ) {
         console.log("Removing from Compare");
         removeFromCompare(productMain.id);

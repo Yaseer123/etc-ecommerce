@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
@@ -16,6 +16,7 @@ import { useModalCompareContext } from "@/context/store-context/ModalCompareCont
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
+import ModalSizeGuide from "../../ModalSizeGuide";
 
 interface Props {
   data: Array<ProductType>;

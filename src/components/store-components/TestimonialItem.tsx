@@ -1,4 +1,4 @@
-import { type TestimonialType } from "@/type/TestimonialType";
+import { type TestimonialType } from "@/types/TestimonialType";
 import Rate from "./Rate";
 import Image from "next/image";
 interface TestimonialProps {

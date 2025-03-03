@@ -2,7 +2,7 @@
 import React from "react";
 import Image from "next/image";
 
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Rate from "@/components/store-components/Rate";
 import TopNav from "@/components/store-components/TopNav";
@@ -10,7 +10,6 @@ import { useCart } from "@/context/store-context/CartContext";
 import { useCompare } from "@/context/store-context/CompareContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
 import Menu from "@/components/store-components/Menu";
-
 
 const Compare = () => {
   const { compareState } = useCompare();
@@ -29,7 +28,6 @@ const Compare = () => {
 
   return (
     <>
-     
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb heading="Compare Products" subHeading="Compare Products" />

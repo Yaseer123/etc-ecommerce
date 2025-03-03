@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useCart } from "@/context/store-context/CartContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";

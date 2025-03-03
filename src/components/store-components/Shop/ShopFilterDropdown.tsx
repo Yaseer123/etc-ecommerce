@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import Image from "next/image";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { type ProductType } from "@/types/ProductType";
+import { ProductType } from "@/types/ProductType";
 import Product from "../Product/Product";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import HandlePagination from "../HandlePagination";
-// import HandlePagination from '../Other/HandlePagination';
+import HandlePagination from "../Other/HandlePagination";
 
 interface Props {
   data: Array<ProductType>;
@@ -17,7 +15,7 @@ interface Props {
   dataType: string | null;
 }
 
-const ShopBreadCrumbImg: React.FC<Props> = ({
+const ShopFilterDropdown: React.FC<Props> = ({
   data,
   productPerPage,
   dataType,
@@ -54,7 +52,6 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
 
   const handleOpenSidebar = () => {
     setOpenSidebar((toggleOpen) => !toggleOpen);
-    setCurrentPage(0);
   };
 
   const handleType = (type: string) => {
@@ -84,7 +81,7 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
     setCurrentPage(0);
   };
 
-  // Filter product
+  // Filter product data by dataType
   let filteredData = data.filter((product) => {
     let isShowOnlySaleMatched = true;
     if (showOnlySale) {
@@ -136,7 +133,7 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
   });
 
   // Create a copy array filtered to sort
-  const sortedData = [...filteredData];
+  let sortedData = [...filteredData];
 
   if (sortOption === "soldQuantityHighToLow") {
     filteredData = sortedData.sort((a, b) => b.sold - a.sold);
@@ -214,7 +211,6 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
   };
 
   const handleClearAll = () => {
-    setSortOption("");
     setType(null);
     setSize(null);
     setColor(null);
@@ -256,15 +252,6 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
                   ),
                 )}
               </div>
-            </div>
-            <div className="bg-img absolute -right-6 top-2 z-[0] w-1/3 max-lg:bottom-0 max-lg:top-auto max-lg:w-[26%] max-sm:w-[45%]">
-              <Image
-                src={"/images/slider/bg1-1.png"}
-                width={1000}
-                height={1000}
-                alt=""
-                className=""
-              />
             </div>
           </div>
         </div>
@@ -387,7 +374,7 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
                     </div>
                   </div>
                 </div>
-                <div className="check-sale flex cursor-pointer items-center gap-2">
+                <div className="check-sale flex items-center gap-2">
                   <input
                     type="checkbox"
                     name="filterSale"
@@ -726,4 +713,4 @@ const ShopBreadCrumbImg: React.FC<Props> = ({
   );
 };
 
-export default ShopBreadCrumbImg;
+export default ShopFilterDropdown;

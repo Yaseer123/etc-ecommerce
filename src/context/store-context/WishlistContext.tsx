@@ -2,7 +2,7 @@
 
 // WishlistContext.tsx
 import React, { createContext, useContext, useReducer, useEffect } from "react";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 
 interface WishlistItem extends ProductType {
   name: string;
