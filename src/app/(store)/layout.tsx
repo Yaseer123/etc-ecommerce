@@ -1,3 +1,4 @@
+import "@/styles/styles.css";
 import AnalyticsScript from "@/components/ga-pixel-script/AnalyticsScript";
 import Footer from "@/components/store-components/Footer";
 import Menu from "@/components/store-components/Menu";
