@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Menu from "@/components/store-components/Menu";
 import Product from "@/components/store-components/Product/Product";
 import useWishlist from "@/hooks/useWishlist";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 

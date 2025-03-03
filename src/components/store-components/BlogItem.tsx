@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { type BlogType } from "@/type/BlogType";
+import { type BlogType } from "@/types/BlogType";
 import { useRouter } from "next/navigation";
 
 interface BlogProps {

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { type BlogType } from "@/type/BlogType";
+import { type BlogType } from "@/types/BlogType";
 import BlogItem from "./BlogItem";
 
 interface Props {

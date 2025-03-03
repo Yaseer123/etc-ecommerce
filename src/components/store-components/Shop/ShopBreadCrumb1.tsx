@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Product from "../Product/Product";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";

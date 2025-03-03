@@ -8,7 +8,7 @@ import React, {
   useReducer,
   useEffect,
 } from "react";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 
 interface CompareState {
   compareArray: CompareItem[];

@@ -188,6 +188,9 @@ importers:
       react-drag-drop-files:
         specifier: ^2.3.10
         version: 2.4.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-facebook-pixel:
+        specifier: ^1.0.4
+        version: 1.0.4
       react-fast-marquee:
         specifier: ^1.6.5
         version: 1.6.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -4127,6 +4130,9 @@ packages:
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
+
+  react-facebook-pixel@1.0.4:
+    resolution: {integrity: sha512-givZY8MS0v/mdbRzvcvouBo/j0TtDiu/93f4gIjJXwDDgwlf6bYUiQvb2qcqjluOOD/hIKUQHNYLNsSOnoEklg==}
 
   react-fast-marquee@1.6.5:
     resolution: {integrity: sha512-swDnPqrT2XISAih0o74zQVE2wQJFMvkx+9VZXYYNSLb/CUcAzU9pNj637Ar2+hyRw6b4tP6xh4GQZip2ZCpQpg==}
@@ -9177,6 +9183,8 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       styled-components: 6.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  react-facebook-pixel@1.0.4: {}
 
   react-fast-marquee@1.6.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:

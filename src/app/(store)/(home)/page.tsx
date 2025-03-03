@@ -15,7 +15,6 @@ import blogData from "@/data/Blog.json";
 export default function page() {
   return (
     <div>
-      
       <div id="header" className="relative w-full">
         <Menu />
         <Slider />

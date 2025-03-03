@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { type ProductType } from "@/type/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import productData from "@/data/Product.json";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/store-components/Footer";
@@ -89,7 +89,6 @@ export default function Page() {
 
   return (
     <>
-     
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
         <Breadcrumb heading="Search Result" subHeading="Search Result" />
@@ -134,7 +133,7 @@ export default function Page() {
                     No products match the selected criteria.
                   </div>
                 ) : (
-                  <Product key={item.id} data={item} type="grid" style=""/>
+                  <Product key={item.id} data={item} type="grid" style="" />
                 ),
               )}
             </div>
