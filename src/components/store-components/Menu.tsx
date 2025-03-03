@@ -15,7 +15,7 @@ import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
 
-export default function Menu() {
+export default function Menu({ props }: { props?: string }) {
   const pathname = usePathname();
   const { openLoginPopup, handleLoginPopup } = useLoginPopup();
   const { openShopDepartmentPopup, handleShopDepartmentPopup } =
@@ -78,7 +78,7 @@ export default function Menu() {
         className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500`}
       >
         <div
-          className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px]`}
+          className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px] ${props}`}
         >
           <div className="container mx-auto h-full">
             <div className="header-main flex h-full items-center justify-between">
