@@ -1,7 +1,6 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Menu from "@/components/store-components/Menu";
-import TopNav from "@/components/store-components/TopNav";
 import React from "react";
 
 const ContactUs = () => {

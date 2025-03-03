@@ -1,8 +1,6 @@
 "use client";
 import React from "react";
-import { useSearchParams } from "next/navigation";
-import productData from "@/data/Product.json";
-import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
+
 
 import Menu from "@/components/store-components/Menu";
 

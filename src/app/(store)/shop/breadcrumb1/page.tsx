@@ -3,10 +3,9 @@
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import productData from "@/data/Product.json";
-import Footer from "@/components/store-components/Footer";
+
 import ShopBreadCrumb1 from "@/components/store-components/Shop/ShopBreadCrumb1";
-import { Menu } from "lucide-react";
-import TopNav from "@/components/store-components/TopNav";
+import Menu from "@/components/store-components/Menu";
 
 export default function BreadCrumb1() {
   const searchParams = useSearchParams();
@@ -31,7 +30,6 @@ export default function BreadCrumb1() {
         gender={gender}
         category={category}
       />
-      <Footer />
     </>
   );
 }

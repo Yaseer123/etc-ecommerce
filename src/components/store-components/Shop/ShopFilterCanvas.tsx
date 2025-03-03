@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { ProductType } from "@/types/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Product from "../Product/Product";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import HandlePagination from "../Other/HandlePagination";
+import HandlePagination from "../HandlePagination";
+
 
 interface Props {
   data: Array<ProductType>;
@@ -135,7 +136,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
   });
 
   // Create a copy array filtered to sort
-  let sortedData = [...filteredData];
+  const sortedData = [...filteredData];
 
   if (sortOption === "soldQuantityHighToLow") {
     filteredData = sortedData.sort((a, b) => b.sold - a.sold);
@@ -231,13 +232,13 @@ const ShopFilterCanvas: React.FC<Props> = ({
             <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
               <div className="text-content">
                 <div className="heading2 text-center">
-                  {dataType === null ? "Shop" : dataType}
+                  {dataType ?? "Shop"}
                 </div>
                 <div className="link caption1 mt-3 flex items-center justify-center gap-1">
                   <Link href={"/"}>Homepage</Link>
                   <Icon.CaretRight size={14} className="text-secondary2" />
                   <div className="capitalize text-secondary2">
-                    {dataType === null ? "Shop" : dataType}
+                    {dataType ?? "Shop"}
                   </div>
                 </div>
               </div>
@@ -631,10 +632,10 @@ const ShopFilterCanvas: React.FC<Props> = ({
                 {totalProducts}
                 <span className="pl-1 text-secondary">Products Found</span>
               </div>
-              {(selectedType ||
-                selectedSize ||
-                selectedColor ||
-                selectedBrand) && (
+              {((selectedType ?? null) ??
+               (selectedSize ?? null) ??
+               (selectedColor ?? null) ??
+               (selectedBrand ?? null)) && (
                 <>
                   <div className="list flex items-center gap-3">
                     <div className="h-4 w-px bg-line"></div>
