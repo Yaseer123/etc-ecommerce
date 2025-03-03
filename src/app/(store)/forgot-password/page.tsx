@@ -2,7 +2,6 @@
 import React from "react";
 import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import TopNav from "@/components/store-components/TopNav";
 import Menu from "@/components/store-components/Menu";
 
 const ForgotPassword = () => {

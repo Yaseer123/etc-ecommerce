@@ -5,11 +5,10 @@ import { useRouter } from "next/navigation";
 import { type ProductType } from "@/types/ProductType";
 import productData from "@/data/Product.json";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import Footer from "@/components/store-components/Footer";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
 import Menu from "@/components/store-components/Menu";
-import TopNav from "@/components/store-components/TopNav";
+
 
 export default function Page() {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -149,7 +148,7 @@ export default function Page() {
           </div>
         </div>
       </div>
-      <Footer />
+
     </>
   );
 }

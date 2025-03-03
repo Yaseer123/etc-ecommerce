@@ -12,7 +12,7 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import BlogItem from "@/components/store-components/Blog/BlogItem";
 import HandlePagination from "@/components/store-components/HandlePagination";
 
-const BlogList = () => {
+const BlogsPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 4;
   const offset = currentPage * productsPerPage;
@@ -79,6 +79,10 @@ const BlogList = () => {
 
   return (
     <>
+      <div id="header" className="relative w-full">
+        <Menu props="bg-transparent" />
+        <Breadcrumb heading="Blogs" subHeading="Blogs" />
+      </div>
       <div className="blog list py-10 md:py-20">
         <div className="container">
           <div className="flex justify-between gap-y-12 max-xl:flex-col">
@@ -268,4 +272,4 @@ const BlogList = () => {
   );
 };
 
-export default BlogList;
+export default BlogsPage;

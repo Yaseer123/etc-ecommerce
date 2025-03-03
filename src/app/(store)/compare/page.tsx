@@ -39,17 +39,17 @@ const Compare = () => {
               <div className="list-product flex">
                 <div className="left w-[170px] flex-shrink-0 lg:w-[240px]"></div>
                 <div className="right flex w-full rounded-t-2xl border border-b-0 border-line">
-                  {compareState.compareArray.map((item) => (
+                  {compareState.compareArray.map((item : ProductType) => (
                     <div
                       className="product-item border-r border-line px-10 pb-5 pt-6"
                       key={item.id}
                     >
                       <div className="bg-img aspect-[3/4] w-full flex-shrink-0 overflow-hidden rounded-lg">
                         <Image
-                          src={item.images[0]}
+                          src={item.images[0]?? "/images/product/1.png"}
                           width={1000}
                           height={1500}
-                          alt={item.images[0]}
+                          alt={item.images[0]?? 'product'}
                           className="h-full w-full object-cover"
                         />
                       </div>
@@ -92,7 +92,7 @@ const Compare = () => {
                 </div>
                 <table className="right w-full border-collapse border-r border-t border-line">
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
@@ -105,7 +105,7 @@ const Compare = () => {
                     ))}
                   </tr>
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
@@ -117,7 +117,7 @@ const Compare = () => {
                     ))}
                   </tr>
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
@@ -129,7 +129,7 @@ const Compare = () => {
                     ))}
                   </tr>
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
@@ -141,7 +141,7 @@ const Compare = () => {
                     ))}
                   </tr>
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="size h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
@@ -158,7 +158,7 @@ const Compare = () => {
                     ))}
                   </tr>
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="size h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
@@ -190,7 +190,7 @@ const Compare = () => {
                     ))}
                   </tr>
                   <tr className={`flex w-full items-center`}>
-                    {compareState.compareArray.map((item, index) => (
+                    {compareState.compareArray.map((item : ProductType, index) => (
                       <td
                         className="h-[60px] w-full border border-r-0 border-t-0 border-line"
                         key={index}
