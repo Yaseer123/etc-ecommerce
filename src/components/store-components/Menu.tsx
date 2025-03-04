@@ -14,6 +14,7 @@ import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
+import CategoryDropdown from "./category/CategoryDropdown";
 
 export default function Menu({ props }: { props?: string }) {
   const pathname = usePathname();
@@ -92,14 +93,7 @@ export default function Menu({ props }: { props?: string }) {
                 <div className="heading4">Rinors</div>
               </Link>
               <div className="form-search flex h-[44px] w-2/3 items-center pl-8 max-lg:hidden">
-                <div className="category-block relative h-full">
-                  <div className="category-btn relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2">
-                    <div className="text-button whitespace-nowrap text-white">
-                      All Categories
-                    </div>
-                    <Icon.CaretDown color="#ffffff" />
-                  </div>
-                </div>
+                <CategoryDropdown />
                 <div className="flex h-full w-full items-center">
                   <input
                     type="text"

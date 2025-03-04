@@ -1,0 +1,124 @@
+import Link from "next/link";
+import useCategoryPopup from "@/hooks/useCategoryPopup";
+import * as Icon from "@phosphor-icons/react/dist/ssr"; // Assuming you have an Icon component
+import { useState } from "react";
+import { motion } from "motion/react";
+
+const CategoryDropdown = () => {
+  const { openCategoryPopup, handleCategoryPopup } = useCategoryPopup();
+  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+
+  // Example categories with nested subcategories
+  const categories = [
+    {
+      name: "Electronics",
+      path: "/category/electronics",
+      subcategories: [
+        { name: "Mobile Phones", path: "/category/electronics/mobile-phones" },
+        { name: "Laptops", path: "/category/electronics/laptops" },
+        { name: "Accessories", path: "/category/electronics/accessories" },
+      ],
+    },
+    {
+      name: "Fashion",
+      path: "/category/fashion",
+      subcategories: [
+        { name: "Men's Clothing", path: "/category/fashion/men" },
+        { name: "Women's Clothing", path: "/category/fashion/women" },
+        { name: "Shoes", path: "/category/fashion/shoes" },
+      ],
+    },
+    {
+      name: "Home & Kitchen",
+      path: "/category/home-kitchen",
+      subcategories: [
+        { name: "Furniture", path: "/category/home-kitchen/furniture" },
+        { name: "Appliances", path: "/category/home-kitchen/appliances" },
+      ],
+    },
+  ];
+
+  return (
+    <div className="category-block relative h-full">
+      {/* Main Category Button */}
+      <div
+        className="category-btn relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2"
+        onClick={handleCategoryPopup}
+      >
+        <div className="text-button whitespace-nowrap text-white">
+          All Categories
+        </div>
+        <Icon.CaretDown color="#ffffff" />
+      </div>
+
+      {/* Dropdown Menu with Width Animation */}
+      <motion.div
+        initial={{ opacity: 0, width: 0 }}
+        animate={{
+          opacity: openCategoryPopup ? 1 : 0,
+          width: openCategoryPopup ? "100%" : "0%",
+        }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
+        className={`category-popup box-shadow-sm absolute left-0 right-0 top-[44px] h-max rounded-b-2xl bg-white ${
+          openCategoryPopup ? "visible" : "invisible"
+        }`}
+        onMouseLeave={() => setHoveredCategory(null)}
+      >
+        {categories.map((category) => (
+          <div
+            key={category.name}
+            className="group relative"
+            onMouseEnter={() => setHoveredCategory(category.name)}
+            onMouseLeave={() => setHoveredCategory(null)}
+          >
+            {/* Parent Category */}
+            <div className="flex cursor-pointer items-center justify-between px-4 py-2 hover:bg-gray-100">
+              <Link
+                href={category.path}
+                className="inline-block whitespace-nowrap"
+              >
+                {category.name}
+              </Link>
+              {category.subcategories && (
+                <Icon.CaretRight
+                  className={`transition-transform ${
+                    hoveredCategory === category.name ? "rotate-90" : ""
+                  }`}
+                />
+              )}
+            </div>
+
+            {/* Subcategories with Width Animation (Fully Visible) */}
+            {category.subcategories && (
+              <motion.div
+                initial={{ opacity: 0, width: 0 }}
+                animate={{
+                  opacity: hoveredCategory === category.name ? 1 : 0,
+                  width: hoveredCategory === category.name ? "200px" : "0px",
+                }}
+                transition={{ duration: 0.2, ease: "easeInOut" }}
+                className="absolute left-full top-0 min-w-[200px] overflow-hidden border border-gray-200 bg-white shadow-lg"
+                style={{
+                  display: hoveredCategory === category.name ? "block" : "none", // Ensures visibility
+                }}
+              >
+                {category.subcategories.map((sub) => (
+                  <div key={sub.name} className="px-4 py-2 hover:bg-gray-200">
+                    <Link
+                      href={sub.path}
+                      className="inline-block whitespace-nowrap"
+                    >
+                      {sub.name}
+                    </Link>
+                  </div>
+                ))}
+              </motion.div>
+            )}
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
+export default CategoryDropdown;
