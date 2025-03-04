@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import TrendingNow from "@/components/store-components/TrendingNow";
 
@@ -85,18 +85,20 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      {/* 🔹 Enhanced Categories Section */}
+      {/* 🔹 Categories Accordion (Using Flexbox) */}
       <div className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-12 text-center text-3xl font-bold">
             Shop By Category
           </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+
+          {/* 🔥 FLEXBOX LAYOUT */}
+          <div className="flex flex-wrap justify-center gap-8">
             {categories.map((category) => (
               <motion.div
                 key={category.name}
-                className={`overflow-hidden rounded-xl transition-all duration-300 ${
-                  openCategory === category.name ? "shadow-2xl" : "shadow-none"
+                className={`w-full overflow-hidden rounded-xl transition-all duration-300 sm:w-[48%] lg:w-[30%] xl:w-[23%] ${
+                  openCategory === category.name ? "shadow-xl" : "shadow-none"
                 }`}
                 whileHover={{ y: -8 }}
               >
@@ -135,10 +137,6 @@ export default function CategoriesPage() {
                       className="absolute bottom-4 right-4 rounded-full bg-white p-2"
                       animate={{
                         rotate: openCategory === category.name ? 180 : 0,
-                        backgroundColor:
-                          openCategory === category.name
-                            ? "rgb(255, 255, 255)"
-                            : "rgba(255, 255, 255, 0.7)",
                       }}
                     >
                       <Icon.CaretDown className="text-gray-800" weight="bold" />
@@ -146,40 +144,58 @@ export default function CategoriesPage() {
                   </div>
                 </div>
 
-                {/* 📌 Subcategories with Enhanced Animation */}
-                <motion.div
-                  initial={{ height: 0, opacity: 0 }}
-                  animate={{
-                    height: openCategory === category.name ? "auto" : 0,
-                    opacity: openCategory === category.name ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.3, ease: "easeInOut" }}
-                  className="overflow-hidden"
-                >
-                  <div className="divide-y divide-gray-100 bg-white p-0">
-                    {category.subcategories.map((sub, index) => (
-                      <motion.div
-                        key={sub.name}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{
-                          opacity: openCategory === category.name ? 1 : 0,
-                          x: openCategory === category.name ? 0 : -20,
-                        }}
-                        transition={{ delay: index * 0.1, duration: 0.3 }}
-                      >
-                        <Link
-                          href={sub.path}
-                          className="block p-4 text-gray-700 transition-all hover:bg-gray-50 hover:pl-6 hover:text-black"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{sub.name}</span>
-                            <Icon.ArrowRight size={16} className="opacity-50" />
-                          </div>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </div>
-                </motion.div>
+                {/* 📌 Subcategories with Animation */}
+                <AnimatePresence>
+                  {openCategory === category.name && (
+                    <motion.div
+                      key={`${category.name}-subcategories`}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{
+                        height: "auto",
+                        opacity: 1,
+                        transition: { duration: 0.3 },
+                      }}
+                      exit={{
+                        height: 0,
+                        opacity: 0,
+                        transition: { duration: 0.3 },
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <div className="divide-y divide-gray-100 bg-white p-0">
+                        {category.subcategories.map((sub, index) => (
+                          <motion.div
+                            key={sub.name}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{
+                              opacity: 1,
+                              x: 0,
+                              transition: { delay: index * 0.1, duration: 0.3 },
+                            }}
+                            exit={{
+                              opacity: 0,
+                              x: -20,
+                              transition: { duration: 0.2 },
+                            }}
+                          >
+                            <Link
+                              href={sub.path}
+                              className="block p-4 text-gray-700 transition-all hover:bg-gray-50 hover:pl-6 hover:text-black"
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{sub.name}</span>
+                                <Icon.ArrowRight
+                                  size={16}
+                                  className="opacity-50"
+                                />
+                              </div>
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             ))}
           </div>
