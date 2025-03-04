@@ -57,8 +57,13 @@ const categories: Category[] = [
 ];
 
 export default function CategoriesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [openCategory, setOpenCategory] = useState<string | null>(null);
+
+  const toggleCategory = (categoryName: string) => {
+    setOpenCategory((prevOpen) =>
+      prevOpen === categoryName ? null : categoryName,
+    );
+  };
 
   return (
     <>
@@ -90,19 +95,15 @@ export default function CategoriesPage() {
             {categories.map((category) => (
               <motion.div
                 key={category.name}
-                className="overflow-hidden rounded-xl shadow-lg transition-all duration-300"
+                className={`overflow-hidden rounded-xl transition-all duration-300 ${
+                  openCategory === category.name ? "shadow-2xl" : "shadow-none"
+                }`}
                 whileHover={{ y: -8 }}
-                onMouseEnter={() => setHoveredCategory(category.name)}
-                onMouseLeave={() => setHoveredCategory(null)}
               >
                 {/* 📌 Category Card */}
                 <div
                   className="cursor-pointer"
-                  onClick={() =>
-                    setSelectedCategory((prev) =>
-                      prev === category.name ? null : category.name,
-                    )
-                  }
+                  onClick={() => toggleCategory(category.name)}
                 >
                   {/* Category Header with Gradient */}
                   <div
@@ -133,9 +134,9 @@ export default function CategoriesPage() {
                     <motion.div
                       className="absolute bottom-4 right-4 rounded-full bg-white p-2"
                       animate={{
-                        rotate: selectedCategory === category.name ? 180 : 0,
+                        rotate: openCategory === category.name ? 180 : 0,
                         backgroundColor:
-                          selectedCategory === category.name
+                          openCategory === category.name
                             ? "rgb(255, 255, 255)"
                             : "rgba(255, 255, 255, 0.7)",
                       }}
@@ -149,8 +150,8 @@ export default function CategoriesPage() {
                 <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{
-                    height: selectedCategory === category.name ? "auto" : 0,
-                    opacity: selectedCategory === category.name ? 1 : 0,
+                    height: openCategory === category.name ? "auto" : 0,
+                    opacity: openCategory === category.name ? 1 : 0,
                   }}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                   className="overflow-hidden"
@@ -161,8 +162,8 @@ export default function CategoriesPage() {
                         key={sub.name}
                         initial={{ opacity: 0, x: -20 }}
                         animate={{
-                          opacity: selectedCategory === category.name ? 1 : 0,
-                          x: selectedCategory === category.name ? 0 : -20,
+                          opacity: openCategory === category.name ? 1 : 0,
+                          x: openCategory === category.name ? 0 : -20,
                         }}
                         transition={{ delay: index * 0.1, duration: 0.3 }}
                       >
