@@ -5,7 +5,6 @@ import { FileUploader } from "react-drag-drop-files";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../admin-components/GalleryImage";
 import { removeImage, uploadFile } from "@/lib/actions/file";
-import { useImageStore } from "@/context/ImageProvider";
 import Image from "next/image";
 import { useImageStore } from "@/context/admin-context/ImageProvider";
 
