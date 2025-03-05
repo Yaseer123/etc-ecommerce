@@ -1,5 +1,4 @@
 import "@/styles/styles.css";
-import AnalyticsScript from "@/components/ga-pixel-script/AnalyticsScript";
 import Footer from "@/components/store-components/Footer";
 import Menu from "@/components/store-components/Menu";
 import ModalCart from "@/components/store-components/Modal/ModalCart";
@@ -13,7 +12,6 @@ const serverTimeLeft: CountdownTimeType = countdownTime();
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <AnalyticsScript />
       <GlobalProvider>
         <TopNav
           props="style-one bg-black_custom"

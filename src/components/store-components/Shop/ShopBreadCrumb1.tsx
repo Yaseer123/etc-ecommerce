@@ -8,6 +8,7 @@ import Product from "../Product/Product";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import HandlePagination from "../HandlePagination";
+import Breadcrumb from "../Breadcrumb/Breadcrumb";
 
 interface Props {
   data: Array<ProductType>;
@@ -15,6 +16,7 @@ interface Props {
   dataType: string | null | undefined;
   gender: string | null;
   category: string | null;
+  slug: string[];
 }
 
 const ShopBreadCrumb1: React.FC<Props> = ({
@@ -23,6 +25,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
   dataType,
   gender,
   category,
+  slug,
 }) => {
   const [showOnlySale, setShowOnlySale] = useState(false);
   const [sortOption, setSortOption] = useState("");
@@ -58,8 +61,8 @@ const ShopBreadCrumb1: React.FC<Props> = ({
   };
 
   const handlePriceChange = (values: number | number[]) => {
-    if (Array.isArray(values)) {
-      setPriceRange({ min: values[0], max: values[1] });
+    if (Array.isArray(values) && values.length >= 2) {
+      setPriceRange({ min: values[0] ?? 0, max: values[1] ?? 100 });
       setCurrentPage(0);
     }
   };
@@ -226,42 +229,29 @@ const ShopBreadCrumb1: React.FC<Props> = ({
     setCurrentPage(0);
     handleType(null);
   };
+  // Prepare breadcrumb items
+  const breadcrumbItems = [
+    { label: "Homepage", href: "/" },
+    { label: "Categories", href: "/categories" },
+    ...slug.map((item, index) => ({
+      label: item,
+      href: `/categories/${slug.slice(0, index + 1).join("/")}`,
+    })),
+  ];
 
   return (
     <>
-      <div className="breadcrumb-block style-img">
-        <div className="breadcrumb-main bg-linear overflow-hidden">
-          <div className="container relative pb-10 pt-24 lg:pt-[134px]">
-            <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
-              <div className="text-content">
-                <div className="heading2 text-center">
-                  {dataType === null ? "Shop" : dataType}
-                </div>
-                <div className="link caption1 mt-3 flex items-center justify-center gap-1">
-                  <Link href={"/"}>Homepage</Link>
-                  <Icon.CaretRight size={14} className="text-secondary2" />
-                  <div className="capitalize text-secondary2">
-                    {dataType === null ? "Shop" : dataType}
-                  </div>
-                </div>
-              </div>
-              <div className="list-tab mt-12 flex flex-wrap items-center justify-center gap-8 gap-y-5 overflow-hidden lg:mt-[70px]">
-                {["t-shirt", "dress", "top", "swimwear", "shirt"].map(
-                  (item, index) => (
-                    <div
-                      key={index}
-                      className={`tab-item text-button-uppercase has-line-before line-2px cursor-pointer ${dataType === item ? "active" : ""}`}
-                      onClick={() => handleType(item)}
-                    >
-                      {item}
-                    </div>
-                  ),
-                )}
-              </div>
-            </div>
+      <Breadcrumb items={breadcrumbItems} pageTitle={slug[slug.length - 1]}>
+        {["t-shirt", "dress", "top", "swimwear", "shirt"].map((item, index) => (
+          <div
+            key={index}
+            className={`tab-item text-button-uppercase has-line-before line-2px cursor-pointer ${dataType === item ? "active" : ""}`}
+            onClick={() => handleType(item)}
+          >
+            {item}
           </div>
-        </div>
-      </div>
+        ))}
+      </Breadcrumb>
 
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
         <div className="container">
@@ -524,9 +514,9 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                   {totalProducts}
                   <span className="pl-1 text-secondary">Products Found</span>
                 </div>
-                {(selectedType ||
-                  selectedSize ||
-                  selectedColor ||
+                {(selectedType ??
+                  selectedSize ??
+                  selectedColor ??
                   selectedBrand) && (
                   <>
                     <div className="list flex items-center gap-3">

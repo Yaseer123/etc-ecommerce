@@ -22,11 +22,11 @@ import RichEditor from "../rich-editor";
 import { v4 as uuid } from "uuid";
 import { Label } from "../ui/label";
 import DndImageGallery from "../rich-editor/DndImageGallery";
-import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { renameImages } from "@/app/actions/file";
+import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 
 export default function AddProductForm() {
   const router = useRouter();

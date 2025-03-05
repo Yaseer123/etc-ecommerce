@@ -1,10 +1,10 @@
-
-
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
+import AnalyticsScript from "@/components/ga-pixel-script/AnalyticsScript";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: "Rinors E-commerce",
@@ -18,6 +18,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
+      <Head>
+        <AnalyticsScript />
+      </Head>
       <body>
         <TRPCReactProvider>{children}</TRPCReactProvider>
         <Toaster />
