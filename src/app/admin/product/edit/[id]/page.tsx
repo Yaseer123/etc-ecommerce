@@ -1,4 +1,4 @@
-import EditProductForm from "@/components/EditProduct";
+import EditProductForm from "@/components/admin-components/EditProduct";
 import { HydrateClient } from "@/trpc/server";
 
 export default async function ProductEditPage({

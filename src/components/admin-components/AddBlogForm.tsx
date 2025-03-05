@@ -3,36 +3,30 @@
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import RichEditor from "./rich-editor";
-import { Input } from "./ui/input";
+import { v4 as uuid } from "uuid";
+import RichEditor from "../rich-editor";
+import { Input } from "../ui/input";
 
-export default function EditBlogForm({
-  userId,
-  blogId,
-}: {
-  userId: string;
-  blogId: string;
-}) {
+export default function AddBlogForm({ userId }: { userId: string }) {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [pending, setPending] = useState(false);
+  const [imageId] = useState(uuid());
   const router = useRouter();
 
-  const [post] = api.post.getOne.useSuspenseQuery({ id: blogId });
-
   useEffect(() => {
-    if (!post) return;
-    const { title, slug } = post;
-    setTitle(title);
-    setSlug(slug);
-  }, [post]);
+    const name = title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)+/g, "");
 
-  if (!post) return null;
+    setSlug(name);
+  }, [setSlug, title]);
 
   const utils = api.useUtils();
-  const editPost = api.post.edit.useMutation({
+  const addPost = api.post.add.useMutation({
     onSuccess: async () => {
-      await utils.post.getOne.invalidate({ id: blogId });
+      await utils.post.getAll.invalidate();
       router.push("/admin/blog");
     },
     onError: ({ message }) => {
@@ -45,9 +39,8 @@ export default function EditBlogForm({
   const handleSubmit = (content: string) => {
     setPending(true);
 
-    editPost.mutate({
-      id: post.id,
-      imageId: post.imageId,
+    addPost.mutate({
+      imageId: imageId,
       title: title,
       content: content,
       slug: slug,
@@ -56,11 +49,11 @@ export default function EditBlogForm({
   };
   return (
     <RichEditor
-      content={post.content}
+      content=""
       handleSubmit={handleSubmit}
-      imageId={post.imageId}
+      imageId={imageId}
       pending={pending}
-      submitButtonText="Update Post"
+      submitButtonText="Create New Post"
     >
       <div className="flex gap-4">
         <Input

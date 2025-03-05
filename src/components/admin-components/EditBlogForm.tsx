@@ -3,30 +3,36 @@
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
-import RichEditor from "./rich-editor";
-import { Input } from "./ui/input";
+import RichEditor from "../rich-editor";
+import { Input } from "../ui/input";
 
-export default function AddBlogForm({ userId }: { userId: string }) {
+export default function EditBlogForm({
+  userId,
+  blogId,
+}: {
+  userId: string;
+  blogId: string;
+}) {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [pending, setPending] = useState(false);
-  const [imageId] = useState(uuid());
   const router = useRouter();
 
-  useEffect(() => {
-    const name = title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "");
+  const [post] = api.post.getOne.useSuspenseQuery({ id: blogId });
 
-    setSlug(name);
-  }, [setSlug, title]);
+  useEffect(() => {
+    if (!post) return;
+    const { title, slug } = post;
+    setTitle(title);
+    setSlug(slug);
+  }, [post]);
+
+  if (!post) return null;
 
   const utils = api.useUtils();
-  const addPost = api.post.add.useMutation({
+  const editPost = api.post.edit.useMutation({
     onSuccess: async () => {
-      await utils.post.getAll.invalidate();
+      await utils.post.getOne.invalidate({ id: blogId });
       router.push("/admin/blog");
     },
     onError: ({ message }) => {
@@ -39,8 +45,9 @@ export default function AddBlogForm({ userId }: { userId: string }) {
   const handleSubmit = (content: string) => {
     setPending(true);
 
-    addPost.mutate({
-      imageId: imageId,
+    editPost.mutate({
+      id: post.id,
+      imageId: post.imageId,
       title: title,
       content: content,
       slug: slug,
@@ -49,11 +56,11 @@ export default function AddBlogForm({ userId }: { userId: string }) {
   };
   return (
     <RichEditor
-      content=""
+      content={post.content}
       handleSubmit={handleSubmit}
-      imageId={imageId}
+      imageId={post.imageId}
       pending={pending}
-      submitButtonText="Create New Post"
+      submitButtonText="Update Post"
     >
       <div className="flex gap-4">
         <Input

@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/DataTable";
+import { DataTable } from "@/components/admin-components/DataTable";
 import { columns, type ProductColumns } from "./Columns";
 import { api } from "@/trpc/react";
 

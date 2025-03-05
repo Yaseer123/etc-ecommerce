@@ -280,10 +280,10 @@ export default function Menu({ props }: { props?: string }) {
                   <ul className="flex h-full items-center gap-8">
                     <li className="h-full">
                       <Link
-                        href="#!"
+                        href="/categories"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"
                       >
-                        Features
+                       Categories
                       </Link>
                       <div className="mega-menu absolute left-0 top-[44px] w-screen bg-white">
                         <div className="container">

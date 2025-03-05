@@ -1,4 +1,4 @@
-import RenderBlog from "@/components/RenderBlog";
+import RenderBlog from "@/components/admin-components/RenderBlog";
 
 export default async function BlogPage({
   params,

@@ -1,4 +1,4 @@
-import AllBlogPosts from "@/components/AllPosts";
+import AllBlogPosts from "@/components/admin-components/AllPosts";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { auth } from "@/server/auth";

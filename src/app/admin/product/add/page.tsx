@@ -1,4 +1,4 @@
-import AddProductForm from "@/components/AddProduct";
+import AddProductForm from "@/components/admin-components/AddProduct";
 import { HydrateClient } from "@/trpc/server";
 
 export default function AddProduct() {

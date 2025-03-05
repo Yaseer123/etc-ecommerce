@@ -13,7 +13,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataTableColumnHeader } from "@/components/DataTableColumnHeader";
+import { DataTableColumnHeader } from "@/components/admin-components/DataTableColumnHeader";
 import { type Product } from "@prisma/client";
 import Link from "next/link";
 

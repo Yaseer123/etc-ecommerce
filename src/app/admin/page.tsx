@@ -1,4 +1,4 @@
-import AdminDashboard from "@/components/AdminDashboard";
+import AdminDashboard from "@/components/admin-components/AdminDashboard";
 
 export default async function AdminPage() {
   return (

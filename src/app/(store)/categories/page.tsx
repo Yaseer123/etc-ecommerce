@@ -20,7 +20,7 @@ const categories: Category[] = [
     path: "/category/electronics",
     icon: Icon.DeviceTablet,
     subcategories: [
-      { name: "Mobile Phones", path: "/category/electronics/mobile-phones" },
+      { name: "Mobile Phones", path: "/categories/electronics/mobile-phones" },
       { name: "Laptops", path: "/category/electronics/laptops" },
       { name: "Accessories", path: "/category/electronics/accessories" },
     ],
