@@ -1,7 +1,6 @@
 import productData from "@/data/Product.json";
 import ShopBreadCrumb1 from "@/components/store-components/Shop/ShopBreadCrumb1";
 import Menu from "@/components/store-components/Menu";
-import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 
 export default async function BreadCrumb1({
   params,

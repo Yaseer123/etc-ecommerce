@@ -699,10 +699,10 @@ export default function Menu({ props }: { props?: string }) {
                     </li>
                     <li className="h-full">
                       <Link
-                        href="#!"
+                        href="/products"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"
                       >
-                        Shop
+                        Products
                       </Link>
                       <div className="mega-menu absolute left-0 top-[44px] w-screen bg-white">
                         <div className="container">

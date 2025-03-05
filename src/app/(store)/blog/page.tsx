@@ -72,12 +72,15 @@ const BlogsPage = () => {
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
   };
-
+ const breadcrumbItems = [
+   { label: "Homepage", href: "/" },
+   { label: "Categories", href: "/categories" },
+ ];
   return (
     <>
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
-        <Breadcrumb heading="Blogs" subHeading="Blogs" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Blogs" />
       </div>
       <div className="blog list py-10 md:py-20">
         <div className="container">
