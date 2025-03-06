@@ -6,14 +6,21 @@ import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import RichEditor from "../rich-editor";
 import { Input } from "../ui/input";
-import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
+import MultipleSelector, {
+  type Option,
+} from "@/components/ui/multiple-selector";
 import { BLOG_TAG_OPTIONS } from "@/utils/constants";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
+import { uploadFile } from "@/app/actions/file";
 
 export default function AddBlogForm({ userId }: { userId: string }) {
   const [value, setValue] = useState<Option[]>([]);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
   const [pending, setPending] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
   const [imageId] = useState(uuid());
   const router = useRouter();
 
@@ -39,11 +46,19 @@ export default function AddBlogForm({ userId }: { userId: string }) {
       setPending(false);
     },
   });
-  const handleSubmit = (content: string) => {
+  const handleSubmit = async (content: string) => {
     setPending(true);
+
+    if (!file) return;
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await uploadFile(formData);
+    if (!res) return;
 
     addPost.mutate({
       imageId: imageId,
+      coverImageId: res.public_id,
+      shortDescription: shortDescription,
       title: title,
       content: content,
       slug: slug,
@@ -59,31 +74,61 @@ export default function AddBlogForm({ userId }: { userId: string }) {
       pending={pending}
       submitButtonText="Create New Post"
     >
-      <div className="flex gap-4">
-        <Input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <Input
-          type="text"
-          placeholder="Slug"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-        />
-        <MultipleSelector
-          value={value}
-          onChange={setValue}
-          defaultOptions={BLOG_TAG_OPTIONS}
-          placeholder="Create new tag..."
-          creatable
-          emptyIndicator={
-            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-              no results found.
-            </p>
-          }
-        />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div>
+          <Label htmlFor="title">Picture</Label>
+
+          <Input
+            type="text"
+            placeholder="Title"
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="slug">Picture</Label>
+          <Input
+            id="slug"
+            type="text"
+            placeholder="Slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+          />
+        </div>
+        <div className="z-50">
+          <Label htmlFor="tags">Tags</Label>
+          <MultipleSelector
+            value={value}
+            onChange={setValue}
+            defaultOptions={BLOG_TAG_OPTIONS}
+            placeholder="Create new tag..."
+            creatable
+            emptyIndicator={
+              <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                no results found.
+              </p>
+            }
+          />
+        </div>
+        <div className="cursor-pointer">
+          <Label htmlFor="picture">Picture</Label>
+          <Input
+            id="picture"
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="short-description">Short Description</Label>
+          <Textarea
+            id="short-description"
+            placeholder="Short Description"
+            value={shortDescription}
+            onChange={(e) => setShortDescription(e.target.value)}
+          />
+        </div>
       </div>
     </RichEditor>
   );

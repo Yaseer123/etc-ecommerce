@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
@@ -6,8 +7,6 @@ import blogData from "@/data/Blog.json";
 import Footer from "@/components/store-components/Footer";
 import { useRouter } from "next/navigation";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import TopNav from "@/components/store-components/TopNav";
-import Menu from "@/components/store-components/Menu";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import BlogItem from "@/components/store-components/Blog/BlogItem";
 import HandlePagination from "@/components/store-components/HandlePagination";
@@ -28,7 +27,6 @@ const BlogsPage = () => {
   };
 
   const handleBlogClick = (blogId: string) => {
-    // Go to blog detail with blogId selected
     router.push(`/blog/detail1?id=${blogId}`);
   };
 
@@ -66,7 +64,6 @@ const BlogsPage = () => {
 
   const pageCount = Math.ceil(filteredData.length / productsPerPage);
 
-  // If page number 0, set current page = 0
   if (pageCount === 0) {
     setCurrentPage(0);
   }
@@ -76,14 +73,13 @@ const BlogsPage = () => {
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
   };
- const breadcrumbItems = [
-   { label: "Homepage", href: "/" },
-   { label: "Categories", href: "/categories" },
- ];
+  const breadcrumbItems = [
+    { label: "Homepage", href: "/" },
+    { label: "Categories", href: "/categories" },
+  ];
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
         <Breadcrumb items={breadcrumbItems} pageTitle="Blogs" />
       </div>
       <div className="blog list py-10 md:py-20">

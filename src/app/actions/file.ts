@@ -11,7 +11,7 @@ cloud.config({
 
 export const uploadFile = async (
   data: FormData,
-  filter: string,
+  filter = "",
 ): Promise<UploadApiResponse | undefined> => {
   const file = data.get("file");
 
@@ -54,6 +54,11 @@ export const readAllImages = async (filter: string) => {
   }
 
   return [];
+};
+
+export const readImage = async (id: string) => {
+  const { secure_url } = (await cloud.api.resource(id)) as UploadApiResponse;
+  return secure_url;
 };
 
 export const removeImage = async (id: string) => {

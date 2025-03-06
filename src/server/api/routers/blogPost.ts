@@ -1,6 +1,7 @@
 import {
   adminProcedure,
   createTRPCRouter,
+  protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 import { z } from "zod";
@@ -27,11 +28,13 @@ export const blogPostRouter = createTRPCRouter({
     }),
 
   // Add a new blog post
-  add: adminProcedure
+  add: protectedProcedure
     .input(
       z.object({
         title: z.string().min(3, "Title must be at least 3 characters"),
         slug: z.string().min(1, "Slug field can't be empty"),
+        shortDescription: z.string(),
+        coverImageId: z.string(),
         content: z.string(),
         createdBy: z.string(),
         imageId: z.string(),
@@ -42,6 +45,8 @@ export const blogPostRouter = createTRPCRouter({
       const post = await ctx.db.post.create({
         data: {
           imageId: input.imageId,
+          coverImageId: input.coverImageId,
+          shortDescription: input.shortDescription,
           title: input.title,
           slug: input.slug,
           content: input.content,
