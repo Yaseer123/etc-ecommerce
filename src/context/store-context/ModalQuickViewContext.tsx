@@ -1,56 +1,57 @@
 "use client";
 
+// ModalQuickviewContext.tsx
+import { type ProductType } from "@/types/ProductType";
 import React, {
   createContext,
   useContext,
   useState,
   type ReactNode,
 } from "react";
-import { type ProductType } from "@/types/ProductType";
 
-interface ModalQuickViewContextProps {
+interface ModalQuickviewContextProps {
   children: ReactNode;
 }
 
-interface ModalQuickViewContextValue {
+interface ModalQuickviewContextValue {
   selectedProduct: ProductType | null;
-  openQuickView: (product: ProductType) => void;
-  closeQuickView: () => void;
+  openQuickview: (product: ProductType) => void;
+  closeQuickview: () => void;
 }
 
-const ModalQuickViewContext = createContext<
-  ModalQuickViewContextValue | undefined
+const ModalQuickviewContext = createContext<
+  ModalQuickviewContextValue | undefined
 >(undefined);
 
-export const ModalQuickViewProvider: React.FC<ModalQuickViewContextProps> = ({
+export const ModalQuickviewProvider: React.FC<ModalQuickviewContextProps> = ({
   children,
 }) => {
   const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(
     null,
   );
 
-  const openQuickView = (product: ProductType) => {
+  const openQuickview = (product: ProductType) => {
     setSelectedProduct(product);
   };
 
-  const closeQuickView = () => {
+  const closeQuickview = () => {
     setSelectedProduct(null);
   };
 
   return (
-    <ModalQuickViewContext.Provider
-      value={{ selectedProduct, openQuickView, closeQuickView }}
+    <ModalQuickviewContext.Provider
+      value={{ selectedProduct, openQuickview, closeQuickview }}
     >
       {children}
-    </ModalQuickViewContext.Provider>
+    </ModalQuickviewContext.Provider>
   );
 };
 
-export const useModalQuickViewContext = () => {
-  const context = useContext(ModalQuickViewContext);
+export const useModalQuickviewContext = () => {
+  const context = useContext(ModalQuickviewContext);
   if (!context) {
     throw new Error(
-      "useModalQuickViewContext must be used within a ModalQuickViewProvider",
+      "useModalQuickviewContext must be used within a ModalQuickviewProvider",
     );
   }
   return context;

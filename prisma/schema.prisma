@@ -46,11 +46,17 @@ model Post {
 model Product {
     id                 String    @id @default(cuid())
     title              String
+    new                Boolean   @default(true)
+    sale               Boolean   @default(false)
+    rate               Float     @default(0)
     slug               String
     shortDescription   String
     description        String?
     price              Float
+    originPrice        Float
     stock              Int
+    brand              String
+    sold               Int       @default(0)
     categoryId         String? // Foreign key to Category
     category           Category? @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
     createdAt          DateTime  @default(now())
@@ -62,6 +68,18 @@ model Product {
     orders    OrderItem[]
     CartItem  CartItem[]
     questions Question[]
+    wishlists WishList[]
+}
+
+model WishList {
+    id        String   @id @default(cuid())
+    userId    String
+    productId String
+    createdAt DateTime @default(now())
+
+    // Relationships
+    user    User    @relation(fields: [userId], references: [id])
+    product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Question {
@@ -136,6 +154,7 @@ model User {
     reviews   Review[]
     cart      Cart?
     questions Question[]
+    WishList  WishList[]
 }
 
 model VerificationToken {

@@ -1,16 +1,16 @@
-interface Variation {
-  color: string;
-  colorCode: string;
-  colorImage: string;
-  image: string;
-}
+// interface Variation {
+//   color: string;
+//   colorCode: string;
+//   colorImage: string;
+//   image: string;
+// }
 
 export interface ProductType {
   id: string;
   category: string;
-  type: string;
+  // type: string;
   name: string;
-  gender: string;
+  // gender: string;
   new: boolean;
   sale: boolean;
   rate: number;
@@ -21,7 +21,7 @@ export interface ProductType {
   quantity: number;
   quantityPurchase: number;
   sizes: Array<string>;
-  variation: Variation[];
+  // variation: Variation[];
   thumbImage: Array<string>;
   images: Array<string>;
   description: string;

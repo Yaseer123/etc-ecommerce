@@ -1,22 +1,15 @@
-"use client";
-
-import productData from "@/data/Product.json";
-import ShopFilterCanvas from "@/components/store-components/Shop/ShopFilterCanvas";
-import { useSearchParams } from "next/navigation";
+// import productData from "@/data/Product.json";
+// import ShopFilterCanvas from "@/components/store-components/Shop/ShopFilterCanvas";
 import Footer from "@/components/store-components/Footer";
+import ListProduct from "@/components/store-components/Shop/ListProduct";
 
 export default function Fullwidth() {
-  const searchParams = useSearchParams();
-  const type = searchParams.get("type");
+  // const searchParams = useSearchParams();
+  // const type = searchParams.get("type");
 
   return (
     <>
-      <ShopFilterCanvas
-        data={productData}
-        productPerPage={12}
-        dataType={type}
-        productStyle="grid"
-      />
+      <ListProduct />
       <Footer />
     </>
   );

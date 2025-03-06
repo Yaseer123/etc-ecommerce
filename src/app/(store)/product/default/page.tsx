@@ -1,13 +1,14 @@
-import Default from "@/components/store-components/Product/Details/Default";
-import productData from "@/data/Product.json";
-import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
+"use client";
 
-const ProductDefault = ({
-  searchParams,
-}: {
-  searchParams: { id?: string };
-}) => {
-  const productId = searchParams?.id ?? "1";
+import Default from "@/components/store-components/Product/Details/Default";
+import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
+import { api } from "@/trpc/react";
+import { useSearchParams } from "next/navigation";
+
+const ProductDefault = () => {
+  const searchParams = useSearchParams();
+  const productId = searchParams.get("id");
+  const [productData] = api.product.getAllPretty.useSuspenseQuery();
 
   return (
     <>

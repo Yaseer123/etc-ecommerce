@@ -1,12 +1,14 @@
 "use client";
 
-// WishlistContext.tsx
-import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { type ProductType } from "@/types/ProductType";
+// WishlistContext.tsx
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+} from "react";
 
-interface WishlistItem extends ProductType {
-  name: string;
-}
+interface WishlistItem extends ProductType {}
 
 interface WishlistState {
   wishlistArray: WishlistItem[];
@@ -18,7 +20,7 @@ type WishlistAction =
   | { type: "LOAD_WISHLIST"; payload: WishlistItem[] };
 
 interface WishlistContextProps {
-  wishlist: WishlistState;
+  wishlistState: WishlistState;
   addToWishlist: (item: ProductType) => void;
   removeFromWishlist: (itemId: string) => void;
 }
@@ -58,7 +60,7 @@ const WishlistReducer = (
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [wishlist, dispatch] = useReducer(WishlistReducer, {
+  const [wishlistState, dispatch] = useReducer(WishlistReducer, {
     wishlistArray: [],
   });
 
@@ -72,7 +74,7 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <WishlistContext.Provider
-      value={{ wishlist, addToWishlist, removeFromWishlist }}
+      value={{ wishlistState, addToWishlist, removeFromWishlist }}
     >
       {children}
     </WishlistContext.Provider>

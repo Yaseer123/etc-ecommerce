@@ -5,28 +5,24 @@ import React, { useState } from "react";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import ModalSizeguide from "./ModalSizeguide";
+import { useModalQuickviewContext } from "@/context/store-context/ModalQuickViewContext";
 import { useCart } from "@/context/store-context/CartContext";
-import { useCompare } from "@/context/store-context/CompareContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalCompareContext } from "@/context/store-context/ModalCompareContext";
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
-import useWishlist from "@/hooks/useWishlist";
+import { useWishlist } from "@/context/store-context/WishlistContext";
 import Rate from "../Rate";
-import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 
-const ModalQuickView = () => {
+const ModalQuickview = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
-  const { selectedProduct, closeQuickView } = useModalQuickViewContext();
+  const { selectedProduct, closeQuickview } = useModalQuickviewContext();
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
-  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
+  const { addToWishlist, removeFromWishlist, wishlistState } = useWishlist();
   const { openModalWishlist } = useModalWishlistContext();
-  const { addToCompare, removeFromCompare, compareState } = useCompare();
-  const { openModalCompare } = useModalCompareContext();
   const percentSale =
     selectedProduct &&
     Math.floor(
@@ -92,14 +88,18 @@ const ModalQuickView = () => {
         );
       }
       openModalCart();
-      closeQuickView();
+      closeQuickview();
     }
   };
 
   const handleAddToWishlist = () => {
     // if product existed in wishlit, remove from wishlist and set state to false
     if (selectedProduct) {
-      if (wishlist.some((item) => item.id === selectedProduct.id)) {
+      if (
+        wishlistState.wishlistArray.some(
+          (item) => item.id === selectedProduct.id,
+        )
+      ) {
         removeFromWishlist(selectedProduct.id);
       } else {
         // else, add to wishlist and set state to true
@@ -108,31 +108,9 @@ const ModalQuickView = () => {
     }
     openModalWishlist();
   };
-
-  const handleAddToCompare = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
-    if (selectedProduct) {
-      if (compareState.compareArray.length < 3) {
-        if (
-          compareState.compareArray.some(
-            (item) => item.id === selectedProduct.id,
-          )
-        ) {
-          removeFromCompare(selectedProduct.id);
-        } else {
-          // else, add to wishlist and set state to true
-          addToCompare(selectedProduct);
-        }
-      } else {
-        alert("Compare up to 3 products");
-      }
-    }
-    openModalCompare();
-  };
-
   return (
     <>
-      <div className={`modal-quickview-block`} onClick={closeQuickView}>
+      <div className={`modal-quickview-block`} onClick={closeQuickview}>
         <div
           className={`modal-quickview-main py-6 ${selectedProduct !== null ? "open" : ""}`}
           onClick={(e) => {
@@ -164,7 +142,7 @@ const ModalQuickView = () => {
                 <div className="heading5">Quick View</div>
                 <div
                   className="close-btn absolute right-0 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
-                  onClick={closeQuickView}
+                  onClick={closeQuickview}
                 >
                   <Icon.X size={14} />
                 </div>
@@ -172,16 +150,13 @@ const ModalQuickView = () => {
               <div className="product-infor px-4">
                 <div className="flex justify-between">
                   <div>
-                    <div className="caption2 font-semibold uppercase text-secondary">
-                      {selectedProduct?.type}
-                    </div>
                     <div className="heading4 mt-1">{selectedProduct?.name}</div>
                   </div>
                   <div
-                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
+                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlistState.wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
                     onClick={handleAddToWishlist}
                   >
-                    {wishlist.some(
+                    {wishlistState.wishlistArray.some(
                       (item) => item.id === selectedProduct?.id,
                     ) ? (
                       <>
@@ -226,29 +201,6 @@ const ModalQuickView = () => {
                     <div className="text-title">
                       Colors:{" "}
                       <span className="text-title color">{activeColor}</span>
-                    </div>
-                    <div className="list-color mt-3 flex flex-wrap items-center gap-2">
-                      {selectedProduct?.variation.map((item, index) => (
-                        <div
-                          className={`color-item relative h-12 w-12 rounded-xl duration-300 ${activeColor === item.color ? "active" : ""}`}
-                          key={index}
-                          datatype={item.image}
-                          onClick={() => {
-                            handleActiveColor(item.color);
-                          }}
-                        >
-                          <Image
-                            src={item.colorImage}
-                            width={100}
-                            height={100}
-                            alt="color"
-                            className="rounded-xl"
-                          />
-                          <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 capitalize text-white">
-                            {item.color}
-                          </div>
-                        </div>
-                      ))}
                     </div>
                   </div>
                   <div className="choose-size mt-5">
@@ -309,15 +261,6 @@ const ModalQuickView = () => {
                     </div>
                   </div>
                   <div className="mt-5 flex flex-wrap items-center gap-8 gap-y-4 lg:gap-20">
-                    <div
-                      className="compare flex cursor-pointer items-center gap-3"
-                      onClick={handleAddToCompare}
-                    >
-                      <div className="compare-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
-                        <Icon.ArrowsCounterClockwise className="heading6" />
-                      </div>
-                      <span>Compare</span>
-                    </div>
                     <div className="share flex cursor-pointer items-center gap-3">
                       <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
                         <Icon.ShareNetwork weight="fill" className="heading6" />
@@ -357,13 +300,7 @@ const ModalQuickView = () => {
                     <div className="mt-3 flex items-center gap-1">
                       <div className="text-title">Categories:</div>
                       <div className="text-secondary">
-                        {selectedProduct?.category}, {selectedProduct?.gender}
-                      </div>
-                    </div>
-                    <div className="mt-3 flex items-center gap-1">
-                      <div className="text-title">Tag:</div>
-                      <div className="text-secondary">
-                        {selectedProduct?.type}
+                        {selectedProduct?.category}
                       </div>
                     </div>
                   </div>
@@ -440,4 +377,4 @@ const ModalQuickView = () => {
   );
 };
 
-export default ModalQuickView;
+export default ModalQuickview;

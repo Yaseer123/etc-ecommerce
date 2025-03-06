@@ -5,12 +5,19 @@ import Link from "next/link";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
-import useWishlist from "@/hooks/useWishlist";
+import { api } from "@/trpc/react";
 
 const ModalWishlist = () => {
   const { isModalOpen, closeModalWishlist } = useModalWishlistContext();
-  const { wishlist, removeFromWishlist } = useWishlist();
-
+  const [wishList] = api.wishList.getWishList.useSuspenseQuery();
+  const utils = api.useUtils();
+  const removeFromWishlistMutation =
+    api.wishList.removeFromWishList.useMutation({
+      onSuccess: async () => {
+        await utils.wishList.getWishList.invalidate();
+      },
+    });
+  console.log(wishList);
   return (
     <>
       <div className={`modal-wishlist-block`} onClick={closeModalWishlist}>
@@ -30,7 +37,7 @@ const ModalWishlist = () => {
             </div>
           </div>
           <div className="list-product px-6">
-            {wishlist.map((product) => (
+            {wishList.map((product) => (
               <div
                 key={product.id}
                 className="item flex items-center justify-between gap-3 border-b border-line py-5"
@@ -59,7 +66,9 @@ const ModalWishlist = () => {
                 </div>
                 <div
                   className="remove-wishlist-btn caption1 text-red cursor-pointer font-semibold underline"
-                  onClick={() => removeFromWishlist(product.id)}
+                  onClick={() =>
+                    removeFromWishlistMutation.mutate({ productId: product.id })
+                  }
                 >
                   Remove
                 </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState} from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { type ProductType } from "@/types/ProductType";
@@ -9,25 +9,24 @@ import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import HandlePagination from "../HandlePagination";
 
-
 interface Props {
   data: Array<ProductType>;
   productPerPage: number;
-  dataType: string | null;
+  // dataType: string | null;
   productStyle: string;
 }
 
 const ShopFilterCanvas: React.FC<Props> = ({
   data,
   productPerPage,
-  dataType,
+  // dataType,
   productStyle,
 }) => {
   const [layoutCol, setLayoutCol] = useState<number | null>(4);
   const [showOnlySale, setShowOnlySale] = useState(false);
   const [sortOption, setSortOption] = useState("");
   const [openSidebar, setOpenSidebar] = useState(false);
-  const [type, setType] = useState<string | null>(dataType);
+  // const [type, setType] = useState<string | null>(dataType);
   const [size, setSize] = useState<string | null>();
   const [color, setColor] = useState<string | null>();
   const [brand, setBrand] = useState<string | null>();
@@ -57,10 +56,10 @@ const ShopFilterCanvas: React.FC<Props> = ({
     setOpenSidebar((toggleOpen) => !toggleOpen);
   };
 
-  const handleType = (type: string) => {
-    setType((prevType) => (prevType === type ? null : type));
-    setCurrentPage(0);
-  };
+  // const handleType = (type: string) => {
+  //   setType((prevType) => (prevType === type ? null : type));
+  //   setCurrentPage(0);
+  // };
 
   const handleSize = (size: string) => {
     setSize((prevSize) => (prevSize === size ? null : size));
@@ -68,8 +67,8 @@ const ShopFilterCanvas: React.FC<Props> = ({
   };
 
   const handlePriceChange = (values: number | number[]) => {
-    if (Array.isArray(values)) {
-      setPriceRange({ min: values[0], max: values[1] });
+    if (Array.isArray(values) && values.length >= 2) {
+      setPriceRange({ min: Number(values[0]), max: Number(values[1]) });
       setCurrentPage(0);
     }
   };
@@ -91,16 +90,16 @@ const ShopFilterCanvas: React.FC<Props> = ({
       isShowOnlySaleMatched = product.sale;
     }
 
-    let isDataTypeMatched = true;
-    if (dataType) {
-      isDataTypeMatched = product.type === dataType;
-    }
+    // let isDataTypeMatched = true;
+    // if (dataType) {
+    //   isDataTypeMatched = product.type === dataType;
+    // }
 
-    let isTypeMatched = true;
-    if (type) {
-      dataType = type;
-      isTypeMatched = product.type === type;
-    }
+    // let isTypeMatched = true;
+    // if (type) {
+    //   dataType = type;
+    //   isTypeMatched = product.type === type;
+    // }
 
     let isSizeMatched = true;
     if (size) {
@@ -113,10 +112,10 @@ const ShopFilterCanvas: React.FC<Props> = ({
         product.price >= priceRange.min && product.price <= priceRange.max;
     }
 
-    let isColorMatched = true;
-    if (color) {
-      isColorMatched = product.variation.some((item) => item.color === color);
-    }
+    // let isColorMatched = true;
+    // if (color) {
+    //   isColorMatched = product.variation.some((item) => item.color === color);
+    // }
 
     let isBrandMatched = true;
     if (brand) {
@@ -125,10 +124,10 @@ const ShopFilterCanvas: React.FC<Props> = ({
 
     return (
       isShowOnlySaleMatched &&
-      isDataTypeMatched &&
-      isTypeMatched &&
+      // isDataTypeMatched &&
+      // isTypeMatched &&
       isSizeMatched &&
-      isColorMatched &&
+      // isColorMatched &&
       isBrandMatched &&
       isPriceRangeMatched &&
       product.category === "fashion"
@@ -159,7 +158,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
   }
 
   const totalProducts = filteredData.length;
-  const selectedType = type;
+  // const selectedType = type;
   const selectedSize = size;
   const selectedColor = color;
   const selectedBrand = brand;
@@ -169,9 +168,9 @@ const ShopFilterCanvas: React.FC<Props> = ({
       {
         id: "no-data",
         category: "no-data",
-        type: "no-data",
+        // type: "no-data",
         name: "no-data",
-        gender: "no-data",
+        // gender: "no-data",
         new: false,
         sale: false,
         rate: 0,
@@ -182,7 +181,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
         quantity: 0,
         quantityPurchase: 0,
         sizes: [],
-        variation: [],
+        // variation: [],
         thumbImage: [],
         images: [],
         description: "no-data",
@@ -214,14 +213,14 @@ const ShopFilterCanvas: React.FC<Props> = ({
   };
 
   const handleClearAll = () => {
-    setType(null);
+    // setType(null);
     setSize(null);
     setColor(null);
     setBrand(null);
     setPriceRange({ min: 0, max: 100 });
     setCurrentPage(0);
-    dataType = null;
-    setType(dataType);
+    // dataType = null;
+    // setType(dataType);
   };
 
   return (
@@ -231,18 +230,14 @@ const ShopFilterCanvas: React.FC<Props> = ({
           <div className="container relative pb-10 pt-24 lg:pt-[134px]">
             <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
               <div className="text-content">
-                <div className="heading2 text-center">
-                  {dataType ?? "Shop"}
-                </div>
+                <div className="heading2 text-center">Shop</div>
                 <div className="link caption1 mt-3 flex items-center justify-center gap-1">
                   <Link href={"/"}>Homepage</Link>
                   <Icon.CaretRight size={14} className="text-secondary2" />
-                  <div className="capitalize text-secondary2">
-                    {dataType ?? "Shop"}
-                  </div>
+                  <div className="capitalize text-secondary2">Shop</div>
                 </div>
               </div>
-              <div className="list-tab mt-12 flex flex-wrap items-center justify-center gap-8 gap-y-5 overflow-hidden lg:mt-[70px]">
+              {/* <div className="list-tab mt-12 flex flex-wrap items-center justify-center gap-8 gap-y-5 overflow-hidden lg:mt-[70px]">
                 {["t-shirt", "dress", "top", "swimwear", "shirt"].map(
                   (item, index) => (
                     <div
@@ -254,7 +249,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                     </div>
                   ),
                 )}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -280,7 +275,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
             />
           </div>
           <div className="filter-type mt-7 border-b border-line pb-8">
-            <div className="heading6">Products Type</div>
+            {/* <div className="heading6">Products Type</div>
             <div className="list-type mt-4">
               {[
                 "t-shirt",
@@ -313,7 +308,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
           <div className="filter-size mt-8 border-b border-line pb-8">
             <div className="heading6">Size</div>
@@ -632,14 +627,11 @@ const ShopFilterCanvas: React.FC<Props> = ({
                 {totalProducts}
                 <span className="pl-1 text-secondary">Products Found</span>
               </div>
-              {((selectedType ?? null) ??
-               (selectedSize ?? null) ??
-               (selectedColor ?? null) ??
-               (selectedBrand ?? null)) && (
+              {(selectedSize ?? selectedColor ?? selectedBrand) && (
                 <>
                   <div className="list flex items-center gap-3">
                     <div className="h-4 w-px bg-line"></div>
-                    {selectedType && (
+                    {/* {selectedType && (
                       <div
                         className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
                         onClick={() => {
@@ -649,7 +641,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                         <Icon.X className="cursor-pointer" />
                         <span>{selectedType}</span>
                       </div>
-                    )}
+                    )} */}
                     {selectedSize && (
                       <div
                         className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
@@ -703,7 +695,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
             <div
               className={`list-product hide-product-sold grid lg:grid-cols-${layoutCol} mt-7 grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px]`}
             >
-              {currentProducts.map((item) =>
+              {data.map((item) =>
                 item.id === "no-data" ? (
                   <div key={item.id} className="no-data-product">
                     No products match the selected criteria.
@@ -712,7 +704,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                   <Product
                     key={item.id}
                     data={item}
-                    type="grid"
+                    type="marketplace"
                     style={productStyle}
                   />
                 ),

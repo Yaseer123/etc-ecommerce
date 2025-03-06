@@ -11,23 +11,20 @@ import "swiper/css/bundle";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import SwiperCore from "swiper/core";
 import { useCart } from "@/context/store-context/CartContext";
-import { useCompare } from "@/context/store-context/CompareContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalCompareContext } from "@/context/store-context/ModalCompareContext";
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
-import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
 import ModalSizeGuide from "../../ModalSizeGuide";
+import { api } from "@/trpc/react";
 
 interface Props {
   data: Array<ProductType>;
-  productId: string | number | null;
+  productId: string | null;
 }
 
 const Default: React.FC<Props> = ({ data, productId }) => {
   SwiperCore.use([Navigation, Thumbs]);
   const swiperRef = useRef<SwiperCore | null>(null);
-  const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
@@ -36,10 +33,23 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
   const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
-  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
+  // const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const { openModalWishlist } = useModalWishlistContext();
-  const { addToCompare, removeFromCompare, compareState } = useCompare();
-  const { openModalCompare } = useModalCompareContext();
+
+  const utils = api.useUtils();
+  const [wishlist] = api.wishList.getWishList.useSuspenseQuery();
+  const addToWishlistMutation = api.wishList.addToWishList.useMutation({
+    onSuccess: async () => {
+      await utils.wishList.getWishList.invalidate();
+    },
+  });
+  const removeFromWishlistMutation =
+    api.wishList.removeFromWishList.useMutation({
+      onSuccess: async () => {
+        await utils.wishList.getWishList.invalidate();
+      },
+    });
+
   let productMain = data.find((product) => product.id === productId)!;
   if (productMain === undefined) {
     if (data.length === 0) {
@@ -127,35 +137,15 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   };
 
   const handleAddToWishlist = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
-    if (wishlist.some((item) => item.id === productMain.id)) {
-      removeFromWishlist(productMain.id);
+    if(!productId) return;
+    // if product existed in wishlistState, remove from wishlistState and set state to false
+    if (wishlist.some((item) => item.id === productId)) {
+      removeFromWishlistMutation.mutate({ productId });
     } else {
-      // else, add to wishlist and set state to true
-      addToWishlist(productMain);
+      // else, add to wishlistState and set state to true
+      addToWishlistMutation.mutate({ productId });
     }
     openModalWishlist();
-  };
-
-  const handleAddToCompare = () => {
-    console.log("Compare Button Clicked");
-
-    if (compareState.compareArray.length < 3) {
-      if (
-        compareState.compareArray.some((item) => item.id === productMain.id)
-      ) {
-        console.log("Removing from Compare");
-        removeFromCompare(productMain.id);
-      } else {
-        console.log("Adding to Compare");
-        addToCompare(productMain);
-      }
-    } else {
-      alert("Compare up to 3 products");
-    }
-
-    console.log("Opening Compare Modal");
-    openModalCompare();
   };
 
   const handleActiveTab = (tab: string) => {
@@ -261,9 +251,9 @@ const Default: React.FC<Props> = ({ data, productId }) => {
             <div className="product-infor w-full md:w-1/2 md:pl-2 lg:pl-[15px]">
               <div className="flex justify-between">
                 <div>
-                  <div className="caption2 font-semibold uppercase text-secondary">
+                  {/* <div className="caption2 font-semibold uppercase text-secondary">
                     {productMain.type}
-                  </div>
+                  </div> */}
                   <div className="heading4 mt-1">{productMain.name}</div>
                 </div>
                 <div
@@ -307,7 +297,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 </div>
               </div>
               <div className="list-action mt-6">
-                <div className="choose-color">
+                {/* <div className="choose-color">
                   <div className="text-title">
                     Colors:{" "}
                     <span className="text-title color">{activeColor}</span>
@@ -335,7 +325,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       </div>
                     ))}
                   </div>
-                </div>
+                </div> */}
                 <div className="choose-size mt-5">
                   <div className="heading flex items-center justify-between">
                     <div className="text-title">
@@ -396,18 +386,6 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   </div>
                 </div>
                 <div className="mt-5 flex items-center gap-8 border-b border-line pb-6 lg:gap-20">
-                  <div
-                    className="compare flex cursor-pointer items-center gap-3"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCompare();
-                    }}
-                  >
-                    <div className="compare-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
-                      <Icon.ArrowsCounterClockwise className="heading6" />
-                    </div>
-                    <span>Compare</span>
-                  </div>
                   <div className="share flex cursor-pointer items-center gap-3">
                     <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
                       <Icon.ShareNetwork weight="fill" className="heading6" />
@@ -446,14 +424,12 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">Categories:</div>
-                    <div className="text-secondary">
-                      {productMain.category}, {productMain.gender}
-                    </div>
+                    <div className="text-secondary">{productMain.category}</div>
                   </div>
-                  <div className="mt-3 flex items-center gap-1">
+                  {/* <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">Tag:</div>
                     <div className="text-secondary">{productMain.type}</div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="list-payment mt-7">
                   <div className="main-content relative rounded-xl border border-line px-3 pb-4 pt-6 max-md:w-2/3 max-sm:w-full sm:px-4 lg:pb-6 lg:pt-8">
