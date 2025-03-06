@@ -14,6 +14,7 @@ import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
+import CategoryDropdown from "./category/CategoryDropdown";
 
 export default function Menu({ props }: { props?: string }) {
   const pathname = usePathname();
@@ -92,14 +93,7 @@ export default function Menu({ props }: { props?: string }) {
                 <div className="heading4">Rinors</div>
               </Link>
               <div className="form-search flex h-[44px] w-2/3 items-center pl-8 max-lg:hidden">
-                <div className="category-block relative h-full">
-                  <div className="category-btn relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2">
-                    <div className="text-button whitespace-nowrap text-white">
-                      All Categories
-                    </div>
-                    <Icon.CaretDown color="#ffffff" />
-                  </div>
-                </div>
+                <CategoryDropdown />
                 <div className="flex h-full w-full items-center">
                   <input
                     type="text"
@@ -286,10 +280,429 @@ export default function Menu({ props }: { props?: string }) {
                   <ul className="flex h-full items-center gap-8">
                     <li className="h-full">
                       <Link
-                        href="#!"
+                        href="/categories"
                         className="text-button-uppercase flex h-full items-center justify-center duration-300"
                       >
-                        Shop
+                       Categories
+                      </Link>
+                      <div className="mega-menu absolute left-0 top-[44px] w-screen bg-white">
+                        <div className="container">
+                          <div className="flex justify-between py-8">
+                            <div className="nav-link grid basis-2/3 grid-cols-4 gap-y-8">
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  For Men
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() => handleGenderClick("men")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Starting From 50% Off
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleTypeClick("outerwear")
+                                      }
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Outerwear | Coats
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("sweater")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Sweaters | Cardigans
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("shirt")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Shirt | Sweatshirts
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleGenderClick("men")}
+                                      className={`link view-all-btn cursor-pointer text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  Massimo Dutti
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("shirt")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Shirt | Clothes
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("top")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Top | Overshirts
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("t-shirt")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      T-shirts | Clothes
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleTypeClick("swimwear")
+                                      }
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Swimwear | Underwear
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleCategoryClick("fashion")
+                                      }
+                                      className={`link view-all-btn text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  Skincare
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("face")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Faces Skin
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("eye")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Eyes Makeup
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("lip")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Lip Polish
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("hair")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Hair Care
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleCategoryClick("cosmetic")
+                                      }
+                                      className={`link view-all-btn text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  Health
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("candle")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Cented Candle
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("drinks")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Health Drinks
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("clothes")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Yoga Clothes
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("mats")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Yoga Equipment
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleCategoryClick("yoga")
+                                      }
+                                      className={`link view-all-btn text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  For Women
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() => handleGenderClick("women")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Starting From 60% Off
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("dress")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Dresses | Jumpsuits
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("t-shirt")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      T-shirts | Sweatshirts
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleTypeClick("accessories")
+                                      }
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Accessories | Jewelry
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleGenderClick("women")}
+                                      className={`link view-all-btn text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  For Kid
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("bed")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Kids Bed
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("toy")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Boy{String.raw`'s`} Toy
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("blanket")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Baby Blanket
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleTypeClick("clothing")
+                                      }
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Newborn Clothing
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleCategoryClick("toys-kid")
+                                      }
+                                      className={`link view-all-btn text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                              <div className="nav-item">
+                                <div className="text-button-uppercase pb-2">
+                                  For Home
+                                </div>
+                                <ul>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleCategoryClick("furniture")
+                                      }
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Furniture | Decor
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("table")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Table | Living Room
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() => handleTypeClick("chair")}
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Chair | Work Room
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleTypeClick("lighting")
+                                      }
+                                      className={`link cursor-pointer text-secondary duration-300`}
+                                    >
+                                      Lighting | Bed Room
+                                    </div>
+                                  </li>
+                                  <li>
+                                    <div
+                                      onClick={() =>
+                                        handleCategoryClick("furniture")
+                                      }
+                                      className={`link view-all-btn text-secondary duration-300`}
+                                    >
+                                      View All
+                                    </div>
+                                  </li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div className="banner-ads-block basis-1/3 pl-2.5">
+                              <div
+                                className="banner-ads-item bg-linear relative cursor-pointer overflow-hidden rounded-2xl"
+                                onClick={() => handleTypeClick("swimwear")}
+                              >
+                                <div className="text-content relative z-[1] py-14 pl-8">
+                                  <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                                    Save $10
+                                  </div>
+                                  <div className="heading6 mt-2">
+                                    Dive into Savings <br />
+                                    on Swimwear
+                                  </div>
+                                  <div className="body1 mt-3 text-secondary">
+                                    Starting at{" "}
+                                    <span className="text-red">$59.99</span>
+                                  </div>
+                                </div>
+                                <Image
+                                  src={"/images/slider/bg2-2.png"}
+                                  width={200}
+                                  height={100}
+                                  alt="bg-img"
+                                  className="absolute right-0 top-0 basis-1/3 duration-700"
+                                />
+                              </div>
+                              <div
+                                className="banner-ads-item bg-linear relative mt-8 cursor-pointer overflow-hidden rounded-2xl"
+                                onClick={() => handleTypeClick("accessories")}
+                              >
+                                <div className="text-content relative z-[1] py-14 pl-8">
+                                  <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                                    Save $10
+                                  </div>
+                                  <div className="heading6 mt-2">
+                                    20% off <br />
+                                    accessories
+                                  </div>
+                                  <div className="body1 mt-3 text-secondary">
+                                    Starting at{" "}
+                                    <span className="text-red">$59.99</span>
+                                  </div>
+                                </div>
+                                <Image
+                                  src={"/images/other/bg-feature.png"}
+                                  width={200}
+                                  height={100}
+                                  alt="bg-img"
+                                  className="absolute right-0 top-0 basis-1/3 duration-700"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li className="h-full">
+                      <Link
+                        href="/products"
+                        className="text-button-uppercase flex h-full items-center justify-center duration-300"
+                      >
+                        Products
                       </Link>
                       <div className="mega-menu absolute left-0 top-[44px] w-screen bg-white">
                         <div className="container">
