@@ -35,6 +35,7 @@ export const blogPostRouter = createTRPCRouter({
         content: z.string(),
         createdBy: z.string(),
         imageId: z.string(),
+        tags: z.array(z.string()),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -45,6 +46,7 @@ export const blogPostRouter = createTRPCRouter({
           slug: input.slug,
           content: input.content,
           createdById: input.createdBy,
+          tags: input.tags,
         },
       });
 

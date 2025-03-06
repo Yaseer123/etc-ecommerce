@@ -33,6 +33,7 @@ model Post {
     slug      String
     content   String
     imageId   String   @unique
+    tags      String[]
     published Boolean  @default(false)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

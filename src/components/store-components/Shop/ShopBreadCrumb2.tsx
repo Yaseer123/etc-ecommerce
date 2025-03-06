@@ -3,11 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { ProductType } from '@/type/ProductType'
 import Product from '../Product/Product';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css'
-import HandlePagination from '../Other/HandlePagination';
+import { type ProductType } from '@/types/ProductType';
+import HandlePagination from '../HandlePagination';
 
 interface Props {
     data: Array<ProductType>;
@@ -107,7 +107,7 @@ const ShopBreadCrumb2: React.FC<Props> = ({ data, productPerPage, dataType }) =>
     })
 
     // Create a copy array filtered to sort
-    let sortedData = [...filteredData];
+    const sortedData = [...filteredData];
 
     if (sortOption === 'soldQuantityHighToLow') {
         filteredData = sortedData.sort((a, b) => b.sold - a.sold)

@@ -6,8 +6,11 @@ import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import RichEditor from "../rich-editor";
 import { Input } from "../ui/input";
+import MultipleSelector, { type Option } from "@/components/ui/multiple-selector";
+import { BLOG_TAG_OPTIONS } from "@/utils/constants";
 
 export default function AddBlogForm({ userId }: { userId: string }) {
+  const [value, setValue] = useState<Option[]>([]);
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [pending, setPending] = useState(false);
@@ -45,6 +48,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
       content: content,
       slug: slug,
       createdBy: userId,
+      tags: value.map((tag) => tag.value),
     });
   };
   return (
@@ -67,6 +71,18 @@ export default function AddBlogForm({ userId }: { userId: string }) {
           placeholder="Slug"
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
+        />
+        <MultipleSelector
+          value={value}
+          onChange={setValue}
+          defaultOptions={BLOG_TAG_OPTIONS}
+          placeholder="Create new tag..."
+          creatable
+          emptyIndicator={
+            <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+              no results found.
+            </p>
+          }
         />
       </div>
     </RichEditor>
