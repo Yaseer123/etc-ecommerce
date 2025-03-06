@@ -1,14 +1,10 @@
-"use client";
-import React from "react";
-import Image from "next/image";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import Menu from "@/components/store-components/Menu";
-
-const PageNotFound = () => {
+import Menu from "./Menu";
+import Image from "next/image";
+export default function PageNotFound() {
   return (
     <>
-     
       <div id="header" className="relative w-full">
         <Menu props="bg-white" />
       </div>
@@ -45,6 +41,4 @@ const PageNotFound = () => {
       </div>
     </>
   );
-};
-
-export default PageNotFound;
+}

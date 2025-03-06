@@ -5,6 +5,8 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import TrendingNow from "@/components/store-components/TrendingNow";
+import ShopCollection from "@/components/store-components/Shop/ShopCollection";
+import data from "@/data/Product.json";
 
 interface Category {
   name: string;
@@ -201,9 +203,10 @@ export default function CategoriesPage() {
           </div>
         </div>
       </div>
-
       {/* 🔹 Trending Categories */}
       <TrendingNow />
+      {/* Collections */}
+      <ShopCollection data={data} />
     </>
   );
 }

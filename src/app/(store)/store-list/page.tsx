@@ -2,15 +2,16 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Menu from "@/components/store-components/Menu";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "Store List", href: "/store-list" },
+];
 const StoreList = () => {
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-        <Breadcrumb heading="Store list" subHeading="Store list" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Store List" />
       </div>
       <div className="store-list py-10 md:py-20">
         <div className="container">

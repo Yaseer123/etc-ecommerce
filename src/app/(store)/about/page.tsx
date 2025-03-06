@@ -1,17 +1,19 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Menu from "@/components/store-components/Menu";
 import Benefit from "@/components/store-components/Benefit";
 import Brand from "@/components/store-components/Brand";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Instagram from "@/components/store-components/Instagram";
+const breadcrumbItems = [
+  { label: "Home", href: "/" },
+  { label: "About us", href: "/about" },
+];
 const AboutUs = () => {
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-        <Breadcrumb heading="About Us" subHeading="About Us" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="About Us" />
       </div>
       <div className="about pt-10 md:pt-20">
         <div className="about-us-block">

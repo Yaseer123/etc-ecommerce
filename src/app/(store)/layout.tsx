@@ -1,6 +1,5 @@
 import "@/styles/styles.css";
 import Footer from "@/components/store-components/Footer";
-import Menu from "@/components/store-components/Menu";
 import ModalCart from "@/components/store-components/Modal/ModalCart";
 import ModalWishlist from "@/components/store-components/Modal/ModalWishlist";
 import TopNav from "@/components/store-components/TopNav";
@@ -17,7 +16,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
           props="style-one bg-black_custom"
           slogan="New customers save 10% with the code GET10"
         />
-        <Menu />
+
         {children}
         <Footer />
         <ModalCart serverTimeLeft={serverTimeLeft} />
