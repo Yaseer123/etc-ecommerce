@@ -8,6 +8,7 @@ import type CountdownTimeType from "@/types/CountdownType";
 import { countdownTime } from "@/utils/countdownTime";
 import React from "react";
 import Menu from "@/components/store-components/Menu";
+import ModalQuickview from "@/components/store-components/Modal/ModalQuickview";
 
 const serverTimeLeft: CountdownTimeType = countdownTime();
 export default function layout({ children }: { children: React.ReactNode }) {
