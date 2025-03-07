@@ -1,23 +1,20 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import React, { useEffect } from "react";
 import Link from "next/link";
-
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import { useState } from "react";
 import { countdownTime } from "@/utils/countdownTime";
-
-const ComingSoon = () => {
-  const [timeLeft, setTimeLeft] = useState(countdownTime());
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(countdownTime());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
+import Image from "next/image";
+import * as Icon from "@phosphor-icons/react/dist/ssr";
+export default function ComingSoon() {
+   const [timeLeft, setTimeLeft] = useState(countdownTime());
+  
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setTimeLeft(countdownTime());
+      }, 1000);
+  
+      return () => clearInterval(timer);
+    }, []);
   return (
     <>
       <div className="coming-soon relative h-screen w-screen">
@@ -107,6 +104,4 @@ const ComingSoon = () => {
       </div>
     </>
   );
-};
-
-export default ComingSoon;
+}

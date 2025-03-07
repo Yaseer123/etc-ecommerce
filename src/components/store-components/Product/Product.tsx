@@ -15,7 +15,7 @@ import { api } from "@/trpc/react";
 interface ProductProps {
   data: ProductType;
   type: string;
-  style: string;
+  style?: string;
 }
 export default function Product({ data, type, style }: ProductProps) {
   const [activeColor, setActiveColor] = useState<string>("");

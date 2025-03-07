@@ -13,7 +13,7 @@ interface Props {
   start: number;
   limit: number;
 }
-export default function MenFashion({ data, start, limit }: Props) {
+export default function Fashion({ data, start, limit }: Props) {
   const [activeTab, setActiveTab] = useState<string>("shirt");
 
   const handleTabClick = (type: string) => {

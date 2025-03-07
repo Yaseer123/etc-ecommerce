@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ProductType } from "@/types/ProductType";
+import { type ProductType } from "@/types/ProductType";
 import Product from "../Product/Product";
 
 interface Props {
@@ -79,7 +79,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       )
                       .slice(0, 2)
                       .map((product) => (
-                        <Product data={product} type="grid" key={product.id} />
+                        <Product data={product} type="grid" key={product.id} style=""/>
                       ))}
                   </div>
                 </div>
@@ -124,7 +124,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       )
                       .slice(2, 4)
                       .map((product) => (
-                        <Product data={product} type="grid" key={product.id} />
+                        <Product data={product} type="grid" key={product.id} style=""/>
                       ))}
                   </div>
                 </div>
