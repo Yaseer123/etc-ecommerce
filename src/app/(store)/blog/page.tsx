@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import blogData from "@/data/Blog.json";
@@ -10,8 +10,10 @@ import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import BlogItem from "@/components/store-components/Blog/BlogItem";
 import HandlePagination from "@/components/store-components/HandlePagination";
+import { api } from "@/trpc/react";
 
 const BlogsPage = () => {
+  const [blogPosts] = api.post.getAllPretty.useSuspenseQuery();
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 4;
   const offset = currentPage * productsPerPage;
@@ -30,45 +32,15 @@ const BlogsPage = () => {
     router.push(`/blog/detail1?id=${blogId}`);
   };
 
-  let filteredData = blogData.filter((blog) => {
-    let isCategoryMatched = true;
-    if (category) {
-      isCategoryMatched =
-        blog.category === category && blog.category !== "underwear";
-    } else {
-      isCategoryMatched = blog.category !== "underwear";
+  const pageCount = Math.ceil(blogPosts.length / productsPerPage);
+
+  useEffect(() => {
+    if (pageCount === 0 && currentPage !== 0) {
+      setCurrentPage(0);
     }
+  }, [pageCount, currentPage]);
 
-    return isCategoryMatched;
-  });
-
-  if (filteredData.length === 0) {
-    filteredData = [
-      {
-        id: "no-data",
-        category: "no-data",
-        tag: "no-data",
-        title: "no-data",
-        date: "no-data",
-        author: "no-data",
-        avatar: "no-data",
-        thumbImg: "",
-        coverImg: "",
-        subImg: ["", ""],
-        shortDesc: "no-data",
-        description: "no-data",
-        slug: "no-data",
-      },
-    ];
-  }
-
-  const pageCount = Math.ceil(filteredData.length / productsPerPage);
-
-  if (pageCount === 0) {
-    setCurrentPage(0);
-  }
-
-  const currentProducts = filteredData.slice(offset, offset + productsPerPage);
+  const currentBlogs = blogPosts.slice(offset, offset + productsPerPage);
 
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
@@ -87,7 +59,7 @@ const BlogsPage = () => {
           <div className="flex justify-between gap-y-12 max-xl:flex-col">
             <div className="left xl:w-3/4 xl:pr-2">
               <div className="list-blog flex flex-col gap-8 xl:gap-10">
-                {currentProducts.map((item) => (
+                {currentBlogs.map((item) => (
                   <BlogItem key={item.id} data={item} type="style-list" />
                 ))}
               </div>

@@ -58,6 +58,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
     addPost.mutate({
       imageId: imageId,
       coverImageId: res.public_id,
+      coverImageUrl: res.secure_url,
       shortDescription: shortDescription,
       title: title,
       content: content,

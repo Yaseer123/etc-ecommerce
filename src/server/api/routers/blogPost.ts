@@ -13,6 +13,21 @@ export const blogPostRouter = createTRPCRouter({
     return blogPost;
   }),
 
+  getAllPretty: publicProcedure.query(async ({ ctx }) => {
+    const blogPost = await ctx.db.post.findMany({
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return blogPost;
+  }),
+
   getOne: publicProcedure
     .input(
       z.object({
@@ -35,6 +50,7 @@ export const blogPostRouter = createTRPCRouter({
         slug: z.string().min(1, "Slug field can't be empty"),
         shortDescription: z.string(),
         coverImageId: z.string(),
+        coverImageUrl: z.string(),
         content: z.string(),
         createdBy: z.string(),
         imageId: z.string(),
@@ -46,6 +62,7 @@ export const blogPostRouter = createTRPCRouter({
         data: {
           imageId: input.imageId,
           coverImageId: input.coverImageId,
+          coverImageUrl: input.coverImageUrl,
           shortDescription: input.shortDescription,
           title: input.title,
           slug: input.slug,
