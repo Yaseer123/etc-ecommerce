@@ -7,7 +7,8 @@ import * as Icon from "@phosphor-icons/react/dist/ssr";
 import TrendingNow from "@/components/store-components/TrendingNow";
 import ShopCollection from "@/components/store-components/Shop/ShopCollection";
 import data from "@/data/Product.json";
-
+import { api } from "@/trpc/react";
+import { error } from "console";
 interface Category {
   name: string;
   path: string;
@@ -16,7 +17,7 @@ interface Category {
 }
 
 // Categories Data with added icons
-const categories: Category[] = [
+const categoryData: Category[] = [
   {
     name: "Electronics",
     path: "/category/electronics",
@@ -60,7 +61,19 @@ const categories: Category[] = [
 
 export default function CategoriesPage() {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
+  // Fetch categories from tRPC
+  const [categories, { error, isLoading }] = api.category.getAll.useSuspenseQuery();
 
+  // if (isLoading) return <p>Loading categories...</p>;
+
+  // if (error) {
+  //   console.error("🔴 tRPC Error:", error);
+  //   return <p>Error loading categories: {error.message}</p>;
+  // }
+
+  // Ensure data is defined (fallback to empty array to prevent errors)
+  const categoryList = categories ?? [];
+  console.log("Categories:",categoryList);
   const toggleCategory = (categoryName: string) => {
     setOpenCategory((prevOpen) =>
       prevOpen === categoryName ? null : categoryName,
@@ -96,7 +109,7 @@ export default function CategoriesPage() {
 
           {/* 🔥 FLEXBOX LAYOUT */}
           <div className="flex flex-wrap justify-center gap-8">
-            {categories.map((category) => (
+            {categoryList.map((category) => (
               <motion.div
                 key={category.name}
                 className={`w-full overflow-hidden rounded-xl transition-all duration-300 sm:w-[48%] lg:w-[30%] xl:w-[23%] ${
@@ -122,11 +135,11 @@ export default function CategoriesPage() {
                     }`}
                   >
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <category.icon
+                      {/* <category.icon
                         size={80}
                         weight="light"
                         className="text-white opacity-30"
-                      />
+                      /> */}
                     </div>
                     <div className="absolute bottom-0 left-0 w-full p-5">
                       <h3 className="text-2xl font-bold text-white">
@@ -181,7 +194,7 @@ export default function CategoriesPage() {
                             }}
                           >
                             <Link
-                              href={sub.path}
+                              href={`/categories/${category.name}/${sub.name}`}
                               className="block p-4 text-gray-700 transition-all hover:bg-gray-50 hover:pl-6 hover:text-black"
                             >
                               <div className="flex items-center justify-between">

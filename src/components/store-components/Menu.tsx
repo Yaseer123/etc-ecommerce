@@ -1023,6 +1023,14 @@ export default function Menu({ props }: { props?: string }) {
                         Store list
                       </Link>
                     </li>
+                    <li className="h-full">
+                      <Link
+                        href="/order-tracking"
+                        className={`text-button-uppercase flex h-full items-center justify-center duration-300 ${pathname.includes("/pages") ? "active" : ""}`}
+                      >
+                        Track Order
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -1680,6 +1688,20 @@ export default function Menu({ props }: { props?: string }) {
                       className="mt-5 flex items-center justify-between text-xl font-semibold"
                     >
                       Store List
+                      <span className="text-right">
+                        <Icon.CaretRight size={20} />
+                      </span>
+                    </Link>
+                  </li>
+                  <li
+                    className={`${openSubNavMobile === 7 ? "open" : ""}`}
+                    onClick={() => handleOpenSubNavMobile(7)}
+                  >
+                    <Link
+                      href="/order-tracking"
+                      className="mt-5 flex items-center justify-between text-xl font-semibold"
+                    >
+                      Track Order
                       <span className="text-right">
                         <Icon.CaretRight size={20} />
                       </span>

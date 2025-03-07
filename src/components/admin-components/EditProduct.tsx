@@ -12,8 +12,8 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import PreSelectedCategory from "./PreSelectedCategory";
-import { useProductImageStore } from "@/app/context/ProductImageProvider";
 import { renameImages } from "@/app/actions/file";
+import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 
 export default function EditProductForm({ productId }: { productId: string }) {
   const [product] = api.product.getProductById.useSuspenseQuery({
