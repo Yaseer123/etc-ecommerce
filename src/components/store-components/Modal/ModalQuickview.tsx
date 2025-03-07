@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import ModalSizeguide from "./ModalSizeguide";
-import { useModalQuickviewContext } from "@/context/store-context/ModalQuickViewContext";
+import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 import { useCart } from "@/context/store-context/CartContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
@@ -16,12 +16,12 @@ const ModalQuickview = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
-  const { selectedProduct, closeQuickview } = useModalQuickviewContext();
+  const { selectedProduct, closeQuickView } = useModalQuickViewContext();
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
-  const { addToWishlist, removeFromWishlist, wishlistState } = useWishlist();
+  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const { openModalWishlist } = useModalWishlistContext();
   const percentSale =
     selectedProduct &&
@@ -88,7 +88,7 @@ const ModalQuickview = () => {
         );
       }
       openModalCart();
-      closeQuickview();
+      closeQuickView();
     }
   };
 
@@ -96,9 +96,7 @@ const ModalQuickview = () => {
     // if product existed in wishlit, remove from wishlist and set state to false
     if (selectedProduct) {
       if (
-        wishlistState.wishlistArray.some(
-          (item) => item.id === selectedProduct.id,
-        )
+        wishlist.wishlistArray.some((item) => item.id === selectedProduct.id)
       ) {
         removeFromWishlist(selectedProduct.id);
       } else {
@@ -110,7 +108,7 @@ const ModalQuickview = () => {
   };
   return (
     <>
-      <div className={`modal-quickview-block`} onClick={closeQuickview}>
+      <div className={`modal-quickview-block`} onClick={closeQuickView}>
         <div
           className={`modal-quickview-main py-6 ${selectedProduct !== null ? "open" : ""}`}
           onClick={(e) => {
@@ -142,7 +140,7 @@ const ModalQuickview = () => {
                 <div className="heading5">Quick View</div>
                 <div
                   className="close-btn absolute right-0 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
-                  onClick={closeQuickview}
+                  onClick={closeQuickView}
                 >
                   <Icon.X size={14} />
                 </div>
@@ -153,10 +151,10 @@ const ModalQuickview = () => {
                     <div className="heading4 mt-1">{selectedProduct?.name}</div>
                   </div>
                   <div
-                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlistState.wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
+                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlist.wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
                     onClick={handleAddToWishlist}
                   >
-                    {wishlistState.wishlistArray.some(
+                    {wishlist.wishlistArray.some(
                       (item) => item.id === selectedProduct?.id,
                     ) ? (
                       <>

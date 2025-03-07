@@ -45,10 +45,10 @@ const BlogsPage = () => {
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
   };
-  const breadcrumbItems = [
-    { label: "Homepage", href: "/" },
-    { label: "Categories", href: "/categories" },
-  ];
+ const breadcrumbItems = [
+   { label: "Home", href: "/" },
+   { label: "Categories", href: "/categories" },
+ ];
   return (
     <>
       <div id="header" className="relative w-full">

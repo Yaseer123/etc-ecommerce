@@ -1,6 +1,5 @@
 import "@/styles/styles.css";
 import Footer from "@/components/store-components/Footer";
-import Menu from "@/components/store-components/Menu";
 import ModalCart from "@/components/store-components/Modal/ModalCart";
 import ModalWishlist from "@/components/store-components/Modal/ModalWishlist";
 import TopNav from "@/components/store-components/TopNav";
@@ -8,7 +7,9 @@ import GlobalProvider from "@/providers/GlobalProvider";
 import type CountdownTimeType from "@/types/CountdownType";
 import { countdownTime } from "@/utils/countdownTime";
 import React from "react";
+import Menu from "@/components/store-components/Menu";
 import ModalQuickview from "@/components/store-components/Modal/ModalQuickview";
+
 const serverTimeLeft: CountdownTimeType = countdownTime();
 export default function layout({ children }: { children: React.ReactNode }) {
   return (
