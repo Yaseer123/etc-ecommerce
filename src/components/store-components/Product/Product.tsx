@@ -9,7 +9,7 @@ import { useModalWishlistContext } from "@/context/store-context/ModalWishlistCo
 import { useRouter } from "next/navigation";
 import Marquee from "react-fast-marquee";
 import Rate from "../Rate";
-import { useModalQuickviewContext } from "@/context/store-context/ModalQuickViewContext";
+import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 import { api } from "@/trpc/react";
 
 interface ProductProps {
@@ -24,7 +24,7 @@ export default function Product({ data, type, style }: ProductProps) {
   const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
   const { openModalWishlist } = useModalWishlistContext();
-  const { openQuickview } = useModalQuickviewContext();
+  const { openQuickView } = useModalQuickViewContext();
 
   const utils = api.useUtils();
   const [wishlistState] = api.wishList.getWishList.useSuspenseQuery();
@@ -72,7 +72,7 @@ export default function Product({ data, type, style }: ProductProps) {
   };
 
   const handleQuickViewOpen = () => {
-    openQuickview(data);
+    openQuickView(data);
   };
 
   const handleDetailProduct = (productId: string) => {

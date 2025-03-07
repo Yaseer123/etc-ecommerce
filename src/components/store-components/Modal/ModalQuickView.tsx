@@ -1,6 +1,6 @@
 "use client";
 
-// Quickview.tsx
+// QuickView.tsx
 import React, { useState } from "react";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
@@ -12,7 +12,7 @@ import { useModalWishlistContext } from "@/context/store-context/ModalWishlistCo
 import { useWishlist } from "@/context/store-context/WishlistContext";
 import Rate from "../Rate";
 
-const ModalQuickview = () => {
+const ModalQuickView = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
@@ -375,4 +375,4 @@ const ModalQuickview = () => {
   );
 };
 
-export default ModalQuickview;
+export default ModalQuickView;

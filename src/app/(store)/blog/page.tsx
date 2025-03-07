@@ -60,7 +60,7 @@ const BlogsPage = () => {
             <div className="left xl:w-3/4 xl:pr-2">
               <div className="list-blog flex flex-col gap-8 xl:gap-10">
                 {currentBlogs.map((item) => (
-                  <BlogItem key={item.id} data={item} type="style-list" />
+                  <BlogItem key={item.id} data={item}/>
                 ))}
               </div>
               {pageCount > 1 && (

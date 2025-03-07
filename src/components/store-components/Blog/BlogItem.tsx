@@ -2,16 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { type BlogType } from "@/types/BlogType";
 import { useRouter } from "next/navigation";
 
 interface BlogProps {
   data: BlogType;
-  type: string;
 }
 
-const BlogItem: React.FC<BlogProps> = ({ data, type }) => {
+const BlogItem: React.FC<BlogProps> = ({ data }) => {
   const router = useRouter();
   const handleBlogClick = (blogId: string) => {
     // Go to blog detail with blogId selected
@@ -20,20 +18,20 @@ const BlogItem: React.FC<BlogProps> = ({ data, type }) => {
 
   return (
     <div
-      className="blog-item style-one h-full cursor-pointer"
+      className="blog-item style-list h-full cursor-pointer"
       onClick={() => handleBlogClick(data.id)}
     >
-      <div className="blog-main block h-full">
-        <div className="blog-thumb overflow-hidden rounded-[20px]">
+      <div className="blog-main flex h-full gap-6 max-md:flex-col md:items-center md:gap-9">
+        <div className="blog-thumb w-full flex-shrink-0 overflow-hidden rounded-[20px] md:w-1/2">
           <Image
             src={data.coverImageUrl}
-            width={960}
-            height={640}
+            width={2000}
+            height={1500}
             alt="blog-img"
-            className="h-[640px] w-[960px] duration-500"
+            className="w-full flex-shrink-0 duration-500"
           />
         </div>
-        <div className="blog-infor mt-7">
+        <div className="blog-infor">
           <div className="blog-tag bg-green text-button-uppercase inline-block rounded-full px-2.5 py-1">
             {data.tags.join(", ")}
           </div>
@@ -46,9 +44,20 @@ const BlogItem: React.FC<BlogProps> = ({ data, type }) => {
             </div>
             <span className="h-[1px] w-[20px] bg-black"></span>
             <div className="blog-date caption1 text-secondary">
-              {new Date(data.updatedAt).toLocaleDateString()}
+              {" "}
+              {new Date(data.updatedAt)
+                .toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })
+                .toUpperCase()}
             </div>
           </div>
+          <div className="body1 mt-4 text-secondary">
+            {data.shortDescription}
+          </div>
+          <div className="text-button mt-4 underline">Read More</div>
         </div>
       </div>
     </div>
