@@ -6,12 +6,12 @@ import * as Icon from "@phosphor-icons/react/dist/ssr";
 import productData from "@/data/Product.json";
 
 import Image from "next/image";
-import { useModalQuickviewContext } from "@/context/store-context/ModalQuickViewContext";
+import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 
 export default function ModalNewsletter() {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
-  const { openQuickview } = useModalQuickviewContext();
+  const { openQuickView } = useModalQuickViewContext();
 
   const handleDetailProduct = (productId: string) => {
     // redirect to shop with category selected
@@ -95,7 +95,7 @@ export default function ModalNewsletter() {
                     </div>
                     <button
                       className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-green_custom sm:px-5 sm:py-3"
-                      onClick={() => openQuickview(item)}
+                      onClick={() => openQuickView(item)}
                     >
                       QUICK VIEW
                     </button>

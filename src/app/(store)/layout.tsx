@@ -8,7 +8,7 @@ import type CountdownTimeType from "@/types/CountdownType";
 import { countdownTime } from "@/utils/countdownTime";
 import React from "react";
 import Menu from "@/components/store-components/Menu";
-import ModalQuickview from "@/components/store-components/Modal/ModalQuickview";
+import ModalQuickView from "@/components/store-components/Modal/ModalQuickView";
 
 const serverTimeLeft: CountdownTimeType = countdownTime();
 export default function layout({ children }: { children: React.ReactNode }) {
@@ -25,7 +25,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
         <ModalCart serverTimeLeft={serverTimeLeft} />
         <ModalWishlist />
         {/* <ModalSearch /> */}
-        <ModalQuickview />
+        <ModalQuickView />
         {/* <ModalCompare /> */}
       </GlobalProvider>
     </>
