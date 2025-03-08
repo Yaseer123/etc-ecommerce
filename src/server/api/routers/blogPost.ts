@@ -15,6 +15,8 @@ export const blogPostRouter = createTRPCRouter({
 
   getAllPretty: publicProcedure.query(async ({ ctx }) => {
     const blogPost = await ctx.db.post.findMany({
+      where: { published: true },
+      orderBy: { updatedAt: "desc" },
       include: {
         createdBy: {
           select: {
@@ -37,6 +39,14 @@ export const blogPostRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const post = await ctx.db.post.findUnique({
         where: { id: input.id },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
       });
 
       return post;

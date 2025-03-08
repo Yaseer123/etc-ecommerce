@@ -11,15 +11,15 @@ interface BlogProps {
 
 const BlogItem: React.FC<BlogProps> = ({ data }) => {
   const router = useRouter();
-  const handleBlogClick = (blogId: string) => {
+  const handleBlogClick = (blogId: string, slug: string) => {
     // Go to blog detail with blogId selected
-    router.push(`/blog/detail1?id=${blogId}`);
+    router.push(`/blog/${slug}?id=${blogId}`);
   };
 
   return (
     <div
       className="blog-item style-list h-full cursor-pointer"
-      onClick={() => handleBlogClick(data.id)}
+      onClick={() => handleBlogClick(data.id, data.slug)}
     >
       <div className="blog-main flex h-full gap-6 max-md:flex-col md:items-center md:gap-9">
         <div className="blog-thumb w-full flex-shrink-0 overflow-hidden rounded-[20px] md:w-1/2">
@@ -32,7 +32,7 @@ const BlogItem: React.FC<BlogProps> = ({ data }) => {
           />
         </div>
         <div className="blog-infor">
-          <div className="blog-tag bg-green text-button-uppercase inline-block rounded-full px-2.5 py-1">
+          <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green px-2.5 py-1">
             {data.tags.join(", ")}
           </div>
           <div className="heading6 blog-title mt-3 duration-300">
