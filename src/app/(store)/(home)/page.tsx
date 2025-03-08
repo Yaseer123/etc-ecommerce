@@ -16,7 +16,7 @@ export default function page() {
       <div id="header" className="relative w-full">
         <Slider />
       </div>
-      <TrendingNow />
+      <TrendingNow data={[]} />
       {/* Fashion for men */}
       <Fashion data={productData} start={0} limit={3} />
       <Banner />

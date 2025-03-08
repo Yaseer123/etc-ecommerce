@@ -232,3 +232,26 @@ model OrderItem {
     order   Order   @relation(fields: [orderId], references: [id])
     product Product @relation(fields: [productId], references: [id])
 }
+
+
+// Faq model
+
+model FaqCategory {
+  id        String    @id @default(cuid())
+  title     String
+  order     Int       @default(0)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  faqItems  FaqItem[]
+}
+
+model FaqItem {
+  id         String      @id @default(cuid())
+  categoryId String
+  question   String
+  answer     String      @db.Text
+  order      Int         @default(0)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  category   FaqCategory @relation(fields: [categoryId], references: [id])
+}

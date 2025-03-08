@@ -21,14 +21,7 @@ export default function CategoriesPage() {
   const [categories, { error, isLoading }] =
     api.category.getAll.useSuspenseQuery();
 
-  // if (isLoading) return <p>Loading categories...</p>;
 
-  // if (error) {
-  //   console.error("🔴 tRPC Error:", error);
-  //   return <p>Error loading categories: {error.message}</p>;
-  // }
-
-  // Ensure data is defined (fallback to empty array to prevent errors)
   const categoryList = categories ?? [];
   console.log("Categories:", categoryList);
   const toggleCategory = (categoryName: string) => {
