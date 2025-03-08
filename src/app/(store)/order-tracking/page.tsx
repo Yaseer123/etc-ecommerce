@@ -2,14 +2,14 @@
 import React from "react";
 import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import Menu from "@/components/store-components/Menu";
-
+const breadcrumbItems = [
+  {label: "Home", href: "/" },
+  { label: "Order Tracking" }];
 const OrderTracking = () => {
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-        <Breadcrumb heading="Order Tracking" subHeading="Order Tracking" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Order Tracking" />
       </div>
       <div className="order-tracking py-10 md:py-20">
         <div className="container">

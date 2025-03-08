@@ -8,61 +8,18 @@ import TrendingNow from "@/components/store-components/TrendingNow";
 import ShopCollection from "@/components/store-components/Shop/ShopCollection";
 import data from "@/data/Product.json";
 import { api } from "@/trpc/react";
-import { error } from "console";
+
 interface Category {
   name: string;
-  path: string;
-  icon: React.ElementType;
-  subcategories: { name: string; path: string }[];
+  subcategories: { name: string }[];
 }
-
 // Categories Data with added icons
-const categoryData: Category[] = [
-  {
-    name: "Electronics",
-    path: "/category/electronics",
-    icon: Icon.DeviceTablet,
-    subcategories: [
-      { name: "Mobile Phones", path: "/categories/electronics/mobile-phones" },
-      { name: "Laptops", path: "/category/electronics/laptops" },
-      { name: "Accessories", path: "/category/electronics/accessories" },
-    ],
-  },
-  {
-    name: "Fashion",
-    path: "/category/fashion",
-    icon: Icon.TShirt,
-    subcategories: [
-      { name: "Men's Clothing", path: "/category/fashion/men" },
-      { name: "Women's Clothing", path: "/category/fashion/women" },
-      { name: "Shoes", path: "/category/fashion/shoes" },
-    ],
-  },
-  {
-    name: "Home & Kitchen",
-    path: "/category/home-kitchen",
-    icon: Icon.Couch,
-    subcategories: [
-      { name: "Furniture", path: "/category/home-kitchen/furniture" },
-      { name: "Appliances", path: "/category/home-kitchen/appliances" },
-    ],
-  },
-  {
-    name: "Beauty & Care",
-    path: "/category/beauty-care",
-    icon: Icon.PaintBrush,
-    subcategories: [
-      { name: "Makeup", path: "/category/beauty-care/makeup" },
-      { name: "Skincare", path: "/category/beauty-care/skincare" },
-      { name: "Haircare", path: "/category/beauty-care/haircare" },
-    ],
-  },
-];
 
 export default function CategoriesPage() {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   // Fetch categories from tRPC
-  const [categories, { error, isLoading }] = api.category.getAll.useSuspenseQuery();
+  const [categories, { error, isLoading }] =
+    api.category.getAll.useSuspenseQuery();
 
   // if (isLoading) return <p>Loading categories...</p>;
 
@@ -73,7 +30,7 @@ export default function CategoriesPage() {
 
   // Ensure data is defined (fallback to empty array to prevent errors)
   const categoryList = categories ?? [];
-  console.log("Categories:",categoryList);
+  console.log("Categories:", categoryList);
   const toggleCategory = (categoryName: string) => {
     setOpenCategory((prevOpen) =>
       prevOpen === categoryName ? null : categoryName,
@@ -217,7 +174,7 @@ export default function CategoriesPage() {
         </div>
       </div>
       {/* 🔹 Trending Categories */}
-      <TrendingNow />
+      <TrendingNow data={categoryList as Category[]} />
       {/* Collections */}
       <ShopCollection data={data} />
     </>
