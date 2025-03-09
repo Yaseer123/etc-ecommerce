@@ -305,7 +305,7 @@ const ModalQuickView = () => {
                   <div className="list-payment mt-7">
                     <div className="main-content relative rounded-xl border border-line px-3 pb-4 pt-6 max-md:w-2/3 max-sm:w-full sm:px-4 lg:pb-6 lg:pt-8">
                       <div className="heading6 absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap bg-white px-5">
-                        Guranteed safe checkout
+                        Guaranteed safe checkout
                       </div>
                       <div className="list grid grid-cols-6">
                         <div className="item flex items-center justify-center px-1 lg:px-3">

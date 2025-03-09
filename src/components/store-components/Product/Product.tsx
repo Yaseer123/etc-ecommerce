@@ -17,6 +17,11 @@ interface ProductProps {
   type: string;
   style?: string;
 }
+type WishlistItem = {
+  id: string;
+  name: string;
+  // other properties as needed
+};
 export default function Product({ data, type, style }: ProductProps) {
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
@@ -27,18 +32,30 @@ export default function Product({ data, type, style }: ProductProps) {
   const { openQuickView } = useModalQuickViewContext();
 
   const utils = api.useUtils();
-  const [wishlistState] = api.wishList.getWishList.useSuspenseQuery();
+
+  // Fixed - properly handle the response from useSuspenseQuery
+  const wishlistResponse = api.wishList.getWishList.useSuspenseQuery();
+  console.log(wishlistResponse);
+  // Ensure wishlistResponse is treated as an array
+  const wishlist: WishlistItem[] = wishlistResponse ?? [];
+
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
     onSuccess: async () => {
       await utils.wishList.getWishList.invalidate();
     },
   });
+
   const removeFromWishlistMutation =
     api.wishList.removeFromWishList.useMutation({
       onSuccess: async () => {
         await utils.wishList.getWishList.invalidate();
       },
     });
+
+  // Create a safe check function for wishlist items
+  const isInWishlist = (itemId: string): boolean => {
+    return wishlist.some((item: { id: string }) => item?.id === itemId);
+  };
 
   const router = useRouter();
 
@@ -61,11 +78,10 @@ export default function Product({ data, type, style }: ProductProps) {
   };
 
   const handleAddToWishlist = () => {
-    // if product existed in wishlistState, remove from wishlistState and set state to false
-    if (wishlistState.some((item) => item.id === data.id)) {
+    // Fixed - use the safe isInWishlist function
+    if (isInWishlist(data.id)) {
       removeFromWishlistMutation.mutate({ productId: data.id });
     } else {
-      // else, add to wishlistState and set state to true
       addToWishlistMutation.mutate({ productId: data.id });
     }
     openModalWishlist();
@@ -76,12 +92,12 @@ export default function Product({ data, type, style }: ProductProps) {
   };
 
   const handleDetailProduct = (productId: string) => {
-    // redirect to shop with category selected
     router.push(`/product/default?id=${productId}`);
   };
 
   const percentSale = Math.floor(100 - (data.price / data.originPrice) * 100);
   const percentSold = Math.floor((data.sold / data.quantity) * 100);
+
   return (
     <>
       {type === "grid" && (
@@ -104,7 +120,7 @@ export default function Product({ data, type, style }: ProductProps) {
 
               <div className="list-action-right absolute right-3 top-3 max-lg:hidden">
                 <div
-                  className={`add-wishlistState-btn relative flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white duration-300 ${wishlistState.some((item) => item.id === data.id) ? "active" : ""}`}
+                  className={`add-wishlistState-btn relative flex h-[32px] w-[32px] items-center justify-center rounded-full bg-white duration-300 ${isInWishlist(data.id) ? "active" : ""}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleAddToWishlist();
@@ -113,7 +129,7 @@ export default function Product({ data, type, style }: ProductProps) {
                   <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                     Add To wishlist
                   </div>
-                  {wishlistState.some((item) => item.id === data.id) ? (
+                  {isInWishlist(data.id) ? (
                     <>
                       <Icon.Heart
                         size={18}
@@ -328,13 +344,13 @@ export default function Product({ data, type, style }: ProductProps) {
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
               <span
-                className={`add-wishlistState-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${wishlistState.some((item) => item.id === data.id) ? "active" : ""}`}
+                className={`add-wishlistState-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${isInWishlist(data.id) ? "active" : ""}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToWishlist();
                 }}
               >
-                {wishlistState.some((item) => item.id === data.id) ? (
+                {isInWishlist(data.id) ? (
                   <>
                     <Icon.Heart
                       size={18}

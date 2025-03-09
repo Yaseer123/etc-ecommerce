@@ -3,40 +3,16 @@ import useCategoryPopup from "@/hooks/useCategoryPopup";
 import * as Icon from "@phosphor-icons/react/dist/ssr"; // Assuming you have an Icon component
 import { useState } from "react";
 import { motion } from "motion/react";
+import { api } from "@/trpc/react";
 
 const CategoryDropdown = () => {
+    const [categories, { error, isLoading }] =
+      api.category.getAll.useSuspenseQuery();
   const { openCategoryPopup, handleCategoryPopup } = useCategoryPopup();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   // Example categories with nested subcategories
-  const categories = [
-    {
-      name: "Electronics",
-      path: "/category/electronics",
-      subcategories: [
-        { name: "Mobile Phones", path: "/category/electronics/mobile-phones" },
-        { name: "Laptops", path: "/category/electronics/laptops" },
-        { name: "Accessories", path: "/category/electronics/accessories" },
-      ],
-    },
-    {
-      name: "Fashion",
-      path: "/category/fashion",
-      subcategories: [
-        { name: "Men's Clothing", path: "/category/fashion/men" },
-        { name: "Women's Clothing", path: "/category/fashion/women" },
-        { name: "Shoes", path: "/category/fashion/shoes" },
-      ],
-    },
-    {
-      name: "Home & Kitchen",
-      path: "/category/home-kitchen",
-      subcategories: [
-        { name: "Furniture", path: "/category/home-kitchen/furniture" },
-        { name: "Appliances", path: "/category/home-kitchen/appliances" },
-      ],
-    },
-  ];
+ 
 
   return (
     <div className="category-block relative h-full">
@@ -74,7 +50,7 @@ const CategoryDropdown = () => {
             {/* Parent Category */}
             <div className="flex cursor-pointer items-center justify-between px-4 py-2 hover:bg-gray-100">
               <Link
-                href={category.path}
+                href={`categories/${category.name}`}
                 className="inline-block whitespace-nowrap"
               >
                 {category.name}
@@ -105,7 +81,7 @@ const CategoryDropdown = () => {
                 {category.subcategories.map((sub) => (
                   <div key={sub.name} className="px-4 py-2 hover:bg-gray-200">
                     <Link
-                      href={sub.path}
+                      href={`categories/${category.name}/${sub.name}`}
                       className="inline-block whitespace-nowrap"
                     >
                       {sub.name}

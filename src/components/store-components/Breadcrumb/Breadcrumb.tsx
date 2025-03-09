@@ -32,7 +32,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 </div>
               )}
               <div className="link caption1 mt-3 flex items-center justify-center gap-1">
-                {items.map((item, index) => (
+                {items?.map((item, index) => (
                   <React.Fragment key={`breadcrumb-${index}`}>
                     {index > 0 && (
                       <Icon.CaretRight size={14} className="text-secondary2" />

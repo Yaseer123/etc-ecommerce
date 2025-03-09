@@ -114,12 +114,21 @@ export default function Page() {
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
   };
-
+  const breadcrumbItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Wishlist",
+      href: "/wishlist",
+    },
+  ];
   return (
     <>
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
-        <Breadcrumb heading="Wish list" subHeading="Wish list" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Wishlist" />
       </div>
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
         <div className="container">
