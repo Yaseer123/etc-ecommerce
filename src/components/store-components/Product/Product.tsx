@@ -22,7 +22,7 @@ type WishlistItem = {
   name: string;
   // other properties as needed
 };
-export default function Product({ data, type, style }: ProductProps) {
+export default function Product({ data, type }: ProductProps) {
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [openQuickShop, setOpenQuickShop] = useState<boolean>(false);
@@ -34,8 +34,7 @@ export default function Product({ data, type, style }: ProductProps) {
   const utils = api.useUtils();
 
   // Fixed - properly handle the response from useSuspenseQuery
-  const wishlistResponse = api.wishList.getWishList.useSuspenseQuery();
-  console.log(wishlistResponse);
+  const [wishlistResponse] = api.wishList.getWishList.useSuspenseQuery();
   // Ensure wishlistResponse is treated as an array
   const wishlist: WishlistItem[] = wishlistResponse ?? [];
 
@@ -78,12 +77,40 @@ export default function Product({ data, type, style }: ProductProps) {
   };
 
   const handleAddToWishlist = () => {
-    // Fixed - use the safe isInWishlist function
     if (isInWishlist(data.id)) {
-      removeFromWishlistMutation.mutate({ productId: data.id });
+      // **Optimistic UI Update: Remove item immediately**
+      utils.wishList.getWishList.setData(
+        undefined,
+        (old) => old?.filter((item) => item.id !== data.id) ?? [],
+      );
+
+      removeFromWishlistMutation.mutate(
+        { productId: data.id },
+        {
+          onError: () => {
+            // **Rollback on failure**
+            void utils.wishList.getWishList.invalidate();
+          },
+        },
+      );
     } else {
-      addToWishlistMutation.mutate({ productId: data.id });
+      // **Optimistic UI Update: Add item immediately**
+      utils.wishList.getWishList.setData(undefined, (old) => [
+        ...(old ?? []),
+        data, // Add complete product data
+      ]);
+
+      addToWishlistMutation.mutate(
+        { productId: data.id },
+        {
+          onError: () => {
+            // **Rollback on failure**
+            void utils.wishList.getWishList.invalidate();
+          },
+        },
+      );
     }
+
     openModalWishlist();
   };
 
@@ -101,19 +128,19 @@ export default function Product({ data, type, style }: ProductProps) {
   return (
     <>
       {type === "grid" && (
-        <div className={`product-item grid-type ${style}`}>
+        <div className="product-item grid-type style-1">
           <div
             onClick={() => handleDetailProduct(data.id)}
             className="product-main block cursor-pointer"
           >
             <div className="product-thumb relative overflow-hidden rounded-2xl bg-white">
               {data.new && (
-                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-green_custom px-3 py-0.5">
+                <div className="product-tag text-button-uppercase bg-green_custom absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5">
                   New
                 </div>
               )}
               {data.sale && (
-                <div className="product-tag text-button-uppercase absolute left-3 top-3 z-[1] inline-block rounded-full bg-red_custom px-3 py-0.5 text-white">
+                <div className="product-tag text-button-uppercase bg-red_custom absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5 text-white">
                   Sale
                 </div>
               )}
@@ -161,54 +188,30 @@ export default function Product({ data, type, style }: ProductProps) {
               {data.sale && (
                 <>
                   <Marquee className="banner-sale-auto absolute bottom-0 left-0 w-full bg-black py-1.5">
-                    <div
-                      className={`caption2 px-2.5 font-semibold uppercase text-white`}
-                    >
-                      Hot Sale {percentSale}% OFF
-                    </div>
-                    <Icon.Lightning weight="fill" className="text-red" />
-                    <div
-                      className={`caption2 px-2.5 font-semibold uppercase text-white`}
-                    >
-                      Hot Sale {percentSale}% OFF
-                    </div>
-                    <Icon.Lightning weight="fill" className="text-red" />
-                    <div
-                      className={`caption2 px-2.5 font-semibold uppercase text-white`}
-                    >
-                      Hot Sale {percentSale}% OFF
-                    </div>
-                    <Icon.Lightning weight="fill" className="text-red" />
-                    <div
-                      className={`caption2 px-2.5 font-semibold uppercase text-white`}
-                    >
-                      Hot Sale {percentSale}% OFF
-                    </div>
-                    <Icon.Lightning weight="fill" className="text-red" />
-                    <div
-                      className={`caption2 px-2.5 font-semibold uppercase text-white`}
-                    >
-                      Hot Sale {percentSale}% OFF
-                    </div>
-                    <Icon.Lightning weight="fill" className="text-red" />
+                    {Array.from({ length: 5 }).map((_) => (
+                      <>
+                        <div
+                          className={`caption2 px-2.5 font-semibold uppercase text-white`}
+                        >
+                          Hot Sale {percentSale}% OFF
+                        </div>
+                        <Icon.Lightning weight="fill" className="text-red" />
+                      </>
+                    ))}
                   </Marquee>
                 </>
               )}
 
-              <div
-                className={`list-action ${style === "style-1" ? "grid grid-cols-2 gap-3" : ""} absolute bottom-5 w-full px-5 max-lg:hidden`}
-              >
-                {style === "style-1" && (
-                  <div
-                    className="quick-view-btn text-button-uppercase w-full rounded-full bg-white py-2 text-center duration-300 hover:bg-black hover:text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleQuickViewOpen();
-                    }}
-                  >
-                    Quick View
-                  </div>
-                )}
+              <div className="list-action absolute bottom-5 grid w-full grid-cols-2 gap-3 px-5 max-lg:hidden">
+                <div
+                  className="quick-view-btn text-button-uppercase w-full rounded-full bg-white py-2 text-center duration-300 hover:bg-black hover:text-white"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleQuickViewOpen();
+                  }}
+                >
+                  Quick View
+                </div>
                 {data.action === "add to cart" ? (
                   <div
                     className="add-cart-btn text-button-uppercase w-full rounded-full bg-white py-2 text-center duration-500 hover:bg-black hover:text-white"
@@ -286,7 +289,7 @@ export default function Product({ data, type, style }: ProductProps) {
               <div className="product-sold pb-2 sm:pb-4">
                 <div className="progress relative h-1.5 w-full overflow-hidden rounded-full bg-line">
                   <div
-                    className={`progress-sold bg-red absolute left-0 top-0 h-full`}
+                    className={`progress-sold absolute left-0 top-0 h-full bg-red`}
                     style={{ width: `${percentSold}%` }}
                   ></div>
                 </div>
@@ -318,7 +321,7 @@ export default function Product({ data, type, style }: ProductProps) {
                     <div className="product-origin-price caption1 text-secondary2">
                       <del>${data.originPrice}.00</del>
                     </div>
-                    <div className="product-sale caption1 inline-block rounded-full bg-green_custom px-3 py-0.5 font-medium">
+                    <div className="product-sale caption1 bg-green_custom inline-block rounded-full px-3 py-0.5 font-medium">
                       -{percentSale}%
                     </div>
                   </>

@@ -13,14 +13,14 @@ interface Props {
   data: Array<ProductType>;
   productPerPage: number;
   // dataType: string | null;
-  productStyle: string;
+  // productStyle: string;
 }
 
 const ShopFilterCanvas: React.FC<Props> = ({
   data,
   productPerPage,
   // dataType,
-  productStyle,
+  // productStyle,
 }) => {
   const [layoutCol, setLayoutCol] = useState<number | null>(4);
   const [showOnlySale, setShowOnlySale] = useState(false);
@@ -705,7 +705,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                     key={item.id}
                     data={item}
                     type="marketplace"
-                    style={productStyle}
+                    // style={productStyle}
                   />
                 ),
               )}

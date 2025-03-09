@@ -11,7 +11,7 @@ export default function ListProduct() {
     <ShopFilterCanvas
       data={productData}
       productPerPage={12}
-      productStyle="style-1"
+      // productStyle="style-1"
     />
   );
 }
