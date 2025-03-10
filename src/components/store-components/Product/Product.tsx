@@ -26,7 +26,7 @@ export default function Product({ data, type }: ProductProps) {
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [openQuickShop, setOpenQuickShop] = useState<boolean>(false);
-  const { addToCart, updateCart, cartState } = useCart();
+  // const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartContext();
   const { openModalWishlist } = useModalWishlistContext();
   const { openQuickView } = useModalQuickViewContext();
@@ -51,6 +51,12 @@ export default function Product({ data, type }: ProductProps) {
       },
     });
 
+  const addToCart = api.cart.addToCart.useMutation({
+    onSuccess: async () => {
+      await utils.cart.getCart.invalidate();
+    },
+  });
+
   // Create a safe check function for wishlist items
   const isInWishlist = (itemId: string): boolean => {
     return wishlist.some((item: { id: string }) => item?.id === itemId);
@@ -67,12 +73,7 @@ export default function Product({ data, type }: ProductProps) {
   };
 
   const handleAddToCart = () => {
-    if (!cartState.cartArray.find((item) => item?.id === data.id)) {
-      addToCart({ ...data });
-      updateCart(data.id, data.quantityPurchase, activeSize, activeColor);
-    } else {
-      updateCart(data.id, data.quantityPurchase, activeSize, activeColor);
-    }
+    addToCart.mutate({ productId: data.id });
     openModalCart();
   };
 

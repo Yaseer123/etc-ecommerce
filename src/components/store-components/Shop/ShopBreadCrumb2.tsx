@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import Link from 'next/link'
+import React, { useState } from 'react'
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Product from '../Product/Product';
 import Slider from 'rc-slider';

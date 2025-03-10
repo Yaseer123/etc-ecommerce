@@ -4,10 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { useCart } from "@/context/store-context/CartContext";
 import { countdownTime } from "@/utils/countdownTime";
-import TopNav from "@/components/store-components/TopNav";
 import Menu from "@/components/store-components/Menu";
 
 const Cart = () => {
@@ -49,7 +47,10 @@ const Cart = () => {
   const [applyCode, setApplyCode] = useState<number>(0);
 
   useEffect(() => {
-    const total = cartState.cartArray.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const total = cartState.cartArray.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
     setTotalCart(total);
   }, [cartState.cartArray]);
 
@@ -81,20 +82,19 @@ const Cart = () => {
 
   return (
     <>
-     
       <div id="header" className="relative w-full">
         <Menu props="bg-transparent" />
-        <Breadcrumb heading="Shopping cart" subHeading="Shopping cart" />
+        {/* <Breadcrumb pageTitle="Shopping cart" subHeading="Shopping cart" /> */}
       </div>
       <div className="cart-block py-10 md:py-20">
         <div className="container">
           <div className="content-main flex justify-between gap-y-8 max-xl:flex-col">
             <div className="w-full xl:w-2/3 xl:pr-3">
-              <div className="time bg-green flex items-center rounded-lg px-5 py-3">
+              <div className="time flex items-center rounded-lg bg-green px-5 py-3">
                 <div className="heding5">🔥</div>
                 <div className="caption1 pl-2">
                   Your cart will expire in
-                  <span className="min text-red text-button fw-700">
+                  <span className="min text-button fw-700 text-red">
                     {" "}
                     {timeLeft.minutes}:
                     {timeLeft.seconds < 10
@@ -222,7 +222,7 @@ const Cart = () => {
                           </div>
                           <div className="flex w-1/12 items-center justify-center">
                             <Icon.XCircle
-                              className="text-red cursor-pointer text-xl duration-500 hover:text-black max-md:text-base"
+                              className="cursor-pointer text-xl text-red duration-500 hover:text-black max-md:text-base"
                               onClick={() => {
                                 removeFromCart(product.id);
                               }}

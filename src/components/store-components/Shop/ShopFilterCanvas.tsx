@@ -30,10 +30,15 @@ const ShopFilterCanvas: React.FC<Props> = ({
   const [size, setSize] = useState<string | null>();
   const [color, setColor] = useState<string | null>();
   const [brand, setBrand] = useState<string | null>();
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
-    min: 0,
-    max: 100,
-  });
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>(
+    data.reduce(
+      (acc, product) => ({
+        max: Math.max(acc.max, product.price),
+        min: Math.min(acc.min, product.price),
+      }),
+      { max: -Infinity, min: Infinity },
+    ),
+  );
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = productPerPage;
   const offset = currentPage * productsPerPage;
@@ -274,42 +279,6 @@ const ShopFilterCanvas: React.FC<Props> = ({
               className="cursor-pointer"
             />
           </div>
-          <div className="filter-type mt-7 border-b border-line pb-8">
-            {/* <div className="heading6">Products Type</div>
-            <div className="list-type mt-4">
-              {[
-                "t-shirt",
-                "dress",
-                "top",
-                "swimwear",
-                "shirt",
-                "underwear",
-                "sets",
-                "accessories",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className={`item flex cursor-pointer items-center justify-between ${dataType === item ? "active" : ""}`}
-                  onClick={() => handleType(item)}
-                >
-                  <div className="has-line-before capitalize text-secondary hover:text-black">
-                    {item}
-                  </div>
-                  <div className="text-secondary2">
-                    (
-                    {
-                      data.filter(
-                        (dataItem) =>
-                          dataItem.type === item &&
-                          dataItem.category === "fashion",
-                      ).length
-                    }
-                    )
-                  </div>
-                </div>
-              ))}
-            </div> */}
-          </div>
           <div className="filter-size mt-8 border-b border-line pb-8">
             <div className="heading6">Size</div>
             <div className="list-size mt-4 flex flex-wrap items-center gap-3 gap-y-4">
@@ -334,9 +303,9 @@ const ShopFilterCanvas: React.FC<Props> = ({
             <div className="heading6">Price Range</div>
             <Slider
               range
-              defaultValue={[0, 100]}
-              min={0}
-              max={100}
+              defaultValue={[priceRange.min, priceRange.max]}
+              min={priceRange.min}
+              max={priceRange.max}
               onChange={handlePriceChange}
               className="mt-5"
             />
@@ -369,28 +338,28 @@ const ShopFilterCanvas: React.FC<Props> = ({
                 className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "red" ? "active" : ""}`}
                 onClick={() => handleColor("red")}
               >
-                <div className="color bg-red h-5 w-5 rounded-full"></div>
+                <div className="color h-5 w-5 rounded-full bg-red"></div>
                 <div className="caption1 capitalize">red</div>
               </div>
               <div
                 className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "green" ? "active" : ""}`}
                 onClick={() => handleColor("green")}
               >
-                <div className="color bg-green h-5 w-5 rounded-full"></div>
+                <div className="color h-5 w-5 rounded-full bg-green"></div>
                 <div className="caption1 capitalize">green</div>
               </div>
               <div
                 className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "yellow" ? "active" : ""}`}
                 onClick={() => handleColor("yellow")}
               >
-                <div className="color bg-yellow h-5 w-5 rounded-full"></div>
+                <div className="color h-5 w-5 rounded-full bg-yellow"></div>
                 <div className="caption1 capitalize">yellow</div>
               </div>
               <div
                 className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "purple" ? "active" : ""}`}
                 onClick={() => handleColor("purple")}
               >
-                <div className="color bg-purple h-5 w-5 rounded-full"></div>
+                <div className="color h-5 w-5 rounded-full bg-purple"></div>
                 <div className="caption1 capitalize">purple</div>
               </div>
               <div
@@ -677,7 +646,7 @@ const ShopFilterCanvas: React.FC<Props> = ({
                     )}
                   </div>
                   <div
-                    className="clear-btn border-red flex cursor-pointer items-center gap-1 rounded-full border px-2 py-1"
+                    className="clear-btn flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"
                     onClick={handleClearAll}
                   >
                     <Icon.X

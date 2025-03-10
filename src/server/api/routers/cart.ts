@@ -13,7 +13,7 @@ export const cartRouter = createTRPCRouter({
     .input(
       z.object({
         productId: z.string().cuid(),
-        quantity: z.number().int().min(1),
+        quantity: z.number().int().min(1).default(1),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -53,12 +53,14 @@ export const cartRouter = createTRPCRouter({
         (item) => item.productId === input.productId,
       );
 
-      if (item) {
-        return await ctx.db.cartItem.update({
-          where: { id: item.id },
-          data: { quantity: item.quantity + input.quantity },
-        });
-      }
+      // if (item) {
+      //   return await ctx.db.cartItem.update({
+      //     where: { id: item.id },
+      //     data: { quantity: item.quantity + input.quantity },
+      //   });
+      // }
+
+      if (item) return;
 
       return await ctx.db.cartItem.create({
         data: {

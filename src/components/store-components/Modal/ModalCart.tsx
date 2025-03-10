@@ -2,14 +2,12 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import productData from "@/data/Product.json";
-import { type ProductType } from "@/types/ProductType";
 import type CountdownTimeType from "@/types/CountdownType";
-import { useCart } from "@/context/store-context/CartContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
 import { countdownTime } from "@/utils/countdownTime";
+import { api } from "@/trpc/react";
+import CartProductItem from "./CartProductItem";
 
 const ModalCart = ({
   serverTimeLeft,
@@ -17,37 +15,43 @@ const ModalCart = ({
   serverTimeLeft: CountdownTimeType;
 }) => {
   const [timeLeft, setTimeLeft] = useState(serverTimeLeft);
+  const [productImage, setProductImage] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(countdownTime());
+      setTimeLeft((prevTime) => {
+        const newTime = countdownTime();
+        return JSON.stringify(prevTime) === JSON.stringify(newTime)
+          ? prevTime
+          : newTime;
+      });
     }, 1000);
-
     return () => clearInterval(timer);
   }, []);
 
   const [activeTab, setActiveTab] = useState<string | undefined>("");
   const { isModalOpen, closeModalCart } = useModalCartContext();
-  const { cartState, addToCart, removeFromCart, updateCart } = useCart();
+  // const { cartState, addToCart, removeFromCart, updateCart } = useCart();
 
-  const handleAddToCart = (productItem: ProductType) => {
-    if (!cartState.cartArray.find((item) => item.id === productItem.id)) {
-      addToCart({ ...productItem });
-      updateCart(productItem.id, productItem.quantityPurchase, "", "");
-    } else {
-      updateCart(productItem.id, productItem.quantityPurchase, "", "");
-    }
-  };
+  const utils = api.useUtils();
+  const [cartState] = api.cart.getCart.useSuspenseQuery();
+  const removeFromCart = api.cart.removeFromCart.useMutation({
+    onSuccess: async () => {
+      await utils.cart.getCart.invalidate();
+    },
+  });
 
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab);
   };
 
   const moneyForFreeship = 150;
-  let [totalCart, setTotalCart] = useState<number>(0);
+  let [totalCart] = useState<number>(0);
   const [discountCart, setDiscountCart] = useState<number>(0);
 
-  cartState.cartArray.map((item) => (totalCart += item.price * item.quantity));
+  cartState?.items.map(
+    (item) => (totalCart += item.product.price * item.quantity),
+  );
 
   return (
     <>
@@ -58,50 +62,7 @@ const ModalCart = ({
             e.stopPropagation();
           }}
         >
-          <div className="left w-1/2 border-r border-line py-6 max-md:hidden">
-            <div className="heading5 px-6 pb-3">You May Also Like</div>
-            <div className="list px-6">
-              {productData.slice(0, 4).map((product) => (
-                <div
-                  key={product.id}
-                  className="item flex items-center justify-between gap-3 border-b border-line py-5"
-                >
-                  <div className="infor flex items-center gap-5">
-                    <div className="bg-img">
-                      <Image
-                        src={product.images[0]}
-                        width={300}
-                        height={300}
-                        alt={product.name}
-                        className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
-                      />
-                    </div>
-                    <div className="">
-                      <div className="name text-button">{product.name}</div>
-                      <div className="mt-2 flex items-center gap-2">
-                        <div className="product-price text-title">
-                          ${product.price}.00
-                        </div>
-                        <div className="product-origin-price text-title text-secondary2">
-                          <del>${product.originPrice}.00</del>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-black bg-white text-xl duration-300 hover:bg-black hover:text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCart(product);
-                    }}
-                  >
-                    <Icon.Handbag />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="right cart-block relative w-full overflow-hidden py-6 md:w-1/2">
+          <div className="right cart-block relative w-full overflow-hidden py-6">
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Shopping Cart</div>
               <div
@@ -112,11 +73,11 @@ const ModalCart = ({
               </div>
             </div>
             <div className="time px-6">
-              <div className="bg-green flex items-center gap-3 rounded-lg px-5 py-3">
+              <div className="flex items-center gap-3 rounded-lg bg-green px-5 py-3">
                 <p className="text-3xl">🔥</p>
                 <div className="caption1">
                   Your cart will expire in{" "}
-                  <span className="text-red caption1 font-semibold">
+                  <span className="caption1 font-semibold text-red">
                     {timeLeft.minutes}:
                     {timeLeft.seconds < 10
                       ? `0${timeLeft.seconds}`
@@ -159,42 +120,15 @@ const ModalCart = ({
               </div>
             </div>
             <div className="list-product px-6">
-              {cartState.cartArray.map((product) => (
+              {cartState?.items.map((item) => (
                 <div
-                  key={product.id}
+                  key={item.product.id}
                   className="item flex items-center justify-between gap-3 border-b border-line py-5"
                 >
-                  <div className="infor flex w-full items-center gap-3">
-                    <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
-                      <Image
-                        src={product.images[0]}
-                        width={300}
-                        height={300}
-                        alt={product.name}
-                        className="h-full w-full"
-                      />
-                    </div>
-                    <div className="w-full">
-                      <div className="flex w-full items-center justify-between">
-                        <div className="name text-button">{product.name}</div>
-                        <div
-                          className="remove-cart-btn caption1 text-red cursor-pointer font-semibold underline"
-                          onClick={() => removeFromCart(product.id)}
-                        >
-                          Remove
-                        </div>
-                      </div>
-                      <div className="mt-3 flex w-full items-center justify-between gap-2">
-                        <div className="flex items-center capitalize text-secondary2">
-                          {product.selectedSize || product.sizes[0]}/
-                          {product.selectedColor || product.variation[0].color}
-                        </div>
-                        <div className="product-price text-title">
-                          ${product.price}.00
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <CartProductItem
+                    item={item}
+                    removeFromCart={() => removeFromCart.mutate(item.id)}
+                  />
                 </div>
               ))}
             </div>

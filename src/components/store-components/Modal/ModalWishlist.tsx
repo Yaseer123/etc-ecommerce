@@ -17,7 +17,6 @@ const ModalWishlist = () => {
         await utils.wishList.getWishList.invalidate();
       },
     });
-  console.log(wishList);
   return (
     <>
       <div className={`modal-wishlist-block`} onClick={closeModalWishlist}>
