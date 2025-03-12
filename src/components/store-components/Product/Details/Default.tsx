@@ -14,7 +14,6 @@ import { useCart } from "@/context/store-context/CartContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import Rate from "../../Rate";
-import ModalSizeGuide from "../../ModalSizeGuide";
 import { api } from "@/trpc/react";
 
 interface Props {
@@ -336,22 +335,12 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       Size:{" "}
                       <span className="text-title size">{activeSize}</span>
                     </div>
-                    <div
-                      className="size-guide cursor-pointer text-base font-normal leading-[22] text-red underline md:text-[13px] md:leading-5"
-                      onClick={handleOpenSizeGuide}
-                    >
-                      Size Guide
-                    </div>
-                    <ModalSizeGuide
-                      data={productMain}
-                      isOpen={openSizeGuide}
-                      onClose={handleCloseSizeGuide}
-                    />
+                    
                   </div>
                   <div className="list-size mt-3 flex flex-wrap items-center gap-2">
                     {productMain.sizes.map((item, index) => (
                       <div
-                        className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} text-button flex items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
+                        className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} flex items-center justify-center rounded-full border border-line bg-white text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${activeSize === item ? "active" : ""}`}
                         key={index}
                         onClick={() => handleActiveSize(item)}
                       >
@@ -1004,7 +993,9 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   </Swiper>
                 </div>
                 <div className="sorting mt-6 flex flex-wrap items-center gap-3 gap-y-3 md:gap-5">
-                  <div className="text-button">Sort by</div>
+                  <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                    Sort by
+                  </div>
                   <div className="item rounded-full border border-line bg-white px-4 py-1">
                     Newest
                   </div>
@@ -1078,11 +1069,13 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                     <div className="flex items-center gap-4">
                       <div className="like-btn flex cursor-pointer items-center gap-1">
                         <Icon.HandsClapping size={18} />
-                        <div className="text-button">20</div>
+                        <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                          20
+                        </div>
                       </div>
                       <Link
                         href={"#form-review"}
-                        className="reply-btn text-button cursor-pointer text-secondary hover:text-black"
+                        className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
                       >
                         Reply
                       </Link>
@@ -1141,11 +1134,13 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                     <div className="flex items-center gap-4">
                       <div className="like-btn flex cursor-pointer items-center gap-1">
                         <Icon.HandsClapping size={18} />
-                        <div className="text-button">20</div>
+                        <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                          20
+                        </div>
                       </div>
                       <Link
                         href={"#form-review"}
-                        className="reply-btn text-button cursor-pointer text-secondary hover:text-black"
+                        className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
                       >
                         Reply
                       </Link>
@@ -1205,11 +1200,13 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                     <div className="flex items-center gap-4">
                       <div className="like-btn flex cursor-pointer items-center gap-1">
                         <Icon.HandsClapping size={18} />
-                        <div className="text-button">20</div>
+                        <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                          20
+                        </div>
                       </div>
                       <Link
                         href={"#form-review"}
-                        className="reply-btn text-button cursor-pointer text-secondary hover:text-black"
+                        className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
                       >
                         Reply
                       </Link>
@@ -1217,7 +1214,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   </div>
                 </div>
               </div>
-              <div className="text-button more-review-btn mt-2 text-center underline">
+              <div className="more-review-btn mt-2 text-center text-base font-semibold capitalize leading-[26px] underline md:text-base md:leading-6">
                 View More Comments
               </div>
             </div>

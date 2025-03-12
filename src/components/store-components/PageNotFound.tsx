@@ -32,7 +32,9 @@ export default function PageNotFound() {
                 </div>
                 <Link className="flex items-center gap-3" href={"/"}>
                   <Icon.ArrowLeft />
-                  <div className="text-button">Back To Homepage</div>
+                  <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                    Back To Homepage
+                  </div>
                 </Link>
               </div>
             </div>

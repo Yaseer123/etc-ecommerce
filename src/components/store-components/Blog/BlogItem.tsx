@@ -31,7 +31,7 @@ const BlogItem: React.FC<BlogProps> = ({ data }) => {
             className="w-full flex-shrink-0 duration-500"
           />
         </div>
-        <div className="blog-infor">
+        <div>
           <div className="blog-tag inline-block rounded-full bg-green px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
             {data.tags.join(", ")}
           </div>
@@ -54,10 +54,12 @@ const BlogItem: React.FC<BlogProps> = ({ data }) => {
                 .toUpperCase()}
             </div>
           </div>
-          <div className="body1 mt-4 text-secondary">
+          <div className="mt-4 text-lg font-normal text-secondary">
             {data.shortDescription}
           </div>
-          <div className="text-button mt-4 underline">Read More</div>
+          <div className="mt-4 text-base font-semibold capitalize leading-[26px] underline md:text-base md:leading-6">
+            Read More
+          </div>
         </div>
       </div>
     </div>

@@ -437,7 +437,7 @@ const ShopBreadCrumb2: React.FC<Props> = ({
                     (item, index) => (
                       <div
                         key={index}
-                        className={`size-item text-button flex h-[44px] w-[44px] items-center justify-center rounded-full border border-line ${size === item ? "active" : ""}`}
+                        className={`size-item flex h-[44px] w-[44px] items-center justify-center rounded-full border border-line text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${size === item ? "active" : ""}`}
                         onClick={() => handleSize(item)}
                       >
                         {item}
@@ -445,7 +445,7 @@ const ShopBreadCrumb2: React.FC<Props> = ({
                     ),
                   )}
                   <div
-                    className={`size-item text-button flex items-center justify-center rounded-full border border-line px-4 py-2 ${size === "freesize" ? "active" : ""}`}
+                    className={`size-item flex items-center justify-center rounded-full border border-line px-4 py-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${size === "freesize" ? "active" : ""}`}
                     onClick={() => handleSize("freesize")}
                   >
                     Freesize

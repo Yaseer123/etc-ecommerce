@@ -2,7 +2,7 @@ import Link from "next/link";
 import useCategoryPopup from "@/hooks/useCategoryPopup";
 import * as Icon from "@phosphor-icons/react/dist/ssr"; // Assuming you have an Icon component
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { api } from "@/trpc/react";
 
 const CategoryDropdown = () => {
@@ -15,13 +15,13 @@ const CategoryDropdown = () => {
  
 
   return (
-    <div className="category-block relative h-full">
+    <div className="relative h-full">
       {/* Main Category Button */}
       <div
-        className="category-btn relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2"
+        className="relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2"
         onClick={handleCategoryPopup}
       >
-        <div className="text-button whitespace-nowrap text-white">
+        <div className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 whitespace-nowrap text-white">
           All Categories
         </div>
         <Icon.CaretDown color="#ffffff" />
@@ -35,7 +35,7 @@ const CategoryDropdown = () => {
           width: openCategoryPopup ? "100%" : "0%",
         }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`category-popup box-shadow-sm absolute left-0 right-0 top-[44px] h-max rounded-b-2xl bg-white ${
+        className={`box-shadow-sm absolute left-0 right-0 top-[44px] h-max rounded-b-2xl bg-white ${
           openCategoryPopup ? "visible" : "invisible"
         }`}
         onMouseLeave={() => setHoveredCategory(null)}

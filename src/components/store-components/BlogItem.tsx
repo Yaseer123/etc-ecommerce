@@ -87,7 +87,9 @@ export default function BlogItem({ data, type }: BlogProps) {
                   <div className="body1 mt-4 text-secondary">
                     {data.shortDesc}
                   </div>
-                  <div className="text-button mt-4 underline">Read More</div>
+                  <div className="mt-4 text-base font-semibold capitalize leading-[26px] underline md:text-base md:leading-6">
+                    Read More
+                  </div>
                 </div>
               </div>
             </div>

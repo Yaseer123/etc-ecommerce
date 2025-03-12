@@ -52,7 +52,9 @@ const ModalWishlist = () => {
                     />
                   </div>
                   <div className="">
-                    <div className="name text-button">{product.name}</div>
+                    <div className="name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                      {product.name}
+                    </div>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="product-price text-title">
                         ${product.price}.00

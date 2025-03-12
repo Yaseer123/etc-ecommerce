@@ -17,7 +17,7 @@ import { useModalCompareContext } from "@/context/store-context/ModalCompareCont
 import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
-import ModalSizeGuide from "../../ModalSizeGuide";
+import ModalSizeGuide from "../../Modal/ModalSizeGuide";
 
 interface Props {
   data: Array<ProductType>;
@@ -387,7 +387,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <div className="list-size mt-3 flex flex-wrap items-center gap-2">
                     {productMain.sizes.map((item, index) => (
                       <div
-                        className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} text-button flex items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
+                        className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} flex items-center justify-center rounded-full border border-line bg-white text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${activeSize === item ? "active" : ""}`}
                         key={index}
                         onClick={() => handleActiveSize(item)}
                       >
@@ -930,7 +930,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         <select
                           id="select-filter"
                           name="select-filter"
-                          className="text-button rounded-lg border border-line bg-white py-2 pl-3 pr-10 md:pr-14"
+                          className="rounded-lg border border-line bg-white py-2 pl-3 pr-10 text-base font-semibold capitalize leading-[26px] md:pr-14 md:text-base md:leading-6"
                           defaultValue={"Sorting"}
                         >
                           <option value="Sorting" disabled>
@@ -992,11 +992,13 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         <div className="flex items-center gap-4">
                           <div className="like-btn flex cursor-pointer items-center gap-1">
                             <Icon.HandsClapping size={18} />
-                            <div className="text-button">20</div>
+                            <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                              20
+                            </div>
                           </div>
                           <Link
                             href={"#form-review"}
-                            className="reply-btn text-button cursor-pointer text-secondary hover:text-black"
+                            className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
                           >
                             Reply
                           </Link>
@@ -1044,11 +1046,13 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         <div className="flex items-center gap-4">
                           <div className="like-btn flex cursor-pointer items-center gap-1">
                             <Icon.HandsClapping size={18} />
-                            <div className="text-button">20</div>
+                            <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                              20
+                            </div>
                           </div>
                           <Link
                             href={"#form-review"}
-                            className="reply-btn text-button cursor-pointer text-secondary hover:text-black"
+                            className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
                           >
                             Reply
                           </Link>
@@ -1096,11 +1100,13 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         <div className="flex items-center gap-4">
                           <div className="like-btn flex cursor-pointer items-center gap-1">
                             <Icon.HandsClapping size={18} />
-                            <div className="text-button">20</div>
+                            <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                              20
+                            </div>
                           </div>
                           <Link
                             href={"#form-review"}
-                            className="reply-btn text-button cursor-pointer text-secondary hover:text-black"
+                            className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
                           >
                             Reply
                           </Link>

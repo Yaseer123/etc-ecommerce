@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import TrendingNow from "@/components/store-components/TrendingNow";
 import ShopCollection from "@/components/store-components/Shop/ShopCollection";

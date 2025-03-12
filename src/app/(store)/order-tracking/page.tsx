@@ -9,7 +9,7 @@ const breadcrumbItems = [
 const OrderTracking = () => {
   return (
     <>
-      <div id="header" className="relative w-full">
+      <div id="" className="relative w-full">
         <Breadcrumb items={breadcrumbItems} pageTitle="Order Tracking" />
       </div>
       <div className="py-10 md:py-20">

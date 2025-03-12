@@ -3,8 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { type ProductType } from "@/type/ProductType";
 import { useRouter } from "next/navigation";
+import { type ProductType } from "@/types/ProductType";
 
 interface Props {
   data: Array<ProductType>;
@@ -21,14 +21,13 @@ const BreadcrumbProduct: React.FC<Props> = ({
   const router = useRouter();
 
   const handleDetailProduct = (productId: string | number | null) => {
-    // Chuyển hướng đến trang shop với category được chọn
     router.push(`/product/${productPage}?id=${productId}`);
   };
 
   return (
     <>
-      <div className="breadcrumb-product">
-        <div className="main bg-surface pb-[14px] pt-[70px] md:pt-[88px]">
+      <div>
+        <div className="bg-[linear-gradient(87deg,#f9f1f0_4.3%,#faf7f1_95.7%)] bg-no-repeat bg-surface pb-[14px] pt-[70px] md:pt-[88px]">
           <div className="mx-auto flex w-full !max-w-[1322px] flex-wrap items-center justify-between gap-3 px-4">
             <div className="left flex items-center gap-1">
               <Link

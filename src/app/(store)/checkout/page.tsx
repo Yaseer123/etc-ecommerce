@@ -72,7 +72,7 @@ const Checkout = () => {
                     </div>
                   </div>
                   <div className="mt-3">
-                    <button className="duration-400 hover:bg-green inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3">
+                    <button className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3">
                       Login
                     </button>
                   </div>
@@ -206,7 +206,7 @@ const Checkout = () => {
                             onChange={() => handlePayment("credit-card")}
                           />
                           <label
-                            className="text-button cursor-pointer pl-2"
+                            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                             htmlFor="credit"
                           >
                             Credit Card
@@ -261,7 +261,7 @@ const Checkout = () => {
                                 name="save"
                               />
                               <label
-                                className="text-button"
+                                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                                 htmlFor="saveCredit"
                               >
                                 Save Card Details
@@ -281,7 +281,7 @@ const Checkout = () => {
                             onChange={() => handlePayment("cash-delivery")}
                           />
                           <label
-                            className="text-button cursor-pointer pl-2"
+                            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                             htmlFor="delivery"
                           >
                             Cash on delivery
@@ -337,7 +337,7 @@ const Checkout = () => {
                                 name="save"
                               />
                               <label
-                                className="text-button"
+                                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                                 htmlFor="saveDelivery"
                               >
                                 Save Card Details
@@ -357,7 +357,7 @@ const Checkout = () => {
                             onChange={() => handlePayment("apple-pay")}
                           />
                           <label
-                            className="text-button cursor-pointer pl-2"
+                            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                             htmlFor="apple"
                           >
                             Apple Pay
@@ -413,7 +413,7 @@ const Checkout = () => {
                                 name="save"
                               />
                               <label
-                                className="text-button"
+                                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                                 htmlFor="saveApple"
                               >
                                 Save Card Details
@@ -433,7 +433,7 @@ const Checkout = () => {
                             onChange={() => handlePayment("paypal")}
                           />
                           <label
-                            className="text-button cursor-pointer pl-2"
+                            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                             htmlFor="paypal"
                           >
                             PayPal
@@ -514,7 +514,7 @@ const Checkout = () => {
                 </div>
                 <div>
                   {cartState.cartArray.length < 1 ? (
-                    <p className="text-button pt-3">No product in cart</p>
+                    <p className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 pt-3">No product in cart</p>
                   ) : (
                     cartState.cartArray.map((product) => (
                       <>

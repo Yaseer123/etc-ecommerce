@@ -88,7 +88,6 @@ export default function Page() {
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
         <Breadcrumb heading="Search Result" subHeading="Search Result" />
       </div>
       <div className="py-10 md:py-14 lg:py-20">
@@ -99,7 +98,7 @@ export default function Page() {
               {query}
               {String.raw`"`}
             </div>
-            <div className="input-block mt-5 h-[44px] w-full sm:mt-8 sm:w-3/5 md:h-[52px] lg:w-1/2">
+            <div className="mt-5 h-[44px] w-full sm:mt-8 sm:w-3/5 md:h-[52px] lg:w-1/2">
               <div className="relative h-full w-full">
                 <input
                   type="text"

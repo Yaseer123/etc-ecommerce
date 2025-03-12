@@ -20,12 +20,16 @@ export default function Footer() {
                   <div className="flex flex-col">
                     <Link
                       href="mailto:rinorscorporation@gmail.com"
-                      className="text-button"
+                      className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                     >
                       Mail:
                     </Link>
-                    <span className="text-button mt-3">Phone:</span>
-                    <span className="text-button mt-3">Address:</span>
+                    <span className="mt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                      Phone:
+                    </span>
+                    <span className="mt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                      Address:
+                    </span>
                   </div>
                   <div className="flex flex-col">
                     <span className="">rinorscorporation@gmail.com</span>

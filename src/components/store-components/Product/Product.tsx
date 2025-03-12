@@ -243,7 +243,7 @@ export default function Product({ data, type }: ProductProps) {
                       <div className="list-size flex flex-wrap items-center justify-center gap-2">
                         {data.sizes.map((item, index) => (
                           <div
-                            className={`size-item text-button flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
+                            className={`size-item flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${activeSize === item ? "active" : ""}`}
                             key={index}
                             onClick={() => handleActiveSize(item)}
                           >

@@ -75,7 +75,7 @@ const ModalCart = ({
                 <p className="text-3xl">🔥</p>
                 <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   Your cart will expire in{" "}
-                  <span className="text-base font-normal font-semibold leading-[22] text-red md:text-[13px] md:leading-5">
+                  <span className="text-base font-semibold leading-[22] text-red md:text-[13px] md:leading-5">
                     {timeLeft.minutes}:
                     {timeLeft.seconds < 10
                       ? `0${timeLeft.seconds}`
@@ -168,7 +168,7 @@ const ModalCart = ({
                 <div className="flex items-center gap-4">
                   <Link
                     href={"/cart"}
-                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black hover:text-white transition-all ease-in-out hover:bg-black  md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     View cart

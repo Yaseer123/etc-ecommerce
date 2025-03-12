@@ -21,13 +21,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   children,
 }) => {
   return (
-    <div className="breadcrumb-block style-img">
-      <div className="breadcrumb-main bg-linear overflow-hidden">
-        <div className="relative mx-auto w-full !max-w-[1322px] px-4 pb-10 pt-24 lg:pt-[134px]">
+    <div>
+      <div className="bg-linear overflow-hidden">
+        <div className="relative mx-auto w-full !max-w-[1322px] px-4 pb-10 pt-16 lg:pt-[100px]">
           <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
             <div className="text-content">
               {pageTitle && (
-                <div className="heading2 text-center capitalize">
+                <div className="text-center text-[44px] font-semibold capitalize leading-[55px] md:text-[22px] md:leading-[30px] lg:text-[32px] lg:leading-10">
                   {pageTitle}
                 </div>
               )}
@@ -35,10 +35,13 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                 {items?.map((item, index) => (
                   <React.Fragment key={`breadcrumb-${index}`}>
                     {index > 0 && (
-                      <Icon.CaretRight size={14} className="text-secondary2" />
+                      <Icon.CaretRight
+                        size={14}
+                        className="text-black transition-all duration-300 ease-in-out"
+                      />
                     )}
                     {index === items.length - 1 ? (
-                      <span className="capitalize text-secondary2">
+                      <span className="capitalize text-black transition-all duration-300 ease-in-out">
                         {item.label}
                       </span>
                     ) : (
@@ -55,7 +58,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
             </div>
 
             {children && (
-              <div className="list-tab mt-12 flex flex-wrap items-center justify-center gap-8 gap-y-5 overflow-hidden lg:mt-[70px]">
+              <div className="mt-12 flex flex-wrap items-center justify-center gap-8 gap-y-5 overflow-hidden lg:mt-[70px]">
                 {children}
               </div>
             )}

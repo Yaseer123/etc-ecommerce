@@ -14,7 +14,9 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
             <Rate currentRate={data.star} size={14} />
             <div className="heading6 title mt-4">{data.title}</div>
             <div className="desc mt-2">{data.description}</div>
-            <div className="text-button name mt-4">{data.name}</div>
+            <div className="name mt-4 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+              {data.name}
+            </div>
             <div className="caption2 date mt-1 text-secondary2">
               {data.date}
             </div>
@@ -32,7 +34,9 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
                 <div className="desc mt-2 text-[30px] font-normal font-semibold capitalize normal-case leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                   {data.description}
                 </div>
-                <div className="text-button name mt-4">{data.name}</div>
+                <div className="name mt-4 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                  {data.name}
+                </div>
                 <div className="caption2 date text-secondary2">{data.date}</div>
               </div>
             </div>
@@ -49,7 +53,9 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
                       {data.description}
                     </div>
                     <div className="mt-4 flex items-center gap-3">
-                      <div className="text-button name">{data.name}</div>
+                      <div className="name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                        {data.name}
+                      </div>
                       <div className="date text-base font-normal leading-[22] text-secondary2 md:text-[13px] md:leading-5">
                         From {data.address}
                       </div>

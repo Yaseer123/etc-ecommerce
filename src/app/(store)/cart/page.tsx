@@ -92,7 +92,7 @@ const Cart = () => {
                 </div>
                 <div className="pl-2 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   Your cart will expire in
-                  <span className="text-button fw-700 text-red">
+                  <span className="fw-700 text-base font-semibold capitalize leading-[26px] text-red md:text-base md:leading-6">
                     {" "}
                     {timeLeft.minutes}:
                     {timeLeft.seconds < 10
@@ -211,7 +211,7 @@ const Cart = () => {
                                 }}
                                 className={`cursor-pointer text-base disabled:pointer-events-none disabled:text-secondary max-md:text-sm ${product.quantity === 1 ? "disabled" : ""}`}
                               />
-                              <div className="text-button quantity">
+                              <div className="quantity text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                 {product.quantity}
                               </div>
                               <Plus

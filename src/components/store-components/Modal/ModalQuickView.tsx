@@ -212,7 +212,7 @@ const ModalQuickView = () => {
                     <div className="list-size mt-3 flex flex-wrap items-center gap-2">
                       {selectedProduct?.sizes.map((item, index) => (
                         <div
-                          className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} text-button flex items-center justify-center rounded-full border border-line bg-white ${activeSize === item ? "active" : ""}`}
+                          className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} flex items-center justify-center rounded-full border border-line bg-white text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${activeSize === item ? "active" : ""}`}
                           key={index}
                           onClick={() => handleActiveSize(item)}
                         >

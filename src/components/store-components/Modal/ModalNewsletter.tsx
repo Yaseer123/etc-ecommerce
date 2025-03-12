@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 import productData from "@/data/Product.json";
-
 import Image from "next/image";
 import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 
@@ -26,7 +25,7 @@ const ModalNewsletter = () => {
 
   return (
     <div className="modal-newsletter" onClick={() => setOpen(false)}>
-      <div className="mx-auto flex h-full w-full !max-w-[1322px] items-center justify-center px-4">
+      <div className="container flex h-full w-full items-center justify-center">
         <div
           className={`modal-newsletter-main ${open ? "open" : ""}`}
           onClick={(e) => {
@@ -43,14 +42,14 @@ const ModalNewsletter = () => {
                 <br />
                 Fridays
               </div>
-              <div className="text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+              <div className="text-button-uppercase text-center">
                 New customers save <span className="text-red">30%</span>
                 with the code
               </div>
-              <div className="rounded-lg bg-white px-4 py-2 text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
+              <div className="text-button-uppercase rounded-lg bg-white px-4 py-2 text-red">
                 GET20off
               </div>
-              <div className="duration-400 md:text-md md:text-md inline-block w-fit cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:bg-white hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4 lg:py-40">
+              <div className="button-main w-fit bg-black uppercase text-white hover:bg-white">
                 Copy coupon code
               </div>
             </div>
@@ -95,7 +94,7 @@ const ModalNewsletter = () => {
                         </div>
                       </div>
                       <button
-                        className="quick-view-btn duration-400 md:text-md inline-block cursor-pointer whitespace-nowrap rounded-[12px] rounded-full bg-black px-10 px-4 py-2 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black sm:px-5 sm:py-3 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                        className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-green sm:px-5 sm:py-3"
                         onClick={() => openQuickView(item)}
                       >
                         QUICK VIEW

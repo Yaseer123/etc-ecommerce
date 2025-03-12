@@ -186,7 +186,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-button">
+                                <strong className="product_name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                   Contrasting sweatshirt
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -219,7 +219,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-button">
+                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
                                   Faux-leather trousers
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -252,7 +252,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-button">
+                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
                                   V-neck knitted top
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -285,7 +285,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-button">
+                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
                                   Contrasting sweatshirt
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -318,7 +318,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-button">
+                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
                                   Faux-leather trousers
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -351,7 +351,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-button">
+                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
                                   V-neck knitted top
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -395,7 +395,7 @@ const MyAccount = () => {
                         {/* {activeOrders === item && (
                                                 <motion.span layoutId='active-pill' className='absolute inset-0 border-black border-b-2'></motion.span>
                                                 )} */}
-                        <span className="text-button relative z-[1]">
+                        <span className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 relative z-[1]">
                           {item}
                         </span>
                       </button>
@@ -407,7 +407,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-button uppercase">
+                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
                           s184989823
                         </strong>
                       </div>
@@ -502,7 +502,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-button uppercase">
+                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
                           s184989824
                         </strong>
                       </div>
@@ -562,7 +562,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-button uppercase">
+                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
                           s184989824
                         </strong>
                       </div>
@@ -624,7 +624,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-button uppercase">
+                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
                           s184989824
                         </strong>
                       </div>
@@ -1028,7 +1028,7 @@ const MyAccount = () => {
                         />
                       </div>
                       <div>
-                        <strong className="text-button">Upload File:</strong>
+                        <strong className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">Upload File:</strong>
                         <p className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                           JPG 120x120px
                         </p>
