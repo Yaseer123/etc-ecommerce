@@ -6,15 +6,15 @@ import { countdownTime } from "@/utils/countdownTime";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
 export default function ComingSoon() {
-   const [timeLeft, setTimeLeft] = useState(countdownTime());
-  
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setTimeLeft(countdownTime());
-      }, 1000);
-  
-      return () => clearInterval(timer);
-    }, []);
+  const [timeLeft, setTimeLeft] = useState(countdownTime());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft(countdownTime());
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
   return (
     <>
       <div className="coming-soon relative h-screen w-screen">
@@ -25,7 +25,7 @@ export default function ComingSoon() {
           alt="bg"
           className="absolute left-0 top-0 h-full w-full object-cover"
         />
-        <div className="container h-full w-full">
+        <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
           <div className="text-content relative flex h-full w-full items-center justify-center">
             <div className="content-main flex w-full flex-col items-center sm:w-3/5 lg:w-1/2">
               <div className="text-display">Coming Soon</div>
@@ -34,36 +34,46 @@ export default function ComingSoon() {
                   <div className="days time heading1">
                     {timeLeft.days < 10 ? `0${timeLeft.days}` : timeLeft.days}
                   </div>
-                  <div className="text-button-uppercase font-medium">Days</div>
+                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                    Days
+                  </div>
                 </div>
-                <span className="heading4">:</span>
+                <span className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  :
+                </span>
                 <div className="item flex flex-col items-center">
                   <div className="hours time heading1">
                     {timeLeft.hours < 10
                       ? `0${timeLeft.hours}`
                       : timeLeft.hours}
                   </div>
-                  <div className="text-button-uppercase font-medium">Hours</div>
+                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                    Hours
+                  </div>
                 </div>
-                <span className="heading4">:</span>
+                <span className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  :
+                </span>
                 <div className="item flex flex-col items-center">
                   <div className="minutes time heading1">
                     {timeLeft.minutes < 10
                       ? `0${timeLeft.minutes}`
                       : timeLeft.minutes}
                   </div>
-                  <div className="text-button-uppercase font-medium">
+                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     Minutes
                   </div>
                 </div>
-                <span className="heading4">:</span>
+                <span className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  :
+                </span>
                 <div className="item flex flex-col items-center">
                   <div className="seconds time heading1">
                     {timeLeft.seconds < 10
                       ? `0${timeLeft.seconds}`
                       : timeLeft.seconds}
                   </div>
-                  <div className="text-button-uppercase font-medium">
+                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     Seconds
                   </div>
                 </div>
@@ -73,7 +83,7 @@ export default function ComingSoon() {
                   <input
                     type="email"
                     placeholder="Enter your e-mail"
-                    className="caption1 h-full w-full rounded-xl border border-line pl-4 pr-14"
+                    className="h-full w-full rounded-xl border border-line pl-4 pr-14 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
                     required
                   />
                   <button className="absolute bottom-1 right-1 top-1 flex aspect-square items-center justify-center rounded-xl bg-black text-white">

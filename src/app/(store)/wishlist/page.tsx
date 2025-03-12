@@ -127,54 +127,76 @@ export default function Page() {
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
         <Breadcrumb items={breadcrumbItems} pageTitle="Wishlist" />
       </div>
-      <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
-        <div className="container">
+      <div className="py-10 md:py-14 lg:py-20">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="list-product-block relative">
             <div className="filter-heading flex flex-wrap items-center justify-between gap-5">
               <div className="left has-line flex flex-wrap items-center gap-5">
                 <div className="choose-layout flex items-center gap-2">
+                  {/* Three-column layout */}
                   <div
-                    className={`item three-col flex cursor-pointer items-center justify-center rounded border border-line p-2 ${layoutCol === 3 ? "active" : ""}`}
+                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
+                      layoutCol === 3 ? "border-black bg-black" : ""
+                    }`}
                     onClick={() => handleLayoutCol(3)}
                   >
                     <div className="flex items-center gap-0.5">
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
+                      {Array.from({ length: 3 }).map((_, index) => (
+                        <span
+                          key={index}
+                          className={`h-4 w-[3px] rounded-sm ${
+                            layoutCol === 3 ? "bg-white" : "bg-secondary2"
+                          }`}
+                        ></span>
+                      ))}
                     </div>
                   </div>
+
+                  {/* Four-column layout */}
                   <div
-                    className={`item four-col flex cursor-pointer items-center justify-center rounded border border-line p-2 ${layoutCol === 4 ? "active" : ""}`}
+                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
+                      layoutCol === 4 ? "border-black bg-black" : ""
+                    }`}
                     onClick={() => handleLayoutCol(4)}
                   >
                     <div className="flex items-center gap-0.5">
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
+                      {Array.from({ length: 4 }).map((_, index) => (
+                        <span
+                          key={index}
+                          className={`h-4 w-[3px] rounded-sm ${
+                            layoutCol === 4 ? "bg-white" : "bg-secondary2"
+                          }`}
+                        ></span>
+                      ))}
                     </div>
                   </div>
+
+                  {/* Five-column layout */}
                   <div
-                    className={`item five-col flex cursor-pointer items-center justify-center rounded border border-line p-2 ${layoutCol === 5 ? "active" : ""}`}
+                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
+                      layoutCol === 5 ? "border-black bg-black" : ""
+                    }`}
                     onClick={() => handleLayoutCol(5)}
                   >
                     <div className="flex items-center gap-0.5">
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
-                      <span className="h-4 w-[3px] rounded-sm bg-secondary2"></span>
+                      {Array.from({ length: 5 }).map((_, index) => (
+                        <span
+                          key={index}
+                          className={`h-4 w-[3px] rounded-sm ${
+                            layoutCol === 5 ? "bg-white" : "bg-secondary2"
+                          }`}
+                        ></span>
+                      ))}
                     </div>
                   </div>
                 </div>
               </div>
               <div className="right flex items-center gap-3">
-                <div className="select-block filter-type relative">
+                <div className="relative">
                   <select
-                    className="caption1 rounded-lg border border-line py-2 pl-3 pr-8 capitalize md:pr-12"
+                    className="rounded-lg border border-line py-2 pl-3 pr-8 text-base font-normal capitalize leading-[22] md:pr-12 md:text-[13px] md:leading-5"
                     name="select-type"
                     id="select-type"
                     onChange={(e) => handleType(e.target.value)}
@@ -206,11 +228,11 @@ export default function Page() {
                     className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
                   />
                 </div>
-                <div className="select-block relative">
+                <div className="relative">
                   <select
                     id="select-filter"
                     name="select-filter"
-                    className="caption1 rounded-lg border border-line py-2 pl-3 pr-10 md:pr-20"
+                    className="rounded-lg border border-line py-2 pl-3 pr-10 text-base font-normal leading-[22] md:pr-20 md:text-[13px] md:leading-5"
                     onChange={(e) => {
                       handleSortChange(e.target.value);
                     }}
@@ -254,7 +276,7 @@ export default function Page() {
                     )}
                   </div>
                   <div
-                    className="clear-btn border-red flex cursor-pointer items-center gap-1 rounded-full border px-2 py-1"
+                    className="flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"
                     onClick={() => {
                       setType(undefined);
                     }}
@@ -263,7 +285,7 @@ export default function Page() {
                       color="rgb(219, 68, 68)"
                       className="cursor-pointer"
                     />
-                    <span className="text-button-uppercase text-red">
+                    <span className="text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
                       Clear All
                     </span>
                   </div>
@@ -272,7 +294,7 @@ export default function Page() {
             </div>
 
             <div
-              className={`list-product hide-product-sold grid lg:grid-cols-${layoutCol} mt-7 grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px]`}
+              className={`list-product grid lg:grid-cols-${layoutCol} mt-7 grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px]`}
             >
               {currentProducts.map((item) =>
                 item.id === "no-data" ? (

@@ -26,7 +26,7 @@ const ModalNewsletter = () => {
 
   return (
     <div className="modal-newsletter" onClick={() => setOpen(false)}>
-      <div className="container flex h-full w-full items-center justify-center">
+      <div className="mx-auto flex h-full w-full !max-w-[1322px] items-center justify-center px-4">
         <div
           className={`modal-newsletter-main ${open ? "open" : ""}`}
           onClick={(e) => {
@@ -34,7 +34,7 @@ const ModalNewsletter = () => {
           }}
         >
           <div className="main-content flex w-full overflow-hidden rounded-[20px]">
-            <div className="left bg-green flex flex-col items-center justify-center gap-5 py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
+            <div className="left flex flex-col items-center justify-center gap-5 bg-green py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
               <div className="text-center text-xs font-semibold uppercase">
                 Special Offer
               </div>
@@ -43,14 +43,14 @@ const ModalNewsletter = () => {
                 <br />
                 Fridays
               </div>
-              <div className="text-button-uppercase text-center">
+              <div className="text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                 New customers save <span className="text-red">30%</span>
                 with the code
               </div>
-              <div className="text-button-uppercase text-red rounded-lg bg-white px-4 py-2">
+              <div className="rounded-lg bg-white px-4 py-2 text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
                 GET20off
               </div>
-              <div className="button-main w-fit bg-black uppercase text-white hover:bg-white">
+              <div className="duration-400 md:text-md md:text-md inline-block w-fit cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:bg-white hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4 lg:py-40">
                 Copy coupon code
               </div>
             </div>
@@ -95,7 +95,7 @@ const ModalNewsletter = () => {
                         </div>
                       </div>
                       <button
-                        className="quick-view-btn button-main hover:bg-green whitespace-nowrap rounded-full bg-black px-4 py-2 text-white sm:px-5 sm:py-3"
+                        className="quick-view-btn duration-400 md:text-md inline-block cursor-pointer whitespace-nowrap rounded-[12px] rounded-full bg-black px-10 px-4 py-2 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black sm:px-5 sm:py-3 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         onClick={() => openQuickView(item)}
                       >
                         QUICK VIEW

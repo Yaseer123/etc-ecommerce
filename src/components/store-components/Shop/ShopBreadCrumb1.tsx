@@ -8,7 +8,7 @@ import Product from "../Product/Product";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import HandlePagination from "../HandlePagination";
-import {type ProductType } from "@/types/ProductType";
+import { type ProductType } from "@/types/ProductType";
 
 interface Props {
   data: Array<ProductType>;
@@ -232,13 +232,13 @@ const ShopBreadCrumb1: React.FC<Props> = ({
     <>
       <div className="breadcrumb-block style-img">
         <div className="breadcrumb-main bg-linear overflow-hidden">
-          <div className="container relative pb-10 pt-24 lg:pt-[134px]">
+          <div className="relative mx-auto w-full !max-w-[1322px] px-4 pb-10 pt-24 lg:pt-[134px]">
             <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
               <div className="text-content">
                 <div className="heading2 text-center">
                   {dataType === null ? "Shop" : dataType}
                 </div>
-                <div className="link caption1 mt-3 flex items-center justify-center gap-1">
+                <div className="link mt-3 flex items-center justify-center gap-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   <Link href={"/"}>Homepage</Link>
                   <Icon.CaretRight size={14} className="text-secondary2" />
                   <div className="capitalize text-secondary2">
@@ -251,7 +251,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                   (item, index) => (
                     <div
                       key={index}
-                      className={`tab-item text-button-uppercase has-line-before line-2px cursor-pointer ${dataType === item ? "active" : ""}`}
+                      className={`tab-item has-line-before line-2px cursor-pointer text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4 ${dataType === item ? "active" : ""}`}
                       onClick={() => handleType(item)}
                     >
                       {item}
@@ -265,7 +265,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
       </div>
 
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
-        <div className="container">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex gap-y-8 max-md:flex-col-reverse max-md:flex-wrap">
             <div className="sidebar w-full md:w-1/3 md:pr-12 lg:w-1/4">
               <div className="filter-type border-b border-line pb-8">
@@ -359,49 +359,63 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                     onClick={() => handleColor("pink")}
                   >
                     <div className="color h-5 w-5 rounded-full bg-[#F4C5BF]"></div>
-                    <div className="caption1 capitalize">pink</div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      pink
+                    </div>
                   </div>
                   <div
                     className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "red" ? "active" : ""}`}
                     onClick={() => handleColor("red")}
                   >
-                    <div className="color bg-red h-5 w-5 rounded-full"></div>
-                    <div className="caption1 capitalize">red</div>
+                    <div className="color h-5 w-5 rounded-full bg-red"></div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      red
+                    </div>
                   </div>
                   <div
                     className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "green" ? "active" : ""}`}
                     onClick={() => handleColor("green")}
                   >
-                    <div className="color bg-green h-5 w-5 rounded-full"></div>
-                    <div className="caption1 capitalize">green</div>
+                    <div className="color h-5 w-5 rounded-full bg-green"></div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      green
+                    </div>
                   </div>
                   <div
                     className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "yellow" ? "active" : ""}`}
                     onClick={() => handleColor("yellow")}
                   >
-                    <div className="color bg-yellow h-5 w-5 rounded-full"></div>
-                    <div className="caption1 capitalize">yellow</div>
+                    <div className="color h-5 w-5 rounded-full bg-yellow"></div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      yellow
+                    </div>
                   </div>
                   <div
                     className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "purple" ? "active" : ""}`}
                     onClick={() => handleColor("purple")}
                   >
-                    <div className="color bg-purple h-5 w-5 rounded-full"></div>
-                    <div className="caption1 capitalize">purple</div>
+                    <div className="color h-5 w-5 rounded-full bg-purple"></div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      purple
+                    </div>
                   </div>
                   <div
                     className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "black" ? "active" : ""}`}
                     onClick={() => handleColor("black")}
                   >
                     <div className="color h-5 w-5 rounded-full bg-black"></div>
-                    <div className="caption1 capitalize">black</div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      black
+                    </div>
                   </div>
                   <div
                     className={`color-item flex items-center justify-center gap-2 rounded-full border border-line px-3 py-[5px] ${color === "white" ? "active" : ""}`}
                     onClick={() => handleColor("white")}
                   >
                     <div className="color h-5 w-5 rounded-full bg-[#F6EFDD]"></div>
-                    <div className="caption1 capitalize">white</div>
+                    <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                      white
+                    </div>
                   </div>
                 </div>
               </div>
@@ -496,7 +510,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                     <select
                       id="select-filter"
                       name="select-filter"
-                      className="caption1 rounded-lg border border-line py-2 pl-3 pr-10 md:pr-20"
+                      className="rounded-lg border border-line py-2 pl-3 pr-10 text-base font-normal leading-[22] md:pr-20 md:text-[13px] md:leading-5"
                       onChange={(e) => {
                         handleSortChange(e.target.value);
                       }}
@@ -578,14 +592,14 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                       )}
                     </div>
                     <div
-                      className="clear-btn border-red flex cursor-pointer items-center gap-1 rounded-full border px-2 py-1"
+                      className="clear-btn flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"
                       onClick={handleClearAll}
                     >
                       <Icon.X
                         color="rgb(219, 68, 68)"
                         className="cursor-pointer"
                       />
-                      <span className="text-button-uppercase text-red">
+                      <span className="text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
                         Clear All
                       </span>
                     </div>

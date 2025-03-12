@@ -136,12 +136,12 @@ export default function Product({ data, type }: ProductProps) {
           >
             <div className="product-thumb relative overflow-hidden rounded-2xl bg-white">
               {data.new && (
-                <div className="product-tag text-button-uppercase bg-green_custom absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5">
+                <div className="product-tag bg-green_custom absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                   New
                 </div>
               )}
               {data.sale && (
-                <div className="product-tag text-button-uppercase bg-red_custom absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5 text-white">
+                <div className="product-tag bg-red_custom absolute left-3 top-3 z-[1] inline-block rounded-full px-3 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                   Sale
                 </div>
               )}
@@ -205,7 +205,7 @@ export default function Product({ data, type }: ProductProps) {
 
               <div className="list-action absolute bottom-5 grid w-full grid-cols-2 gap-3 px-5 max-lg:hidden">
                 <div
-                  className="quick-view-btn text-button-uppercase w-full rounded-full bg-white py-2 text-center duration-300 hover:bg-black hover:text-white"
+                  className="quick-view-btn w-full rounded-full bg-white py-2 text-center text-sm font-semibold uppercase leading-5 duration-300 hover:bg-black hover:text-white md:text-xs md:leading-4"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleQuickViewOpen();
@@ -215,7 +215,7 @@ export default function Product({ data, type }: ProductProps) {
                 </div>
                 {data.action === "add to cart" ? (
                   <div
-                    className="add-cart-btn text-button-uppercase w-full rounded-full bg-white py-2 text-center duration-500 hover:bg-black hover:text-white"
+                    className="add-cart-btn w-full rounded-full bg-white py-2 text-center text-sm font-semibold uppercase leading-5 duration-500 hover:bg-black hover:text-white md:text-xs md:leading-4"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart();
@@ -226,7 +226,7 @@ export default function Product({ data, type }: ProductProps) {
                 ) : (
                   <>
                     <div
-                      className="quick-shop-btn text-button-uppercase rounded-full bg-white py-2 text-center duration-500 hover:bg-black hover:text-white"
+                      className="quick-shop-btn rounded-full bg-white py-2 text-center text-sm font-semibold uppercase leading-5 duration-500 hover:bg-black hover:text-white md:text-xs md:leading-4"
                       onClick={(e) => {
                         e.stopPropagation();
                         setOpenQuickShop(!openQuickShop);
@@ -295,13 +295,13 @@ export default function Product({ data, type }: ProductProps) {
                   ></div>
                 </div>
                 <div className="mt-2 flex flex-wrap items-center justify-between gap-3 gap-y-1">
-                  <div className="text-button-uppercase">
+                  <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     <span className="text-secondary2 max-sm:text-xs">
                       Sold:{" "}
                     </span>
                     <span className="max-sm:text-xs">{data.sold}</span>
                   </div>
-                  <div className="text-button-uppercase">
+                  <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     <span className="text-secondary2 max-sm:text-xs">
                       Available:{" "}
                     </span>
@@ -319,10 +319,10 @@ export default function Product({ data, type }: ProductProps) {
                 <div className="product-price text-title">${data.price}.00</div>
                 {percentSale > 0 && (
                   <>
-                    <div className="product-origin-price caption1 text-secondary2">
+                    <div className="product-origin-price text-base font-normal leading-[22] text-secondary2 md:text-[13px] md:leading-5">
                       <del>${data.originPrice}.00</del>
                     </div>
-                    <div className="product-sale caption1 bg-green_custom inline-block rounded-full px-3 py-0.5 font-medium">
+                    <div className="product-sale bg-green_custom inline-block rounded-full px-3 py-0.5 text-base font-medium font-normal leading-[22] md:text-[13px] md:leading-5">
                       -{percentSale}%
                     </div>
                   </>

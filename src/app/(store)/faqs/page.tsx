@@ -23,7 +23,7 @@ const Faqs = () => {
 
   if (categoriesLoading) {
     return (
-      <div className="container py-20 text-center">
+      <div className="w-full px-4 mx-auto !max-w-[1322px] py-20 text-center">
         <p>Loading FAQs...</p>
       </div>
     );
@@ -35,7 +35,7 @@ const Faqs = () => {
         <Breadcrumb items={breadcrumbItems} pageTitle="FAQs" />
       </div>
       <div className="faqs-block py-10 md:py-20">
-        <div className="container">
+        <div className="w-full px-4 mx-auto !max-w-[1322px]">
           <div className="flex flex-col gap-8 md:flex-row md:justify-between">
             <div className="left md:w-1/4">
               <div className="menu-tab flex flex-col gap-5">

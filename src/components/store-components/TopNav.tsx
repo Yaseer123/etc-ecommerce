@@ -22,7 +22,7 @@ export default function TopNav({ props, slogan }: Props) {
   return (
     <>
       <div className={`top-nav h-[30px] md:h-[44px] ${props}`}>
-        <div className="container mx-auto h-full">
+        <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
           <div className="top-nav-main flex h-full justify-between max-md:justify-center">
             <div className="left-content flex items-center gap-5 max-md:hidden">
               <div
@@ -76,7 +76,7 @@ export default function TopNav({ props, slogan }: Props) {
                 <Icon.CaretDown size={12} color="#fff" />
               </div>
             </div>
-            <div className="text-button-uppercase flex items-center text-center text-white">
+            <div className="flex items-center text-center text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
               {slogan}
             </div>
             <div className="right-content flex items-center gap-5 text-white max-md:hidden">

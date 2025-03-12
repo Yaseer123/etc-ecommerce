@@ -4,7 +4,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import * as Icon from "@phosphor-icons/react/dist/ssr";
-import ModalSizeguide from "./ModalSizeguide";
 import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 import { useCart } from "@/context/store-context/CartContext";
 import { useModalCartContext } from "@/context/store-context/ModalCartContext";
@@ -148,7 +147,9 @@ const ModalQuickView = () => {
               <div className="product-infor px-4">
                 <div className="flex justify-between">
                   <div>
-                    <div className="heading4 mt-1">{selectedProduct?.name}</div>
+                    <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                      {selectedProduct?.name}
+                    </div>
                   </div>
                   <div
                     className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlist.wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
@@ -173,7 +174,7 @@ const ModalQuickView = () => {
                 </div>
                 <div className="mt-3 flex items-center">
                   <Rate currentRate={selectedProduct?.rate} size={14} />
-                  <span className="caption1 text-secondary">
+                  <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                     (1.234 reviews)
                   </span>
                 </div>
@@ -186,7 +187,7 @@ const ModalQuickView = () => {
                     <del>${selectedProduct?.originPrice}.00</del>
                   </div>
                   {selectedProduct?.originPrice && (
-                    <div className="product-sale caption2 bg-green inline-block rounded-full px-3 py-0.5 font-semibold">
+                    <div className="product-sale caption2 inline-block rounded-full bg-green px-3 py-0.5 font-semibold">
                       -{percentSale}%
                     </div>
                   )}
@@ -207,17 +208,6 @@ const ModalQuickView = () => {
                         Size:{" "}
                         <span className="text-title size">{activeSize}</span>
                       </div>
-                      <div
-                        className="caption1 size-guide text-red cursor-pointer underline"
-                        onClick={handleOpenSizeGuide}
-                      >
-                        Size Guide
-                      </div>
-                      <ModalSizeguide
-                        data={selectedProduct}
-                        isOpen={openSizeGuide}
-                        onClose={handleCloseSizeGuide}
-                      />
                     </div>
                     <div className="list-size mt-3 flex flex-wrap items-center gap-2">
                       {selectedProduct?.sizes.map((item, index) => (
@@ -248,13 +238,13 @@ const ModalQuickView = () => {
                     </div>
                     <div
                       onClick={handleAddToCart}
-                      className="button-main w-full border border-black bg-white text-center text-black"
+                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     >
                       Add To Cart
                     </div>
                   </div>
                   <div className="button-block mt-5">
-                    <div className="button-main w-full text-center">
+                    <div className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                       Buy It Now
                     </div>
                   </div>

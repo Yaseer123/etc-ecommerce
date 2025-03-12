@@ -8,8 +8,8 @@ import "swiper/css/bundle";
 import { useRouter } from "next/navigation";
 interface Category {
   name: string;
- 
-  subcategories: { name: string;  }[];
+
+  subcategories: { name: string }[];
 }
 export default function TrendingNow({ data }: { data: Category[] }) {
   const router = useRouter();
@@ -21,8 +21,10 @@ export default function TrendingNow({ data }: { data: Category[] }) {
   return (
     <>
       <div className="trending-block style-six pt-10 md:pt-20">
-        <div className="container">
-          <div className="heading3 text-center">Trending Right Now</div>
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
+          <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+            Trending Right Now
+          </div>
           <div className="list-trending section-swiper-navigation style-small-border style-outline mt-6 md:mt-10">
             <Swiper
               spaceBetween={12}

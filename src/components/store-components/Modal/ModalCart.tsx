@@ -15,7 +15,6 @@ const ModalCart = ({
   serverTimeLeft: CountdownTimeType;
 }) => {
   const [timeLeft, setTimeLeft] = useState(serverTimeLeft);
-  const [productImage, setProductImage] = useState<string | null>(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -47,7 +46,6 @@ const ModalCart = ({
 
   const moneyForFreeship = 150;
   let [totalCart] = useState<number>(0);
-  const [discountCart, setDiscountCart] = useState<number>(0);
 
   cartState?.items.map(
     (item) => (totalCart += item.product.price * item.quantity),
@@ -75,9 +73,9 @@ const ModalCart = ({
             <div className="time px-6">
               <div className="flex items-center gap-3 rounded-lg bg-green px-5 py-3">
                 <p className="text-3xl">🔥</p>
-                <div className="caption1">
+                <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   Your cart will expire in{" "}
-                  <span className="caption1 font-semibold text-red">
+                  <span className="text-base font-normal font-semibold leading-[22] text-red md:text-[13px] md:leading-5">
                     {timeLeft.minutes}:
                     {timeLeft.seconds < 10
                       ? `0${timeLeft.seconds}`
@@ -139,21 +137,27 @@ const ModalCart = ({
                   onClick={() => handleActiveTab("note")}
                 >
                   <Icon.NotePencil className="text-xl" />
-                  <div className="caption1">Note</div>
+                  <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                    Note
+                  </div>
                 </div>
                 <div
                   className="item flex cursor-pointer items-center gap-3"
                   onClick={() => handleActiveTab("shipping")}
                 >
                   <Icon.Truck className="text-xl" />
-                  <div className="caption1">Shipping</div>
+                  <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                    Shipping
+                  </div>
                 </div>
                 <div
                   className="item flex cursor-pointer items-center gap-3"
                   onClick={() => handleActiveTab("coupon")}
                 >
                   <Icon.Tag className="text-xl" />
-                  <div className="caption1">Coupon</div>
+                  <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                    Coupon
+                  </div>
                 </div>
               </div>
               <div className="flex items-center justify-between px-6 pt-6">
@@ -164,14 +168,14 @@ const ModalCart = ({
                 <div className="flex items-center gap-4">
                   <Link
                     href={"/cart"}
-                    className="button-main basis-1/2 border border-black bg-white text-center uppercase text-black"
+                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     View cart
                   </Link>
                   <Link
                     href={"/checkout"}
-                    className="button-main basis-1/2 text-center uppercase"
+                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     Check Out
@@ -179,7 +183,7 @@ const ModalCart = ({
                 </div>
                 <div
                   onClick={closeModalCart}
-                  className="text-button-uppercase has-line-before mt-4 inline-block cursor-pointer text-center"
+                  className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
                 >
                   Or continue shopping
                 </div>
@@ -190,7 +194,9 @@ const ModalCart = ({
                 <div className="border-b border-line px-6 py-4">
                   <div className="item flex cursor-pointer items-center gap-3">
                     <Icon.NotePencil className="text-xl" />
-                    <div className="caption1">Note</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      Note
+                    </div>
                   </div>
                 </div>
                 <div className="form px-6 pt-4">
@@ -199,19 +205,19 @@ const ModalCart = ({
                     id="form-note"
                     rows={4}
                     placeholder="Add special instructions for your order..."
-                    className="caption1 w-full rounded-md border-line bg-surface px-4 py-3"
+                    className="w-full rounded-md border-line bg-surface px-4 py-3 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
                   ></textarea>
                 </div>
                 <div className="block-button px-6 pb-6 pt-4 text-center">
                   <div
-                    className="button-main w-full text-center"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => setActiveTab("")}
                   >
                     Save
                   </div>
                   <div
                     onClick={() => setActiveTab("")}
-                    className="text-button-uppercase has-line-before mt-4 inline-block cursor-pointer text-center"
+                    className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
                   >
                     Cancel
                   </div>
@@ -223,14 +229,16 @@ const ModalCart = ({
                 <div className="border-b border-line px-6 py-4">
                   <div className="item flex cursor-pointer items-center gap-3">
                     <Icon.Truck className="text-xl" />
-                    <div className="caption1">Estimate shipping rates</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      Estimate shipping rates
+                    </div>
                   </div>
                 </div>
                 <div className="form px-6 pt-4">
                   <div className="">
                     <label
                       htmlFor="select-country"
-                      className="caption1 text-secondary"
+                      className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5"
                     >
                       Country/region
                     </label>
@@ -258,7 +266,7 @@ const ModalCart = ({
                   <div className="mt-3">
                     <label
                       htmlFor="select-state"
-                      className="caption1 text-secondary"
+                      className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5"
                     >
                       State
                     </label>
@@ -286,7 +294,7 @@ const ModalCart = ({
                   <div className="mt-3">
                     <label
                       htmlFor="select-code"
-                      className="caption1 text-secondary"
+                      className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5"
                     >
                       Postal/Zip Code
                     </label>
@@ -300,14 +308,14 @@ const ModalCart = ({
                 </div>
                 <div className="block-button px-6 pb-6 pt-4 text-center">
                   <div
-                    className="button-main w-full text-center"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => setActiveTab("")}
                   >
                     Calculator
                   </div>
                   <div
                     onClick={() => setActiveTab("")}
-                    className="text-button-uppercase has-line-before mt-4 inline-block cursor-pointer text-center"
+                    className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
                   >
                     Cancel
                   </div>
@@ -319,14 +327,16 @@ const ModalCart = ({
                 <div className="border-b border-line px-6 py-4">
                   <div className="item flex cursor-pointer items-center gap-3">
                     <Icon.Tag className="text-xl" />
-                    <div className="caption1">Add A Coupon Code</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      Add A Coupon Code
+                    </div>
                   </div>
                 </div>
                 <div className="form px-6 pt-4">
                   <div className="">
                     <label
                       htmlFor="select-discount"
-                      className="caption1 text-secondary"
+                      className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5"
                     >
                       Enter Code
                     </label>
@@ -340,14 +350,14 @@ const ModalCart = ({
                 </div>
                 <div className="block-button px-6 pb-6 pt-4 text-center">
                   <div
-                    className="button-main w-full text-center"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => setActiveTab("")}
                   >
                     Apply
                   </div>
                   <div
                     onClick={() => setActiveTab("")}
-                    className="text-button-uppercase has-line-before mt-4 inline-block cursor-pointer text-center"
+                    className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
                   >
                     Cancel
                   </div>

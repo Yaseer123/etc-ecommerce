@@ -30,9 +30,11 @@ export default function Fashion({ data, start, limit }: Props) {
   return (
     <>
       <div className="tab-features-block pt-10 md:pt-20">
-        <div className="container">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="heading flex flex-wrap items-center justify-between gap-5">
-            <div className="heading3">men{String.raw`'s`} Fashion</div>
+            <div className="text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+              men{String.raw`'s`} Fashion
+            </div>
             <div className="menu-tab flex items-center gap-2 rounded-2xl bg-surface p-1">
               {["t-shirt", "shirt", "sweater", "outerwear"].map((type) => (
                 <div
@@ -46,7 +48,7 @@ export default function Fashion({ data, start, limit }: Props) {
                       className="absolute inset-0 rounded-2xl bg-white"
                     ></motion.div>
                   )}
-                  <span className="text-button-uppercase relative z-[1]">
+                  <span className="relative z-[1] text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     {type}
                   </span>
                 </div>
@@ -59,7 +61,7 @@ export default function Fashion({ data, start, limit }: Props) {
               href={"/shop/breadcrumb1"}
               className="banner relative flex items-center justify-center overflow-hidden rounded-[20px]"
             >
-              <div className="heading4 text-center text-white">
+              <div className="text-center text-[30px] font-semibold capitalize leading-[42px] text-white md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                 Fashion For <br />
                 Men
               </div>

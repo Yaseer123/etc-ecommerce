@@ -137,7 +137,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   };
 
   const handleAddToWishlist = () => {
-    if(!productId) return;
+    if (!productId) return;
     // if product existed in wishlistState, remove from wishlistState and set state to false
     if (wishlist.some((item) => item.id === productId)) {
       removeFromWishlistMutation.mutate({ productId });
@@ -156,7 +156,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
     <>
       <div className="product-detail default">
         <div className="featured-product underwear py-10 md:py-20">
-          <div className="container flex flex-wrap justify-between gap-y-6">
+          <div className="mx-auto flex w-full !max-w-[1322px] flex-wrap justify-between gap-y-6 px-4">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
               <Swiper
                 slidesPerView={1}
@@ -254,7 +254,9 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   {/* <div className="caption2 font-semibold uppercase text-secondary">
                     {productMain.type}
                   </div> */}
-                  <div className="heading4 mt-1">{productMain.name}</div>
+                  <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                    {productMain.name}
+                  </div>
                 </div>
                 <div
                   className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
@@ -277,7 +279,9 @@ const Default: React.FC<Props> = ({ data, productId }) => {
               </div>
               <div className="mt-3 flex items-center">
                 <Rate currentRate={productMain.rate} size={14} />
-                <span className="caption1 text-secondary">(1.234 reviews)</span>
+                <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                  (1.234 reviews)
+                </span>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
                 <div className="product-price heading5">
@@ -288,7 +292,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <del>${productMain.originPrice}.00</del>
                 </div>
                 {productMain.originPrice && (
-                  <div className="product-sale caption2 inline-block rounded-full bg-green_custom px-3 py-0.5 font-semibold">
+                  <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
                     -{percentSale}%
                   </div>
                 )}
@@ -333,7 +337,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       <span className="text-title size">{activeSize}</span>
                     </div>
                     <div
-                      className="caption1 size-guide text-red cursor-pointer underline"
+                      className="size-guide cursor-pointer text-base font-normal leading-[22] text-red underline md:text-[13px] md:leading-5"
                       onClick={handleOpenSizeGuide}
                     >
                       Size Guide
@@ -501,7 +505,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <div className="icon-delivery-truck text-4xl"></div>
                   <div>
                     <div className="text-title">Free shipping</div>
-                    <div className="caption1 mt-1 text-secondary">
+                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       Free shipping on orders over $75.
                     </div>
                   </div>
@@ -510,7 +514,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <div className="icon-phone-call text-4xl"></div>
                   <div>
                     <div className="text-title">Support everyday</div>
-                    <div className="caption1 mt-1 text-secondary">
+                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       Support from 8:30 AM to 10:00 PM everyday
                     </div>
                   </div>
@@ -519,7 +523,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <div className="icon-return text-4xl"></div>
                   <div>
                     <div className="text-title">100 Day Returns</div>
-                    <div className="caption1 mt-1 text-secondary">
+                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       Not impressed? Get a refund. You have 100 days to break
                       our hearts.
                     </div>
@@ -567,7 +571,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
           </div>
         </div>
         <div className="desc-tab pb-10 md:pb-20">
-          <div className="container">
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
                 <div
@@ -804,9 +808,11 @@ const Default: React.FC<Props> = ({ data, productId }) => {
           </div>
         </div>
         <div className="review-block bg-surface py-10 md:py-20">
-          <div className="container">
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
             <div className="heading flex flex-wrap items-center justify-between gap-4">
-              <div className="heading4">Customer Review</div>
+              <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                Customer Review
+              </div>
               <Link
                 href={"#form-review"}
                 className="button-main border border-black bg-white text-black"
@@ -828,53 +834,73 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 <div className="list-rating mt-3">
                   <div className="item flex items-center justify-between gap-1.5">
                     <div className="flex items-center gap-1">
-                      <div className="caption1">5</div>
+                      <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                        5
+                      </div>
                       <Icon.Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
-                      <div className="progress-percent bg-yellow absolute left-0 top-0 h-full w-[50%]"></div>
+                      <div className="progress-percent absolute left-0 top-0 h-full w-[50%] bg-yellow"></div>
                     </div>
-                    <div className="caption1">50%</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      50%
+                    </div>
                   </div>
                   <div className="item mt-1 flex items-center justify-between gap-1.5">
                     <div className="flex items-center gap-1">
-                      <div className="caption1">4</div>
+                      <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                        4
+                      </div>
                       <Icon.Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
-                      <div className="progress-percent bg-yellow absolute left-0 top-0 h-full w-[20%]"></div>
+                      <div className="progress-percent absolute left-0 top-0 h-full w-[20%] bg-yellow"></div>
                     </div>
-                    <div className="caption1">20%</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      20%
+                    </div>
                   </div>
                   <div className="item mt-1 flex items-center justify-between gap-1.5">
                     <div className="flex items-center gap-1">
-                      <div className="caption1">3</div>
+                      <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                        3
+                      </div>
                       <Icon.Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
-                      <div className="progress-percent bg-yellow absolute left-0 top-0 h-full w-[10%]"></div>
+                      <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-yellow"></div>
                     </div>
-                    <div className="caption1">10%</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      10%
+                    </div>
                   </div>
                   <div className="item mt-1 flex items-center justify-between gap-1.5">
                     <div className="flex items-center gap-1">
-                      <div className="caption1">2</div>
+                      <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                        2
+                      </div>
                       <Icon.Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
-                      <div className="progress-percent bg-yellow absolute left-0 top-0 h-full w-[10%]"></div>
+                      <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-yellow"></div>
                     </div>
-                    <div className="caption1">10%</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      10%
+                    </div>
                   </div>
                   <div className="item mt-1 flex items-center justify-between gap-1.5">
                     <div className="flex items-center gap-2">
-                      <div className="caption1">1</div>
+                      <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                        1
+                      </div>
                       <Icon.Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
-                      <div className="progress-percent bg-yellow absolute left-0 top-0 h-full w-[10%]"></div>
+                      <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-yellow"></div>
                     </div>
-                    <div className="caption1">10%</div>
+                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                      10%
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1196,7 +1222,9 @@ const Default: React.FC<Props> = ({ data, productId }) => {
               </div>
             </div>
             <div id="form-review" className="form-review pt-6">
-              <div className="heading4">Leave A comment</div>
+              <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                Leave A comment
+              </div>
               <form className="mt-6 grid gap-4 gap-y-5 sm:grid-cols-2">
                 <div className="name">
                   <input
@@ -1247,8 +1275,10 @@ const Default: React.FC<Props> = ({ data, productId }) => {
           </div>
         </div>
         <div className="related-product py-10 md:py-20">
-          <div className="container">
-            <div className="heading3 text-center">Related Products</div>
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
+            <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+              Related Products
+            </div>
             <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-5 md:mt-10 md:gap-[30px] lg:grid-cols-4">
               {data
                 .slice(Number(productId), Number(productId) + 4)

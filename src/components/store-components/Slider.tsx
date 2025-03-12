@@ -4,8 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination } from "swiper/modules";
-import { motion } from "motion/react";
+import { Pagination } from "swiper/modules";
 import "swiper/css/bundle";
 import "swiper/css/effect-fade";
 import { useRouter } from "next/navigation";
@@ -19,7 +18,7 @@ const Slider = () => {
   return (
     <>
       <div className="slider-block style-two w-full">
-        <div className="banner-block container flex h-full w-full gap-y-5 max-lg:flex-wrap lg:pt-[30px]">
+        <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-y-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
           <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px]">
             <Swiper
               spaceBetween={0}
@@ -35,7 +34,9 @@ const Slider = () => {
               <SwiperSlide>
                 <div className="slider-item bg-linear relative flex h-full w-full items-center">
                   <div className="text-content relative z-[1] basis-1/2 pl-5 md:pl-[60px]">
-                    <div className="text-button-uppercase">Fresh and Tasty</div>
+                    <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                      Fresh and Tasty
+                    </div>
                     <div className="heading2 mt-2 lg:mt-3">
                       New Season Women’s style
                     </div>
@@ -64,7 +65,9 @@ const Slider = () => {
               <SwiperSlide>
                 <div className="slider-item bg-linear relative flex h-full w-full items-center">
                   <div className="text-content relative z-[1] basis-1/2 pl-5 max-[400px]:basis-[55%] md:pl-[60px]">
-                    <div className="text-button-uppercase">Fresh and Tasty</div>
+                    <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                      Fresh and Tasty
+                    </div>
                     <div className="heading2 mt-2 lg:mt-3">
                       Men’s Clothing fashion
                     </div>
@@ -93,7 +96,9 @@ const Slider = () => {
               <SwiperSlide>
                 <div className="slider-item bg-linear relative flex h-full w-full items-center">
                   <div className="text-content relative z-[1] basis-1/2 pl-5 md:pl-[60px]">
-                    <div className="text-button-uppercase">Fresh and Tasty</div>
+                    <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                      Fresh and Tasty
+                    </div>
                     <div className="heading2 mt-2 lg:mt-3">
                       Summer Sale Collections
                     </div>
@@ -127,7 +132,7 @@ const Slider = () => {
               onClick={() => handleTypeClick("swimwear")}
             >
               <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                   Save $10
                 </div>
                 <div className="heading6 mt-2">
@@ -152,7 +157,7 @@ const Slider = () => {
               onClick={() => handleTypeClick("accessories")}
             >
               <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                   Save $10
                 </div>
                 <div className="heading6 mt-2">

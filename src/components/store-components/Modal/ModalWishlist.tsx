@@ -64,7 +64,7 @@ const ModalWishlist = () => {
                   </div>
                 </div>
                 <div
-                  className="remove-wishlist-btn caption1 text-red cursor-pointer font-semibold underline"
+                  className="remove-wishlist-btn cursor-pointer text-base font-normal font-semibold leading-[22] text-red underline md:text-[13px] md:leading-5"
                   onClick={() =>
                     removeFromWishlistMutation.mutate({ productId: product.id })
                   }
@@ -84,7 +84,7 @@ const ModalWishlist = () => {
             </Link>
             <div
               onClick={closeModalWishlist}
-              className="text-button-uppercase has-line-before mt-4 inline-block cursor-pointer text-center"
+              className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
             >
               Or continue shopping
             </div>

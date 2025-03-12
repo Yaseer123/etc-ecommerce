@@ -23,18 +23,16 @@ const MyAccount = () => {
 
   return (
     <>
-    
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
         <Breadcrumb heading="My Account" subHeading="My Account" />
       </div>
-      <div className="profile-block py-10 md:py-20">
-        <div className="container">
-          <div className="content-main flex w-full gap-y-8 max-md:flex-col">
+      <div className="py-10 md:py-20">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
+          <div className="flex w-full gap-y-8 max-md:flex-col">
             <div className="left w-full md:w-1/3 md:pr-[16px] lg:pr-[28px] xl:pr-[3.125rem]">
-              <div className="user-infor rounded-xl bg-surface px-4 py-5 md:rounded-[20px] lg:px-7 lg:py-10">
+              <div className="rounded-xl bg-surface px-4 py-5 md:rounded-[20px] lg:px-7 lg:py-10">
                 <div className="heading flex flex-col items-center justify-center">
-                  <div className="avatar">
+                  <div>
                     <Image
                       src={"/images/avatar/1.png"}
                       width={300}
@@ -43,10 +41,10 @@ const MyAccount = () => {
                       className="h-[120px] w-[120px] rounded-full md:h-[140px] md:w-[140px]"
                     />
                   </div>
-                  <div className="name heading6 mt-4 text-center">
+                  <div className="mt-4 text-center text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                     Tony Nguyen
                   </div>
-                  <div className="mail heading6 mt-1 text-center font-normal normal-case text-secondary">
+                  <div className="mt-1 text-center text-[20px] font-semibold capitalize leading-[28px] text-secondary md:text-base lg:text-lg lg:leading-[26px]">
                     hi.avitex@gmail.com
                   </div>
                 </div>
@@ -58,7 +56,9 @@ const MyAccount = () => {
                     onClick={() => setActiveTab("dashboard")}
                   >
                     <Icon.HouseLine size={20} />
-                    <strong className="heading6">Dashboard</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      Dashboard
+                    </strong>
                   </Link>
                   <Link
                     href={"#!"}
@@ -67,7 +67,9 @@ const MyAccount = () => {
                     onClick={() => setActiveTab("orders")}
                   >
                     <Icon.Package size={20} />
-                    <strong className="heading6">History Orders</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      History Orders
+                    </strong>
                   </Link>
                   <Link
                     href={"#!"}
@@ -76,7 +78,9 @@ const MyAccount = () => {
                     onClick={() => setActiveTab("address")}
                   >
                     <Icon.Tag size={20} />
-                    <strong className="heading6">My Address</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      My Address
+                    </strong>
                   </Link>
                   <Link
                     href={"#!"}
@@ -85,14 +89,18 @@ const MyAccount = () => {
                     onClick={() => setActiveTab("setting")}
                   >
                     <Icon.GearSix size={20} />
-                    <strong className="heading6">Setting</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      Setting
+                    </strong>
                   </Link>
                   <Link
                     href={"/login"}
                     className="item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white"
                   >
                     <Icon.SignOut size={20} />
-                    <strong className="heading6">Logout</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      Logout
+                    </strong>
                   </Link>
                 </div>
               </div>
@@ -127,7 +135,9 @@ const MyAccount = () => {
                   </div>
                 </div>
                 <div className="recent_order mt-7 rounded-xl border border-line px-5 pb-2 pt-5">
-                  <h6 className="heading6">Recent Orders</h6>
+                  <h6 className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                    Recent Orders
+                  </h6>
                   <div className="list mt-5 w-full overflow-x-auto">
                     <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
                       <thead className="border-b border-line">
@@ -179,7 +189,7 @@ const MyAccount = () => {
                                 <strong className="product_name text-button">
                                   Contrasting sweatshirt
                                 </strong>
-                                <span className="product_tag caption1 text-secondary">
+                                <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                   Women, Clothing
                                 </span>
                               </div>
@@ -187,7 +197,7 @@ const MyAccount = () => {
                           </td>
                           <td className="price py-3">$45.00</td>
                           <td className="py-3 text-right">
-                            <span className="tag bg-yellow text-yellow caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                            <span className="tag rounded-full bg-yellow bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-yellow md:text-[13px] md:leading-5">
                               Pending
                             </span>
                           </td>
@@ -212,7 +222,7 @@ const MyAccount = () => {
                                 <strong className="product_name text-button">
                                   Faux-leather trousers
                                 </strong>
-                                <span className="product_tag caption1 text-secondary">
+                                <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                   Women, Clothing
                                 </span>
                               </div>
@@ -220,7 +230,7 @@ const MyAccount = () => {
                           </td>
                           <td className="price py-3">$45.00</td>
                           <td className="py-3 text-right">
-                            <span className="tag bg-purple text-purple caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                            <span className="tag rounded-full bg-purple bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-purple md:text-[13px] md:leading-5">
                               Delivery
                             </span>
                           </td>
@@ -245,7 +255,7 @@ const MyAccount = () => {
                                 <strong className="product_name text-button">
                                   V-neck knitted top
                                 </strong>
-                                <span className="product_tag caption1 text-secondary">
+                                <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                   Women, Clothing
                                 </span>
                               </div>
@@ -253,7 +263,7 @@ const MyAccount = () => {
                           </td>
                           <td className="price py-3">$45.00</td>
                           <td className="py-3 text-right">
-                            <span className="tag caption1 rounded-full bg-success bg-opacity-10 px-4 py-1.5 font-semibold text-success">
+                            <span className="tag rounded-full bg-success bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-success md:text-[13px] md:leading-5">
                               Completed
                             </span>
                           </td>
@@ -278,7 +288,7 @@ const MyAccount = () => {
                                 <strong className="product_name text-button">
                                   Contrasting sweatshirt
                                 </strong>
-                                <span className="product_tag caption1 text-secondary">
+                                <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                   Women, Clothing
                                 </span>
                               </div>
@@ -286,7 +296,7 @@ const MyAccount = () => {
                           </td>
                           <td className="price py-3">$45.00</td>
                           <td className="py-3 text-right">
-                            <span className="tag bg-yellow text-yellow caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                            <span className="tag rounded-full bg-yellow bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-yellow md:text-[13px] md:leading-5">
                               Pending
                             </span>
                           </td>
@@ -311,7 +321,7 @@ const MyAccount = () => {
                                 <strong className="product_name text-button">
                                   Faux-leather trousers
                                 </strong>
-                                <span className="product_tag caption1 text-secondary">
+                                <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                   Women, Clothing
                                 </span>
                               </div>
@@ -319,7 +329,7 @@ const MyAccount = () => {
                           </td>
                           <td className="price py-3">$45.00</td>
                           <td className="py-3 text-right">
-                            <span className="tag bg-purple text-purple caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                            <span className="tag rounded-full bg-purple bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-purple md:text-[13px] md:leading-5">
                               Delivery
                             </span>
                           </td>
@@ -344,7 +354,7 @@ const MyAccount = () => {
                                 <strong className="product_name text-button">
                                   V-neck knitted top
                                 </strong>
-                                <span className="product_tag caption1 text-secondary">
+                                <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                   Women, Clothing
                                 </span>
                               </div>
@@ -352,7 +362,7 @@ const MyAccount = () => {
                           </td>
                           <td className="price py-3">$45.00</td>
                           <td className="py-3 text-right">
-                            <span className="tag bg-red text-red caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                            <span className="tag rounded-full bg-red bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-red md:text-[13px] md:leading-5">
                               Canceled
                             </span>
                           </td>
@@ -365,7 +375,9 @@ const MyAccount = () => {
               <div
                 className={`tab text-content w-full overflow-hidden rounded-xl border border-line p-7 ${activeTab === "orders" ? "block" : "hidden"}`}
               >
-                <h6 className="heading6">Your Orders</h6>
+                <h6 className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                  Your Orders
+                </h6>
                 <div className="w-full overflow-x-auto">
                   <div className="menu-tab mt-3 grid grid-cols-5 border-b border-line max-lg:w-[500px]">
                     {[
@@ -401,7 +413,7 @@ const MyAccount = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order status:</strong>
-                        <span className="tag bg-purple text-purple caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                        <span className="tag rounded-full bg-purple bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-purple md:text-[13px] md:leading-5">
                           Delivery
                         </span>
                       </div>
@@ -425,7 +437,7 @@ const MyAccount = () => {
                             <div className="prd_name text-title">
                               Contrasting sheepskin sweatshirt
                             </div>
-                            <div className="caption1 mt-2 text-secondary">
+                            <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                               <span className="prd_size uppercase">XL</span>
                               <span>/</span>
                               <span className="prd_color capitalize">
@@ -458,7 +470,7 @@ const MyAccount = () => {
                             <div className="prd_name text-title">
                               Contrasting sheepskin sweatshirt
                             </div>
-                            <div className="caption1 mt-2 text-secondary">
+                            <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                               <span className="prd_size uppercase">XL</span>
                               <span>/</span>
                               <span className="prd_color capitalize">
@@ -476,12 +488,12 @@ const MyAccount = () => {
                     </div>
                     <div className="flex flex-wrap gap-4 p-5">
                       <button
-                        className="button-main"
+                        className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         onClick={() => setOpenDetail(true)}
                       >
                         Order Details
                       </button>
-                      <button className="button-main border border-line bg-surface text-black hover:bg-black hover:text-white">
+                      <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-line bg-black bg-surface px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-black hover:bg-green hover:text-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                         Cancel Order
                       </button>
                     </div>
@@ -496,7 +508,7 @@ const MyAccount = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order status:</strong>
-                        <span className="tag bg-yellow text-yellow caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                        <span className="tag rounded-full bg-yellow bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-yellow md:text-[13px] md:leading-5">
                           Pending
                         </span>
                       </div>
@@ -520,7 +532,7 @@ const MyAccount = () => {
                             <div className="prd_name text-title">
                               Contrasting sheepskin sweatshirt
                             </div>
-                            <div className="caption1 mt-2 text-secondary">
+                            <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                               <span className="prd_size uppercase">L</span>
                               <span>/</span>
                               <span className="prd_color capitalize">Pink</span>
@@ -536,12 +548,12 @@ const MyAccount = () => {
                     </div>
                     <div className="flex flex-wrap gap-4 p-5">
                       <button
-                        className="button-main"
+                        className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         onClick={() => setOpenDetail(true)}
                       >
                         Order Details
                       </button>
-                      <button className="button-main border border-line bg-surface text-black hover:bg-black hover:text-white">
+                      <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-line bg-black bg-surface px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-black hover:bg-green hover:text-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                         Cancel Order
                       </button>
                     </div>
@@ -556,7 +568,7 @@ const MyAccount = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order status:</strong>
-                        <span className="tag caption1 rounded-full bg-success bg-opacity-10 px-4 py-1.5 font-semibold text-success">
+                        <span className="tag rounded-full bg-success bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-success md:text-[13px] md:leading-5">
                           Completed
                         </span>
                       </div>
@@ -580,7 +592,7 @@ const MyAccount = () => {
                             <div className="prd_name text-title">
                               Contrasting sheepskin sweatshirt
                             </div>
-                            <div className="caption1 mt-2 text-secondary">
+                            <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                               <span className="prd_size uppercase">L</span>
                               <span>/</span>
                               <span className="prd_color capitalize">
@@ -598,12 +610,12 @@ const MyAccount = () => {
                     </div>
                     <div className="flex flex-wrap gap-4 p-5">
                       <button
-                        className="button-main"
+                        className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         onClick={() => setOpenDetail(true)}
                       >
                         Order Details
                       </button>
-                      <button className="button-main border border-line bg-surface text-black hover:bg-black hover:text-white">
+                      <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-line bg-black bg-surface px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-black hover:bg-green hover:text-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                         Cancel Order
                       </button>
                     </div>
@@ -618,7 +630,7 @@ const MyAccount = () => {
                       </div>
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order status:</strong>
-                        <span className="tag bg-red text-red caption1 rounded-full bg-opacity-10 px-4 py-1.5 font-semibold">
+                        <span className="tag rounded-full bg-red bg-opacity-10 px-4 py-1.5 text-base font-normal font-semibold leading-[22] text-red md:text-[13px] md:leading-5">
                           Canceled
                         </span>
                       </div>
@@ -642,7 +654,7 @@ const MyAccount = () => {
                             <div className="prd_name text-title">
                               Contrasting sheepskin sweatshirt
                             </div>
-                            <div className="caption1 mt-2 text-secondary">
+                            <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                               <span className="prd_size uppercase">M</span>
                               <span>/</span>
                               <span className="prd_color capitalize">
@@ -660,12 +672,12 @@ const MyAccount = () => {
                     </div>
                     <div className="flex flex-wrap gap-4 p-5">
                       <button
-                        className="button-main"
+                        className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         onClick={() => setOpenDetail(true)}
                       >
                         Order Details
                       </button>
-                      <button className="button-main border border-line bg-surface text-black hover:bg-black hover:text-white">
+                      <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-line bg-black bg-surface px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-black hover:bg-green hover:text-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                         Cancel Order
                       </button>
                     </div>
@@ -681,7 +693,9 @@ const MyAccount = () => {
                     className={`tab_btn flex w-full items-center justify-between border-b border-line pb-1.5 ${activeAddress === "billing" ? "active" : ""}`}
                     onClick={() => handleActiveAddress("billing")}
                   >
-                    <strong className="heading6">Billing address</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      Billing address
+                    </strong>
                     <Icon.CaretDown className="ic_down text-2xl duration-300" />
                   </button>
                   <div
@@ -691,7 +705,7 @@ const MyAccount = () => {
                       <div className="first-name">
                         <label
                           htmlFor="billingFirstName"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           First Name <span className="text-red">*</span>
                         </label>
@@ -705,7 +719,7 @@ const MyAccount = () => {
                       <div className="last-name">
                         <label
                           htmlFor="billingLastName"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Last Name <span className="text-red">*</span>
                         </label>
@@ -719,7 +733,7 @@ const MyAccount = () => {
                       <div className="company">
                         <label
                           htmlFor="billingCompany"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Company name (optional)
                         </label>
@@ -733,7 +747,7 @@ const MyAccount = () => {
                       <div className="country">
                         <label
                           htmlFor="billingCountry"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Country / Region <span className="text-red">*</span>
                         </label>
@@ -747,7 +761,7 @@ const MyAccount = () => {
                       <div className="street">
                         <label
                           htmlFor="billingStreet"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           street address <span className="text-red">*</span>
                         </label>
@@ -761,7 +775,7 @@ const MyAccount = () => {
                       <div className="city">
                         <label
                           htmlFor="billingCity"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Town / city <span className="text-red">*</span>
                         </label>
@@ -775,7 +789,7 @@ const MyAccount = () => {
                       <div className="state">
                         <label
                           htmlFor="billingState"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           state <span className="text-red">*</span>
                         </label>
@@ -789,7 +803,7 @@ const MyAccount = () => {
                       <div className="zip">
                         <label
                           htmlFor="billingZip"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           ZIP <span className="text-red">*</span>
                         </label>
@@ -803,7 +817,7 @@ const MyAccount = () => {
                       <div className="phone">
                         <label
                           htmlFor="billingPhone"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Phone <span className="text-red">*</span>
                         </label>
@@ -817,7 +831,7 @@ const MyAccount = () => {
                       <div className="email">
                         <label
                           htmlFor="billingEmail"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Email <span className="text-red">*</span>
                         </label>
@@ -835,7 +849,9 @@ const MyAccount = () => {
                     className={`tab_btn mt-10 flex w-full items-center justify-between border-b border-line pb-1.5 ${activeAddress === "shipping" ? "active" : ""}`}
                     onClick={() => handleActiveAddress("shipping")}
                   >
-                    <strong className="heading6">Shipping address</strong>
+                    <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                      Shipping address
+                    </strong>
                     <Icon.CaretDown className="ic_down text-2xl duration-300" />
                   </button>
                   <div
@@ -845,7 +861,7 @@ const MyAccount = () => {
                       <div className="first-name">
                         <label
                           htmlFor="shippingFirstName"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           First Name <span className="text-red">*</span>
                         </label>
@@ -859,7 +875,7 @@ const MyAccount = () => {
                       <div className="last-name">
                         <label
                           htmlFor="shippingLastName"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Last Name <span className="text-red">*</span>
                         </label>
@@ -873,7 +889,7 @@ const MyAccount = () => {
                       <div className="company">
                         <label
                           htmlFor="shippingCompany"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Company name (optional)
                         </label>
@@ -887,7 +903,7 @@ const MyAccount = () => {
                       <div className="country">
                         <label
                           htmlFor="shippingCountry"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Country / Region <span className="text-red">*</span>
                         </label>
@@ -901,7 +917,7 @@ const MyAccount = () => {
                       <div className="street">
                         <label
                           htmlFor="shippingStreet"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           street address <span className="text-red">*</span>
                         </label>
@@ -915,7 +931,7 @@ const MyAccount = () => {
                       <div className="city">
                         <label
                           htmlFor="shippingCity"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Town / city <span className="text-red">*</span>
                         </label>
@@ -929,7 +945,7 @@ const MyAccount = () => {
                       <div className="state">
                         <label
                           htmlFor="shippingState"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           state <span className="text-red">*</span>
                         </label>
@@ -943,7 +959,7 @@ const MyAccount = () => {
                       <div className="zip">
                         <label
                           htmlFor="shippingZip"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           ZIP <span className="text-red">*</span>
                         </label>
@@ -957,7 +973,7 @@ const MyAccount = () => {
                       <div className="phone">
                         <label
                           htmlFor="shippingPhone"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Phone <span className="text-red">*</span>
                         </label>
@@ -971,7 +987,7 @@ const MyAccount = () => {
                       <div className="email">
                         <label
                           htmlFor="shippingEmail"
-                          className="caption1 capitalize"
+                          className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                         >
                           Email <span className="text-red">*</span>
                         </label>
@@ -985,7 +1001,9 @@ const MyAccount = () => {
                     </div>
                   </div>
                   <div className="block-button mt-6 lg:mt-10">
-                    <button className="button-main">Update Address</button>
+                    <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
+                      Update Address
+                    </button>
                   </div>
                 </form>
               </div>
@@ -1011,7 +1029,7 @@ const MyAccount = () => {
                       </div>
                       <div>
                         <strong className="text-button">Upload File:</strong>
-                        <p className="caption1 mt-1 text-secondary">
+                        <p className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                           JPG 120x120px
                         </p>
                         <div className="upload_file mt-3 flex w-[220px] items-center gap-3 rounded border border-line px-3 py-2">
@@ -1037,7 +1055,7 @@ const MyAccount = () => {
                     <div className="first-name">
                       <label
                         htmlFor="firstName"
-                        className="caption1 capitalize"
+                        className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                       >
                         First Name <span className="text-red">*</span>
                       </label>
@@ -1051,7 +1069,10 @@ const MyAccount = () => {
                       />
                     </div>
                     <div className="last-name">
-                      <label htmlFor="lastName" className="caption1 capitalize">
+                      <label
+                        htmlFor="lastName"
+                        className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
+                      >
                         Last Name <span className="text-red">*</span>
                       </label>
                       <input
@@ -1066,7 +1087,7 @@ const MyAccount = () => {
                     <div className="phone-number">
                       <label
                         htmlFor="phoneNumber"
-                        className="caption1 capitalize"
+                        className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
                       >
                         Phone Number <span className="text-red">*</span>
                       </label>
@@ -1080,7 +1101,10 @@ const MyAccount = () => {
                       />
                     </div>
                     <div className="email">
-                      <label htmlFor="email" className="caption1 capitalize">
+                      <label
+                        htmlFor="email"
+                        className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
+                      >
                         Email Address <span className="text-red">*</span>
                       </label>
                       <input
@@ -1093,7 +1117,10 @@ const MyAccount = () => {
                       />
                     </div>
                     <div className="gender">
-                      <label htmlFor="gender" className="caption1 capitalize">
+                      <label
+                        htmlFor="gender"
+                        className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5"
+                      >
                         Gender <span className="text-red">*</span>
                       </label>
                       <div className="select-block mt-2">
@@ -1114,7 +1141,10 @@ const MyAccount = () => {
                       </div>
                     </div>
                     <div className="birth">
-                      <label htmlFor="birth" className="caption1">
+                      <label
+                        htmlFor="birth"
+                        className="text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                      >
                         Day of Birth <span className="text-red">*</span>
                       </label>
                       <input
@@ -1130,7 +1160,10 @@ const MyAccount = () => {
                     Change Password
                   </div>
                   <div className="pass">
-                    <label htmlFor="password" className="caption1">
+                    <label
+                      htmlFor="password"
+                      className="text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                    >
                       Current password <span className="text-red">*</span>
                     </label>
                     <input
@@ -1142,7 +1175,10 @@ const MyAccount = () => {
                     />
                   </div>
                   <div className="new-pass mt-5">
-                    <label htmlFor="newPassword" className="caption1">
+                    <label
+                      htmlFor="newPassword"
+                      className="text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                    >
                       New password <span className="text-red">*</span>
                     </label>
                     <input
@@ -1154,7 +1190,10 @@ const MyAccount = () => {
                     />
                   </div>
                   <div className="confirm-pass mt-5">
-                    <label htmlFor="confirmPassword" className="caption1">
+                    <label
+                      htmlFor="confirmPassword"
+                      className="text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                    >
                       Confirm new password <span className="text-red">*</span>
                     </label>
                     <input
@@ -1166,7 +1205,9 @@ const MyAccount = () => {
                     />
                   </div>
                   <div className="block-button mt-6 lg:mt-10">
-                    <button className="button-main">Save Change</button>
+                    <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
+                      Save Change
+                    </button>
                   </div>
                 </form>
               </div>
@@ -1186,44 +1227,48 @@ const MyAccount = () => {
             <h5 className="heading5">Order Details</h5>
             <div className="list_info mt-5 grid grid-cols-2 gap-10 gap-y-8">
               <div className="info_item">
-                <strong className="text-button-uppercase text-secondary">
+                <strong className="text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
                   Contact Information
                 </strong>
-                <h6 className="heading6 order_name mt-2">Tony nguyen</h6>
-                <h6 className="heading6 order_phone mt-2">
+                <h6 className="order_name mt-2 text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                  Tony nguyen
+                </h6>
+                <h6 className="order_phone mt-2 text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                   (+12) 345 - 678910
                 </h6>
-                <h6 className="heading6 order_email mt-2 normal-case">
+                <h6 className="order_email mt-2 text-[20px] font-semibold capitalize normal-case leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                   hi.avitex@gmail.com
                 </h6>
               </div>
               <div className="info_item">
-                <strong className="text-button-uppercase text-secondary">
+                <strong className="text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
                   Payment method
                 </strong>
-                <h6 className="heading6 order_payment mt-2">cash delivery</h6>
+                <h6 className="order_payment mt-2 text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
+                  cash delivery
+                </h6>
               </div>
               <div className="info_item">
-                <strong className="text-button-uppercase text-secondary">
+                <strong className="text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
                   Shipping address
                 </strong>
-                <h6 className="heading6 order_shipping_address mt-2">
+                <h6 className="order_shipping_address mt-2 text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                   2163 Phillips Gap Rd, West Jefferson, North Carolina, US
                 </h6>
               </div>
               <div className="info_item">
-                <strong className="text-button-uppercase text-secondary">
+                <strong className="text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
                   Billing address
                 </strong>
-                <h6 className="heading6 order_billing_address mt-2">
+                <h6 className="order_billing_address mt-2 text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                   2163 Phillips Gap Rd, West Jefferson, North Carolina, US
                 </h6>
               </div>
               <div className="info_item">
-                <strong className="text-button-uppercase text-secondary">
+                <strong className="text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
                   Company
                 </strong>
-                <h6 className="heading6 order_company mt-2">
+                <h6 className="order_company mt-2 text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                   Avitex Technology
                 </h6>
               </div>
@@ -1250,7 +1295,7 @@ const MyAccount = () => {
                     <div className="prd_name text-title">
                       Contrasting sheepskin sweatshirt
                     </div>
-                    <div className="caption1 mt-2 text-secondary">
+                    <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       <span className="prd_size uppercase">XL</span>
                       <span>/</span>
                       <span className="prd_color capitalize">Yellow</span>
@@ -1281,7 +1326,7 @@ const MyAccount = () => {
                     <div className="prd_name text-title">
                       Contrasting sheepskin sweatshirt
                     </div>
-                    <div className="caption1 mt-2 text-secondary">
+                    <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       <span className="prd_size uppercase">XL</span>
                       <span>/</span>
                       <span className="prd_color capitalize">White</span>

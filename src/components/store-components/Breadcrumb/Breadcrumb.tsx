@@ -23,7 +23,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   return (
     <div className="breadcrumb-block style-img">
       <div className="breadcrumb-main bg-linear overflow-hidden">
-        <div className="container relative pb-10 pt-24 lg:pt-[134px]">
+        <div className="relative mx-auto w-full !max-w-[1322px] px-4 pb-10 pt-24 lg:pt-[134px]">
           <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
             <div className="text-content">
               {pageTitle && (
@@ -31,7 +31,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                   {pageTitle}
                 </div>
               )}
-              <div className="link caption1 mt-3 flex items-center justify-center gap-1">
+              <div className="link mt-3 flex items-center justify-center gap-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                 {items?.map((item, index) => (
                   <React.Fragment key={`breadcrumb-${index}`}>
                     {index > 0 && (

@@ -11,7 +11,9 @@ export default function Instagram() {
     <>
       <div className="instagram-block pt-10 md:pt-20">
         <div className="heading">
-          <div className="heading3 text-center">Rinors On Instagram</div>
+          <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+            Rinors On Instagram
+          </div>
           <div className="mt-3 text-center">#Anvougetheme</div>
         </div>
         <div className="list-instagram mt-4 md:mt-7">

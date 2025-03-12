@@ -12,7 +12,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
   return (
     <>
       <div className="shop-collection py-10 md:py-14 lg:py-20">
-        <div className="container">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="banner-heading relative overflow-hidden rounded-2xl max-lg:h-[300px] max-md:h-[260px]">
             <div className="bg-img h-full">
               <Image
@@ -57,7 +57,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       <div className="body1 font-semibold uppercase text-secondary2">
                         SUMMER STAPLE
                       </div>
-                      <div className="heading3 mt-1 sm:mt-3">
+                      <div className="mt-1 text-[36px] font-semibold capitalize leading-[40px] sm:mt-3 md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
                         Linen Wrap Dresses
                       </div>
                     </div>
@@ -79,7 +79,12 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       )
                       .slice(0, 2)
                       .map((product) => (
-                        <Product data={product} type="grid" key={product.id} style=""/>
+                        <Product
+                          data={product}
+                          type="grid"
+                          key={product.id}
+                          style=""
+                        />
                       ))}
                   </div>
                 </div>
@@ -102,7 +107,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       <div className="body1 font-semibold uppercase text-secondary2">
                         SUMMER STAPLE
                       </div>
-                      <div className="heading3 mt-1 sm:mt-3">
+                      <div className="mt-1 text-[36px] font-semibold capitalize leading-[40px] sm:mt-3 md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
                         Linen Wrap Dresses
                       </div>
                     </div>
@@ -124,7 +129,12 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       )
                       .slice(2, 4)
                       .map((product) => (
-                        <Product data={product} type="grid" key={product.id} style=""/>
+                        <Product
+                          data={product}
+                          type="grid"
+                          key={product.id}
+                          style=""
+                        />
                       ))}
                   </div>
                 </div>
@@ -147,7 +157,7 @@ const ShopCollection: React.FC<Props> = ({ data }) => {
                       <div className="body1 font-semibold uppercase text-secondary2">
                         SUMMER STAPLE
                       </div>
-                      <div className="heading3 mt-1 sm:mt-3">
+                      <div className="mt-1 text-[36px] font-semibold capitalize leading-[40px] sm:mt-3 md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
                         Linen Wrap Dresses
                       </div>
                     </div>

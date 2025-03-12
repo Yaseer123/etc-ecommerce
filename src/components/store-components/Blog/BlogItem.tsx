@@ -32,18 +32,18 @@ const BlogItem: React.FC<BlogProps> = ({ data }) => {
           />
         </div>
         <div className="blog-infor">
-          <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green px-2.5 py-1">
+          <div className="blog-tag inline-block rounded-full bg-green px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
             {data.tags.join(", ")}
           </div>
           <div className="heading6 blog-title mt-3 duration-300">
             {data.title}
           </div>
           <div className="mt-2 flex items-center gap-2">
-            <div className="blog-author caption1 text-secondary">
+            <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
               by {data.createdBy.name}
             </div>
             <span className="h-[1px] w-[20px] bg-black"></span>
-            <div className="blog-date caption1 text-secondary">
+            <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
               {" "}
               {new Date(data.updatedAt)
                 .toLocaleDateString("en-US", {

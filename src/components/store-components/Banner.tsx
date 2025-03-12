@@ -5,7 +5,7 @@ export default function Banner() {
   return (
     <>
       <div className="banner-block pt-10 md:pt-20">
-        <div className="container">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="list-banner grid gap-[20px] md:grid-cols-2 lg:grid-cols-3 lg:gap-[30px]">
             <Link
               href={"/shop/breadcrumb-img"}
@@ -25,7 +25,7 @@ export default function Banner() {
                   Women{String.raw`'s`} Fashion <br />
                   Must-Haves
                 </div>
-                <div className="caption1 relative mt-2 inline-block border-b-2 border-black pb-1 font-semibold text-black duration-500">
+                <div className="relative mt-2 inline-block border-b-2 border-black pb-1 text-base font-normal font-semibold leading-[22] text-black duration-500 md:text-[13px] md:leading-5">
                   Shop Now
                 </div>
               </div>
@@ -48,7 +48,7 @@ export default function Banner() {
                   Latest Men{String.raw`'s`} <br />
                   Fashion Essentials
                 </div>
-                <div className="caption1 relative mt-2 inline-block border-b-2 border-black pb-1 font-semibold text-black duration-500">
+                <div className="relative mt-2 inline-block border-b-2 border-black pb-1 text-base font-normal font-semibold leading-[22] text-black duration-500 md:text-[13px] md:leading-5">
                   Shop Now
                 </div>
               </div>
@@ -71,7 +71,7 @@ export default function Banner() {
                   Summer Sale <br />
                   collection
                 </div>
-                <div className="caption1 relative mt-2 inline-block border-b-2 border-black pb-1 font-semibold text-black duration-500">
+                <div className="relative mt-2 inline-block border-b-2 border-black pb-1 text-base font-normal font-semibold leading-[22] text-black duration-500 md:text-[13px] md:leading-5">
                   Shop Now
                 </div>
               </div>

@@ -26,7 +26,7 @@ export default function ModalNewsletter() {
 
   return (
     <div className="modal-newsletter" onClick={() => setOpen(false)}>
-      <div className="container flex h-full w-full items-center justify-center">
+      <div className="mx-auto flex h-full w-full !max-w-[1322px] items-center justify-center px-4">
         <div
           className={`modal-newsletter-main ${open ? "open" : ""}`}
           onClick={(e) => {
@@ -34,7 +34,7 @@ export default function ModalNewsletter() {
           }}
         >
           <div className="main-content flex w-full overflow-hidden rounded-[20px]">
-            <div className="left flex flex-col items-center justify-center gap-5 bg-green_custom py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
+            <div className="left bg-green_custom flex flex-col items-center justify-center gap-5 py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
               <div className="text-center text-xs font-semibold uppercase">
                 Special Offer
               </div>
@@ -43,11 +43,11 @@ export default function ModalNewsletter() {
                 <br />
                 Fridays
               </div>
-              <div className="text-button-uppercase text-center">
+              <div className="text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                 New customers save <span className="text-red">30%</span>
                 with the code
               </div>
-              <div className="text-button-uppercase text-red rounded-lg bg-white px-4 py-2">
+              <div className="rounded-lg bg-white px-4 py-2 text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
                 GET20off
               </div>
               <div className="button-main w-fit bg-black uppercase text-white hover:bg-white">
@@ -94,7 +94,7 @@ export default function ModalNewsletter() {
                       </div>
                     </div>
                     <button
-                      className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-green_custom sm:px-5 sm:py-3"
+                      className="quick-view-btn button-main hover:bg-green_custom whitespace-nowrap rounded-full bg-black px-4 py-2 text-white sm:px-5 sm:py-3"
                       onClick={() => openQuickView(item)}
                     >
                       QUICK VIEW

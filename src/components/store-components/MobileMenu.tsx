@@ -20,20 +20,20 @@ const MobileMenu = ({
     }
   };
 
-//   const handleCategoryClick = (category: any) => {
-//     // Your implementation for category click
-//     handleMenuMobile();
-//   };
+  //   const handleCategoryClick = (category: any) => {
+  //     // Your implementation for category click
+  //     handleMenuMobile();
+  //   };
 
-//   const handleTypeClick = (type:any) => {
-//     // Your implementation for type click
-//     handleMenuMobile();
-//   };
+  //   const handleTypeClick = (type:any) => {
+  //     // Your implementation for type click
+  //     handleMenuMobile();
+  //   };
 
   return (
     <div id="menu-mobile" className={`${openMenuMobile ? "open" : ""}`}>
-      <div className="menu-container h-full bg-white">
-        <div className="container h-full">
+      <div className="menu-w-full mx-auto h-full !max-w-[1322px] bg-white px-4">
+        <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
           <div className="menu-main h-full overflow-hidden">
             <div className="heading relative flex items-center justify-center py-2">
               <div
@@ -86,7 +86,7 @@ const MobileMenu = ({
                     <div className="list-nav-item w-full pb-12 pt-3">
                       <div className="nav-link grid grid-cols-2 gap-5 gap-y-6">
                         <div className="nav-item">
-                          <div className="text-button-uppercase pb-1">
+                          <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                             Sale & Offer
                           </div>
                           <ul>
@@ -133,7 +133,7 @@ const MobileMenu = ({
                           </ul>
                         </div>
                         <div className="nav-item">
-                          <div className="text-button-uppercase pb-1">
+                          <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                             Makeup
                           </div>
                           <ul>
@@ -180,7 +180,7 @@ const MobileMenu = ({
                           </ul>
                         </div>
                         <div className="nav-item">
-                          <div className="text-button-uppercase pb-1">
+                          <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                             Skincare
                           </div>
                           <ul>
@@ -227,7 +227,7 @@ const MobileMenu = ({
                           </ul>
                         </div>
                         <div className="nav-item">
-                          <div className="text-button-uppercase pb-1">
+                          <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                             New product
                           </div>
                           <ul>
@@ -280,7 +280,7 @@ const MobileMenu = ({
                           onClick={() => handleCategoryClick("cosmetic")}
                         >
                           <div className="text-content relative z-[1] py-14 pl-8">
-                            <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                            <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                               Save $10
                             </div>
                             <div className="heading6 mt-2">
@@ -291,7 +291,9 @@ const MobileMenu = ({
                               Starting at{" "}
                               <span className="text-red">$59.99</span>
                             </div>
-                            <div className="button-main mt-5">Shop Now</div>
+                            <div className="duration-400 md:text-md mt-5 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
+                              Shop Now
+                            </div>
                           </div>
                           <Image
                             src={"/images/other/bg-feature-cosmetic.png"}
@@ -330,7 +332,7 @@ const MobileMenu = ({
                       <div className="">
                         <div className="nav-link grid grid-cols-2 justify-between gap-5 gap-y-6">
                           <div className="nav-item">
-                            <div className="text-button-uppercase pb-1">
+                            <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                               Shop Features
                             </div>
                             <ul>
@@ -385,7 +387,7 @@ const MobileMenu = ({
                             </ul>
                           </div>
                           <div className="nav-item">
-                            <div className="text-button-uppercase pb-1">
+                            <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                               Shop Features
                             </div>
                             <ul>
@@ -440,7 +442,7 @@ const MobileMenu = ({
                             </ul>
                           </div>
                           <div className="nav-item">
-                            <div className="text-button-uppercase pb-1">
+                            <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                               Shop Layout
                             </div>
                             <ul>
@@ -503,7 +505,7 @@ const MobileMenu = ({
                             </ul>
                           </div>
                           <div className="nav-item">
-                            <div className="text-button-uppercase pb-1">
+                            <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                               Products Pages
                             </div>
                             <ul>
@@ -587,7 +589,7 @@ const MobileMenu = ({
                           </div>
                         </div>
                         <div className="recent-product pt-3">
-                          <div className="text-button-uppercase pb-1">
+                          <div className="pb-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                             Recent Products
                           </div>
                           <div className="list-product hide-product-sold mt-3 grid grid-cols-2 gap-5">

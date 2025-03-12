@@ -32,7 +32,7 @@ export default function BlogDetailsPage() {
   //   router.push(`/blog/detail1?id=${id}`);
   // };
   return (
-    <div className="blog detail1">
+    <div className="blog">
       <div className="bg-img mt-14 md:mt-[74px]">
         <Image
           src={blogMain.coverImageUrl}
@@ -42,13 +42,15 @@ export default function BlogDetailsPage() {
           className="h-[260px] w-full object-cover sm:h-[380px] lg:h-[520px] xl:h-[640px] min-[1600px]:h-[800px]"
         />
       </div>
-      <div className="container pt-10 md:pt-20">
+      <div className="mx-auto w-full !max-w-[1322px] px-4 pt-10 md:pt-20">
         <div className="blog-content flex items-center justify-center">
           <div className="main w-full md:w-5/6">
-            <div className="blog-tag text-button-uppercase inline-block rounded-full bg-green px-2.5 py-1">
+            <div className="blog-tag inline-block rounded-full bg-green px-2.5 py-1 text-sm font-semibold uppercase leading-5">
               {blogMain.tags.join(", ")}
             </div>
-            <div className="heading3 mt-3">{blogMain.title}</div>
+            <div className="mt-3 text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+              {blogMain.title}
+            </div>
             <div className="author mt-4 flex items-center gap-4">
               {/* <div className="avatar h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
                 <Image
@@ -60,11 +62,11 @@ export default function BlogDetailsPage() {
                 />
               </div> */}
               <div className="flex items-center gap-2">
-                <div className="caption1 text-secondary">
+                <div className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                   by {blogMain.createdBy.name}
                 </div>
                 <div className="line h-px w-5 bg-secondary"></div>
-                <div className="caption1 text-secondary">
+                <div className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                   {new Date(blogMain.updatedAt)
                     .toLocaleDateString("en-US", {
                       month: "short",

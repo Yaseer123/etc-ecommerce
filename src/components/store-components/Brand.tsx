@@ -3,13 +3,13 @@
 import React from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay} from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import "swiper/css/bundle";
 export default function Brand() {
   return (
     <>
       <div className="brand-block py-[32px] md:py-[60px]">
-        <div className="container">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="list-brand">
             <Swiper
               spaceBetween={12}

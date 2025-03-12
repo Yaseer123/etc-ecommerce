@@ -68,14 +68,18 @@ export default function ModalSizeGuide({ data, isOpen, onClose }: Props) {
           >
             <Icon.X size={14} />
           </div>
-          <div className="heading3">Size guide</div>
+          <div className="text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+            Size guide
+          </div>
           <div className="progress mt-6 md:mt-8">
             <div className="imd:items-center flex justify-between gap-10 gap-y-5 max-md:flex-col max-md:pr-3">
               <div className="flex flex-shrink-0 items-center gap-8">
                 <span className="flex-shrink-0 md:w-14">Height</span>
                 <div className="flex w-20 flex-shrink-0 items-center justify-center gap-1 rounded-lg border border-line py-2">
                   <span>{heightRange.max}</span>
-                  <span className="caption1 text-secondary">Cm</span>
+                  <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                    Cm
+                  </span>
                 </div>
               </div>
               <Slider
@@ -91,7 +95,9 @@ export default function ModalSizeGuide({ data, isOpen, onClose }: Props) {
                 <span className="flex-shrink-0 md:w-14">Weight</span>
                 <div className="flex w-20 flex-shrink-0 items-center justify-center gap-1 rounded-lg border border-line py-2">
                   <span>{weightRange.max}</span>
-                  <span className="caption1 text-secondary">Kg</span>
+                  <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                    Kg
+                  </span>
                 </div>
               </div>
               <Slider

@@ -21,7 +21,6 @@ export default function CategoriesPage() {
   const [categories, { error, isLoading }] =
     api.category.getAll.useSuspenseQuery();
 
-
   const categoryList = categories ?? [];
   console.log("Categories:", categoryList);
   const toggleCategory = (categoryName: string) => {
@@ -35,11 +34,11 @@ export default function CategoriesPage() {
       {/* 🔹 Breadcrumb Section */}
       <div className="breadcrumb-block style-img">
         <div className="breadcrumb-main bg-linear overflow-hidden">
-          <div className="container relative pb-10 pt-24 lg:pt-[134px]">
+          <div className="relative mx-auto w-full !max-w-[1322px] px-4 pb-10 pt-24 lg:pt-[134px]">
             <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
               <div className="text-content">
                 <div className="heading2 text-center">Categories</div>
-                <div className="link caption1 mt-3 flex items-center justify-center gap-1">
+                <div className="link mt-3 flex items-center justify-center gap-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   <Link href={"/"}>Homepage</Link>
                   <Icon.CaretRight size={14} className="text-secondary2" />
                   <div className="capitalize text-secondary2">Categories</div>
@@ -52,7 +51,7 @@ export default function CategoriesPage() {
 
       {/* 🔹 Categories Accordion (Using Flexbox) */}
       <div className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <h2 className="mb-12 text-center text-3xl font-bold">
             Shop By Category
           </h2>
@@ -76,7 +75,7 @@ export default function CategoriesPage() {
                   <div
                     className={`relative h-40 overflow-hidden bg-gradient-to-r ${
                       category.name === "Electronics"
-                        ? "from-blue-500 to-purple-600"
+                        ? "to-purple-600 from-blue-500"
                         : category.name === "Fashion"
                           ? "from-pink-500 to-rose-500"
                           : category.name === "Home & Kitchen"

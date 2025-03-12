@@ -14,7 +14,7 @@ import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
-import CategoryDropdown from "./category/CategoryDropdown";
+import CategoryDropdown from "./Category/CategoryDropdown";
 import MobileMenu from "./MobileMenu";
 
 export default function Menu({ props }: { props?: string }) {
@@ -82,7 +82,7 @@ export default function Menu({ props }: { props?: string }) {
         <div
           className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px] ${props}`}
         >
-          <div className="container mx-auto h-full">
+          <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
             <div className="header-main flex h-full items-center justify-between">
               <div
                 className="menu-mobile-icon flex items-center lg:hidden"
@@ -91,7 +91,9 @@ export default function Menu({ props }: { props?: string }) {
                 <i className="icon-category text-2xl"></i>
               </div>
               <Link href={"/"} className="flex items-center">
-                <div className="heading4">Rinors</div>
+                <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  Rinors
+                </div>
               </Link>
               <div className="form-search flex h-[44px] w-2/3 items-center pl-8 max-lg:hidden">
                 <CategoryDropdown />
@@ -107,7 +109,7 @@ export default function Menu({ props }: { props?: string }) {
                     }
                   />
                   <button
-                    className="search-button button-main !flex h-full !items-center !justify-center !rounded-none !rounded-r bg-black px-7"
+                    className="search-button duration-400 md:text-md inline-block !flex h-full cursor-pointer !items-center !justify-center !rounded-none rounded-[12px] !rounded-r bg-black px-10 px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => {
                       handleSearch(searchKeyword);
                     }}
@@ -129,7 +131,7 @@ export default function Menu({ props }: { props?: string }) {
                     >
                       <Link
                         href={"/login"}
-                        className="button-main w-full text-center"
+                        className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       >
                         Login
                       </Link>
@@ -144,7 +146,7 @@ export default function Menu({ props }: { props?: string }) {
                       </div>
                       <Link
                         href={"/my-account"}
-                        className="button-main w-full border border-black bg-white text-center text-black"
+                        className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       >
                         Dashboard
                       </Link>
@@ -176,7 +178,7 @@ export default function Menu({ props }: { props?: string }) {
         </div>
 
         <div className="top-nav-menu relative z-10 h-[44px] border-b border-t border-line bg-white max-lg:hidden">
-          <div className="container h-full">
+          <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
             <div className="top-nav-menu-main flex h-full items-center justify-between">
               <div className="left flex h-full items-center">
                 <div className="menu-department-block relative h-full">
@@ -184,7 +186,7 @@ export default function Menu({ props }: { props?: string }) {
                     className="menu-department-btn relative flex h-full w-fit cursor-pointer items-center gap-4 bg-black px-4 sm:gap-5"
                     onClick={handleShopDepartmentPopup}
                   >
-                    <div className="text-button-uppercase whitespace-nowrap text-white">
+                    <div className="whitespace-nowrap text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                       Shop By Department
                     </div>
                     <Icon.CaretDown
@@ -282,16 +284,16 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/categories"
-                        className="text-button-uppercase flex h-full items-center justify-center duration-300"
+                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
                       >
                         Categories
                       </Link>
                       <div className="mega-menu absolute left-0 top-[44px] w-screen bg-white">
-                        <div className="container">
+                        <div className="mx-auto w-full !max-w-[1322px] px-4">
                           <div className="flex justify-between py-8">
                             <div className="nav-link grid basis-2/3 grid-cols-4 gap-y-8">
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   For Men
                                 </div>
                                 <ul>
@@ -340,7 +342,7 @@ export default function Menu({ props }: { props?: string }) {
                                 </ul>
                               </div>
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   Massimo Dutti
                                 </div>
                                 <ul>
@@ -391,7 +393,7 @@ export default function Menu({ props }: { props?: string }) {
                                 </ul>
                               </div>
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   Skincare
                                 </div>
                                 <ul>
@@ -440,7 +442,7 @@ export default function Menu({ props }: { props?: string }) {
                                 </ul>
                               </div>
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   Health
                                 </div>
                                 <ul>
@@ -489,7 +491,7 @@ export default function Menu({ props }: { props?: string }) {
                                 </ul>
                               </div>
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   For Women
                                 </div>
                                 <ul>
@@ -538,7 +540,7 @@ export default function Menu({ props }: { props?: string }) {
                                 </ul>
                               </div>
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   For Kid
                                 </div>
                                 <ul>
@@ -589,7 +591,7 @@ export default function Menu({ props }: { props?: string }) {
                                 </ul>
                               </div>
                               <div className="nav-item">
-                                <div className="text-button-uppercase pb-2">
+                                <div className="pb-2 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                                   For Home
                                 </div>
                                 <ul>
@@ -648,7 +650,7 @@ export default function Menu({ props }: { props?: string }) {
                                 onClick={() => handleTypeClick("swimwear")}
                               >
                                 <div className="text-content relative z-[1] py-14 pl-8">
-                                  <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                                  <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                                     Save $10
                                   </div>
                                   <div className="heading6 mt-2">
@@ -673,7 +675,7 @@ export default function Menu({ props }: { props?: string }) {
                                 onClick={() => handleTypeClick("accessories")}
                               >
                                 <div className="text-content relative z-[1] py-14 pl-8">
-                                  <div className="text-button-uppercase bg-red inline-block rounded-sm px-2 py-0.5 text-white">
+                                  <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                                     Save $10
                                   </div>
                                   <div className="heading6 mt-2">
@@ -701,7 +703,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/products"
-                        className="text-button-uppercase flex h-full items-center justify-center duration-300"
+                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
                       >
                         Products
                       </Link>
@@ -710,7 +712,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="relative h-full">
                       <Link
                         href="/blog"
-                        className="text-button-uppercase flex h-full items-center justify-center duration-300"
+                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
                       >
                         Blog
                       </Link>
@@ -718,7 +720,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/about"
-                        className="text-button-uppercase flex h-full items-center justify-center duration-300"
+                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
                       >
                         About Us
                       </Link>
@@ -727,7 +729,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/faqs"
-                        className="text-button-uppercase flex h-full items-center justify-center duration-300"
+                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
                       >
                         FAQ
                       </Link>
@@ -735,7 +737,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/contact"
-                        className={`text-button-uppercase flex h-full items-center justify-center duration-300 ${pathname.includes("/pages") ? "active" : ""}`}
+                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
                       >
                         Contact Us
                       </Link>
@@ -743,7 +745,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/store-list"
-                        className={`text-button-uppercase flex h-full items-center justify-center duration-300 ${pathname.includes("/pages") ? "active" : ""}`}
+                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
                       >
                         Store list
                       </Link>
@@ -751,7 +753,7 @@ export default function Menu({ props }: { props?: string }) {
                     <li className="h-full">
                       <Link
                         href="/order-tracking"
-                        className={`text-button-uppercase flex h-full items-center justify-center duration-300 ${pathname.includes("/pages") ? "active" : ""}`}
+                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
                       >
                         Track Order
                       </Link>
@@ -760,8 +762,12 @@ export default function Menu({ props }: { props?: string }) {
                 </div>
               </div>
               <div className="right flex items-center gap-1">
-                <div className="caption1">Hotline:</div>
-                <div className="text-button-uppercase">+01 1234 8888</div>
+                <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                  Hotline:
+                </div>
+                <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                  +01 1234 8888
+                </div>
               </div>
             </div>
           </div>

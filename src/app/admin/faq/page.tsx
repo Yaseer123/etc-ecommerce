@@ -130,7 +130,7 @@ const AdminFAQsPage = () => {
   }
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="mx-auto w-full !max-w-[1322px] p-6 px-4">
       <h1 className="mb-8 text-3xl font-bold">Manage FAQs</h1>
 
       {/* Categories Section */}
@@ -190,13 +190,13 @@ const AdminFAQsPage = () => {
                         title: category.title,
                       })
                     }
-                    className="rounded bg-yellow-500 px-3 py-1 text-white"
+                    className="bg-yellow-500 rounded px-3 py-1 text-white"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDeleteCategory(category.id)}
-                    className="rounded bg-red-500 px-3 py-1 text-white"
+                    className="bg-red-500 rounded px-3 py-1 text-white"
                   >
                     Delete
                   </button>
@@ -341,13 +341,13 @@ const AdminFAQsPage = () => {
                                 answer: faq.answer,
                               })
                             }
-                            className="rounded bg-yellow-500 px-3 py-1 text-white"
+                            className="bg-yellow-500 rounded px-3 py-1 text-white"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteFaqItem(faq.id)}
-                            className="rounded bg-red-500 px-3 py-1 text-white"
+                            className="bg-red-500 rounded px-3 py-1 text-white"
                           >
                             Delete
                           </button>

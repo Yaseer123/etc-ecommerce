@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { useCart } from "@/context/store-context/CartContext";
 import Menu from "@/components/store-components/Menu";
+import { CaretDown } from "@phosphor-icons/react";
 
 const Checkout = () => {
   const searchParams = useSearchParams();
@@ -17,7 +18,10 @@ const Checkout = () => {
   const [activePayment, setActivePayment] = useState<string>("credit-card");
 
   React.useEffect(() => {
-    const sum = cartState.cartArray.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+    const sum = cartState.cartArray.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0,
+    );
     setTotalCart(sum);
   }, [cartState.cartArray]);
 
@@ -27,32 +31,28 @@ const Checkout = () => {
 
   return (
     <>
-    
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
         <Breadcrumb heading="Shopping cart" subHeading="Shopping cart" />
       </div>
-      <div className="cart-block py-10 md:py-20">
-        <div className="container">
-          <div className="content-main flex justify-between">
-            <div className="left w-1/2">
-              <div className="login flex justify-between rounded-lg bg-surface px-4 py-3">
-                <div className="left flex items-center">
-                  <span className="text-on-surface-variant1 pr-4">
-                    Already have an account?{" "}
-                  </span>
-                  <span className="text-button text-on-surface hover-underline cursor-pointer">
+      <div className="py-10 md:py-20">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
+          <div className="flex justify-between md:overflow-x-auto">
+            <div className="w-1/2">
+              <div className="flex justify-between rounded-lg bg-surface px-4 py-3">
+                <div className="flex items-center">
+                  <span className="pr-4">Already have an account? </span>
+                  <span className="cursor-pointer text-base font-semibold capitalize leading-[26px] hover:underline md:text-base md:leading-6">
                     Login
                   </span>
                 </div>
-                <div className="right">
+                <div>
                   <i className="ph ph-caret-down fs-20 d-block cursor-pointer"></i>
                 </div>
               </div>
-              <div className="form-login-block mt-3">
+              <div className="mt-3">
                 <form className="rounded-lg border border-line p-5">
                   <div className="grid gap-5 sm:grid-cols-2">
-                    <div className="email">
+                    <div>
                       <input
                         className="w-full rounded-lg border-line px-4 pb-3 pt-3"
                         id="username"
@@ -61,7 +61,7 @@ const Checkout = () => {
                         required
                       />
                     </div>
-                    <div className="pass">
+                    <div>
                       <input
                         className="w-full rounded-lg border-line px-4 pb-3 pt-3"
                         id="password"
@@ -71,16 +71,18 @@ const Checkout = () => {
                       />
                     </div>
                   </div>
-                  <div className="block-button mt-3">
-                    <button className="button-main button-blue-hover">
+                  <div className="mt-3">
+                    <button className="duration-400 hover:bg-green inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3">
                       Login
                     </button>
                   </div>
                 </form>
               </div>
-              <div className="information mt-5">
-                <div className="heading5">Information</div>
-                <div className="form-checkout mt-5">
+              <div className="mt-5">
+                <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                  Information
+                </div>
+                <div className="mt-5">
                   <form>
                     <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
                       <div className="">
@@ -119,7 +121,7 @@ const Checkout = () => {
                           required
                         />
                       </div>
-                      <div className="select-block col-span-full">
+                      <div className="relative col-span-full">
                         <select
                           className="w-full rounded-lg border border-line px-4 py-3"
                           id="region"
@@ -133,7 +135,7 @@ const Checkout = () => {
                           <option value="France">France</option>
                           <option value="Singapore">Singapore</option>
                         </select>
-                        <Icon.CaretDown className="arrow-down" />
+                        <CaretDown className="absolute right-4 top-1/2 -translate-y-1/2" />
                       </div>
                       <div className="">
                         <input
@@ -153,7 +155,7 @@ const Checkout = () => {
                           required
                         />
                       </div>
-                      <div className="select-block">
+                      <div className="relative">
                         <select
                           className="w-full rounded-lg border border-line px-4 py-3"
                           id="country"
@@ -167,7 +169,7 @@ const Checkout = () => {
                           <option value="France">France</option>
                           <option value="Singapore">Singapore</option>
                         </select>
-                        <Icon.CaretDown className="arrow-down" />
+                        <CaretDown className="absolute right-4 top-1/2 -translate-y-1/2" />
                       </div>
                       <div className="">
                         <input
@@ -187,11 +189,13 @@ const Checkout = () => {
                         ></textarea>
                       </div>
                     </div>
-                    <div className="payment-block mt-6 md:mt-10">
-                      <div className="heading5">Choose payment Option:</div>
-                      <div className="list-payment mt-5">
+                    <div className="mt-6 md:mt-10">
+                      <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                        Choose payment Option:
+                      </div>
+                      <div className="mt-5">
                         <div
-                          className={`type rounded-lg border border-line bg-surface p-5 ${activePayment === "credit-card" ? "open" : ""}`}
+                          className={`rounded-lg border border-line bg-surface p-5`}
                         >
                           <input
                             className="cursor-pointer"
@@ -207,8 +211,14 @@ const Checkout = () => {
                           >
                             Credit Card
                           </label>
-                          <div className="infor">
-                            <div className="text-on-surface-variant1 pt-4">
+                          <div
+                            className={
+                              activePayment === "credit-card"
+                                ? "visible max-h-[1000px] opacity-100"
+                                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
+                            }
+                          >
+                            <div className="pt-4">
                               Make your payment directly into our bank account.
                               Your order will not be shipped until the funds
                               have cleared in our account.
@@ -260,7 +270,7 @@ const Checkout = () => {
                           </div>
                         </div>
                         <div
-                          className={`type mt-5 rounded-lg border border-line bg-surface p-5 ${activePayment === "cash-delivery" ? "open" : ""}`}
+                          className={`mt-5 rounded-lg border border-line bg-surface p-5`}
                         >
                           <input
                             className="cursor-pointer"
@@ -276,8 +286,14 @@ const Checkout = () => {
                           >
                             Cash on delivery
                           </label>
-                          <div className="infor">
-                            <div className="text-on-surface-variant1 pt-4">
+                          <div
+                            className={
+                              activePayment === "cash-delivery"
+                                ? "visible max-h-[1000px] opacity-100"
+                                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
+                            }
+                          >
+                            <div className="pt-4">
                               Make your payment directly into our bank account.
                               Your order will not be shipped until the funds
                               have cleared in our account.
@@ -330,7 +346,7 @@ const Checkout = () => {
                           </div>
                         </div>
                         <div
-                          className={`type mt-5 rounded-lg border border-line bg-surface p-5 ${activePayment === "apple-pay" ? "open" : ""}`}
+                          className={`mt-5 rounded-lg border border-line bg-surface p-5`}
                         >
                           <input
                             className="cursor-pointer"
@@ -346,7 +362,13 @@ const Checkout = () => {
                           >
                             Apple Pay
                           </label>
-                          <div className="infor">
+                          <div
+                            className={
+                              activePayment === "apple-pay"
+                                ? "visible max-h-[1000px] opacity-100"
+                                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
+                            }
+                          >
                             <div className="text-on-surface-variant1 pt-4">
                               Make your payment directly into our bank account.
                               Your order will not be shipped until the funds
@@ -400,7 +422,7 @@ const Checkout = () => {
                           </div>
                         </div>
                         <div
-                          className={`type mt-5 rounded-lg border border-line bg-surface p-5 ${activePayment === "paypal" ? "open" : ""}`}
+                          className={`type mt-5 rounded-lg border border-line bg-surface p-5`}
                         >
                           <input
                             className="cursor-pointer"
@@ -416,7 +438,13 @@ const Checkout = () => {
                           >
                             PayPal
                           </label>
-                          <div className="infor">
+                          <div
+                            className={
+                              activePayment === "paypal"
+                                ? "visible max-h-[1000px] opacity-100"
+                                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
+                            }
+                          >
                             <div className="text-on-surface-variant1 pt-4">
                               Make your payment directly into our bank account.
                               Your order will not be shipped until the funds
@@ -460,7 +488,7 @@ const Checkout = () => {
                                 name="save"
                               />
                               <label
-                                className="text-button"
+                                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
                                 htmlFor="savePaypal"
                               >
                                 Save Card Details
@@ -470,26 +498,30 @@ const Checkout = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="block-button mt-6 md:mt-10">
-                      <button className="button-main w-full">Payment</button>
+                    <div className="mt-6 md:mt-10">
+                      <button className="duration-400 hover:bg-green-500 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3">
+                        Payment
+                      </button>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
             <div className="right w-5/12">
-              <div className="checkout-block">
-                <div className="heading5 pb-3">Your Order</div>
-                <div className="list-product-checkout">
+              <div>
+                <div className="pb-3 text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                  Your Order
+                </div>
+                <div>
                   {cartState.cartArray.length < 1 ? (
                     <p className="text-button pt-3">No product in cart</p>
                   ) : (
                     cartState.cartArray.map((product) => (
                       <>
-                        <div className="item mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5">
+                        <div className="mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5">
                           <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
                             <Image
-                              src={product.thumbImage[0] ?? ''}
+                              src={product.thumbImage[0] ?? ""}
                               width={500}
                               height={500}
                               alt="img"
@@ -498,21 +530,22 @@ const Checkout = () => {
                           </div>
                           <div className="flex w-full items-center justify-between">
                             <div>
-                              <div className="name text-title">
+                              <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                                 {product.name}
                               </div>
-                              <div className="caption1 mt-2 text-secondary">
+                              <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                 <span className="size capitalize">
                                   {product.selectedSize || product.sizes[0]}
                                 </span>
                                 <span>/</span>
                                 <span className="color capitalize">
                                   {product.selectedColor ??
-                                    product.variation?.[0]?.color ?? 'default' }
+                                    product.variation?.[0]?.color ??
+                                    "default"}
                                 </span>
                               </div>
                             </div>
-                            <div className="text-title">
+                            <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                               <span className="quantity">
                                 {product.quantity}
                               </span>
@@ -525,22 +558,28 @@ const Checkout = () => {
                     ))
                   )}
                 </div>
-                <div className="discount-block flex justify-between border-b border-line py-5">
-                  <div className="text-title">Discounts</div>
-                  <div className="text-title">
+                <div className="flex justify-between border-b border-line py-5">
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                    Discounts
+                  </div>
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     -$<span className="discount">{discount}</span>
                     <span>.00</span>
                   </div>
                 </div>
-                <div className="ship-block flex justify-between border-b border-line py-5">
-                  <div className="text-title">Shipping</div>
-                  <div className="text-title">
+                <div className="flex justify-between border-b border-line py-5">
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                    Shipping
+                  </div>
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     {Number(ship) === 0 ? "Free" : `$${ship}.00`}
                   </div>
                 </div>
-                <div className="total-cart-block flex justify-between pt-5">
-                  <div className="heading5">Total</div>
-                  <div className="heading5 total-cart">
+                <div className="flex justify-between pt-5">
+                  <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                    Total
+                  </div>
+                  <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                     ${totalCart - Number(discount) + Number(ship)}.00
                   </div>
                 </div>

@@ -9,7 +9,7 @@ export default function PageNotFound() {
         <Menu props="bg-white" />
       </div>
       <div className="page-not-found bg-linear mt-14 py-10 md:mt-[74px] md:py-20">
-        <div className="container">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex items-center justify-between gap-y-8 max-sm:flex-col">
             <Image
               src={"/images/other/404-img.png"}

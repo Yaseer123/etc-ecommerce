@@ -45,7 +45,7 @@ export default function CartProductItem({
         <div className="flex w-full items-center justify-between">
           <div className="name text-button">{product.title}</div>
           <div
-            className="remove-cart-btn caption1 cursor-pointer font-semibold text-red underline"
+            className="remove-cart-btn cursor-pointer text-base font-normal font-semibold leading-[22] text-red underline md:text-[13px] md:leading-5"
             onClick={() => removeFromCart()}
           >
             Remove

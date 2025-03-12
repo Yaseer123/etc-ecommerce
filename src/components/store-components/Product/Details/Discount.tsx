@@ -148,7 +148,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
     <>
       <div className="product-detail grouped">
         <div className="featured-product underwear bg-linear pb-8 pt-6 md:pb-[60px] md:pt-8">
-          <div className="container flex flex-wrap justify-between gap-y-6">
+          <div className="mx-auto flex w-full !max-w-[1322px] flex-wrap justify-between gap-y-6 px-4">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
               <Swiper
                 slidesPerView={1}
@@ -244,7 +244,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <div className="caption2 font-semibold uppercase text-secondary">
                     {productMain.type}
                   </div>
-                  <div className="heading4 mt-1">{productMain.name}</div>
+                  <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                    {productMain.name}
+                  </div>
                 </div>
                 <div
                   className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
@@ -267,7 +269,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
               </div>
               <div className="mt-3 flex items-center">
                 <Rate currentRate={productMain.rate} size={14} />
-                <span className="caption1 text-secondary">(1.234 reviews)</span>
+                <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                  (1.234 reviews)
+                </span>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
                 <div className="product-price heading5">
@@ -278,7 +282,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <del>${productMain.originPrice}.00</del>
                 </div>
                 {productMain.originPrice && (
-                  <div className="product-sale caption2 inline-block rounded-full bg-green_custom px-3 py-0.5 font-semibold">
+                  <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
                     -{percentSale}%
                   </div>
                 )}
@@ -304,7 +308,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         />
                       </svg>
                       <div className="content absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2 md:right-1">
-                        <div className="caption1 text-white">15% Off</div>
+                        <div className="text-base font-normal leading-[22] text-white md:text-[13px] md:leading-5">
+                          15% Off
+                        </div>
                         <div className="button cursor-pointer rounded-full bg-white px-2 py-1 text-xs font-semibold duration-300 hover:bg-black hover:text-white">
                           Apply
                         </div>
@@ -324,7 +330,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         />
                       </svg>
                       <div className="content absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-2 md:right-1">
-                        <div className="caption1 text-white">25% Off</div>
+                        <div className="text-base font-normal leading-[22] text-white md:text-[13px] md:leading-5">
+                          25% Off
+                        </div>
                         <div className="button cursor-pointer rounded-full bg-white px-2 py-1 text-xs font-semibold duration-300 hover:bg-black hover:text-white">
                           Apply
                         </div>
@@ -365,7 +373,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                       <span className="text-title size">{activeSize}</span>
                     </div>
                     <div
-                      className="caption1 size-guide text-red cursor-pointer underline"
+                      className="size-guide cursor-pointer text-base font-normal leading-[22] text-red underline md:text-[13px] md:leading-5"
                       onClick={handleOpenSizeGuide}
                     >
                       Size Guide
@@ -407,13 +415,13 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   </div>
                   <div
                     onClick={handleAddToCart}
-                    className="button-main w-full border border-black bg-white text-center text-black"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Add To Cart
                   </div>
                 </div>
                 <div className="button-block mt-5">
-                  <div className="button-main w-full text-center">
+                  <div className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                     Buy It Now
                   </div>
                 </div>
@@ -547,7 +555,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <div className="icon-delivery-truck text-4xl"></div>
                   <div>
                     <div className="text-title">Free shipping</div>
-                    <div className="caption1 mt-1 text-secondary">
+                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       Free shipping on orders over $75.
                     </div>
                   </div>
@@ -556,7 +564,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <div className="icon-phone-call text-4xl"></div>
                   <div>
                     <div className="text-title">Support everyday</div>
-                    <div className="caption1 mt-1 text-secondary">
+                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       Support from 8:30 AM to 10:00 PM everyday
                     </div>
                   </div>
@@ -565,7 +573,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <div className="icon-return text-4xl"></div>
                   <div>
                     <div className="text-title">100 Day Returns</div>
-                    <div className="caption1 mt-1 text-secondary">
+                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                       Not impressed? Get a refund. You have 100 days to break
                       our hearts.
                     </div>
@@ -576,7 +584,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
           </div>
         </div>
         <div className="desc-tab pt-10 md:pt-20">
-          <div className="container">
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
                 <div
@@ -830,60 +838,80 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     <div className="list-rating w-2/3">
                       <div className="item flex items-center justify-end gap-1.5">
                         <div className="flex items-center gap-1">
-                          <div className="caption1">5</div>
+                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                            5
+                          </div>
                           <Icon.Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[50%] bg-black"></div>
                         </div>
-                        <div className="caption1">50%</div>
+                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                          50%
+                        </div>
                       </div>
                       <div className="item mt-1 flex items-center justify-end gap-1.5">
                         <div className="flex items-center gap-1">
-                          <div className="caption1">4</div>
+                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                            4
+                          </div>
                           <Icon.Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[20%] bg-black"></div>
                         </div>
-                        <div className="caption1">20%</div>
+                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                          20%
+                        </div>
                       </div>
                       <div className="item mt-1 flex items-center justify-end gap-1.5">
                         <div className="flex items-center gap-1">
-                          <div className="caption1">3</div>
+                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                            3
+                          </div>
                           <Icon.Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
                         </div>
-                        <div className="caption1">10%</div>
+                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                          10%
+                        </div>
                       </div>
                       <div className="item mt-1 flex items-center justify-end gap-1.5">
                         <div className="flex items-center gap-1">
-                          <div className="caption1">2</div>
+                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                            2
+                          </div>
                           <Icon.Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
                         </div>
-                        <div className="caption1">10%</div>
+                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                          10%
+                        </div>
                       </div>
                       <div className="item mt-1 flex items-center justify-end gap-1.5">
                         <div className="flex items-center gap-2">
-                          <div className="caption1">1</div>
+                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                            1
+                          </div>
                           <Icon.Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
                         </div>
-                        <div className="caption1">10%</div>
+                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                          10%
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="right">
                     <Link
                       href={"#form-review"}
-                      className="button-main whitespace-nowrap border border-black bg-white text-black"
+                      className="duration-400 md:text-md inline-block cursor-pointer whitespace-nowrap rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     >
                       Write Reviews
                     </Link>
@@ -891,7 +919,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                 </div>
                 <div className="mt-8">
                   <div className="heading flex flex-wrap items-center justify-between gap-4">
-                    <div className="heading4">03 Comments</div>
+                    <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                      03 Comments
+                    </div>
                     <div className="right flex items-center gap-3">
                       <label htmlFor="select-filter" className="uppercase">
                         Sort by:
@@ -1079,7 +1109,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     </div>
                   </div>
                   <div id="form-review" className="form-review pt-6">
-                    <div className="heading4">Leave A comment</div>
+                    <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                      Leave A comment
+                    </div>
                     <form className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6">
                       <div className="name">
                         <input
@@ -1121,7 +1153,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         </label>
                       </div>
                       <div className="col-span-full sm:pt-3">
-                        <button className="button-main border border-black bg-white text-black">
+                        <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                           Submit Reviews
                         </button>
                       </div>
@@ -1134,8 +1166,10 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
         </div>
 
         <div className="related-product py-10 md:py-20">
-          <div className="container">
-            <div className="heading3 text-center">Related Products</div>
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
+            <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
+              Related Products
+            </div>
             <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-5 md:mt-10 md:gap-[30px] lg:grid-cols-4">
               {data
                 .slice(Number(productId), Number(productId) + 4)
