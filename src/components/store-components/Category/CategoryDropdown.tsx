@@ -1,18 +1,17 @@
 import Link from "next/link";
 import useCategoryPopup from "@/hooks/useCategoryPopup";
-import * as Icon from "@phosphor-icons/react/dist/ssr"; // Assuming you have an Icon component
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { api } from "@/trpc/react";
+import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 const CategoryDropdown = () => {
-    const [categories, { error, isLoading }] =
-      api.category.getAll.useSuspenseQuery();
+  const [categories, { error, isLoading }] =
+    api.category.getAll.useSuspenseQuery();
   const { openCategoryPopup, handleCategoryPopup } = useCategoryPopup();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
   // Example categories with nested subcategories
- 
 
   return (
     <div className="relative h-full">
@@ -21,10 +20,10 @@ const CategoryDropdown = () => {
         className="relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2"
         onClick={handleCategoryPopup}
       >
-        <div className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 whitespace-nowrap text-white">
+        <div className="whitespace-nowrap text-base font-semibold capitalize leading-[26px] text-white md:text-base md:leading-6">
           All Categories
         </div>
-        <Icon.CaretDown color="#ffffff" />
+        <CaretDown color="#ffffff" />
       </div>
 
       {/* Dropdown Menu with Width Animation */}
@@ -56,7 +55,7 @@ const CategoryDropdown = () => {
                 {category.name}
               </Link>
               {category.subcategories && (
-                <Icon.CaretRight
+                <CaretRight
                   className={`transition-transform ${
                     hoveredCategory === category.name ? "rotate-90" : ""
                   }`}

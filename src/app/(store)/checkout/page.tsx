@@ -1,29 +1,27 @@
 "use client";
 import React, { useState } from "react";
 import Image from "next/image";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useSearchParams } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { useCart } from "@/context/store-context/CartContext";
-import Menu from "@/components/store-components/Menu";
-import { CaretDown } from "@phosphor-icons/react";
+import { useCartStore } from "@/context/store-context/CartContext";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 
 const Checkout = () => {
   const searchParams = useSearchParams();
   const discount = searchParams.get("discount");
   const ship = searchParams.get("ship");
 
-  const { cartState } = useCart();
+  const { cartArray } = useCartStore();
   const [totalCart, setTotalCart] = useState<number>(0);
   const [activePayment, setActivePayment] = useState<string>("credit-card");
 
   React.useEffect(() => {
-    const sum = cartState.cartArray.reduce(
+    const sum = cartArray.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0,
     );
     setTotalCart(sum);
-  }, [cartState.cartArray]);
+  }, [cartArray]);
 
   const handlePayment = (item: string) => {
     setActivePayment(item);
@@ -514,7 +512,9 @@ const Checkout = () => {
                 </div>
                 <div>
                   {cartState.cartArray.length < 1 ? (
-                    <p className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 pt-3">No product in cart</p>
+                    <p className="pt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                      No product in cart
+                    </p>
                   ) : (
                     cartState.cartArray.map((product) => (
                       <>

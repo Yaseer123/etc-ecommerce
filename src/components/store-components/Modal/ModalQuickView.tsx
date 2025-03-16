@@ -3,25 +3,36 @@
 // QuickView.tsx
 import React, { useState } from "react";
 import Image from "next/image";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
-import { useCart } from "@/context/store-context/CartContext";
-import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
-import { useWishlist } from "@/context/store-context/WishlistContext";
+import { useCartStore } from "@/context/store-context/CartContext";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import Rate from "../Rate";
+import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
+import { useWishlistStore } from "@/context/store-context/WishlistContext";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import {
+  X,
+  Heart,
+  Minus,
+  Plus,
+  ShareNetwork,
+  ArrowClockwise,
+  Question,
+  Timer,
+  Eye,
+} from "@phosphor-icons/react/dist/ssr";
 
 const ModalQuickView = () => {
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
-  const { selectedProduct, closeQuickView } = useModalQuickViewContext();
+  const { selectedProduct, closeQuickView } = useModalQuickViewStore();
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
-  const { addToCart, updateCart, cartState } = useCart();
-  const { openModalCart } = useModalCartContext();
-  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
-  const { openModalWishlist } = useModalWishlistContext();
+  const { addToCart, updateCart, cartArray } = useCartStore();
+  const { openModalCart } = useModalCartStore();
+  const { addToWishlist, removeFromWishlist, wishlistArray } =
+    useWishlistStore();
+  const { openModalWishlist } = useModalWishlistStore();
   const percentSale =
     selectedProduct &&
     Math.floor(
@@ -70,7 +81,7 @@ const ModalQuickView = () => {
 
   const handleAddToCart = () => {
     if (selectedProduct) {
-      if (!cartState.cartArray.find((item) => item.id === selectedProduct.id)) {
+      if (!cartArray.find((item) => item.id === selectedProduct.id)) {
         addToCart({ ...selectedProduct });
         updateCart(
           selectedProduct.id,
@@ -94,9 +105,7 @@ const ModalQuickView = () => {
   const handleAddToWishlist = () => {
     // if product existed in wishlit, remove from wishlist and set state to false
     if (selectedProduct) {
-      if (
-        wishlist.wishlistArray.some((item) => item.id === selectedProduct.id)
-      ) {
+      if (wishlistArray.some((item) => item.id === selectedProduct.id)) {
         removeFromWishlist(selectedProduct.id);
       } else {
         // else, add to wishlist and set state to true
@@ -141,7 +150,7 @@ const ModalQuickView = () => {
                   className="close-btn absolute right-0 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
                   onClick={closeQuickView}
                 >
-                  <Icon.X size={14} />
+                  <X size={14} />
                 </div>
               </div>
               <div className="product-infor px-4">
@@ -152,22 +161,18 @@ const ModalQuickView = () => {
                     </div>
                   </div>
                   <div
-                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlist.wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
+                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:text-white ${wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
                     onClick={handleAddToWishlist}
                   >
-                    {wishlist.wishlistArray.some(
+                    {wishlistArray.some(
                       (item) => item.id === selectedProduct?.id,
                     ) ? (
                       <>
-                        <Icon.Heart
-                          size={20}
-                          weight="fill"
-                          className="text-red"
-                        />
+                        <Heart size={20} weight="fill" className="text-red" />
                       </>
                     ) : (
                       <>
-                        <Icon.Heart size={20} />
+                        <Heart size={20} />
                       </>
                     )}
                   </div>
@@ -224,14 +229,14 @@ const ModalQuickView = () => {
                   <div className="text-title mt-5">Quantity:</div>
                   <div className="choose-quantity mt-3 flex items-center gap-5 max-xl:flex-wrap lg:justify-between">
                     <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
-                      <Icon.Minus
+                      <Minus
                         onClick={handleDecreaseQuantity}
                         className={`${selectedProduct?.quantityPurchase === 1 ? "disabled" : ""} body1 cursor-pointer`}
                       />
                       <div className="body1 font-semibold">
                         {selectedProduct?.quantityPurchase}
                       </div>
-                      <Icon.Plus
+                      <Plus
                         onClick={handleIncreaseQuantity}
                         className="body1 cursor-pointer"
                       />
@@ -251,7 +256,7 @@ const ModalQuickView = () => {
                   <div className="mt-5 flex flex-wrap items-center gap-8 gap-y-4 lg:gap-20">
                     <div className="share flex cursor-pointer items-center gap-3">
                       <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
-                        <Icon.ShareNetwork weight="fill" className="heading6" />
+                        <ShareNetwork weight="fill" className="heading6" />
                       </div>
                       <span>Share Products</span>
                     </div>
@@ -259,23 +264,23 @@ const ModalQuickView = () => {
                   <div className="more-infor mt-6">
                     <div className="flex flex-wrap items-center gap-4">
                       <div className="flex items-center gap-1">
-                        <Icon.ArrowClockwise className="body1" />
+                        <ArrowClockwise className="body1" />
                         <div className="text-title">Delivery & Return</div>
                       </div>
                       <div className="flex items-center gap-1">
-                        <Icon.Question className="body1" />
+                        <Question className="body1" />
                         <div className="text-title">Ask A Question</div>
                       </div>
                     </div>
                     <div className="mt-3 flex flex-wrap items-center gap-1">
-                      <Icon.Timer className="body1" />
+                      <Timer className="body1" />
                       <span className="text-title">Estimated Delivery:</span>
                       <span className="text-secondary">
                         14 January - 18 January
                       </span>
                     </div>
                     <div className="mt-3 flex flex-wrap items-center gap-1">
-                      <Icon.Eye className="body1" />
+                      <Eye className="body1" />
                       <span className="text-title">38</span>
                       <span className="text-secondary">
                         people viewing this product right now!

@@ -5,12 +5,11 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Footer from "@/components/store-components/Footer";
 import { useRouter } from "next/navigation";
-// import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import BlogItem from "@/components/store-components/Blog/BlogItem";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import { api } from "@/trpc/react";
-import { MagnifyingGlass } from "@phosphor-icons/react";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 
 const BlogsPage = () => {
   const [blogPosts] = api.post.getAllPretty.useSuspenseQuery();
@@ -55,7 +54,7 @@ const BlogsPage = () => {
         <Breadcrumb items={breadcrumbItems} pageTitle="Blogs" />
       </div>
       <div className="blog list py-10 md:py-20">
-        <div className="w-full px-4 mx-auto !max-w-[1322px]">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex justify-between gap-y-12 max-xl:flex-col">
             <div className="left xl:w-3/4 xl:pr-2">
               <div className="list-blog flex flex-col gap-8 xl:gap-10">
@@ -100,7 +99,7 @@ const BlogsPage = () => {
                         className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
                       />
                       <div>
-                        <div className="blog-tag text-sm leading-5 font-semibold uppercase inline-block whitespace-nowrap rounded-full bg-green px-2 py-0.5 text-xs">
+                        <div className="blog-tag inline-block whitespace-nowrap rounded-full bg-green px-2 py-0.5 text-sm text-xs font-semibold uppercase leading-5">
                           {item.tags.join(", ")}
                         </div>
                         <div className="text-title mt-1">{item.title}</div>
@@ -114,31 +113,31 @@ const BlogsPage = () => {
                 <div className="heading6">Tags Cloud</div>
                 <div className="list-tags mt-4 flex flex-wrap items-center gap-3">
                   <div
-                    className={`tags text-sm leading-5 font-semibold uppercase cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "fashion" ? "active" : ""}`}
+                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "fashion" ? "active" : ""}`}
                     onClick={() => handleCategory("fashion")}
                   >
                     fashion
                   </div>
                   <div
-                    className={`tags text-sm leading-5 font-semibold uppercase cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "cosmetic" ? "active" : ""}`}
+                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "cosmetic" ? "active" : ""}`}
                     onClick={() => handleCategory("cosmetic")}
                   >
                     cosmetic
                   </div>
                   <div
-                    className={`tags text-sm leading-5 font-semibold uppercase cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "toy-kid" ? "active" : ""}`}
+                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "toy-kid" ? "active" : ""}`}
                     onClick={() => handleCategory("toys-kid")}
                   >
                     toys kid
                   </div>
                   <div
-                    className={`tags text-sm leading-5 font-semibold uppercase cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "yoga" ? "active" : ""}`}
+                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "yoga" ? "active" : ""}`}
                     onClick={() => handleCategory("yoga")}
                   >
                     yoga
                   </div>
                   <div
-                    className={`tags text-sm leading-5 font-semibold uppercase cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "organic" ? "active" : ""}`}
+                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "organic" ? "active" : ""}`}
                     onClick={() => handleCategory("organic")}
                   >
                     organic

@@ -3,12 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
+import {X} from "@phosphor-icons/react/dist/ssr";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
 
 const ModalWishlist = () => {
-  const { isModalOpen, closeModalWishlist } = useModalWishlistContext();
+  const { isModalOpen, closeModalWishlist } = useModalWishlistStore();
   const [wishList] = api.wishList.getWishList.useSuspenseQuery();
   const utils = api.useUtils();
   const removeFromWishlistMutation =
@@ -32,7 +32,7 @@ const ModalWishlist = () => {
               className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
               onClick={closeModalWishlist}
             >
-              <Icon.X size={14} />
+              <X size={14} />
             </div>
           </div>
           <div className="list-product px-6">

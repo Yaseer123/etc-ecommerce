@@ -1,4 +1,5 @@
 "use client";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { useState } from "react";
 import {
@@ -8,7 +9,6 @@ import {
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 interface Props {
   props: string;
   slogan: string;
@@ -48,7 +48,7 @@ export default function TopNav({ props, slogan }: Props) {
                     ))}
                   </ul>
                 </div>
-                <Icon.CaretDown size={12} color="#fff" />
+                <CaretDown size={12} color="#fff" />
               </div>
               <div
                 className="choose-type choose-currency flex items-center gap-1.5"
@@ -73,7 +73,7 @@ export default function TopNav({ props, slogan }: Props) {
                     ))}
                   </ul>
                 </div>
-                <Icon.CaretDown size={12} color="#fff" />
+                <CaretDown size={12} color="#fff" />
               </div>
             </div>
             <div className="flex items-center text-center text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">

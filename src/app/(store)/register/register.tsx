@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import Link from "next/link";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Menu from "@/components/store-components/Menu";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import { CheckSquare } from "@phosphor-icons/react/dist/ssr";
 
 export default function register() {
   return (
@@ -53,7 +53,7 @@ export default function register() {
                 <div className="mt-5 flex items-center">
                   <div className="block-input">
                     <input type="checkbox" name="remember" id="remember" />
-                    <Icon.CheckSquare
+                    <CheckSquare
                       size={20}
                       weight="fill"
                       className="icon-checkbox"

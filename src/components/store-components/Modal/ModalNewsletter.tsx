@@ -2,15 +2,16 @@
 
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import {X} from "@phosphor-icons/react/dist/ssr";
 import productData from "@/data/Product.json";
 import Image from "next/image";
-import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
+import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
+import { X } from "@phosphor-icons/react/dist/ssr";
 
 const ModalNewsletter = () => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
-  const { openQuickView } = useModalQuickViewContext();
+  const { openQuickView } = useModalQuickViewStore();
 
   const handleDetailProduct = (productId: string) => {
     // redirect to shop with category selected
@@ -58,15 +59,15 @@ const ModalNewsletter = () => {
                 className="close-newsletter-btn absolute right-5 top-5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-line"
                 onClick={() => setOpen(false)}
               >
-                <Icon.X weight="bold" className="text-xl" />
+                <X weight="bold" className="text-xl" />
               </div>
               <div className="heading5 pb-5">You May Also Like</div>
               <div className="list flex flex-col gap-5 overflow-x-auto sm:pr-6">
-                {productData.slice(11, 16).map((item, index) => (
+                {productData.slice(11, 16).map((item) => (
                   <>
                     <div
                       className="product-item item flex items-center justify-between gap-3 border-b border-line pb-5"
-                      key={index}
+                      key={item.id}
                     >
                       <div
                         className="infor flex cursor-pointer items-center gap-5"

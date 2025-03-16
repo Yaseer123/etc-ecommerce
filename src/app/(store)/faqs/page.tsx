@@ -1,8 +1,8 @@
 "use client";
 import React from "react";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { useFaqs } from "@/hooks/useFaqs"; // Adjust the import path as needed
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 const breadcrumbItems = [
   { label: "Home", href: "/" },
@@ -23,7 +23,7 @@ const Faqs = () => {
 
   if (categoriesLoading) {
     return (
-      <div className="w-full px-4 mx-auto !max-w-[1322px] py-20 text-center">
+      <div className="mx-auto w-full !max-w-[1322px] px-4 py-20 text-center">
         <p>Loading FAQs...</p>
       </div>
     );
@@ -35,7 +35,7 @@ const Faqs = () => {
         <Breadcrumb items={breadcrumbItems} pageTitle="FAQs" />
       </div>
       <div className="faqs-block py-10 md:py-20">
-        <div className="w-full px-4 mx-auto !max-w-[1322px]">
+        <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex flex-col gap-8 md:flex-row md:justify-between">
             <div className="left md:w-1/4">
               <div className="menu-tab flex flex-col gap-5">
@@ -69,7 +69,7 @@ const Faqs = () => {
                     >
                       <div className="heading flex items-center justify-between gap-6">
                         <div className="heading6">{faq.question}</div>
-                        <Icon.CaretRight
+                        <CaretRight
                           size={24}
                           className={`transform duration-300 ${
                             activeQuestion === faq.id ? "rotate-90" : ""

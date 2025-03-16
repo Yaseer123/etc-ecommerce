@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { countdownTime } from "@/utils/countdownTime";
 import Image from "next/image";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 export default function ComingSoon() {
   const [timeLeft, setTimeLeft] = useState(countdownTime());
 
@@ -87,7 +87,7 @@ export default function ComingSoon() {
                     required
                   />
                   <button className="absolute bottom-1 right-1 top-1 flex aspect-square items-center justify-center rounded-xl bg-black text-white">
-                    <Icon.ArrowRight className="heading5 text-white" />
+                    <ArrowRight className="heading5 text-white" />
                   </button>
                 </form>
               </div>

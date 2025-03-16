@@ -7,7 +7,6 @@ import productData from "@/data/Product.json";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
-import Menu from "@/components/store-components/Menu";
 
 export default function Page() {
   const [searchKeyword, setSearchKeyword] = useState<string>("");

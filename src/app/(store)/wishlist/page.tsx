@@ -2,11 +2,10 @@
 
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
-import Menu from "@/components/store-components/Menu";
 import Product from "@/components/store-components/Product/Product";
 import useWishlist from "@/hooks/useWishlist";
 import { type ProductType } from "@/types/ProductType";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import { CaretDown, X } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 
 export default function Page() {
@@ -223,7 +222,7 @@ export default function Page() {
                       </option>
                     ))}
                   </select>
-                  <Icon.CaretDown
+                  <CaretDown
                     size={12}
                     className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
                   />
@@ -246,7 +245,7 @@ export default function Page() {
                     <option value="priceHighToLow">Price High To Low</option>
                     <option value="priceLowToHigh">Price Low To High</option>
                   </select>
-                  <Icon.CaretDown
+                  <CaretDown
                     size={12}
                     className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
                   />
@@ -270,7 +269,7 @@ export default function Page() {
                           setType(undefined);
                         }}
                       >
-                        <Icon.X className="cursor-pointer" />
+                        <X className="cursor-pointer" />
                         <span>{selectedType}</span>
                       </div>
                     )}
@@ -281,10 +280,7 @@ export default function Page() {
                       setType(undefined);
                     }}
                   >
-                    <Icon.X
-                      color="rgb(219, 68, 68)"
-                      className="cursor-pointer"
-                    />
+                    <X color="rgb(219, 68, 68)" className="cursor-pointer" />
                     <span className="text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
                       Clear All
                     </span>

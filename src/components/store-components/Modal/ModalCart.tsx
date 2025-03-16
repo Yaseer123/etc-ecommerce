@@ -2,12 +2,18 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import type CountdownTimeType from "@/types/CountdownType";
-import { useModalCartContext } from "@/context/store-context/ModalCartContext";
 import { countdownTime } from "@/utils/countdownTime";
 import { api } from "@/trpc/react";
 import CartProductItem from "./CartProductItem";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import {
+  X,
+  NotePencil,
+  Truck,
+  Tag,
+  CaretDown,
+} from "@phosphor-icons/react/dist/ssr";
 
 const ModalCart = ({
   serverTimeLeft,
@@ -29,7 +35,7 @@ const ModalCart = ({
   }, []);
 
   const [activeTab, setActiveTab] = useState<string | undefined>("");
-  const { isModalOpen, closeModalCart } = useModalCartContext();
+  const { isModalOpen, closeModalCart } = useModalCartStore();
   // const { cartState, addToCart, removeFromCart, updateCart } = useCart();
 
   const utils = api.useUtils();
@@ -67,7 +73,7 @@ const ModalCart = ({
                 className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
                 onClick={closeModalCart}
               >
-                <Icon.X size={14} />
+                <X size={14} />
               </div>
             </div>
             <div className="time px-6">
@@ -136,7 +142,7 @@ const ModalCart = ({
                   className="item flex cursor-pointer items-center gap-3"
                   onClick={() => handleActiveTab("note")}
                 >
-                  <Icon.NotePencil className="text-xl" />
+                  <NotePencil className="text-xl" />
                   <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                     Note
                   </div>
@@ -145,7 +151,7 @@ const ModalCart = ({
                   className="item flex cursor-pointer items-center gap-3"
                   onClick={() => handleActiveTab("shipping")}
                 >
-                  <Icon.Truck className="text-xl" />
+                  <Truck className="text-xl" />
                   <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                     Shipping
                   </div>
@@ -154,7 +160,7 @@ const ModalCart = ({
                   className="item flex cursor-pointer items-center gap-3"
                   onClick={() => handleActiveTab("coupon")}
                 >
-                  <Icon.Tag className="text-xl" />
+                  <Tag className="text-xl" />
                   <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                     Coupon
                   </div>
@@ -168,7 +174,7 @@ const ModalCart = ({
                 <div className="flex items-center gap-4">
                   <Link
                     href={"/cart"}
-                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black hover:text-white transition-all ease-in-out hover:bg-black  md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     View cart
@@ -193,7 +199,7 @@ const ModalCart = ({
               >
                 <div className="border-b border-line px-6 py-4">
                   <div className="item flex cursor-pointer items-center gap-3">
-                    <Icon.NotePencil className="text-xl" />
+                    <NotePencil className="text-xl" />
                     <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                       Note
                     </div>
@@ -228,7 +234,7 @@ const ModalCart = ({
               >
                 <div className="border-b border-line px-6 py-4">
                   <div className="item flex cursor-pointer items-center gap-3">
-                    <Icon.Truck className="text-xl" />
+                    <Truck className="text-xl" />
                     <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                       Estimate shipping rates
                     </div>
@@ -257,7 +263,7 @@ const ModalCart = ({
                         <option value="UK">UK</option>
                         <option value="USA">USA</option>
                       </select>
-                      <Icon.CaretDown
+                      <CaretDown
                         size={12}
                         className="absolute right-2 top-1/2 -translate-y-1/2 md:right-5"
                       />
@@ -285,7 +291,7 @@ const ModalCart = ({
                         <option value="London">London</option>
                         <option value="New York">New York</option>
                       </select>
-                      <Icon.CaretDown
+                      <CaretDown
                         size={12}
                         className="absolute right-2 top-1/2 -translate-y-1/2 md:right-5"
                       />
@@ -326,7 +332,7 @@ const ModalCart = ({
               >
                 <div className="border-b border-line px-6 py-4">
                   <div className="item flex cursor-pointer items-center gap-3">
-                    <Icon.Tag className="text-xl" />
+                    <Tag className="text-xl" />
                     <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                       Add A Coupon Code
                     </div>

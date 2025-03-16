@@ -1,7 +1,7 @@
 import Link from "next/link";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Menu from "./Menu";
 import Image from "next/image";
+import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 export default function PageNotFound() {
   return (
     <>
@@ -31,7 +31,7 @@ export default function PageNotFound() {
                   Take a break before trying again{" "}
                 </div>
                 <Link className="flex items-center gap-3" href={"/"}>
-                  <Icon.ArrowLeft />
+                  <ArrowLeft />
                   <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                     Back To Homepage
                   </div>

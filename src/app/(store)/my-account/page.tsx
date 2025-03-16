@@ -2,10 +2,17 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import TopNav from "@/components/store-components/TopNav";
-import Menu from "@/components/store-components/Menu";
+import {
+  CaretDown,
+  GearSix,
+  HourglassMedium,
+  HouseLine,
+  Package,
+  ReceiptX,
+  SignOut,
+  Tag,
+} from "@phosphor-icons/react/dist/ssr";
 
 const MyAccount = () => {
   const [activeTab, setActiveTab] = useState<string | undefined>("dashboard");
@@ -55,7 +62,7 @@ const MyAccount = () => {
                     className={`item flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "dashboard" ? "active" : ""}`}
                     onClick={() => setActiveTab("dashboard")}
                   >
-                    <Icon.HouseLine size={20} />
+                    <HouseLine size={20} />
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       Dashboard
                     </strong>
@@ -66,7 +73,7 @@ const MyAccount = () => {
                     className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "orders" ? "active" : ""}`}
                     onClick={() => setActiveTab("orders")}
                   >
-                    <Icon.Package size={20} />
+                    <Package size={20} />
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       History Orders
                     </strong>
@@ -77,7 +84,7 @@ const MyAccount = () => {
                     className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "address" ? "active" : ""}`}
                     onClick={() => setActiveTab("address")}
                   >
-                    <Icon.Tag size={20} />
+                    <Tag size={20} />
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       My Address
                     </strong>
@@ -88,7 +95,7 @@ const MyAccount = () => {
                     className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "setting" ? "active" : ""}`}
                     onClick={() => setActiveTab("setting")}
                   >
-                    <Icon.GearSix size={20} />
+                    <GearSix size={20} />
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       Setting
                     </strong>
@@ -97,7 +104,7 @@ const MyAccount = () => {
                     href={"/login"}
                     className="item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white"
                   >
-                    <Icon.SignOut size={20} />
+                    <SignOut size={20} />
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       Logout
                     </strong>
@@ -115,14 +122,14 @@ const MyAccount = () => {
                       <span className="text-secondary">Awaiting Pickup</span>
                       <h5 className="heading5 mt-1">4</h5>
                     </div>
-                    <Icon.HourglassMedium className="text-4xl" />
+                    <HourglassMedium className="text-4xl" />
                   </div>
                   <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-line p-5">
                     <div className="counter">
                       <span className="text-secondary">Cancelled Orders</span>
                       <h5 className="heading5 mt-1">12</h5>
                     </div>
-                    <Icon.ReceiptX className="text-4xl" />
+                    <ReceiptX className="text-4xl" />
                   </div>
                   <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-line p-5">
                     <div className="counter">
@@ -131,7 +138,7 @@ const MyAccount = () => {
                       </span>
                       <h5 className="heading5 mt-1">200</h5>
                     </div>
-                    <Icon.Package className="text-4xl" />
+                    <Package className="text-4xl" />
                   </div>
                 </div>
                 <div className="recent_order mt-7 rounded-xl border border-line px-5 pb-2 pt-5">
@@ -219,7 +226,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
+                                <strong className="product_name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                   Faux-leather trousers
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -252,7 +259,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
+                                <strong className="product_name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                   V-neck knitted top
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -285,7 +292,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
+                                <strong className="product_name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                   Contrasting sweatshirt
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -318,7 +325,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
+                                <strong className="product_name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                   Faux-leather trousers
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -351,7 +358,7 @@ const MyAccount = () => {
                                 className="h-12 w-12 flex-shrink-0 rounded"
                               />
                               <div className="info flex flex-col">
-                                <strong className="product_name text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">
+                                <strong className="product_name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                                   V-neck knitted top
                                 </strong>
                                 <span className="product_tag text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
@@ -395,7 +402,7 @@ const MyAccount = () => {
                         {/* {activeOrders === item && (
                                                 <motion.span layoutId='active-pill' className='absolute inset-0 border-black border-b-2'></motion.span>
                                                 )} */}
-                        <span className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 relative z-[1]">
+                        <span className="relative z-[1] text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                           {item}
                         </span>
                       </button>
@@ -407,7 +414,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
+                        <strong className="order_number text-base font-semibold uppercase capitalize leading-[26px] md:text-base md:leading-6">
                           s184989823
                         </strong>
                       </div>
@@ -502,7 +509,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
+                        <strong className="order_number text-base font-semibold uppercase capitalize leading-[26px] md:text-base md:leading-6">
                           s184989824
                         </strong>
                       </div>
@@ -562,7 +569,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
+                        <strong className="order_number text-base font-semibold uppercase capitalize leading-[26px] md:text-base md:leading-6">
                           s184989824
                         </strong>
                       </div>
@@ -624,7 +631,7 @@ const MyAccount = () => {
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
                       <div className="flex items-center gap-2">
                         <strong className="text-title">Order Number:</strong>
-                        <strong className="order_number text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6 uppercase">
+                        <strong className="order_number text-base font-semibold uppercase capitalize leading-[26px] md:text-base md:leading-6">
                           s184989824
                         </strong>
                       </div>
@@ -696,7 +703,7 @@ const MyAccount = () => {
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       Billing address
                     </strong>
-                    <Icon.CaretDown className="ic_down text-2xl duration-300" />
+                    <CaretDown className="ic_down text-2xl duration-300" />
                   </button>
                   <div
                     className={`form_address ${activeAddress === "billing" ? "block" : "hidden"}`}
@@ -852,7 +859,7 @@ const MyAccount = () => {
                     <strong className="text-[20px] font-semibold capitalize leading-[28px] md:text-base lg:text-lg lg:leading-[26px]">
                       Shipping address
                     </strong>
-                    <Icon.CaretDown className="ic_down text-2xl duration-300" />
+                    <CaretDown className="ic_down text-2xl duration-300" />
                   </button>
                   <div
                     className={`form_address ${activeAddress === "shipping" ? "block" : "hidden"}`}
@@ -1028,7 +1035,9 @@ const MyAccount = () => {
                         />
                       </div>
                       <div>
-                        <strong className="text-base leading-[26px] font-semibold capitalize md:text-base md:leading-6">Upload File:</strong>
+                        <strong className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                          Upload File:
+                        </strong>
                         <p className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                           JPG 120x120px
                         </p>
@@ -1137,7 +1146,7 @@ const MyAccount = () => {
                           <option value="Female">Female</option>
                           <option value="Other">Other</option>
                         </select>
-                        <Icon.CaretDown className="arrow-down text-lg" />
+                        <CaretDown className="arrow-down text-lg" />
                       </div>
                     </div>
                     <div className="birth">

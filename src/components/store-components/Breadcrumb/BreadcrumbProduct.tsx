@@ -2,9 +2,13 @@
 
 import React from "react";
 import Link from "next/link";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import { useRouter } from "next/navigation";
 import { type ProductType } from "@/types/ProductType";
+import {
+  CaretCircleLeft,
+  CaretCircleRight,
+  CaretRight,
+} from "@phosphor-icons/react/dist/ssr";
 
 interface Props {
   data: Array<ProductType>;
@@ -27,7 +31,7 @@ const BreadcrumbProduct: React.FC<Props> = ({
   return (
     <>
       <div>
-        <div className="bg-[linear-gradient(87deg,#f9f1f0_4.3%,#faf7f1_95.7%)] bg-no-repeat bg-surface pb-[14px] pt-[70px] md:pt-[88px]">
+        <div className="bg-surface bg-[linear-gradient(87deg,#f9f1f0_4.3%,#faf7f1_95.7%)] bg-no-repeat pb-[14px] pt-[70px] md:pt-[88px]">
           <div className="mx-auto flex w-full !max-w-[1322px] flex-wrap items-center justify-between gap-3 px-4">
             <div className="left flex items-center gap-1">
               <Link
@@ -36,11 +40,11 @@ const BreadcrumbProduct: React.FC<Props> = ({
               >
                 Homepage
               </Link>
-              <Icon.CaretRight size={12} className="text-secondary2" />
+              <CaretRight size={12} className="text-secondary2" />
               <div className="text-base font-normal leading-[22] text-secondary2 md:text-[13px] md:leading-5">
                 Product
               </div>
-              <Icon.CaretRight size={12} className="text-secondary2" />
+              <CaretRight size={12} className="text-secondary2" />
               <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">{`Product ${productPage}`}</div>
             </div>
             <div className="right flex items-center gap-3">
@@ -50,7 +54,7 @@ const BreadcrumbProduct: React.FC<Props> = ({
                     onClick={() => handleDetailProduct(Number(productId) - 1)}
                     className="flex cursor-pointer items-center border-r border-line pr-3 text-secondary hover:text-black"
                   >
-                    <Icon.CaretCircleLeft className="text-2xl text-black" />
+                    <CaretCircleLeft className="text-2xl text-black" />
                     <span className="pl-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                       Previous Product
                     </span>
@@ -62,7 +66,7 @@ const BreadcrumbProduct: React.FC<Props> = ({
                     <span className="pr-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                       Next Product
                     </span>
-                    <Icon.CaretCircleRight className="text-2xl text-black" />
+                    <CaretCircleRight className="text-2xl text-black" />
                   </div>
                 </>
               ) : (
@@ -75,7 +79,7 @@ const BreadcrumbProduct: React.FC<Props> = ({
                       <span className="pr-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         Next Product
                       </span>
-                      <Icon.CaretCircleRight className="text-2xl text-black" />
+                      <CaretCircleRight className="text-2xl text-black" />
                     </div>
                   )}
                 </>

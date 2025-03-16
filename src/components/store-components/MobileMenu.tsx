@@ -1,8 +1,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import * as Icon from "@phosphor-icons/react";
 import Product from "./Product/Product";
+import {
+  CaretLeft,
+  CaretRight,
+  MagnifyingGlass,
+  X,
+} from "@phosphor-icons/react/dist/ssr";
 
 const MobileMenu = ({
   openMenuMobile,
@@ -40,7 +45,7 @@ const MobileMenu = ({
                 className="close-menu-mobile-btn absolute left-0 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-surface"
                 onClick={handleMenuMobile}
               >
-                <Icon.X size={14} />
+                <X size={14} />
               </div>
               <Link
                 href={"/"}
@@ -50,7 +55,7 @@ const MobileMenu = ({
               </Link>
             </div>
             <div className="form-search relative mt-2">
-              <Icon.MagnifyingGlass
+              <MagnifyingGlass
                 size={20}
                 className="absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"
               />
@@ -72,7 +77,7 @@ const MobileMenu = ({
                   >
                     Categories
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                   <div className="sub-nav-mobile">
@@ -80,7 +85,7 @@ const MobileMenu = ({
                       className="back-btn flex items-center gap-3"
                       onClick={() => handleOpenSubNavMobile(2)}
                     >
-                      <Icon.CaretLeft />
+                      <CaretLeft />
                       Back
                     </div>
                     <div className="list-nav-item w-full pb-12 pt-3">
@@ -317,7 +322,7 @@ const MobileMenu = ({
                   >
                     Products
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                   <div className="sub-nav-mobile">
@@ -325,7 +330,7 @@ const MobileMenu = ({
                       className="back-btn flex items-center gap-3"
                       onClick={() => handleOpenSubNavMobile(3)}
                     >
-                      <Icon.CaretLeft />
+                      <CaretLeft />
                       Back
                     </div>
                     <div className="list-nav-item w-full pb-12 pt-3">
@@ -624,7 +629,7 @@ const MobileMenu = ({
                   >
                     Blog
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                 </li>
@@ -638,7 +643,7 @@ const MobileMenu = ({
                   >
                     About Us
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                 </li>
@@ -652,7 +657,7 @@ const MobileMenu = ({
                   >
                     Contact Us
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                 </li>
@@ -666,7 +671,7 @@ const MobileMenu = ({
                   >
                     Store List
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                 </li>
@@ -680,7 +685,7 @@ const MobileMenu = ({
                   >
                     Track Order
                     <span className="text-right">
-                      <Icon.CaretRight size={20} />
+                      <CaretRight size={20} />
                     </span>
                   </Link>
                 </li>

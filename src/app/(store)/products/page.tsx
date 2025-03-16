@@ -1,14 +1,33 @@
-import Footer from "@/components/store-components/Footer";
-import ListProduct from "@/components/store-components/Shop/ListProduct";
+import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import ShopFilterCanvas from "@/components/store-components/Shop/ShopFilterCanvas";
+import { api } from "@/trpc/server";
 
-export default function ProductsPage() {
-  // const searchParams = useSearchParams();
-  // const type = searchParams.get("type");
+export default async function ProductsPage() {
+  const productData = await api.product.getAllPretty();
+
+  const breadcrumbItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "products",
+      href: "/products",
+    },
+  ];
+
+  if (!productData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
-      <ListProduct />
-      <Footer />
+      <Breadcrumb items={breadcrumbItems} pageTitle="Shop" />
+      <ShopFilterCanvas
+        data={productData}
+        productPerPage={12}
+        // productStyle="style-1"
+      />
     </>
   );
 }

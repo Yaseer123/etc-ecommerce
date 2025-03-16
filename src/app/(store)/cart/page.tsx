@@ -3,10 +3,9 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/context/store-context/CartContext";
+import { useCartStore } from "@/context/store-context/CartContext";
 import { countdownTime } from "@/utils/countdownTime";
-import Menu from "@/components/store-components/Menu";
-import { Minus, Plus, XCircle } from "@phosphor-icons/react";
+import { Minus, Plus, XCircle } from "@phosphor-icons/react/dist/ssr";
 
 const Cart = () => {
   const [timeLeft, setTimeLeft] = useState(countdownTime());
@@ -20,12 +19,10 @@ const Cart = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const { cartState, updateCart, removeFromCart } = useCart();
+  const { cartArray, updateCart, removeFromCart } = useCartStore();
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
-    const itemToUpdate = cartState.cartArray.find(
-      (item) => item.id === productId,
-    );
+    const itemToUpdate = cartArray.find((item) => item.id === productId);
 
     if (itemToUpdate) {
       updateCart(
@@ -44,12 +41,12 @@ const Cart = () => {
   const [applyCode, setApplyCode] = useState<number>(0);
 
   useEffect(() => {
-    const total = cartState.cartArray.reduce(
+    const total = cartArray.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0,
     );
     setTotalCart(total);
-  }, [cartState.cartArray]);
+  }, [cartArray]);
 
   const handleApplyCode = (minValue: number, discount: number) => {
     if (totalCart > minValue) {
@@ -69,7 +66,7 @@ const Cart = () => {
   //   setShipCart(30);
   // }
 
-  // if (cartState.cartArray.length === 0) {
+  // if (cartArray.cartArray.length === 0) {
   //   setShipCart(0);
   // }
 
@@ -164,12 +161,12 @@ const Cart = () => {
                     </div>
                   </div>
                   <div className="mt-3 w-full">
-                    {cartState.cartArray.length < 1 ? (
+                    {cartArray.length < 1 ? (
                       <p className="pt-3 text-base font-semibold capitalize leading-[26px]">
                         No product in cart
                       </p>
                     ) : (
-                      cartState.cartArray.map((product) => (
+                      cartArray.map((product) => (
                         <div
                           className="mt-5 flex w-full border-b border-line pb-5 md:mt-7 md:pb-7"
                           key={product.id}

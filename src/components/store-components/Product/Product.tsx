@@ -2,15 +2,19 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { type ProductType } from "@/types/ProductType";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
-import { useCart } from "@/context/store-context/CartContext";
-import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import { useRouter } from "next/navigation";
+import {
+  Heart,
+  Lightning,
+  Eye,
+  ShoppingBagOpen,
+} from "@phosphor-icons/react/dist/ssr";
 import Marquee from "react-fast-marquee";
 import Rate from "../Rate";
-import { useModalQuickViewContext } from "@/context/store-context/ModalQuickViewContext";
 import { api } from "@/trpc/react";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 
 interface ProductProps {
   data: ProductType;
@@ -27,9 +31,9 @@ export default function Product({ data, type }: ProductProps) {
   const [activeSize, setActiveSize] = useState<string>("");
   const [openQuickShop, setOpenQuickShop] = useState<boolean>(false);
   // const { addToCart, updateCart, cartState } = useCart();
-  const { openModalCart } = useModalCartContext();
-  const { openModalWishlist } = useModalWishlistContext();
-  const { openQuickView } = useModalQuickViewContext();
+  const { openModalCart } = useModalCartStore();
+  const { openModalWishlist } = useModalWishlistStore();
+  const { openQuickView } = useModalQuickViewStore();
 
   const utils = api.useUtils();
 
@@ -120,7 +124,7 @@ export default function Product({ data, type }: ProductProps) {
   };
 
   const handleDetailProduct = (productId: string) => {
-    router.push(`/product/default?id=${productId}`);
+    router.push(`/products/default?id=${productId}`);
   };
 
   const percentSale = Math.floor(100 - (data.price / data.originPrice) * 100);
@@ -159,15 +163,11 @@ export default function Product({ data, type }: ProductProps) {
                   </div>
                   {isInWishlist(data.id) ? (
                     <>
-                      <Icon.Heart
-                        size={18}
-                        weight="fill"
-                        className="text-white"
-                      />
+                      <Heart size={18} weight="fill" className="text-white" />
                     </>
                   ) : (
                     <>
-                      <Icon.Heart size={18} />
+                      <Heart size={18} />
                     </>
                   )}
                 </div>
@@ -189,14 +189,15 @@ export default function Product({ data, type }: ProductProps) {
               {data.sale && (
                 <>
                   <Marquee className="banner-sale-auto absolute bottom-0 left-0 w-full bg-black py-1.5">
-                    {Array.from({ length: 5 }).map((_) => (
+                    {Array.from({ length: 5 }).map((_, index) => (
                       <>
                         <div
                           className={`caption2 px-2.5 font-semibold uppercase text-white`}
+                          key={index}
                         >
                           Hot Sale {percentSale}% OFF
                         </div>
-                        <Icon.Lightning weight="fill" className="text-red" />
+                        <Lightning weight="fill" className="text-red" />
                       </>
                     ))}
                   </Marquee>
@@ -273,7 +274,7 @@ export default function Product({ data, type }: ProductProps) {
                     handleQuickViewOpen();
                   }}
                 >
-                  <Icon.Eye className="text-lg" />
+                  <Eye className="text-lg" />
                 </div>
                 <div
                   className="add-cart-btn flex h-9 w-9 items-center justify-center rounded-lg bg-white duration-300 hover:bg-black hover:text-white"
@@ -282,7 +283,7 @@ export default function Product({ data, type }: ProductProps) {
                     handleAddToCart();
                   }}
                 >
-                  <Icon.ShoppingBagOpen className="text-lg" />
+                  <ShoppingBagOpen className="text-lg" />
                 </div>
               </div>
             </div>
@@ -356,15 +357,11 @@ export default function Product({ data, type }: ProductProps) {
               >
                 {isInWishlist(data.id) ? (
                   <>
-                    <Icon.Heart
-                      size={18}
-                      weight="duotone"
-                      className="text-black"
-                    />
+                    <Heart size={18} weight="duotone" className="text-black" />
                   </>
                 ) : (
                   <>
-                    <Icon.Heart size={18} />
+                    <Heart size={18} />
                   </>
                 )}
                 <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
@@ -379,7 +376,7 @@ export default function Product({ data, type }: ProductProps) {
                   handleQuickViewOpen();
                 }}
               >
-                <Icon.Eye />
+                <Eye />
                 <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                   Quick View
                 </div>
@@ -391,7 +388,7 @@ export default function Product({ data, type }: ProductProps) {
                   handleAddToCart();
                 }}
               >
-                <Icon.ShoppingBagOpen />
+                <ShoppingBagOpen />
                 <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                   Add To Cart
                 </div>

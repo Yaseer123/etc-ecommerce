@@ -3,17 +3,23 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import {} from "@phosphor-icons/react/dist/ssr";
 import { usePathname } from "next/navigation";
-import { useCart } from "@/context/store-context/CartContext";
-import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
+import { useCartStore } from "@/context/store-context/CartContext";
 import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
 import CategoryDropdown from "./Category/CategoryDropdown";
 import MobileMenu from "./MobileMenu";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import {
+  CaretDown,
+  Handbag,
+  Heart,
+  User,
+} from "@phosphor-icons/react/dist/ssr";
 
 export default function Menu({ props }: { props?: string }) {
   const pathname = usePathname();
@@ -21,9 +27,9 @@ export default function Menu({ props }: { props?: string }) {
   const { openShopDepartmentPopup, handleShopDepartmentPopup } =
     useShopDepartmentPopup();
   const { openMenuMobile, handleMenuMobile } = useMenuMobile();
-  const { openModalCart } = useModalCartContext();
-  const { cartState } = useCart();
-  const { openModalWishlist } = useModalWishlistContext();
+  const { openModalCart } = useModalCartStore();
+  const { cartArray } = useCartStore();
+  const { openModalWishlist } = useModalWishlistStore();
 
   const [searchKeyword, setSearchKeyword] = useState("");
   const router = useRouter();
@@ -53,7 +59,7 @@ export default function Menu({ props }: { props?: string }) {
   return (
     <>
       <div
-        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white pt-5 duration-500`}
+        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white md:pt-5 duration-500`}
       >
         <div
           className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px] ${props}`}
@@ -85,7 +91,7 @@ export default function Menu({ props }: { props?: string }) {
                     }
                   />
                   <button
-                    className="search-button duration-400 md:text-md !flex h-full cursor-pointer !items-center !justify-center rounded-[12px] !rounded-r bg-black px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="search-button duration-400 md:text-md !flex h-full cursor-pointer !items-center !justify-center rounded-[12px] !rounded-l-none !rounded-r bg-black px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => {
                       handleSearch(searchKeyword);
                     }}
@@ -97,11 +103,7 @@ export default function Menu({ props }: { props?: string }) {
               <div className="right flex gap-12">
                 <div className="list-action flex items-center gap-4">
                   <div className="user-icon flex cursor-pointer items-center justify-center">
-                    <Icon.User
-                      size={24}
-                      color="black"
-                      onClick={handleLoginPopup}
-                    />
+                    <User size={24} color="black" onClick={handleLoginPopup} />
                     <div
                       className={`login-popup box-shadow-sm absolute top-[74px] w-[320px] rounded-xl bg-white p-7 ${openLoginPopup ? "open" : ""}`}
                     >
@@ -136,15 +138,15 @@ export default function Menu({ props }: { props?: string }) {
                     className="wishlist-icon flex cursor-pointer items-center max-md:hidden"
                     onClick={openModalWishlist}
                   >
-                    <Icon.Heart size={24} color="black" />
+                    <Heart size={24} color="black" />
                   </div>
                   <div
                     className="cart-icon relative flex cursor-pointer items-center"
                     onClick={openModalCart}
                   >
-                    <Icon.Handbag size={24} color="black" />
+                    <Handbag size={24} color="black" />
                     <span className="quantity cart-quantity absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white">
-                      {cartState.cartArray.length}
+                      {cartArray.length}
                     </span>
                   </div>
                 </div>
@@ -165,7 +167,7 @@ export default function Menu({ props }: { props?: string }) {
                     <div className="whitespace-nowrap text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
                       Shop By Department
                     </div>
-                    <Icon.CaretDown
+                    <CaretDown
                       color="#ffffff"
                       className="text-xl max-sm:text-base"
                     />

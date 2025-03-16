@@ -2,8 +2,12 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
-
+import {
+  CaretRight,
+  CheckSquare,
+  CaretDown,
+  X,
+} from "@phosphor-icons/react/dist/ssr";
 import Product from "../Product/Product";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
@@ -240,7 +244,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                 </div>
                 <div className="link mt-3 flex items-center justify-center gap-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   <Link href={"/"}>Homepage</Link>
-                  <Icon.CaretRight size={14} className="text-secondary2" />
+                  <CaretRight size={14} className="text-secondary2" />
                   <div className="capitalize text-secondary2">
                     {dataType === null ? "Shop" : dataType}
                   </div>
@@ -437,7 +441,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                               checked={brand === item}
                               onChange={() => handleBrand(item)}
                             />
-                            <Icon.CheckSquare
+                            <CheckSquare
                               size={20}
                               weight="fill"
                               className="icon-checkbox"
@@ -526,7 +530,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                       <option value="priceHighToLow">Price High To Low</option>
                       <option value="priceLowToHigh">Price Low To High</option>
                     </select>
-                    <Icon.CaretDown
+                    <CaretDown
                       size={12}
                       className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
                     />
@@ -553,7 +557,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                             setType(null);
                           }}
                         >
-                          <Icon.X className="cursor-pointer" />
+                          <X className="cursor-pointer" />
                           <span>{selectedType}</span>
                         </div>
                       )}
@@ -564,7 +568,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                             setSize(null);
                           }}
                         >
-                          <Icon.X className="cursor-pointer" />
+                          <X className="cursor-pointer" />
                           <span>{selectedSize}</span>
                         </div>
                       )}
@@ -575,7 +579,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                             setColor(null);
                           }}
                         >
-                          <Icon.X className="cursor-pointer" />
+                          <X className="cursor-pointer" />
                           <span>{selectedColor}</span>
                         </div>
                       )}
@@ -586,7 +590,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                             setBrand(null);
                           }}
                         >
-                          <Icon.X className="cursor-pointer" />
+                          <X className="cursor-pointer" />
                           <span>{selectedBrand}</span>
                         </div>
                       )}
@@ -595,10 +599,7 @@ const ShopBreadCrumb1: React.FC<Props> = ({
                       className="clear-btn flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"
                       onClick={handleClearAll}
                     >
-                      <Icon.X
-                        color="rgb(219, 68, 68)"
-                        className="cursor-pointer"
-                      />
+                      <X color="rgb(219, 68, 68)" className="cursor-pointer" />
                       <span className="text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
                         Clear All
                       </span>

@@ -3,11 +3,15 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
 import TrendingNow from "@/components/store-components/TrendingNow";
 import ShopCollection from "@/components/store-components/Shop/ShopCollection";
 import data from "@/data/Product.json";
 import { api } from "@/trpc/react";
+import {
+  ArrowRight,
+  CaretDown,
+  CaretRight,
+} from "@phosphor-icons/react/dist/ssr";
 
 interface Category {
   name: string;
@@ -40,7 +44,7 @@ export default function CategoriesPage() {
                 <div className="heading2 text-center">Categories</div>
                 <div className="link mt-3 flex items-center justify-center gap-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                   <Link href={"/"}>Homepage</Link>
-                  <Icon.CaretRight size={14} className="text-secondary2" />
+                  <CaretRight size={14} className="text-secondary2" />
                   <div className="capitalize text-secondary2">Categories</div>
                 </div>
               </div>
@@ -103,7 +107,7 @@ export default function CategoriesPage() {
                         rotate: openCategory === category.name ? 180 : 0,
                       }}
                     >
-                      <Icon.CaretDown className="text-gray-800" weight="bold" />
+                      <CaretDown className="text-gray-800" weight="bold" />
                     </motion.div>
                   </div>
                 </div>
@@ -148,10 +152,7 @@ export default function CategoriesPage() {
                             >
                               <div className="flex items-center justify-between">
                                 <span>{sub.name}</span>
-                                <Icon.ArrowRight
-                                  size={16}
-                                  className="opacity-50"
-                                />
+                                <ArrowRight size={16} className="opacity-50" />
                               </div>
                             </Link>
                           </motion.div>
@@ -168,7 +169,7 @@ export default function CategoriesPage() {
       {/* 🔹 Trending Categories */}
       <TrendingNow data={categoryList as Category[]} />
       {/* Collections */}
-      <ShopCollection data={data} />
+      {/* <ShopCollection data={data} /> */}
     </>
   );
 }

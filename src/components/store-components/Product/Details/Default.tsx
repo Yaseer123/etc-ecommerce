@@ -8,13 +8,26 @@ import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, Scrollbar } from "swiper/modules";
 import "swiper/css/bundle";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import {
+  X,
+  Heart,
+  Minus,
+  Plus,
+  ShareNetwork,
+  ArrowClockwise,
+  Question,
+  Timer,
+  Eye,
+  Dot,
+  Star,
+  HandsClapping,
+} from "@phosphor-icons/react/dist/ssr";
 import SwiperCore from "swiper/core";
-import { useCart } from "@/context/store-context/CartContext";
-import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import Rate from "../../Rate";
 import { api } from "@/trpc/react";
+import { useCartStore } from "@/context/store-context/CartContext";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 
 interface Props {
   data: Array<ProductType>;
@@ -30,10 +43,10 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
-  const { addToCart, updateCart, cartState } = useCart();
-  const { openModalCart } = useModalCartContext();
+  const { addToCart, updateCart, cartArray } = useCartStore();
+  const { openModalCart } = useModalCartStore();
   // const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
-  const { openModalWishlist } = useModalWishlistContext();
+  const { openModalWishlist } = useModalWishlistStore();
 
   const utils = api.useUtils();
   const [wishlist] = api.wishList.getWishList.useSuspenseQuery();
@@ -116,7 +129,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   };
 
   const handleAddToCart = () => {
-    if (!cartState.cartArray.find((item) => item.id === productMain.id)) {
+    if (!cartArray.find((item) => item.id === productMain.id)) {
       addToCart({ ...productMain });
       updateCart(
         productMain.id,
@@ -212,7 +225,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                     setOpenPopupImg(false);
                   }}
                 >
-                  <Icon.X className="text-3xl text-white" />
+                  <X className="text-3xl text-white" />
                 </span>
                 <Swiper
                   spaceBetween={0}
@@ -263,15 +276,11 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 >
                   {wishlist.some((item) => item.id === productMain.id) ? (
                     <>
-                      <Icon.Heart
-                        size={24}
-                        weight="fill"
-                        className="text-white"
-                      />
+                      <Heart size={24} weight="fill" className="text-white" />
                     </>
                   ) : (
                     <>
-                      <Icon.Heart size={24} />
+                      <Heart size={24} />
                     </>
                   )}
                 </div>
@@ -335,7 +344,6 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       Size:{" "}
                       <span className="text-title size">{activeSize}</span>
                     </div>
-                    
                   </div>
                   <div className="list-size mt-3 flex flex-wrap items-center gap-2">
                     {productMain.sizes.map((item, index) => (
@@ -352,7 +360,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 <div className="text-title mt-5">Quantity:</div>
                 <div className="choose-quantity mt-3 flex items-center gap-5 gap-y-3 lg:justify-between">
                   <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
-                    <Icon.Minus
+                    <Minus
                       size={20}
                       onClick={handleDecreaseQuantity}
                       className={`${productMain.quantityPurchase === 1 ? "disabled" : ""} cursor-pointer`}
@@ -360,7 +368,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                     <div className="body1 font-semibold">
                       {productMain.quantityPurchase}
                     </div>
-                    <Icon.Plus
+                    <Plus
                       size={20}
                       onClick={handleIncreaseQuantity}
                       className="cursor-pointer"
@@ -381,7 +389,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 <div className="mt-5 flex items-center gap-8 border-b border-line pb-6 lg:gap-20">
                   <div className="share flex cursor-pointer items-center gap-3">
                     <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
-                      <Icon.ShareNetwork weight="fill" className="heading6" />
+                      <ShareNetwork weight="fill" className="heading6" />
                     </div>
                     <span>Share Products</span>
                   </div>
@@ -389,23 +397,23 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                 <div className="more-infor mt-6">
                   <div className="flex flex-wrap items-center gap-4">
                     <div className="flex items-center gap-1">
-                      <Icon.ArrowClockwise className="body1" />
+                      <ArrowClockwise className="body1" />
                       <div className="text-title">Delivery & Return</div>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Icon.Question className="body1" />
+                      <Question className="body1" />
                       <div className="text-title">Ask A Question</div>
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
-                    <Icon.Timer className="body1" />
+                    <Timer className="body1" />
                     <div className="text-title">Estimated Delivery:</div>
                     <div className="text-secondary">
                       14 January - 18 January
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
-                    <Icon.Eye className="body1" />
+                    <Eye className="body1" />
                     <div className="text-title">38</div>
                     <div className="text-secondary">
                       people viewing this product right now!
@@ -600,33 +608,33 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                     <div className="heading6">About This Products</div>
                     <div className="list-feature">
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Lorem ipsum dolor sit amet, consectetur adipiscing
                           elit.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Nulla luctus libero quis mauris vestibulum dapibus.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Maecenas ullamcorper erat mi, vel consequat enim
                           suscipit at.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Quisque consectetur nibh ac urna molestie scelerisque.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Mauris in nisl scelerisque massa consectetur pretium
                           sed et mauris.
@@ -826,7 +834,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         5
                       </div>
-                      <Icon.Star size={14} weight="fill" />
+                      <Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
                       <div className="progress-percent absolute left-0 top-0 h-full w-[50%] bg-yellow"></div>
@@ -840,7 +848,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         4
                       </div>
-                      <Icon.Star size={14} weight="fill" />
+                      <Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
                       <div className="progress-percent absolute left-0 top-0 h-full w-[20%] bg-yellow"></div>
@@ -854,7 +862,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         3
                       </div>
-                      <Icon.Star size={14} weight="fill" />
+                      <Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
                       <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-yellow"></div>
@@ -868,7 +876,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         2
                       </div>
-                      <Icon.Star size={14} weight="fill" />
+                      <Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
                       <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-yellow"></div>
@@ -882,7 +890,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         1
                       </div>
-                      <Icon.Star size={14} weight="fill" />
+                      <Star size={14} weight="fill" />
                     </div>
                     <div className="progress relative h-2 w-3/4 bg-line">
                       <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-yellow"></div>
@@ -1068,7 +1076,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <div className="action mt-3">
                     <div className="flex items-center gap-4">
                       <div className="like-btn flex cursor-pointer items-center gap-1">
-                        <Icon.HandsClapping size={18} />
+                        <HandsClapping size={18} />
                         <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                           20
                         </div>
@@ -1133,7 +1141,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <div className="action mt-3">
                     <div className="flex items-center gap-4">
                       <div className="like-btn flex cursor-pointer items-center gap-1">
-                        <Icon.HandsClapping size={18} />
+                        <HandsClapping size={18} />
                         <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                           20
                         </div>
@@ -1199,7 +1207,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
                   <div className="action mt-3">
                     <div className="flex items-center gap-4">
                       <div className="like-btn flex cursor-pointer items-center gap-1">
-                        <Icon.HandsClapping size={18} />
+                        <HandsClapping size={18} />
                         <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                           20
                         </div>
@@ -1278,7 +1286,7 @@ const Default: React.FC<Props> = ({ data, productId }) => {
             </div>
             <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-5 md:mt-10 md:gap-[30px] lg:grid-cols-4">
               {data
-                .slice(Number(productId), Number(productId) + 4)
+                // .slice(Number(productId), Number(productId) + 4)
                 .map((item, index) => (
                   <Product
                     key={index}

@@ -8,16 +8,28 @@ import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
 import "swiper/css/bundle";
-import * as Icon from "@phosphor-icons/react/dist/ssr";
+import {
+  X,
+  Heart,
+  Minus,
+  Plus,
+  ShareNetwork,
+  ArrowClockwise,
+  Question,
+  Timer,
+  Eye,
+  Dot,
+  Star,
+  CaretDown,
+  DotsThree,
+  HandsClapping,
+} from "@phosphor-icons/react/dist/ssr";
 import SwiperCore from "swiper/core";
-import { useCart } from "@/context/store-context/CartContext";
-import { useCompare } from "@/context/store-context/CompareContext";
-import { useModalCartContext } from "@/context/store-context/ModalCartContext";
-import { useModalCompareContext } from "@/context/store-context/ModalCompareContext";
-import { useModalWishlistContext } from "@/context/store-context/ModalWishlistContext";
 import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
-import ModalSizeGuide from "../../Modal/ModalSizeGuide";
+import { useCartStore } from "@/context/store-context/CartContext";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 
 interface Props {
   data: Array<ProductType>;
@@ -26,6 +38,7 @@ interface Props {
 
 const Discount: React.FC<Props> = ({ data, productId }) => {
   SwiperCore.use([Navigation, Thumbs]);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef: any = useRef();
   const [photoIndex, setPhotoIndex] = useState(0);
   const [openPopupImg, setOpenPopupImg] = useState(false);
@@ -34,12 +47,10 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
-  const { addToCart, updateCart, cartState } = useCart();
-  const { openModalCart } = useModalCartContext();
+  const { addToCart, updateCart, cartArray } = useCartStore();
+  const { openModalCart } = useModalCartStore();
   const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
-  const { openModalWishlist } = useModalWishlistContext();
-  const { addToCompare, removeFromCompare, compareState } = useCompare();
-  const { openModalCompare } = useModalCompareContext();
+  const { openModalWishlist } = useModalWishlistStore();
   let productMain = data.find((product) => product.id === productId)!;
   if (productMain === undefined) {
     productMain = data[0];
@@ -93,7 +104,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
   };
 
   const handleAddToCart = () => {
-    if (!cartState.cartArray.find((item) => item.id === productMain.id)) {
+    if (!cartArray.find((item) => item.id === productMain.id)) {
       addToCart({ ...productMain });
       updateCart(
         productMain.id,
@@ -122,24 +133,6 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
     openModalWishlist();
   };
 
-  const handleAddToCompare = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
-    if (compareState.compareArray.length < 3) {
-      if (
-        compareState.compareArray.some((item) => item.id === productMain.id)
-      ) {
-        removeFromCompare(productMain.id);
-      } else {
-        // else, add to wishlist and set state to true
-        addToCompare(productMain);
-      }
-    } else {
-      alert("Compare up to 3 products");
-    }
-
-    openModalCompare();
-  };
-
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab);
   };
@@ -161,6 +154,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <SwiperSlide
                     key={index}
                     onClick={() => {
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
                       swiperRef.current?.slideTo(index);
                       setOpenPopupImg(true);
                     }}
@@ -203,7 +197,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     setOpenPopupImg(false);
                   }}
                 >
-                  <Icon.X className="text-3xl text-white" />
+                  <X className="text-3xl text-white" />
                 </span>
                 <Swiper
                   spaceBetween={0}
@@ -213,6 +207,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   loop={true}
                   className="popupSwiper"
                   onSwiper={(swiper) => {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
                     swiperRef.current = swiper;
                   }}
                 >
@@ -241,9 +236,6 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
             <div className="product-infor w-full md:w-1/2 md:pl-2 lg:pl-[15px]">
               <div className="flex justify-between">
                 <div>
-                  <div className="caption2 font-semibold uppercase text-secondary">
-                    {productMain.type}
-                  </div>
                   <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                     {productMain.name}
                   </div>
@@ -254,15 +246,11 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                 >
                   {wishlist.some((item) => item.id === productMain.id) ? (
                     <>
-                      <Icon.Heart
-                        size={24}
-                        weight="fill"
-                        className="text-white"
-                      />
+                      <Heart size={24} weight="fill" className="text-white" />
                     </>
                   ) : (
                     <>
-                      <Icon.Heart size={24} />
+                      <Heart size={24} />
                     </>
                   )}
                 </div>
@@ -345,7 +333,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     Colors:{" "}
                     <span className="text-title color">{activeColor}</span>
                   </div>
-                  <div className="list-color mt-3 flex flex-wrap items-center gap-2">
+                  {/* <div className="list-color mt-3 flex flex-wrap items-center gap-2">
                     {productMain.variation.map((item, index) => (
                       <div
                         className={`color-item relative h-12 w-12 rounded-xl duration-300 ${activeColor === item.color ? "active" : ""}`}
@@ -364,7 +352,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         </div>
                       </div>
                     ))}
-                  </div>
+                  </div> */}
                 </div>
                 <div className="choose-size mt-5">
                   <div className="heading flex items-center justify-between">
@@ -372,17 +360,6 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                       Size:{" "}
                       <span className="text-title size">{activeSize}</span>
                     </div>
-                    <div
-                      className="size-guide cursor-pointer text-base font-normal leading-[22] text-red underline md:text-[13px] md:leading-5"
-                      onClick={handleOpenSizeGuide}
-                    >
-                      Size Guide
-                    </div>
-                    <ModalSizeGuide
-                      data={productMain}
-                      isOpen={openSizeGuide}
-                      onClose={handleCloseSizeGuide}
-                    />
                   </div>
                   <div className="list-size mt-3 flex flex-wrap items-center gap-2">
                     {productMain.sizes.map((item, index) => (
@@ -399,7 +376,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                 <div className="text-title mt-5">Quantity:</div>
                 <div className="choose-quantity mt-3 flex items-center gap-5 gap-y-3 lg:justify-between">
                   <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line bg-white max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
-                    <Icon.Minus
+                    <Minus
                       size={20}
                       onClick={handleDecreaseQuantity}
                       className={`${productMain.quantityPurchase === 1 ? "disabled" : ""} cursor-pointer`}
@@ -407,7 +384,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     <div className="body1 font-semibold">
                       {productMain.quantityPurchase}
                     </div>
-                    <Icon.Plus
+                    <Plus
                       size={20}
                       onClick={handleIncreaseQuantity}
                       className="cursor-pointer"
@@ -426,21 +403,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   </div>
                 </div>
                 <div className="mt-5 flex items-center gap-8 border-b border-line pb-6 lg:gap-20">
-                  <div
-                    className="compare flex cursor-pointer items-center gap-3"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleAddToCompare();
-                    }}
-                  >
-                    <div className="compare-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
-                      <Icon.ArrowsCounterClockwise className="heading6" />
-                    </div>
-                    <span>Compare</span>
-                  </div>
                   <div className="share flex cursor-pointer items-center gap-3">
                     <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
-                      <Icon.ShareNetwork weight="fill" className="heading6" />
+                      <ShareNetwork weight="fill" className="heading6" />
                     </div>
                     <span>Share Products</span>
                   </div>
@@ -448,23 +413,23 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                 <div className="more-infor mt-6">
                   <div className="flex flex-wrap items-center gap-4">
                     <div className="flex items-center gap-1">
-                      <Icon.ArrowClockwise className="body1" />
+                      <ArrowClockwise className="body1" />
                       <div className="text-title">Delivery & Return</div>
                     </div>
                     <div className="flex items-center gap-1">
-                      <Icon.Question className="body1" />
+                      <Question className="body1" />
                       <div className="text-title">Ask A Question</div>
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
-                    <Icon.Timer className="body1" />
+                    <Timer className="body1" />
                     <div className="text-title">Estimated Delivery:</div>
                     <div className="text-secondary">
                       14 January - 18 January
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
-                    <Icon.Eye className="body1" />
+                    <Eye className="body1" />
                     <div className="text-title">38</div>
                     <div className="text-secondary">
                       people viewing this product right now!
@@ -476,13 +441,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">Categories:</div>
-                    <div className="text-secondary">
-                      {productMain.category}, {productMain.gender}
-                    </div>
-                  </div>
-                  <div className="mt-3 flex items-center gap-1">
-                    <div className="text-title">Tag:</div>
-                    <div className="text-secondary">{productMain.type}</div>
+                    <div className="text-secondary">{productMain.category}</div>
                   </div>
                 </div>
                 <div className="list-payment mt-7">
@@ -630,33 +589,33 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     <div className="heading6">About This Products</div>
                     <div className="list-feature">
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Lorem ipsum dolor sit amet, consectetur adipiscing
                           elit.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Nulla luctus libero quis mauris vestibulum dapibus.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Maecenas ullamcorper erat mi, vel consequat enim
                           suscipit at.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Quisque consectetur nibh ac urna molestie scelerisque.
                         </p>
                       </div>
                       <div className="item mt-1 flex gap-1 text-secondary">
-                        <Icon.Dot size={28} />
+                        <Dot size={28} />
                         <p>
                           Mauris in nisl scelerisque massa consectetur pretium
                           sed et mauris.
@@ -841,7 +800,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                             5
                           </div>
-                          <Icon.Star size={14} weight="fill" />
+                          <Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[50%] bg-black"></div>
@@ -855,7 +814,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                             4
                           </div>
-                          <Icon.Star size={14} weight="fill" />
+                          <Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[20%] bg-black"></div>
@@ -869,7 +828,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                             3
                           </div>
-                          <Icon.Star size={14} weight="fill" />
+                          <Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
@@ -883,7 +842,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                             2
                           </div>
-                          <Icon.Star size={14} weight="fill" />
+                          <Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
@@ -897,7 +856,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                             1
                           </div>
-                          <Icon.Star size={14} weight="fill" />
+                          <Star size={14} weight="fill" />
                         </div>
                         <div className="progress relative h-2 w-3/4 bg-line">
                           <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
@@ -943,7 +902,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           <option value="2star">2 Star</option>
                           <option value="1star">1 Star</option>
                         </select>
-                        <Icon.CaretDown
+                        <CaretDown
                           size={12}
                           className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
                         />
@@ -979,7 +938,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           </div>
                         </div>
                         <div className="more-action cursor-pointer">
-                          <Icon.DotsThree size={24} weight="bold" />
+                          <DotsThree size={24} weight="bold" />
                         </div>
                       </div>
                       <div className="mt-3">
@@ -991,7 +950,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                       <div className="action mt-3">
                         <div className="flex items-center gap-4">
                           <div className="like-btn flex cursor-pointer items-center gap-1">
-                            <Icon.HandsClapping size={18} />
+                            <HandsClapping size={18} />
                             <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                               20
                             </div>
@@ -1033,7 +992,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           </div>
                         </div>
                         <div className="more-action cursor-pointer">
-                          <Icon.DotsThree size={24} weight="bold" />
+                          <DotsThree size={24} weight="bold" />
                         </div>
                       </div>
                       <div className="mt-3">
@@ -1045,7 +1004,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                       <div className="action mt-3">
                         <div className="flex items-center gap-4">
                           <div className="like-btn flex cursor-pointer items-center gap-1">
-                            <Icon.HandsClapping size={18} />
+                            <HandsClapping size={18} />
                             <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                               20
                             </div>
@@ -1087,7 +1046,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                           </div>
                         </div>
                         <div className="more-action cursor-pointer">
-                          <Icon.DotsThree size={24} weight="bold" />
+                          <DotsThree size={24} weight="bold" />
                         </div>
                       </div>
                       <div className="mt-3">
@@ -1099,7 +1058,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                       <div className="action mt-3">
                         <div className="flex items-center gap-4">
                           <div className="like-btn flex cursor-pointer items-center gap-1">
-                            <Icon.HandsClapping size={18} />
+                            <HandsClapping size={18} />
                             <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                               20
                             </div>
