@@ -190,15 +190,12 @@ export default function Product({ data, type }: ProductProps) {
                 <>
                   <Marquee className="banner-sale-auto absolute bottom-0 left-0 w-full bg-black py-1.5">
                     {Array.from({ length: 5 }).map((_, index) => (
-                      <>
-                        <div
-                          className={`caption2 px-2.5 font-semibold uppercase text-white`}
-                          key={index}
-                        >
+                      <React.Fragment key={index}>
+                        <div className="caption2 px-2.5 font-semibold uppercase text-white">
                           Hot Sale {percentSale}% OFF
                         </div>
                         <Lightning weight="fill" className="text-red" />
-                      </>
+                      </React.Fragment>
                     ))}
                   </Marquee>
                 </>
