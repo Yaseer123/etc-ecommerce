@@ -11,12 +11,18 @@ interface FilterBlockProps {
   showOnlySale: boolean;
   sortOption: string;
   totalProducts: number;
-  selectedSize: string | null | undefined;
-  selectedColor: string | null | undefined;
   selectedBrand: string | null | undefined;
-  setSize: (size: string | null) => void;
-  setColor: (color: string | null) => void;
+  selectedCategory: { id: string; name: string } | null | undefined;
   setBrand: (brand: string | null) => void;
+  setCategory: React.Dispatch<
+    React.SetStateAction<
+      | {
+          id: string;
+          name: string;
+        }
+      | null
+    >
+  >;
 }
 
 const FilterBlock: React.FC<FilterBlockProps> = ({
@@ -29,12 +35,10 @@ const FilterBlock: React.FC<FilterBlockProps> = ({
   showOnlySale,
   sortOption,
   totalProducts,
-  selectedSize,
-  selectedColor,
   selectedBrand,
-  setSize,
-  setColor,
+  selectedCategory,
   setBrand,
+  setCategory,
 }) => {
   return (
     <>
@@ -201,33 +205,23 @@ const FilterBlock: React.FC<FilterBlockProps> = ({
           {totalProducts}
           <span className="pl-1 text-secondary">Products Found</span>
         </div>
-        {(selectedSize ?? selectedColor ?? selectedBrand) && (
+        {(selectedBrand ?? selectedCategory) && (
           <>
             <div className="list flex items-center gap-3">
               <div className="h-4 w-px bg-line"></div>
 
-              {selectedSize && (
+              {selectedCategory && (
                 <div
                   className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
                   onClick={() => {
-                    setSize(null);
+                    setCategory(null);
                   }}
                 >
                   <X className="cursor-pointer" />
-                  <span>{selectedSize}</span>
+                  <span>{selectedCategory.name}</span>
                 </div>
               )}
-              {selectedColor && (
-                <div
-                  className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
-                  onClick={() => {
-                    setColor(null);
-                  }}
-                >
-                  <X className="cursor-pointer" />
-                  <span>{selectedColor}</span>
-                </div>
-              )}
+
               {selectedBrand && (
                 <div
                   className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"

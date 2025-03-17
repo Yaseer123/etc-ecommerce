@@ -46,17 +46,24 @@ export const productRouter = createTRPCRouter({
     return products;
   }),
 
-  getAllPretty: publicProcedure.query(async ({ ctx }) => {
-    const products = await ctx.db.product.findMany({
-      include: { category: true },
-    });
+  getAllPretty: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const products = input
+        ? await ctx.db.product.findMany({
+            where: { categoryId: input },
+            include: { category: true },
+          })
+        : await ctx.db.product.findMany({
+            include: { category: true },
+          });
 
-    const prettifiedProducts = products.map(async (product) =>
-      prettifyProduct(product as ProductWithCategory),
-    );
+      const prettifiedProducts = products.map(async (product) =>
+        prettifyProduct(product as ProductWithCategory),
+      );
 
-    return await Promise.all(prettifiedProducts);
-  }),
+      return await Promise.all(prettifiedProducts);
+    }),
 
   getProductById: publicProcedure
     .input(

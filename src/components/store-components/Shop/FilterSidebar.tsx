@@ -3,11 +3,13 @@ import { X, CheckSquare } from "@phosphor-icons/react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { type ProductType } from "@/types/ProductType";
+import FilterByCategory from "./FilterByCategory";
 
 interface SidebarProps {
   openSidebar: boolean;
   handleOpenSidebar: () => void;
   handlePriceChange: (values: number | number[]) => void;
+  handleCategory: (categoryId: string, categoryName:string) => void;
   handleBrand: (brand: string) => void;
   priceRange: { min: number; max: number };
   brand: string | null | undefined;
@@ -18,6 +20,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   openSidebar,
   handleOpenSidebar,
   handlePriceChange,
+  handleCategory,
   handleBrand,
   priceRange,
   brand,
@@ -42,6 +45,13 @@ const FilterSidebar: React.FC<SidebarProps> = ({
             onClick={handleOpenSidebar}
             className="cursor-pointer"
           />
+        </div>
+
+        <div className="filter-categories mt-8 pb-5">
+          <div className="heading6">Categories</div>
+          <div className="list-categories mt-4">
+            <FilterByCategory handleCategory={handleCategory} />
+          </div>
         </div>
 
         <div className="filter-price mt-8 border-b border-line pb-8">

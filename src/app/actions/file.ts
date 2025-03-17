@@ -38,6 +38,30 @@ export const uploadFile = async (
   }
 };
 
+export const readImagesBulk = async (imageIds: string[]) => {
+  try {
+    const results = await Promise.all(
+      imageIds.map(async (id) => {
+        try {
+          const { secure_url } = (await cloud.api.resource(
+            id,
+          )) as UploadApiResponse;
+          return { id, secure_url };
+        } catch (error) {
+          console.error(`Error fetching image ${id}:`, error);
+          return null;
+        }
+      }),
+    );
+    return results.filter(
+      (result): result is { id: string; secure_url: string } => result !== null,
+    );
+  } catch (error) {
+    console.error("Bulk fetch error:", error);
+    return [];
+  }
+};
+
 export const readAllImages = async (filter: string) => {
   try {
     const { resources } = (await cloud.api.resources({

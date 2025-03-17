@@ -2,8 +2,13 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import ShopFilterCanvas from "@/components/store-components/Shop/ShopFilterCanvas";
 import { api } from "@/trpc/server";
 
-export default async function ProductsPage() {
-  const productData = await api.product.getAllPretty();
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const category = (await searchParams).category as string;
+  const productData = await api.product.getAllPretty(category ?? "");
 
   const breadcrumbItems = [
     {
