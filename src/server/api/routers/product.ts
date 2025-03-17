@@ -47,7 +47,7 @@ export const productRouter = createTRPCRouter({
   }),
 
   getAllPretty: publicProcedure
-    .input(z.string())
+    .input(z.string().optional())
     .query(async ({ ctx, input }) => {
       const products = input
         ? await ctx.db.product.findMany({

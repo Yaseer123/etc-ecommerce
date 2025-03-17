@@ -3,16 +3,15 @@
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
-import useWishlist from "@/hooks/useWishlist";
-import { type ProductType } from "@/types/ProductType";
+import { api } from "@/trpc/react";
 import { CaretDown, X } from "@phosphor-icons/react/dist/ssr";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function Page() {
-  const { wishlist } = useWishlist();
-  const [sortOption, setSortOption] = useState("");
+  const [wishList] = api.wishList.getWishList.useSuspenseQuery();
   const [layoutCol, setLayoutCol] = useState<number | null>(4);
-  const [type, setType] = useState<string | undefined>();
+  const [sortOption, setSortOption] = useState("");
+
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 12;
   const offset = currentPage * productsPerPage;
@@ -21,94 +20,38 @@ export default function Page() {
     setLayoutCol(col);
   };
 
-  const handleType = (type: string) => {
-    setType((prevType) => (prevType === type ? undefined : type));
-  };
-
   const handleSortChange = (option: string) => {
     setSortOption(option);
+    setCurrentPage(0);
   };
 
-  // Filter product data by type
-  let filteredData = wishlist.filter((product) => {
-    let isTypeMatched = true;
-    if (type) {
-      isTypeMatched = product.type === type;
+  const sortedData = useMemo(() => {
+    const sorted = [...wishList];
+    if (sortOption === "soldQuantityHighToLow") {
+      return sorted.sort((a, b) => b.sold - a.sold);
     }
+    if (sortOption === "discountHighToLow") {
+      return sorted.sort(
+        (a, b) =>
+          Math.floor(100 - (b.price / b.originPrice) * 100) -
+          Math.floor(100 - (a.price / a.originPrice) * 100),
+      );
+    }
+    if (sortOption === "priceHighToLow") {
+      return sorted.sort((a, b) => b.price - a.price);
+    }
+    if (sortOption === "priceLowToHigh") {
+      return sorted.sort((a, b) => a.price - b.price);
+    }
+    return sorted;
+  }, [wishList, sortOption]);
 
-    return isTypeMatched;
-  });
+  const totalProducts = sortedData.length;
+  const pageCount = Math.ceil(totalProducts / productsPerPage);
 
-  const totalProducts = filteredData.length;
-  const selectedType = type;
-
-  if (filteredData.length === 0) {
-    filteredData = [
-      {
-        id: "no-data",
-        category: "no-data",
-        type: "no-data",
-        name: "no-data",
-        gender: "no-data",
-        new: false,
-        sale: false,
-        rate: 0,
-        price: 0,
-        originPrice: 0,
-        brand: "no-data",
-        sold: 0,
-        quantity: 0,
-        quantityPurchase: 0,
-        sizes: [],
-        variation: [],
-        thumbImage: [],
-        images: [],
-        description: "no-data",
-        action: "no-data",
-        slug: "no-data",
-      },
-    ];
-  }
-
-  // Tạo một bản sao của mảng đã lọc để sắp xếp
-  const sortedData = [...filteredData];
-
-  if (sortOption === "soldQuantityHighToLow") {
-    filteredData = sortedData.sort((a, b) => b.sold - a.sold);
-  }
-
-  if (sortOption === "discountHighToLow") {
-    filteredData = sortedData.sort(
-      (a, b) =>
-        Math.floor(100 - (b.price / b.originPrice) * 100) -
-        Math.floor(100 - (a.price / a.originPrice) * 100),
-    );
-  }
-
-  if (sortOption === "priceHighToLow") {
-    filteredData = sortedData.sort((a, b) => b.price - a.price);
-  }
-
-  if (sortOption === "priceLowToHigh") {
-    filteredData = sortedData.sort((a, b) => a.price - b.price);
-  }
-
-  // Find page number base on filteredData
-  const pageCount = Math.ceil(filteredData.length / productsPerPage);
-
-  // If page number 0, set current page = 0
-  if (pageCount === 0) {
-    setCurrentPage(0);
-  }
-
-  // Get product data for current page
-  let currentProducts: ProductType[];
-
-  if (filteredData.length > 0) {
-    currentProducts = filteredData.slice(offset, offset + productsPerPage);
-  } else {
-    currentProducts = [];
-  }
+  const currentProducts = useMemo(() => {
+    return sortedData.slice(offset, offset + productsPerPage);
+  }, [sortedData, offset, productsPerPage]);
 
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
@@ -195,40 +138,6 @@ export default function Page() {
               <div className="right flex items-center gap-3">
                 <div className="relative">
                   <select
-                    className="rounded-lg border border-line py-2 pl-3 pr-8 text-base font-normal capitalize leading-[22] md:pr-12 md:text-[13px] md:leading-5"
-                    name="select-type"
-                    id="select-type"
-                    onChange={(e) => handleType(e.target.value)}
-                    value={type ?? "Type"}
-                  >
-                    <option value="Type" disabled>
-                      Type
-                    </option>
-                    {[
-                      "t-shirt",
-                      "dress",
-                      "top",
-                      "swimwear",
-                      "shirt",
-                      "underwear",
-                      "sets",
-                      "accessories",
-                    ].map((item, index) => (
-                      <option
-                        key={index}
-                        className={`item cursor-pointer ${type === item ? "active" : ""}`}
-                      >
-                        {item}
-                      </option>
-                    ))}
-                  </select>
-                  <CaretDown
-                    size={12}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
-                  />
-                </div>
-                <div className="relative">
-                  <select
                     id="select-filter"
                     name="select-filter"
                     className="rounded-lg border border-line py-2 pl-3 pr-10 text-base font-normal leading-[22] md:pr-20 md:text-[13px] md:leading-5"
@@ -258,35 +167,6 @@ export default function Page() {
                 {totalProducts}
                 <span className="pl-1 text-secondary">Products Found</span>
               </div>
-              {selectedType && (
-                <>
-                  <div className="list flex items-center gap-3">
-                    <div className="h-4 w-px bg-line"></div>
-                    {selectedType && (
-                      <div
-                        className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
-                        onClick={() => {
-                          setType(undefined);
-                        }}
-                      >
-                        <X className="cursor-pointer" />
-                        <span>{selectedType}</span>
-                      </div>
-                    )}
-                  </div>
-                  <div
-                    className="flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"
-                    onClick={() => {
-                      setType(undefined);
-                    }}
-                  >
-                    <X color="rgb(219, 68, 68)" className="cursor-pointer" />
-                    <span className="text-sm font-semibold uppercase leading-5 text-red md:text-xs md:leading-4">
-                      Clear All
-                    </span>
-                  </div>
-                </>
-              )}
             </div>
 
             <div

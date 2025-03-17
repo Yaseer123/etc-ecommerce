@@ -26,7 +26,6 @@ export default function HomeEleven() {
       </Suspense>
       <Brand />
       <Newsletter />
-      <Footer />
       <ModalNewsletter />
     </>
   );

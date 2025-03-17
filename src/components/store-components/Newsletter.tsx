@@ -19,7 +19,7 @@ export default function Newsletter() {
                 className="h-full w-full rounded-xl border border-line pl-4 pr-14 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
                 required
               />
-              <button className="button-main bg-green_custom absolute bottom-1 right-1 top-1 flex items-center justify-center text-black">
+              <button className="button-main absolute bottom-1 right-1 top-1 flex items-center justify-center bg-green text-black">
                 Subscribe
               </button>
             </form>

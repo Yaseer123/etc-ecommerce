@@ -3,15 +3,13 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import TrendingNow from "@/components/store-components/TrendingNow";
-import ShopCollection from "@/components/store-components/Shop/ShopCollection";
-import data from "@/data/Product.json";
 import { api } from "@/trpc/react";
 import {
   ArrowRight,
   CaretDown,
   CaretRight,
 } from "@phosphor-icons/react/dist/ssr";
+import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 
 interface Category {
   name: string;
@@ -22,8 +20,7 @@ interface Category {
 export default function CategoriesPage() {
   const [openCategory, setOpenCategory] = useState<string | null>(null);
   // Fetch categories from tRPC
-  const [categories, { error, isLoading }] =
-    api.category.getAll.useSuspenseQuery();
+  const [categories] = api.category.getAll.useSuspenseQuery();
 
   const categoryList = categories ?? [];
   console.log("Categories:", categoryList);
@@ -33,25 +30,14 @@ export default function CategoriesPage() {
     );
   };
 
+  const breadcrumbItems = [
+    { label: "Home", href: "/" },
+    { label: "Categories" },
+  ];
+
   return (
     <>
-      {/* 🔹 Breadcrumb Section */}
-      <div className="breadcrumb-block style-img">
-        <div className="breadcrumb-main bg-linear overflow-hidden">
-          <div className="relative mx-auto w-full !max-w-[1322px] px-4 pb-10 pt-24 lg:pt-[134px]">
-            <div className="main-content relative z-[1] flex h-full w-full flex-col items-center justify-center">
-              <div className="text-content">
-                <div className="heading2 text-center">Categories</div>
-                <div className="link mt-3 flex items-center justify-center gap-1 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                  <Link href={"/"}>Homepage</Link>
-                  <CaretRight size={14} className="text-secondary2" />
-                  <div className="capitalize text-secondary2">Categories</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <Breadcrumb items={breadcrumbItems} pageTitle="Categories" />
 
       {/* 🔹 Categories Accordion (Using Flexbox) */}
       <div className="bg-gray-50 py-20">
@@ -166,10 +152,6 @@ export default function CategoriesPage() {
           </div>
         </div>
       </div>
-      {/* 🔹 Trending Categories */}
-      <TrendingNow data={categoryList as Category[]} />
-      {/* Collections */}
-      {/* <ShopCollection data={data} /> */}
     </>
   );
 }
