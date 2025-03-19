@@ -25,7 +25,7 @@ export default function BlogItem({ data, type }: BlogProps) {
           <div className="blog-main block h-full">
             <div className="blog-thumb overflow-hidden rounded-[20px]">
               <Image
-                src={data.thumbImg}
+                src={data.coverImageUrl}
                 width={2000}
                 height={1500}
                 alt="blog-img"
@@ -34,18 +34,24 @@ export default function BlogItem({ data, type }: BlogProps) {
             </div>
             <div className="blog-infor mt-7">
               <div className="blog-tag bg-green_custom inline-block rounded-full px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-                {data.tag}
+                {data.tags.join(", ")}
               </div>
               <div className="heading6 blog-title mt-3 duration-300">
                 {data.title}
               </div>
               <div className="mt-2 flex items-center gap-2">
                 <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                  by {data.author}
+                  by {data.createdBy.name}
                 </div>
                 <span className="h-[1px] w-[20px] bg-black"></span>
                 <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                  {data.date}
+                  {new Date(data.updatedAt)
+                    .toLocaleDateString("en-US", {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })
+                    .toUpperCase()}
                 </div>
               </div>
             </div>
@@ -61,7 +67,7 @@ export default function BlogItem({ data, type }: BlogProps) {
               <div className="blog-main flex h-full gap-6 max-md:flex-col md:items-center md:gap-9">
                 <div className="blog-thumb w-full flex-shrink-0 overflow-hidden rounded-[20px] md:w-1/2">
                   <Image
-                    src={data.thumbImg}
+                    src={data.coverImageUrl}
                     width={2000}
                     height={1500}
                     alt="blog-img"
@@ -70,22 +76,28 @@ export default function BlogItem({ data, type }: BlogProps) {
                 </div>
                 <div className="blog-infor">
                   <div className="blog-tag bg-green_custom inline-block rounded-full px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-                    {data.tag}
+                    {data.tags.join(", ")}
                   </div>
                   <div className="heading6 blog-title mt-3 duration-300">
                     {data.title}
                   </div>
                   <div className="mt-2 flex items-center gap-2">
                     <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                      by {data.author}
+                      by {data.createdBy.name}
                     </div>
                     <span className="h-[1px] w-[20px] bg-black"></span>
                     <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                      {data.date}
+                      {new Date(data.updatedAt)
+                        .toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })
+                        .toUpperCase()}
                     </div>
                   </div>
                   <div className="body1 mt-4 text-secondary">
-                    {data.shortDesc}
+                    {data.shortDescription}
                   </div>
                   <div className="mt-4 text-base font-semibold capitalize leading-[26px] underline md:text-base md:leading-6">
                     Read More
@@ -103,7 +115,7 @@ export default function BlogItem({ data, type }: BlogProps) {
                   <div className="blog-main block h-full border-b border-line pb-8">
                     <div className="blog-thumb overflow-hidden rounded-[20px]">
                       <Image
-                        src={data.thumbImg}
+                        src={data.coverImageUrl}
                         width={2000}
                         height={1500}
                         alt="blog-img"
@@ -112,22 +124,28 @@ export default function BlogItem({ data, type }: BlogProps) {
                     </div>
                     <div className="blog-infor mt-7">
                       <div className="blog-tag bg-green_custom inline-block rounded-full px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-                        {data.tag}
+                        {data.tags.join(", ")}
                       </div>
                       <div className="heading6 blog-title mt-3 duration-300">
                         {data.title}
                       </div>
                       <div className="mt-2 flex items-center gap-2">
                         <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                          by {data.author}
+                          by {data.createdBy.name}
                         </div>
                         <span className="h-[1px] w-[20px] bg-black"></span>
                         <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                          {data.date}
+                          {new Date(data.updatedAt)
+                            .toLocaleDateString("en-US", {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })
+                            .toUpperCase()}
                         </div>
                       </div>
                       <div className="body1 mt-4 text-secondary">
-                        {data.shortDesc}
+                        {data.shortDescription}
                       </div>
                       <div className="text-button mt-4 underline">
                         Read More

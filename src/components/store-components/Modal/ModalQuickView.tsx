@@ -22,9 +22,6 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 
 const ModalQuickView = () => {
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [openPopupImg, setOpenPopupImg] = useState(false);
-  const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
   const { selectedProduct, closeQuickView } = useModalQuickViewStore();
   const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
@@ -38,18 +35,6 @@ const ModalQuickView = () => {
     Math.floor(
       100 - (selectedProduct.price / selectedProduct.originPrice) * 100,
     );
-
-  const handleOpenSizeGuide = () => {
-    setOpenSizeGuide(true);
-  };
-
-  const handleCloseSizeGuide = () => {
-    setOpenSizeGuide(false);
-  };
-
-  const handleActiveColor = (item: string) => {
-    setActiveColor(item);
-  };
 
   const handleActiveSize = (item: string) => {
     setActiveSize(item);
@@ -114,6 +99,9 @@ const ModalQuickView = () => {
     }
     openModalWishlist();
   };
+
+  if (!selectedProduct) return null;
+
   return (
     <>
       <div className={`modal-quickview-block`} onClick={closeQuickView}>

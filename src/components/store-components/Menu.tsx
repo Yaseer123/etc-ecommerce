@@ -22,9 +22,11 @@ import {
 
 export default function Menu({
   isAuthenticated,
+  username,
   props,
 }: {
   isAuthenticated: boolean;
+  username: string | null | undefined;
   props?: string;
 }) {
   const pathname = usePathname();

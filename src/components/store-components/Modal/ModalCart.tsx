@@ -36,7 +36,6 @@ const ModalCart = ({
 
   const [activeTab, setActiveTab] = useState<string | undefined>("");
   const { isModalOpen, closeModalCart } = useModalCartStore();
-  // const { cartState, addToCart, removeFromCart, updateCart } = useCart();
 
   const utils = api.useUtils();
   const [cartState] = api.cart.getCart.useSuspenseQuery();
