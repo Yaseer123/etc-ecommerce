@@ -25,7 +25,6 @@ export const prettifyProduct = async (product: ProductWithCategory) => {
     sale: product.sale,
     rate: product.rate,
     originPrice: product.originPrice,
-    thumbImage: images.slice(0, 2).map((image) => image.secure_url),
     images: images.map((image) => image.secure_url),
     slug: product.slug,
     sizes: ["XS", "S", "M", "L", "XL", "2XL"],
@@ -74,9 +73,10 @@ export const productRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const product = await ctx.db.product.findUnique({
         where: { id: input.id },
+        include: { category: true },
       });
 
-      return product;
+      return await prettifyProduct(product as ProductWithCategory);
     }),
 
   getProductWithCategoryName: publicProcedure.query(async ({ ctx }) => {

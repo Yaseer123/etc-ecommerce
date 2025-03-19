@@ -8,9 +8,7 @@
 export interface ProductType {
   id: string;
   category: string;
-  // type: string;
   name: string;
-  // gender: string;
   new: boolean;
   sale: boolean;
   rate: number;
@@ -21,8 +19,6 @@ export interface ProductType {
   quantity: number;
   quantityPurchase: number;
   sizes: Array<string>;
-  // variation: Variation[];
-  thumbImage: Array<string>;
   images: Array<string>;
   description: string;
   action: string;

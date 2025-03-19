@@ -6,7 +6,7 @@ import { type ProductType } from "@/types/ProductType";
 interface CartItem extends ProductType {
   quantity: number;
   selectedSize: string;
-  selectedColor: string;
+  selectedColor?: string;
 }
 
 interface CartState {
@@ -17,7 +17,7 @@ interface CartState {
     itemId: string,
     quantity: number,
     selectedSize: string,
-    selectedColor: string
+    selectedColor?: string
   ) => void;
 }
 
@@ -44,7 +44,7 @@ export const useCartStore = create<CartState>()(
           cartArray: state.cartArray.filter(item => item.id !== itemId)
         })),
       
-      updateCart: (itemId: string, quantity: number, selectedSize: string, selectedColor: string) => 
+      updateCart: (itemId: string, quantity: number, selectedSize: string, selectedColor?: string) => 
         set((state) => ({
           cartArray: state.cartArray.map(item => 
             item.id === itemId

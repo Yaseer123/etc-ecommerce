@@ -31,7 +31,6 @@ export default async function ProductsPage({
       <ShopFilterCanvas
         data={productData}
         productPerPage={12}
-        // productStyle="style-1"
       />
     </>
   );

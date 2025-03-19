@@ -4,7 +4,6 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { type ProductType } from "@/types/ProductType";
-import Product from "../Product";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
 import "swiper/css/bundle";
@@ -25,56 +24,63 @@ import {
   HandsClapping,
 } from "@phosphor-icons/react/dist/ssr";
 import SwiperCore from "swiper/core";
-import useWishlist from "@/hooks/useWishlist";
 import Rate from "../../Rate";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import { api } from "@/trpc/react";
 
-interface Props {
-  data: Array<ProductType>;
-  productId: string | number | null;
-}
+type WishlistItem = {
+  id: string;
+  name: string;
+};
 
-const Discount: React.FC<Props> = ({ data, productId }) => {
+export default function ProductDetails({
+  productMain,
+}: {
+  productMain: ProductType;
+}) {
   SwiperCore.use([Navigation, Thumbs]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef: any = useRef();
-  const [photoIndex, setPhotoIndex] = useState(0);
+
   const [openPopupImg, setOpenPopupImg] = useState(false);
-  const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
-  const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
-  const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const { openModalWishlist } = useModalWishlistStore();
-  let productMain = data.find((product) => product.id === productId)!;
-  if (productMain === undefined) {
-    productMain = data[0];
-  }
+  const utils = api.useUtils();
+
+  const [wishlistResponse] = api.wishList.getWishList.useSuspenseQuery();
+  const wishlist: WishlistItem[] = wishlistResponse ?? [];
+
+  const addToWishlistMutation = api.wishList.addToWishList.useMutation({
+    onSuccess: async () => {
+      await utils.wishList.getWishList.invalidate();
+    },
+  });
+
+  const removeFromWishlistMutation =
+    api.wishList.removeFromWishList.useMutation({
+      onSuccess: async () => {
+        await utils.wishList.getWishList.invalidate();
+      },
+    });
+
+  // const addToCart = api.cart.addToCart.useMutation({
+  //   onSuccess: async () => {
+  //     await utils.cart.getCart.invalidate();
+  //   },
+  // });
 
   const percentSale = Math.floor(
     100 - (productMain.price / productMain.originPrice) * 100,
   );
 
-  const handleOpenSizeGuide = () => {
-    setOpenSizeGuide(true);
-  };
-
-  const handleCloseSizeGuide = () => {
-    setOpenSizeGuide(false);
-  };
-
   const handleSwiper = (swiper: SwiperCore) => {
-    // Do something with the thumbsSwiper instance
     setThumbsSwiper(swiper);
-  };
-
-  const handleActiveColor = (item: string) => {
-    setActiveColor(item);
   };
 
   const handleActiveSize = (item: string) => {
@@ -83,53 +89,73 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
 
   const handleIncreaseQuantity = () => {
     productMain.quantityPurchase += 1;
-    updateCart(
-      productMain.id,
-      productMain.quantityPurchase + 1,
-      activeSize,
-      activeColor,
-    );
+    updateCart(productMain.id, productMain.quantityPurchase + 1, activeSize);
   };
 
   const handleDecreaseQuantity = () => {
     if (productMain.quantityPurchase > 1) {
       productMain.quantityPurchase -= 1;
-      updateCart(
-        productMain.id,
-        productMain.quantityPurchase - 1,
-        activeSize,
-        activeColor,
-      );
+      updateCart(productMain.id, productMain.quantityPurchase - 1, activeSize);
     }
   };
 
   const handleAddToCart = () => {
     if (!cartArray.find((item) => item.id === productMain.id)) {
       addToCart({ ...productMain });
-      updateCart(
-        productMain.id,
-        productMain.quantityPurchase,
-        activeSize,
-        activeColor,
-      );
+      updateCart(productMain.id, productMain.quantityPurchase, activeSize);
     } else {
-      updateCart(
-        productMain.id,
-        productMain.quantityPurchase,
-        activeSize,
-        activeColor,
-      );
+      updateCart(productMain.id, productMain.quantityPurchase, activeSize);
     }
     openModalCart();
   };
+
+  // const handleAddToWishlist = () => {
+  //   if (wishlist.some((item) => item.id === productMain.id)) {
+  //     removeFromWishlist(productMain.id);
+  //   } else {
+  //     addToWishlist(productMain);
+  //   }
+  //   openModalWishlist();
+  // };
+  const isInWishlist = (itemId: string): boolean => {
+    return wishlist.some((item: { id: string }) => item?.id === itemId);
+  };
+
   const handleAddToWishlist = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
-    if (wishlist.some((item) => item.id === productMain.id)) {
-      removeFromWishlist(productMain.id);
+    if (isInWishlist(productMain.id)) {
+      // **Optimistic UI Update: Remove item immediately**
+      utils.wishList.getWishList.setData(
+        undefined,
+        (old) => old?.filter((item) => item.id !== productMain.id) ?? [],
+      );
+
+      removeFromWishlistMutation.mutate(
+        { productId: productMain.id },
+        {
+          onError: () => {
+            // **Rollback on failure**
+            void utils.wishList.getWishList.invalidate();
+          },
+        },
+      );
     } else {
-      // else, add to wishlist and set state to true
-      addToWishlist(productMain);
+      // **Optimistic UI Update: Add item immediately**
+      utils.wishList.getWishList.setData(undefined, (old) => [
+        ...(old ?? []),
+        productMain, // Add complete product data
+      ]);
+
+      addToWishlistMutation.mutate(
+        { productId: productMain.id },
+        {
+          onError: () => {
+            // **Rollback on failure**
+            void utils.wishList.getWishList.invalidate();
+          },
+        },
+      );
     }
+
     openModalWishlist();
   };
 
@@ -261,7 +287,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   (1.234 reviews)
                 </span>
               </div>
-              <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
+              <div className="mt-5 flex flex-wrap items-center gap-3">
                 <div className="product-price heading5">
                   ${productMain.price}.00
                 </div>
@@ -274,9 +300,9 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     -{percentSale}%
                   </div>
                 )}
-                <div className="desc mt-3 text-secondary">
-                  {productMain.description}
-                </div>
+              </div>
+              <div className="desc mt-5 block border-b border-line pb-6 text-secondary">
+                {productMain.description}
               </div>
               <div className="list-action mt-6">
                 <div className="discount-code">
@@ -328,32 +354,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     </div>
                   </div>
                 </div>
-                <div className="choose-color mt-5">
-                  <div className="text-title">
-                    Colors:{" "}
-                    <span className="text-title color">{activeColor}</span>
-                  </div>
-                  {/* <div className="list-color mt-3 flex flex-wrap items-center gap-2">
-                    {productMain.variation.map((item, index) => (
-                      <div
-                        className={`color-item relative h-12 w-12 rounded-xl duration-300 ${activeColor === item.color ? "active" : ""}`}
-                        key={index}
-                        onClick={() => handleActiveColor(item.color)}
-                      >
-                        <Image
-                          src={item.colorImage}
-                          width={100}
-                          height={100}
-                          alt="color"
-                          className="rounded-xl"
-                        />
-                        <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 capitalize text-white">
-                          {item.color}
-                        </div>
-                      </div>
-                    ))}
-                  </div> */}
-                </div>
+
                 <div className="choose-size mt-5">
                   <div className="heading flex items-center justify-between">
                     <div className="text-title">
@@ -392,7 +393,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   </div>
                   <div
                     onClick={handleAddToCart}
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Add To Cart
                   </div>
@@ -870,7 +871,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                   <div className="right">
                     <Link
                       href={"#form-review"}
-                      className="duration-400 md:text-md inline-block cursor-pointer whitespace-nowrap rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md inline-block cursor-pointer whitespace-nowrap rounded-[12px] border border-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     >
                       Write Reviews
                     </Link>
@@ -1118,7 +1119,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                         </label>
                       </div>
                       <div className="col-span-full sm:pt-3">
-                        <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
+                        <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
                           Submit Reviews
                         </button>
                       </div>
@@ -1135,7 +1136,7 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
             <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
               Related Products
             </div>
-            <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-5 md:mt-10 md:gap-[30px] lg:grid-cols-4">
+            {/* <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-5 md:mt-10 md:gap-[30px] lg:grid-cols-4">
               {data
                 .slice(Number(productId), Number(productId) + 4)
                 .map((item, index) => (
@@ -1146,12 +1147,10 @@ const Discount: React.FC<Props> = ({ data, productId }) => {
                     style="style-1"
                   />
                 ))}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
     </>
   );
-};
-
-export default Discount;
+}

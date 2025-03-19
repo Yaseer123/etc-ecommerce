@@ -24,22 +24,17 @@ interface ProductProps {
 type WishlistItem = {
   id: string;
   name: string;
-  // other properties as needed
 };
 export default function Product({ data, type }: ProductProps) {
-  const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [openQuickShop, setOpenQuickShop] = useState<boolean>(false);
-  // const { addToCart, updateCart, cartState } = useCart();
   const { openModalCart } = useModalCartStore();
   const { openModalWishlist } = useModalWishlistStore();
   const { openQuickView } = useModalQuickViewStore();
 
   const utils = api.useUtils();
 
-  // Fixed - properly handle the response from useSuspenseQuery
   const [wishlistResponse] = api.wishList.getWishList.useSuspenseQuery();
-  // Ensure wishlistResponse is treated as an array
   const wishlist: WishlistItem[] = wishlistResponse ?? [];
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
@@ -67,10 +62,6 @@ export default function Product({ data, type }: ProductProps) {
   };
 
   const router = useRouter();
-
-  const handleActiveColor = (item: string) => {
-    setActiveColor(item);
-  };
 
   const handleActiveSize = (item: string) => {
     setActiveSize(item);
@@ -124,7 +115,7 @@ export default function Product({ data, type }: ProductProps) {
   };
 
   const handleDetailProduct = (productId: string) => {
-    router.push(`/products/default?id=${productId}`);
+    router.push(`/products/${data.slug}?id=${productId}`);
   };
 
   const percentSale = Math.floor(100 - (data.price / data.originPrice) * 100);
@@ -174,7 +165,7 @@ export default function Product({ data, type }: ProductProps) {
               </div>
 
               <div className="product-img aspect-[3/4] h-full w-full">
-                {data.thumbImage.map((img, index) => (
+                {data.images.map((img, index) => (
                   <Image
                     key={index}
                     src={img}
@@ -320,7 +311,7 @@ export default function Product({ data, type }: ProductProps) {
                     <div className="product-origin-price text-base font-normal leading-[22] text-secondary2 md:text-[13px] md:leading-5">
                       <del>${data.originPrice}.00</del>
                     </div>
-                    <div className="product-sale bg-green_custom inline-block rounded-full px-3 py-0.5 text-base font-medium font-normal leading-[22] md:text-[13px] md:leading-5">
+                    <div className="product-sale bg-green_custom inline-block rounded-full px-3 py-0.5 text-base font-medium leading-[22] md:text-[13px] md:leading-5">
                       -{percentSale}%
                     </div>
                   </>
@@ -341,7 +332,7 @@ export default function Product({ data, type }: ProductProps) {
               className="aspect-square w-full"
               width={5000}
               height={5000}
-              src={data.thumbImage[0] ?? ""}
+              src={data.images[0] ?? "/images/product/1000x1000.png"}
               alt="img"
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
