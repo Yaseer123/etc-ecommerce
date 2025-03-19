@@ -1,14 +1,14 @@
-"use client";
 import React from "react";
 import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { CheckSquare } from "@phosphor-icons/react/dist/ssr";
+import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 
 const Login = () => {
+  const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Login" }];
   return (
     <>
       <div id="header" className="relative w-full">
-        <Breadcrumb heading="Login" subHeading="Login" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Login" />
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
@@ -18,6 +18,17 @@ const Login = () => {
                 Login
               </div>
               <form className="mt-4 md:mt-7">
+                <Link href="/api/auth/signin">
+                  <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white">
+                    <GoogleLogo weight="bold" />
+                    <span>Login with Google</span>
+                  </button>
+                </Link>
+                <div className="relative my-5 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                  <span className="relative z-30 bg-white px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
                 <div className="email">
                   <input
                     className="w-full rounded-lg border-line px-4 pb-3 pt-3"

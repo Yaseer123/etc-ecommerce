@@ -28,10 +28,15 @@ const MyAccount = () => {
     setActiveOrders(order);
   };
 
+  const breadcrumbItems = [
+    {label:"home", href:"/"},
+    {label:"my-account"}
+  ]
+
   return (
     <>
       <div id="header" className="relative w-full">
-        <Breadcrumb heading="My Account" subHeading="My Account" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="My Account" />
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
@@ -101,7 +106,7 @@ const MyAccount = () => {
                     </strong>
                   </Link>
                   <Link
-                    href={"/login"}
+                    href={"/api/auth/signout"}
                     className="item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white"
                   >
                     <SignOut size={20} />

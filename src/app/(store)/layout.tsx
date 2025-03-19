@@ -7,17 +7,18 @@ import { countdownTime } from "@/utils/countdownTime";
 import React from "react";
 import Menu from "@/components/store-components/Menu";
 import ModalQuickView from "@/components/store-components/Modal/ModalQuickView";
+import { auth } from "@/server/auth";
 
 const serverTimeLeft: CountdownTimeType = countdownTime();
-export default function layout({ children }: { children: React.ReactNode }) {
+export default async function layout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
   return (
     <>
-      <Menu />
+      <Menu isAuthenticated={!!session?.user} />
       {children}
       <Footer />
       <ModalCart serverTimeLeft={serverTimeLeft} />
       <ModalWishlist />
-      {/* <ModalSearch /> */}
       <ModalQuickView />
     </>
   );

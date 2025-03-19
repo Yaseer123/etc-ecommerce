@@ -1,36 +1,56 @@
-"use client";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { api } from "@/trpc/react";
-import DOMPurify from "dompurify";
+import { api } from "@/trpc/server";
+import { redirect } from "next/navigation";
+import ParseContent from "@/components/store-components/Blog/ParseContent";
 
-export default function BlogDetailsPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const blogId = (await searchParams).id as string;
 
-  const blogId = searchParams.get("id");
-  if (blogId === null) {
-    return router.push("/blog");
+  if (!blogId) {
+    return {
+      title: "Blog",
+      description: "Explore our latest blog posts.",
+    };
   }
 
-  const [blogMain] = api.post.getOne.useSuspenseQuery({ id: blogId });
+  const blogMain = await api.post.getOne({ id: blogId });
 
-  if (blogMain === null) {
-    return router.push("/blog");
+  if (!blogMain) {
+    return {
+      title: "Blog",
+      description: "Explore our latest blog posts.",
+    };
   }
 
-  // const handleBlogClick = (category: string) => {
-  //   // Go to blog detail with category selected
-  //   router.push(`/blog/default?category=${category}`);
-  // };
+  return {
+    title: blogMain.title,
+    description: blogMain.shortDescription,
+  };
+}
 
-  // const handleBlogDetail = (id: string) => {
-  //   // Go to blog detail with id selected
-  //   router.push(`/blog/detail1?id=${id}`);
-  // };
+export default async function BlogDetailsPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const blogId = (await searchParams).id as string;
+
+  if (!blogId) {
+    return redirect("/blog");
+  }
+
+  const blogMain = await api.post.getOne({ id: blogId });
+
+  if (!blogMain) {
+    return redirect("/blog");
+  }
+
   return (
     <div className="blog">
       <div className="bg-img mt-14 md:mt-[74px]">
@@ -52,15 +72,6 @@ export default function BlogDetailsPage() {
               {blogMain.title}
             </div>
             <div className="author mt-4 flex items-center gap-4">
-              {/* <div className="avatar h-10 w-10 flex-shrink-0 overflow-hidden rounded-full">
-                <Image
-                  src=
-                  width={200}
-                  height={200}
-                  alt="avatar"
-                  className="h-full w-full object-cover"
-                />
-              </div> */}
               <div className="flex items-center gap-2">
                 <div className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                   by {blogMain.createdBy.name}
@@ -79,14 +90,7 @@ export default function BlogDetailsPage() {
             </div>
             <div className="content mt-5 md:mt-8">
               <div className="body1">{blogMain.shortDescription}</div>
-              {/* <div className="body1 mt-3">{blogMain.content}</div> */}
-              <div
-                className="body1 prose prose-sm mt-3 outline-none sm:prose-base lg:prose-lg xl:prose-2xl"
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(blogMain.content),
-                }}
-              />
+              <ParseContent content={blogMain.content} />
             </div>
             <div className="action mt-5 flex w-full items-center justify-end p-4 md:mt-8">
               <div className="right ml-auto flex flex-wrap items-center gap-3">
@@ -133,9 +137,6 @@ export default function BlogDetailsPage() {
           </div>
         </div>
       </div>
-      {/* <div className="pb-10 md:pb-20">
-        <NewsInsight data={blogData} start={0} limit={3} />
-      </div> */}
     </div>
   );
 }

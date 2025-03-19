@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Image from "next/image";
-import Footer from "@/components/store-components/Footer";
 import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import BlogItem from "@/components/store-components/Blog/BlogItem";
@@ -99,9 +98,7 @@ const BlogsPage = () => {
                         className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
                       />
                       <div>
-                        <div className="blog-tag inline-block whitespace-nowrap rounded-full bg-green px-2 py-0.5 text-sm text-xs font-semibold uppercase leading-5">
-                          {item.tags.join(", ")}
-                        </div>
+                        <div className="blog-tag inline-block rounded-full bg-green px-2 py-0.5 text-xs font-semibold uppercase leading-5 whitespace-nowrap overflow-hidden text-ellipsis" style={{ maxWidth: '150px' }}>{item.tags.join(", ")}</div>
                         <div className="text-title mt-1">{item.title}</div>
                       </div>
                     </div>
@@ -148,7 +145,6 @@ const BlogsPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </>
   );
 };

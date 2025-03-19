@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {} from "@phosphor-icons/react/dist/ssr";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
 import productData from "@/data/Product.json";
@@ -21,7 +20,13 @@ import {
   User,
 } from "@phosphor-icons/react/dist/ssr";
 
-export default function Menu({ props }: { props?: string }) {
+export default function Menu({
+  isAuthenticated,
+  props,
+}: {
+  isAuthenticated: boolean;
+  props?: string;
+}) {
   const pathname = usePathname();
   const { openLoginPopup, handleLoginPopup } = useLoginPopup();
   const { openShopDepartmentPopup, handleShopDepartmentPopup } =
@@ -59,7 +64,7 @@ export default function Menu({ props }: { props?: string }) {
   return (
     <>
       <div
-        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white md:pt-5 duration-500`}
+        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 md:pt-5`}
       >
         <div
           className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px] ${props}`}
@@ -124,22 +129,20 @@ export default function Menu({ props }: { props?: string }) {
                       </div>
                       <Link
                         href={"/my-account"}
-                        className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                        className="button-main w-full border border-black bg-white text-center text-black"
                       >
                         Dashboard
                       </Link>
-                      <div className="bottom mt-4 border-t border-line pt-4"></div>
-                      <Link href={"#!"} className="body1 hover:underline">
-                        Support
-                      </Link>
                     </div>
                   </div>
-                  <div
-                    className="wishlist-icon flex cursor-pointer items-center max-md:hidden"
-                    onClick={openModalWishlist}
-                  >
-                    <Heart size={24} color="black" />
-                  </div>
+                  {isAuthenticated && (
+                    <div
+                      className="wishlist-icon flex cursor-pointer items-center max-md:hidden"
+                      onClick={openModalWishlist}
+                    >
+                      <Heart size={24} color="black" />
+                    </div>
+                  )}
                   <div
                     className="cart-icon relative flex cursor-pointer items-center"
                     onClick={openModalCart}

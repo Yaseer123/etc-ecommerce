@@ -3,17 +3,14 @@ import React from "react";
 import Link from "next/link";
 import Menu from "@/components/store-components/Menu";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { CheckSquare } from "@phosphor-icons/react/dist/ssr";
+import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
 
 export default function register() {
+  const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Register" }];
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-        <Breadcrumb
-          heading="Create An Account"
-          subHeading="Create An Account"
-        />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Create An Account" />
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
@@ -23,6 +20,17 @@ export default function register() {
                 Register
               </div>
               <form className="mt-4 md:mt-7">
+                <Link href="/api/auth/signin">
+                  <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white">
+                    <GoogleLogo weight="bold" />
+                    <span>Login with Google</span>
+                  </button>
+                </Link>
+                <div className="relative my-5 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
+                  <span className="relative z-30 bg-white px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
                 <div className="email">
                   <input
                     className="w-full rounded-lg border-line px-4 pb-3 pt-3"
