@@ -38,14 +38,11 @@ const Default: React.FC<Props> = ({ data, productId }) => {
   SwiperCore.use([Navigation, Thumbs]);
   const swiperRef = useRef<SwiperCore | null>(null);
   const [openPopupImg, setOpenPopupImg] = useState(false);
-  const [openSizeGuide, setOpenSizeGuide] = useState<boolean>(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
-  const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
-  // const { addToWishlist, removeFromWishlist, wishlist } = useWishlist();
   const { openModalWishlist } = useModalWishlistStore();
 
   const utils = api.useUtils();
@@ -74,32 +71,9 @@ const Default: React.FC<Props> = ({ data, productId }) => {
     100 - (productMain?.price / productMain?.originPrice) * 100,
   );
 
-  const handleOpenSizeGuide = () => {
-    setOpenSizeGuide(true);
-  };
-
-  const handleCloseSizeGuide = () => {
-    setOpenSizeGuide(false);
-  };
-
   const handleSwiper = (swiper: SwiperCore) => {
     // Do something with the thumbsSwiper instance
     setThumbsSwiper(swiper);
-  };
-
-  const handleActiveColor = (item: string) => {
-    setActiveColor(item);
-
-    // // Find variation with selected color
-    // const foundColor = productMain.variation.find((variation) => variation.color === item);
-    // // If found, slide next to img
-    // if (foundColor) {
-    //     const index = productMain.images.indexOf(foundColor.image);
-
-    //     if (index !== -1) {
-    //         swiperRef.current?.slideTo(index);
-    //     }
-    // }
   };
 
   const handleActiveSize = (item: string) => {
@@ -108,42 +82,22 @@ const Default: React.FC<Props> = ({ data, productId }) => {
 
   const handleIncreaseQuantity = () => {
     productMain.quantityPurchase += 1;
-    updateCart(
-      productMain.id,
-      productMain.quantityPurchase + 1,
-      activeSize,
-      activeColor,
-    );
+    updateCart(productMain.id, productMain.quantityPurchase + 1);
   };
 
   const handleDecreaseQuantity = () => {
     if (productMain.quantityPurchase > 1) {
       productMain.quantityPurchase -= 1;
-      updateCart(
-        productMain.id,
-        productMain.quantityPurchase - 1,
-        activeSize,
-        activeColor,
-      );
+      updateCart(productMain.id, productMain.quantityPurchase - 1);
     }
   };
 
   const handleAddToCart = () => {
     if (!cartArray.find((item) => item.id === productMain.id)) {
       addToCart({ ...productMain });
-      updateCart(
-        productMain.id,
-        productMain.quantityPurchase,
-        activeSize,
-        activeColor,
-      );
+      updateCart(productMain.id, productMain.quantityPurchase);
     } else {
-      updateCart(
-        productMain.id,
-        productMain.quantityPurchase,
-        activeSize,
-        activeColor,
-      );
+      updateCart(productMain.id, productMain.quantityPurchase);
     }
     openModalCart();
   };

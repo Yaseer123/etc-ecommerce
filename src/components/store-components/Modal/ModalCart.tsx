@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import type CountdownTimeType from "@/types/CountdownType";
 import { countdownTime } from "@/utils/countdownTime";
-import { api } from "@/trpc/react";
 import CartProductItem from "./CartProductItem";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import {
@@ -14,6 +13,7 @@ import {
   Tag,
   CaretDown,
 } from "@phosphor-icons/react/dist/ssr";
+import { useCartStore } from "@/context/store-context/CartContext";
 
 const ModalCart = ({
   serverTimeLeft,
@@ -37,13 +37,7 @@ const ModalCart = ({
   const [activeTab, setActiveTab] = useState<string | undefined>("");
   const { isModalOpen, closeModalCart } = useModalCartStore();
 
-  const utils = api.useUtils();
-  const [cartState] = api.cart.getCart.useSuspenseQuery();
-  const removeFromCart = api.cart.removeFromCart.useMutation({
-    onSuccess: async () => {
-      await utils.cart.getCart.invalidate();
-    },
-  });
+  const { cartArray: cartState } = useCartStore();
 
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab);
@@ -52,9 +46,7 @@ const ModalCart = ({
   const moneyForFreeship = 150;
   let [totalCart] = useState<number>(0);
 
-  cartState?.items.map(
-    (item) => (totalCart += item.product.price * item.quantity),
-  );
+  cartState.map((item) => (totalCart += item.price * item.quantity));
 
   return (
     <>
@@ -123,15 +115,12 @@ const ModalCart = ({
               </div>
             </div>
             <div className="list-product px-6">
-              {cartState?.items.map((item) => (
+              {cartState.map((item) => (
                 <div
-                  key={item.product.id}
+                  key={item.id}
                   className="item flex items-center justify-between gap-3 border-b border-line py-5"
                 >
-                  <CartProductItem
-                    item={item}
-                    removeFromCart={() => removeFromCart.mutate(item.id)}
-                  />
+                  <CartProductItem item={item} />
                 </div>
               ))}
             </div>

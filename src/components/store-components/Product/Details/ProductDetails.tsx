@@ -69,12 +69,6 @@ export default function ProductDetails({
       },
     });
 
-  // const addToCart = api.cart.addToCart.useMutation({
-  //   onSuccess: async () => {
-  //     await utils.cart.getCart.invalidate();
-  //   },
-  // });
-
   const percentSale = Math.floor(
     100 - (productMain.price / productMain.originPrice) * 100,
   );
@@ -89,34 +83,26 @@ export default function ProductDetails({
 
   const handleIncreaseQuantity = () => {
     productMain.quantityPurchase += 1;
-    updateCart(productMain.id, productMain.quantityPurchase + 1, activeSize);
+    updateCart(productMain.id, productMain.quantityPurchase + 1);
   };
 
   const handleDecreaseQuantity = () => {
     if (productMain.quantityPurchase > 1) {
       productMain.quantityPurchase -= 1;
-      updateCart(productMain.id, productMain.quantityPurchase - 1, activeSize);
+      updateCart(productMain.id, productMain.quantityPurchase - 1);
     }
   };
 
   const handleAddToCart = () => {
     if (!cartArray.find((item) => item.id === productMain.id)) {
       addToCart({ ...productMain });
-      updateCart(productMain.id, productMain.quantityPurchase, activeSize);
+      updateCart(productMain.id, productMain.quantityPurchase);
     } else {
-      updateCart(productMain.id, productMain.quantityPurchase, activeSize);
+      updateCart(productMain.id, productMain.quantityPurchase);
     }
     openModalCart();
   };
 
-  // const handleAddToWishlist = () => {
-  //   if (wishlist.some((item) => item.id === productMain.id)) {
-  //     removeFromWishlist(productMain.id);
-  //   } else {
-  //     addToWishlist(productMain);
-  //   }
-  //   openModalWishlist();
-  // };
   const isInWishlist = (itemId: string): boolean => {
     return wishlist.some((item: { id: string }) => item?.id === itemId);
   };

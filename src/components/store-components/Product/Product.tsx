@@ -8,6 +8,7 @@ import { api } from "@/trpc/react";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
+import { useCartStore } from "@/context/store-context/CartContext";
 
 interface ProductProps {
   data: ProductType;
@@ -22,6 +23,7 @@ export default function Product({ data, type }: ProductProps) {
   const { openModalCart } = useModalCartStore();
   const { openModalWishlist } = useModalWishlistStore();
   const { openQuickView } = useModalQuickViewStore();
+  const { addToCart } = useCartStore();
 
   const utils = api.useUtils();
 
@@ -41,12 +43,6 @@ export default function Product({ data, type }: ProductProps) {
       },
     });
 
-  const addToCart = api.cart.addToCart.useMutation({
-    onSuccess: async () => {
-      await utils.cart.getCart.invalidate();
-    },
-  });
-
   // Create a safe check function for wishlist items
   const isInWishlist = (itemId: string): boolean => {
     return wishlist.some((item: { id: string }) => item?.id === itemId);
@@ -55,7 +51,7 @@ export default function Product({ data, type }: ProductProps) {
   const router = useRouter();
 
   const handleAddToCart = () => {
-    addToCart.mutate({ productId: data.id });
+    addToCart(data);
     openModalCart();
   };
 

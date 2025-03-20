@@ -1,65 +1,65 @@
 // cartStore.ts
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { type ProductType } from "@/types/ProductType";
+import { v4 as uuid } from "uuid";
 
-interface CartItem extends ProductType {
+interface CartItem {
+  id: string;
+  name: string;
+  price: number;
   quantity: number;
-  selectedSize: string;
-  selectedColor?: string;
+  productId: string;
+  coverImage: string;
 }
 
 interface CartState {
   cartArray: CartItem[];
   addToCart: (item: ProductType) => void;
   removeFromCart: (itemId: string) => void;
-  updateCart: (
-    itemId: string,
-    quantity: number,
-    selectedSize: string,
-    selectedColor?: string
-  ) => void;
+  updateCart: (itemId: string, quantity: number) => void;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set) => ({
       cartArray: [],
-      
-      addToCart: (item: ProductType) => 
+
+      addToCart: (item: ProductType) =>
         set((state) => ({
           cartArray: [
-            ...state.cartArray, 
+            ...state.cartArray,
             {
-              ...item,
+              // ...item,
               quantity: 1,
-              selectedSize: "",
-              selectedColor: ""
-            }
-          ]
+              id: uuid(),
+              productId: item.id,
+              name: item.name,
+              price: item.price,
+              coverImage: item.images[0]!,
+            },
+          ],
         })),
-      
-      removeFromCart: (itemId: string) => 
+
+      removeFromCart: (itemId: string) =>
         set((state) => ({
-          cartArray: state.cartArray.filter(item => item.id !== itemId)
+          cartArray: state.cartArray.filter((item) => item.id !== itemId),
         })),
-      
-      updateCart: (itemId: string, quantity: number, selectedSize: string, selectedColor?: string) => 
+
+      updateCart: (itemId: string, quantity: number) =>
         set((state) => ({
-          cartArray: state.cartArray.map(item => 
+          cartArray: state.cartArray.map((item) =>
             item.id === itemId
               ? {
                   ...item,
                   quantity,
-                  selectedSize,
-                  selectedColor
                 }
-              : item
-          )
-        }))
+              : item,
+          ),
+        })),
     }),
     {
-      name: 'cart-storage', // unique name for localStorage
-    }
-  )
+      name: "cart-storage", // unique name for localStorage
+    },
+  ),
 );
