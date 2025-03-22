@@ -10,12 +10,14 @@ const ProductDefault = () => {
   const productId = searchParams.get("id");
   const [productData] = api.product.getAllPretty.useSuspenseQuery();
 
+  const selectedProduct = productData.find((product) => product.id === productId);
+
   return (
     <>
       <BreadcrumbProduct
-        data={productData}
-        productPage="default"
-        productId={productId}
+        data={selectedProduct!}
+        // productPage="default"
+        // productId={productId}
       />
       <Default data={productData} productId={productId} />
     </>

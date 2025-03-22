@@ -22,11 +22,9 @@ import {
 
 export default function Menu({
   isAuthenticated,
-  username,
   props,
 }: {
   isAuthenticated: boolean;
-  username: string | null | undefined;
   props?: string;
 }) {
   const pathname = usePathname();
@@ -114,12 +112,17 @@ export default function Menu({
                     <div
                       className={`login-popup box-shadow-sm absolute top-[74px] w-[320px] rounded-xl bg-white p-7 ${openLoginPopup ? "open" : ""}`}
                     >
-                      <Link
+                      {isAuthenticated ? <Link
+                        href={"/api/auth/signout"}
+                        className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      >
+                        Sign Out
+                      </Link> : <Link
                         href={"/login"}
                         className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       >
                         Login
-                      </Link>
+                      </Link>}
                       <div className="mt-3 pb-4 text-center text-secondary">
                         Don’t have an account?
                         <Link

@@ -75,7 +75,9 @@ const ModalNewsletter = () => {
                         <Image
                           width={5000}
                           height={5000}
-                          src={item.thumbImage[0]}
+                          src={
+                            item.images[0] ?? "/images/product/1000x1000.png"
+                          }
                           alt={item.name}
                           className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
                         />

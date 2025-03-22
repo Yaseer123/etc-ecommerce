@@ -16,7 +16,7 @@ import { renameImages } from "@/app/actions/file";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 
 export default function EditProductForm({ productId }: { productId: string }) {
-  const [product] = api.product.getProductById.useSuspenseQuery({
+  const [product] = api.product.getProductByIdAdmin.useSuspenseQuery({
     id: productId,
   });
 

@@ -2,15 +2,23 @@
 import React from "react";
 import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import Menu from "@/components/store-components/Menu";
 
 const ForgotPassword = () => {
+  const breadcrumbItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Forgot your password?",
+    },
+  ];
   return (
     <>
       <div id="header" className="relative w-full">
         <Breadcrumb
-          heading="Forget your password"
-          subHeading="Forget your password"
+          items={breadcrumbItems}
+          pageTitle="Forgot your password?"
         />
       </div>
       <div className="py-10 md:py-20">

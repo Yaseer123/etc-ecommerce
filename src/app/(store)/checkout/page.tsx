@@ -27,10 +27,20 @@ const Checkout = () => {
     setActivePayment(item);
   };
 
+  const breadcrumbItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Checkout",
+    },
+  ];
+
   return (
     <>
       <div id="header" className="relative w-full">
-        <Breadcrumb heading="Shopping cart" subHeading="Shopping cart" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Checkout" />
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
@@ -511,17 +521,17 @@ const Checkout = () => {
                   Your Order
                 </div>
                 <div>
-                  {cartState.cartArray.length < 1 ? (
+                  {cartArray.length < 1 ? (
                     <p className="pt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                       No product in cart
                     </p>
                   ) : (
-                    cartState.cartArray.map((product) => (
+                    cartArray.map((product) => (
                       <>
                         <div className="mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5">
                           <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
                             <Image
-                              src={product.thumbImage[0] ?? ""}
+                              src={product.coverImage ?? "/images/product/1000x1000.png"}
                               width={500}
                               height={500}
                               alt="img"
@@ -533,7 +543,7 @@ const Checkout = () => {
                               <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                                 {product.name}
                               </div>
-                              <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                              {/* <div className="mt-2 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                                 <span className="size capitalize">
                                   {product.selectedSize || product.sizes[0]}
                                 </span>
@@ -543,7 +553,7 @@ const Checkout = () => {
                                     product.variation?.[0]?.color ??
                                     "default"}
                                 </span>
-                              </div>
+                              </div> */}
                             </div>
                             <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                               <span className="quantity">

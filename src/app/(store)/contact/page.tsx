@@ -1,14 +1,22 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import Menu from "@/components/store-components/Menu";
 import React from "react";
 
 const ContactUs = () => {
+  const breadcrumbItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Contact us",
+    },
+  ];
+
   return (
     <>
       <div id="header" className="relative w-full">
-        <Menu props="bg-transparent" />
-        <Breadcrumb heading="Contact us" subHeading="Contact us" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Contact us" />
       </div>
       <div className="contact-us py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">

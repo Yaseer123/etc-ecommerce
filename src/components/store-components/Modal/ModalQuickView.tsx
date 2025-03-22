@@ -23,7 +23,6 @@ import {
 
 const ModalQuickView = () => {
   const { selectedProduct, closeQuickView } = useModalQuickViewStore();
-  const [activeColor, setActiveColor] = useState<string>("");
   const [activeSize, setActiveSize] = useState<string>("");
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
@@ -43,24 +42,14 @@ const ModalQuickView = () => {
   const handleIncreaseQuantity = () => {
     if (selectedProduct) {
       selectedProduct.quantityPurchase += 1;
-      updateCart(
-        selectedProduct.id,
-        selectedProduct.quantityPurchase + 1,
-        activeSize,
-        activeColor,
-      );
+      updateCart(selectedProduct.id, selectedProduct.quantityPurchase + 1);
     }
   };
 
   const handleDecreaseQuantity = () => {
     if (selectedProduct && selectedProduct.quantityPurchase > 1) {
       selectedProduct.quantityPurchase -= 1;
-      updateCart(
-        selectedProduct.id,
-        selectedProduct.quantityPurchase - 1,
-        activeSize,
-        activeColor,
-      );
+      updateCart(selectedProduct.id, selectedProduct.quantityPurchase - 1);
     }
   };
 
@@ -68,19 +57,9 @@ const ModalQuickView = () => {
     if (selectedProduct) {
       if (!cartArray.find((item) => item.id === selectedProduct.id)) {
         addToCart({ ...selectedProduct });
-        updateCart(
-          selectedProduct.id,
-          selectedProduct.quantityPurchase,
-          activeSize,
-          activeColor,
-        );
+        updateCart(selectedProduct.id, selectedProduct.quantityPurchase);
       } else {
-        updateCart(
-          selectedProduct.id,
-          selectedProduct.quantityPurchase,
-          activeSize,
-          activeColor,
-        );
+        updateCart(selectedProduct.id, selectedProduct.quantityPurchase);
       }
       openModalCart();
       closeQuickView();
@@ -189,12 +168,6 @@ const ModalQuickView = () => {
                   </div>
                 </div>
                 <div className="list-action mt-6">
-                  <div className="choose-color">
-                    <div className="text-title">
-                      Colors:{" "}
-                      <span className="text-title color">{activeColor}</span>
-                    </div>
-                  </div>
                   <div className="choose-size mt-5">
                     <div className="heading flex items-center justify-between">
                       <div className="text-title">

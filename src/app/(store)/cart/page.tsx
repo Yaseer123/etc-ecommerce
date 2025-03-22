@@ -25,12 +25,7 @@ const Cart = () => {
     const itemToUpdate = cartArray.find((item) => item.id === productId);
 
     if (itemToUpdate) {
-      updateCart(
-        productId,
-        newQuantity,
-        itemToUpdate.selectedSize,
-        itemToUpdate.selectedColor,
-      );
+      updateCart(productId, newQuantity);
     }
   };
 
@@ -175,7 +170,10 @@ const Cart = () => {
                             <div className="flex items-center gap-6">
                               <div className="bg-img aspect-[3/4] w-20 md:w-[100px]">
                                 <Image
-                                  src={product.thumbImage[0] ?? ""}
+                                  src={
+                                    product.coverImage ??
+                                    "/images/product/1000x1000.png"
+                                  }
                                   width={1000}
                                   height={1000}
                                   alt={product.name}

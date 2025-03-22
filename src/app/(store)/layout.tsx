@@ -19,7 +19,7 @@ export default async function layout({
 
   return (
     <HydrateClient>
-      <Menu isAuthenticated={!!session?.user} username={session?.user.name} />
+      <Menu isAuthenticated={!!session?.user} />
       {children}
       <Footer />
       <ModalWrapper serverTimeLeft={serverTimeLeft} />

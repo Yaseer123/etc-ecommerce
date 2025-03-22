@@ -8,13 +8,21 @@ import {
   MagnifyingGlass,
   X,
 } from "@phosphor-icons/react/dist/ssr";
+import { type ProductType } from "@/types/ProductType";
+
+interface MobileMenuProps {
+  openMenuMobile: boolean;
+  handleMenuMobile: () => void;
+  productData: ProductType[];
+  pathname: string;
+}
 
 const MobileMenu = ({
   openMenuMobile,
   handleMenuMobile,
   productData,
   pathname,
-}: any) => {
+}: MobileMenuProps) => {
   const [openSubNavMobile, setOpenSubNavMobile] = useState<null | number>(null);
 
   const handleOpenSubNavMobile = (index: number | null) => {
@@ -25,15 +33,15 @@ const MobileMenu = ({
     }
   };
 
-  //   const handleCategoryClick = (category: any) => {
-  //     // Your implementation for category click
-  //     handleMenuMobile();
-  //   };
+    const handleCategoryClick = (category: string) => {
+      // Your implementation for category click
+      handleMenuMobile();
+    };
 
-  //   const handleTypeClick = (type:any) => {
-  //     // Your implementation for type click
-  //     handleMenuMobile();
-  //   };
+    const handleTypeClick = (type:string) => {
+      // Your implementation for type click
+      handleMenuMobile();
+    };
 
   return (
     <div id="menu-mobile" className={`${openMenuMobile ? "open" : ""}`}>

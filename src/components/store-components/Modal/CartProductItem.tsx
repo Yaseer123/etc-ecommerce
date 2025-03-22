@@ -9,7 +9,6 @@ interface CartItemProp {
   id: string;
   name: string;
   coverImage: string;
-  productId: string;
 }
 
 interface CartProductItemProps {

@@ -2,14 +2,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { type ProductType } from "@/types/ProductType";
-import { v4 as uuid } from "uuid";
 
 interface CartItem {
-  id: string;
   name: string;
   price: number;
   quantity: number;
-  productId: string;
+  id: string;
   coverImage: string;
 }
 
@@ -26,20 +24,24 @@ export const useCartStore = create<CartState>()(
       cartArray: [],
 
       addToCart: (item: ProductType) =>
-        set((state) => ({
-          cartArray: [
-            ...state.cartArray,
-            {
-              // ...item,
-              quantity: 1,
-              id: uuid(),
-              productId: item.id,
-              name: item.name,
-              price: item.price,
-              coverImage: item.images[0]!,
-            },
-          ],
-        })),
+        set((state) => {
+          const existingItem = state.cartArray.find((cartItem) => cartItem.id === item.id);
+          if (existingItem) {
+            return state; // Return unchanged state if item exists
+          }
+          return {
+            cartArray: [
+              ...state.cartArray,
+              {
+                quantity: 1,
+                id: item.id,
+                name: item.name,
+                price: item.price,
+                coverImage: item.images[0]!,
+              },
+            ],
+          };
+        }),
 
       removeFromCart: (itemId: string) =>
         set((state) => ({

@@ -84,10 +84,20 @@ export default function Page() {
     setCurrentPage(selected);
   };
 
+  const breadcrumbItems = [
+    {
+      label: "Home",
+      href: "/",
+    },
+    {
+      label: "Search Result",
+    },
+  ];
+
   return (
     <>
       <div id="header" className="relative w-full">
-        <Breadcrumb heading="Search Result" subHeading="Search Result" />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Search Result" />
       </div>
       <div className="py-10 md:py-14 lg:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
@@ -102,7 +112,7 @@ export default function Page() {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="text-base leading-[22] font-normal md:text-[13px] md:leading-5 h-full w-full rounded-xl border border-line pl-4 pr-32 md:pr-[150px]"
+                  className="h-full w-full rounded-xl border border-line pl-4 pr-32 text-base font-normal leading-[22] md:pr-[150px] md:text-[13px] md:leading-5"
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                   onKeyDown={(e) =>

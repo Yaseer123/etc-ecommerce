@@ -1,13 +1,9 @@
 import Link from "next/link";
-import Menu from "./Menu";
 import Image from "next/image";
 import { ArrowLeft } from "@phosphor-icons/react/dist/ssr";
 export default function PageNotFound() {
   return (
     <>
-      <div id="header" className="relative w-full">
-        <Menu props="bg-white" />
-      </div>
       <div className="page-not-found bg-linear mt-14 py-10 md:mt-[74px] md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex items-center justify-between gap-y-8 max-sm:flex-col">
