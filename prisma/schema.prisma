@@ -79,7 +79,6 @@ model Product {
 
     reviews   Review[]
     orders    OrderItem[]
-    CartItem  CartItem[]
     questions Question[]
     wishlists WishList[]
 }
@@ -165,7 +164,6 @@ model User {
     address   Address?
     orders    Order[]
     reviews   Review[]
-    cart      Cart?
     questions Question[]
     WishList  WishList[]
 }
@@ -191,31 +189,6 @@ model Address {
     // Relationships
     user  User    @relation(fields: [userId], references: [id])
     Order Order[]
-}
-
-model Cart {
-    id        String     @id @default(cuid())
-    userId    String     @unique
-    items     CartItem[]
-    createdAt DateTime   @default(now())
-    updatedAt DateTime   @updatedAt
-
-    // Relationships
-    user User @relation(fields: [userId], references: [id])
-}
-
-model CartItem {
-    id        String   @id @default(cuid())
-    cartId    String
-    productId String
-    quantity  Int
-    coverImage String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    // Relationships
-    cart    Cart    @relation(fields: [cartId], references: [id])
-    product Product @relation(fields: [productId], references: [id])
 }
 
 model Order {

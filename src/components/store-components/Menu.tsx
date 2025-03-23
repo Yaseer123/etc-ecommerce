@@ -67,7 +67,7 @@ export default function Menu({
         className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 md:pt-5`}
       >
         <div
-          className={`header-menu style-eigh h-[56px] w-full bg-white md:h-[74px] ${props}`}
+          className={`header-menu style-eight h-[56px] w-full bg-white md:h-[74px] ${props}`}
         >
           <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
             <div className="header-main flex h-full items-center justify-between">

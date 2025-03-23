@@ -67,7 +67,7 @@ const ModalQuickView = () => {
   };
 
   const handleAddToWishlist = () => {
-    // if product existed in wishlit, remove from wishlist and set state to false
+    // if product existed in wishlist, remove from wishlist and set state to false
     if (selectedProduct) {
       if (wishlistArray.some((item) => item.id === selectedProduct.id)) {
         removeFromWishlist(selectedProduct.id);
@@ -204,7 +204,7 @@ const ModalQuickView = () => {
                     </div>
                     <div
                       onClick={handleAddToCart}
-                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     >
                       Add To Cart
                     </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import useCategoryPopup from "@/hooks/useCategoryPopup";
 import { useState } from "react";
@@ -6,12 +8,11 @@ import { api } from "@/trpc/react";
 import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
 
 const CategoryDropdown = () => {
-  const [categories, { error, isLoading }] =
-    api.category.getAll.useSuspenseQuery();
+  const [categories, { error }] = api.category.getAll.useSuspenseQuery();
   const { openCategoryPopup, handleCategoryPopup } = useCategoryPopup();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
-  // Example categories with nested subcategories
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <div className="relative h-full">

@@ -3,20 +3,122 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import {X} from "@phosphor-icons/react/dist/ssr";
+import { X } from "@phosphor-icons/react/dist/ssr";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
 
 const ModalWishlist = () => {
   const { isModalOpen, closeModalWishlist } = useModalWishlistStore();
-  const [wishList] = api.wishList.getWishList.useSuspenseQuery();
+  const { data: session } = useSession(); // Check if the user is logged in
+
   const utils = api.useUtils();
+
+  const {
+    data: wishList,
+    isLoading,
+    isError,
+  } = api.wishList.getWishList.useQuery(undefined, {
+    enabled: !!session?.user, // Only fetch wishlist if the user is logged in
+  });
+
   const removeFromWishlistMutation =
     api.wishList.removeFromWishList.useMutation({
       onSuccess: async () => {
-        await utils.wishList.getWishList.invalidate();
+        await utils.wishList.getWishList.invalidate(); // Invalidate the cache to refresh the wishlist
       },
     });
+
+  if (!session?.user) {
+    return (
+      <>
+        <div className={`modal-wishlist-block`} onClick={closeModalWishlist}>
+          <div
+            className={`modal-wishlist-main py-6 ${isModalOpen ? "open" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <div className="heading relative flex items-center justify-between px-6 pb-3">
+              <div className="heading5">Wishlist</div>
+              <div
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                onClick={closeModalWishlist}
+              >
+                <X size={14} />
+              </div>
+            </div>
+            <div className="list-product px-6">
+              <div className="text-center text-base font-semibold text-gray-600">
+                Login to add products to your wishlist.
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <div className={`modal-wishlist-block`} onClick={closeModalWishlist}>
+          <div
+            className={`modal-wishlist-main py-6 ${isModalOpen ? "open" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <div className="heading relative flex items-center justify-between px-6 pb-3">
+              <div className="heading5">Wishlist</div>
+              <div
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                onClick={closeModalWishlist}
+              >
+                <X size={14} />
+              </div>
+            </div>
+            <div className="list-product px-6">
+              <div className="text-center text-base font-semibold text-gray-600">
+                Loading your wishlist...
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <div className={`modal-wishlist-block`} onClick={closeModalWishlist}>
+          <div
+            className={`modal-wishlist-main py-6 ${isModalOpen ? "open" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <div className="heading relative flex items-center justify-between px-6 pb-3">
+              <div className="heading5">Wishlist</div>
+              <div
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                onClick={closeModalWishlist}
+              >
+                <X size={14} />
+              </div>
+            </div>
+            <div className="list-product px-6">
+              <div className="text-red-600 text-center text-base font-semibold">
+                Failed to load your wishlist. Please try again later.
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div className={`modal-wishlist-block`} onClick={closeModalWishlist}>
@@ -36,7 +138,7 @@ const ModalWishlist = () => {
             </div>
           </div>
           <div className="list-product px-6">
-            {wishList.map((product) => (
+            {wishList?.map((product) => (
               <div
                 key={product.id}
                 className="item flex items-center justify-between gap-3 border-b border-line py-5"
@@ -66,7 +168,7 @@ const ModalWishlist = () => {
                   </div>
                 </div>
                 <div
-                  className="remove-wishlist-btn cursor-pointer text-base font-normal font-semibold leading-[22] text-red underline md:text-[13px] md:leading-5"
+                  className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red underline md:text-[13px] md:leading-5"
                   onClick={() =>
                     removeFromWishlistMutation.mutate({ productId: product.id })
                   }

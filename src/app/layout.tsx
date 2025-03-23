@@ -4,8 +4,7 @@ import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
 import AnalyticsScript from "@/components/ga-pixel-script/AnalyticsScript";
 import Head from "next/head";
-
-
+import { SessionProvider } from "next-auth/react";
 
 export default function RootLayout({
   children,
@@ -23,7 +22,9 @@ export default function RootLayout({
         <AnalyticsScript />
       </Head>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <SessionProvider>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </SessionProvider>
         <Toaster />
       </body>
     </html>

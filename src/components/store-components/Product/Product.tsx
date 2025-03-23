@@ -1,34 +1,38 @@
 "use client";
+
 import Image from "next/image";
 import { type ProductType } from "@/types/ProductType";
 import { useRouter } from "next/navigation";
 import { Heart, Eye, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
 import Rate from "../Rate";
-import { api } from "@/trpc/react";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { useCartStore } from "@/context/store-context/CartContext";
+import { useSession } from "next-auth/react";
+import { api } from "@/trpc/react";
 
 interface ProductProps {
   data: ProductType;
   type: string;
   style?: string;
 }
-type WishlistItem = {
-  id: string;
-  name: string;
-};
+
 export default function Product({ data, type }: ProductProps) {
   const { openModalCart } = useModalCartStore();
   const { openModalWishlist } = useModalWishlistStore();
   const { openQuickView } = useModalQuickViewStore();
   const { addToCart } = useCartStore();
+  const { data: session } = useSession(); // Check if the user is logged in
 
   const utils = api.useUtils();
 
-  const [wishlistResponse] = api.wishList.getWishList.useSuspenseQuery();
-  const wishlist: WishlistItem[] = wishlistResponse ?? [];
+  const { data: wishlist = [] } = api.wishList.getWishList.useQuery(
+    undefined,
+    {
+      enabled: !!session?.user, // Only fetch wishlist if the user is logged in
+    },
+  );
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
     onSuccess: async () => {
@@ -43,9 +47,8 @@ export default function Product({ data, type }: ProductProps) {
       },
     });
 
-  // Create a safe check function for wishlist items
   const isInWishlist = (itemId: string): boolean => {
-    return wishlist.some((item: { id: string }) => item?.id === itemId);
+    return wishlist.some((item) => item.id === itemId);
   };
 
   const router = useRouter();
@@ -56,38 +59,15 @@ export default function Product({ data, type }: ProductProps) {
   };
 
   const handleAddToWishlist = () => {
+    if (!session?.user) {
+      openModalWishlist();
+      return;
+    }
+
     if (isInWishlist(data.id)) {
-      // **Optimistic UI Update: Remove item immediately**
-      utils.wishList.getWishList.setData(
-        undefined,
-        (old) => old?.filter((item) => item.id !== data.id) ?? [],
-      );
-
-      removeFromWishlistMutation.mutate(
-        { productId: data.id },
-        {
-          onError: () => {
-            // **Rollback on failure**
-            void utils.wishList.getWishList.invalidate();
-          },
-        },
-      );
+      removeFromWishlistMutation.mutate({ productId: data.id });
     } else {
-      // **Optimistic UI Update: Add item immediately**
-      utils.wishList.getWishList.setData(undefined, (old) => [
-        ...(old ?? []),
-        data, // Add complete product data
-      ]);
-
-      addToWishlistMutation.mutate(
-        { productId: data.id },
-        {
-          onError: () => {
-            // **Rollback on failure**
-            void utils.wishList.getWishList.invalidate();
-          },
-        },
-      );
+      addToWishlistMutation.mutate({ productId: data.id });
     }
 
     openModalWishlist();
@@ -118,23 +98,23 @@ export default function Product({ data, type }: ProductProps) {
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
               <span
-                className={`add-wishlistState-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${isInWishlist(data.id) ? "active" : ""}`}
+                className={`add-wishlistState-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${
+                  isInWishlist(data.id) ? "active" : ""
+                }`}
                 onClick={(e) => {
                   e.stopPropagation();
                   handleAddToWishlist();
                 }}
               >
                 {isInWishlist(data.id) ? (
-                  <>
-                    <Heart size={18} weight="duotone" className="text-black" />
-                  </>
+                  <Heart size={18} weight="duotone" className="text-black" />
                 ) : (
-                  <>
-                    <Heart size={18} />
-                  </>
+                  <Heart size={18} />
                 )}
                 <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
-                  Add To wishlist
+                  {isInWishlist(data.id)
+                    ? "Remove from Wishlist"
+                    : "Add to Wishlist"}
                 </div>
               </span>
 

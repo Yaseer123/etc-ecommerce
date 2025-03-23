@@ -3,12 +3,22 @@
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
-import { api } from "@/trpc/react";
-import { CaretDown, X } from "@phosphor-icons/react/dist/ssr";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
+import { api } from "@/trpc/react";
 
-export default function Page() {
-  const [wishList] = api.wishList.getWishList.useSuspenseQuery();
+export default function WishlistPage() {
+  const { data: session } = useSession(); // Check if the user is logged in
+
+  const {
+    data: wishList,
+    isLoading,
+    isError,
+  } = api.wishList.getWishList.useQuery(undefined, {
+    enabled: !!session?.user, // Only fetch wishlist if the user is logged in
+  });
+
   const [layoutCol, setLayoutCol] = useState<number | null>(4);
   const [sortOption, setSortOption] = useState("");
 
@@ -26,6 +36,7 @@ export default function Page() {
   };
 
   const sortedData = useMemo(() => {
+    if (!wishList) return [];
     const sorted = [...wishList];
     if (sortOption === "soldQuantityHighToLow") {
       return sorted.sort((a, b) => b.sold - a.sold);
@@ -56,6 +67,7 @@ export default function Page() {
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
   };
+
   const breadcrumbItems = [
     {
       label: "Home",
@@ -66,6 +78,58 @@ export default function Page() {
       href: "/wishlist",
     },
   ];
+
+  if (!session?.user) {
+    return (
+      <>
+        <div id="header" className="relative w-full">
+          <Breadcrumb items={breadcrumbItems} pageTitle="Wishlist" />
+        </div>
+        <div className="py-10 md:py-14 lg:py-20">
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
+            <div className="text-center text-lg font-semibold text-gray-600">
+              Login to view your wishlist.
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <>
+        <div id="header" className="relative w-full">
+          <Breadcrumb items={breadcrumbItems} pageTitle="Wishlist" />
+        </div>
+        <div className="py-10 md:py-14 lg:py-20">
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
+            <div className="text-center text-lg font-semibold text-gray-600">
+              Loading your wishlist...
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (isError) {
+    return (
+      <>
+        <div id="header" className="relative w-full">
+          <Breadcrumb items={breadcrumbItems} pageTitle="Wishlist" />
+        </div>
+        <div className="py-10 md:py-14 lg:py-20">
+          <div className="mx-auto w-full !max-w-[1322px] px-4">
+            <div className="text-red-600 text-center text-lg font-semibold">
+              Failed to load your wishlist. Please try again later.
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       <div id="header" className="relative w-full">
