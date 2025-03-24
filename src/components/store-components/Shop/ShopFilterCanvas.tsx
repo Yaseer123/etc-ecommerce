@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { type ProductType } from "@/types/ProductType";
+import { type ProductWithCategory } from "@/types/ProductType";
 import FilterSidebar from "./FilterSidebar";
 import FilterBlock from "./FilterBlock";
 import ProductList from "./ProductList";
 
 interface Props {
-  data: Array<ProductType>;
+  data: Array<ProductWithCategory>;
   productPerPage: number;
 }
 
@@ -93,7 +93,7 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
 
       let isCategoryMatched = true;
       if (category) {
-        isCategoryMatched = product.category === category.name;
+        isCategoryMatched = product.category?.name === category.name;
       }
 
       return (

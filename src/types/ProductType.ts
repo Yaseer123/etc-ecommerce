@@ -1,9 +1,4 @@
-// interface Variation {
-//   color: string;
-//   colorCode: string;
-//   colorImage: string;
-//   image: string;
-// }
+import type { Product, Category } from "@prisma/client";
 
 export interface ProductType {
   id: string;
@@ -24,4 +19,8 @@ export interface ProductType {
   action: string;
   slug: string;
   attributes: Record<string, string>;
+}
+
+export type ProductWithCategory = Product & {
+  category: Category | null
 }

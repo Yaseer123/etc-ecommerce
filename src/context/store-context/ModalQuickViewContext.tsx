@@ -1,15 +1,15 @@
 // modalQuickViewStore.ts
+import type { Product } from "@prisma/client";
 import { create } from "zustand";
-import { type ProductType } from "@/types/ProductType";
 
 interface ModalQuickViewState {
-  selectedProduct: ProductType | null;
-  openQuickView: (product: ProductType) => void;
+  selectedProduct: Product | null;
+  openQuickView: (product: Product) => void;
   closeQuickView: () => void;
 }
 
 export const useModalQuickViewStore = create<ModalQuickViewState>((set) => ({
   selectedProduct: null,
-  openQuickView: (product: ProductType) => set({ selectedProduct: product }),
+  openQuickView: (product: Product) => set({ selectedProduct: product }),
   closeQuickView: () => set({ selectedProduct: null }),
 }));

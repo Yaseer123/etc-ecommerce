@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import Product from "./Product/Product";
 import { motion } from "framer-motion";
 import { api } from "@/trpc/react";

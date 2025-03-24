@@ -1,10 +1,10 @@
 import React from "react";
 import Product from "../Product/Product";
 import HandlePagination from "../HandlePagination";
-import { type ProductType } from "@/types/ProductType";
+import type { ProductWithCategory } from "@/types/ProductType";
 
 interface ProductListProps {
-  data: Array<ProductType>;
+  data: Array<ProductWithCategory>;
   layoutCol: number | null;
   pageCount: number;
   handlePageChange: (selected: number) => void;

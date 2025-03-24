@@ -12,7 +12,7 @@ const ModalNewsletter = () => {
   const router = useRouter();
   const { openQuickView } = useModalQuickViewStore();
 
-  const [productData] = api.product.getAllPretty.useSuspenseQuery();
+  const [productData] = api.product.getAll.useSuspenseQuery();
 
   const handleDetailProduct = (productId: string) => {
     // redirect to shop with category selected
@@ -80,12 +80,12 @@ const ModalNewsletter = () => {
                           src={
                             item.images[0] ?? "/images/product/1000x1000.png"
                           }
-                          alt={item.name}
+                          alt={item.title}
                           className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
                         />
                       </div>
                       <div className="">
-                        <div className="name text-button">{item.name}</div>
+                        <div className="name text-button">{item.title}</div>
                         <div className="mt-2 flex items-center gap-2">
                           <div className="product-price text-title">
                             ${item.price}.00

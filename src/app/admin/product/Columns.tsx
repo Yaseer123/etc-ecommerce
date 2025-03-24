@@ -14,13 +14,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/admin-components/DataTableColumnHeader";
-import { type Product } from "@prisma/client";
+import type { Category, Product } from "@prisma/client";
 import Link from "next/link";
 
 export interface ProductColumns extends Product {
-  category: {
-    name: string;
-  } | null;
+  category: Category | null;
 }
 
 export const columns: ColumnDef<ProductColumns>[] = [

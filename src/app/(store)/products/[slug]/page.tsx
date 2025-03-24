@@ -26,16 +26,16 @@ export async function generateMetadata({
   }
 
   return {
-    title: productData.name,
+    title: productData.title,
     description: productData.description,
     openGraph: {
-      title: productData.name,
+      title: productData.title,
       description: productData.description,
       images: productData.images,
     },
     twitter: {
       card: "summary_large_image",
-      title: productData.name,
+      title: productData.title,
       description: productData.description,
       images: productData.images[0],
     },

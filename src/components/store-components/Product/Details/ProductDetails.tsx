@@ -3,7 +3,6 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { type ProductType } from "@/types/ProductType";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
 import "swiper/css/bundle";
@@ -29,32 +28,33 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
 import ParseContent from "../../Blog/ParseContent";
-
-type WishlistItem = {
-  id: string;
-  name: string;
-};
+import { v4 as uuid } from "uuid";
+import { useSession } from "next-auth/react";
+import type { ProductWithCategory } from "@/types/ProductType";
 
 export default function ProductDetails({
   productMain,
 }: {
-  productMain: ProductType;
+  productMain: ProductWithCategory;
 }) {
   SwiperCore.use([Navigation, Thumbs]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef: any = useRef();
 
+  const { data: session } = useSession();
+
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
-  const [activeSize, setActiveSize] = useState<string>("");
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
+  const [productQuantity, setProductQuantity] = useState<number>(1);
+
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
   const { openModalWishlist } = useModalWishlistStore();
   const utils = api.useUtils();
 
   const [wishlistResponse] = api.wishList.getWishList.useSuspenseQuery();
-  const wishlist: WishlistItem[] = wishlistResponse ?? [];
+  const wishlist = wishlistResponse ?? [];
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
     onSuccess: async () => {
@@ -77,28 +77,24 @@ export default function ProductDetails({
     setThumbsSwiper(swiper);
   };
 
-  const handleActiveSize = (item: string) => {
-    setActiveSize(item);
-  };
-
   const handleIncreaseQuantity = () => {
-    productMain.quantityPurchase += 1;
-    updateCart(productMain.id, productMain.quantityPurchase + 1);
+    // updateCart(productMain.id, productQuantity + 1);
+    setProductQuantity(productQuantity + 1);
   };
 
   const handleDecreaseQuantity = () => {
-    if (productMain.quantityPurchase > 1) {
-      productMain.quantityPurchase -= 1;
-      updateCart(productMain.id, productMain.quantityPurchase - 1);
+    if (productQuantity > 1) {
+      setProductQuantity(productQuantity - 1);
+      // updateCart(productMain.id, productMain.quantityPurchase - 1);
     }
   };
 
   const handleAddToCart = () => {
     if (!cartArray.find((item) => item.id === productMain.id)) {
       addToCart({ ...productMain });
-      updateCart(productMain.id, productMain.quantityPurchase);
+      updateCart(productMain.id, productQuantity);
     } else {
-      updateCart(productMain.id, productMain.quantityPurchase);
+      updateCart(productMain.id, productQuantity);
     }
     openModalCart();
   };
@@ -128,7 +124,13 @@ export default function ProductDetails({
       // **Optimistic UI Update: Add item immediately**
       utils.wishList.getWishList.setData(undefined, (old) => [
         ...(old ?? []),
-        productMain, // Add complete product data
+        {
+          id: uuid(), // Temporary ID for optimistic update
+          product: productMain,
+          createdAt: new Date(),
+          userId: session?.user.id ?? "temp-user", // Replace with actual user ID if available
+          productId: productMain.id,
+        },
       ]);
 
       addToWishlistMutation.mutate(
@@ -249,7 +251,7 @@ export default function ProductDetails({
               <div className="flex justify-between">
                 <div>
                   <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                    {productMain.name}
+                    {productMain.title}
                   </div>
                 </div>
                 <div
@@ -288,7 +290,7 @@ export default function ProductDetails({
                 )}
               </div>
               <div className="desc mt-5 block border-b border-line pb-6 text-secondary">
-                {productMain.description}
+                {productMain.shortDescription}
               </div>
               <div className="list-action mt-6">
                 <div className="discount-code">
@@ -341,36 +343,15 @@ export default function ProductDetails({
                   </div>
                 </div>
 
-                <div className="choose-size mt-5">
-                  <div className="heading flex items-center justify-between">
-                    <div className="text-title">
-                      Size:{" "}
-                      <span className="text-title size">{activeSize}</span>
-                    </div>
-                  </div>
-                  <div className="list-size mt-3 flex flex-wrap items-center gap-2">
-                    {productMain.sizes.map((item, index) => (
-                      <div
-                        className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} flex items-center justify-center rounded-full border border-line bg-white text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${activeSize === item ? "active" : ""}`}
-                        key={index}
-                        onClick={() => handleActiveSize(item)}
-                      >
-                        {item}
-                      </div>
-                    ))}
-                  </div>
-                </div>
                 <div className="text-title mt-5">Quantity:</div>
                 <div className="choose-quantity mt-3 flex items-center gap-5 gap-y-3 lg:justify-between">
                   <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line bg-white max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
                     <Minus
                       size={20}
                       onClick={handleDecreaseQuantity}
-                      className={`${productMain.quantityPurchase === 1 ? "disabled" : ""} cursor-pointer`}
+                      className={`${productQuantity === 1 ? "disabled" : ""} cursor-pointer`}
                     />
-                    <div className="body1 font-semibold">
-                      {productMain.quantityPurchase}
-                    </div>
+                    <div className="body1 font-semibold">{productQuantity}</div>
                     <Plus
                       size={20}
                       onClick={handleIncreaseQuantity}
@@ -428,7 +409,9 @@ export default function ProductDetails({
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">Categories:</div>
-                    <div className="text-secondary">{productMain.category}</div>
+                    <div className="text-secondary">
+                      {productMain.category?.name}
+                    </div>
                   </div>
                 </div>
                 <div className="list-payment mt-7">

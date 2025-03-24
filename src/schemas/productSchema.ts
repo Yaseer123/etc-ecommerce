@@ -21,12 +21,6 @@ export const productSchema = z.object({
 
 export type Product = z.infer<typeof productSchema>;
 
-export type ProductWithCategory = Product & {
-  category: {
-    name: string;
-  };
-};
-
 // Update Product Schema
 export const updateProductSchema = z.object({
   id: z.string().cuid("Invalid product ID"),

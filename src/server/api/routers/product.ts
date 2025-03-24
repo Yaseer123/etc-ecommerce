@@ -5,37 +5,6 @@ import {
 } from "@/server/api/trpc";
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 import { z } from "zod";
-import { readAllImages } from "@/app/actions/file";
-import { type Category, type Product } from "@prisma/client";
-
-interface ProductWithCategory extends Product {
-  category?: Category;
-}
-
-export const prettifyProduct = async (product: ProductWithCategory) => {
-  const images = await readAllImages(product.imageId);
-
-  return {
-    id: product.id,
-    name: product.title,
-    description: product.shortDescription,
-    price: product.price,
-    category: product.category?.name ?? "Default",
-    new: product.new,
-    sale: product.sale,
-    rate: product.rate,
-    originPrice: product.originPrice,
-    images: images.map((image) => image.secure_url),
-    slug: product.slug,
-    sizes: ["XS", "S", "M", "L", "XL", "2XL"],
-    brand: "Default",
-    sold: 0,
-    quantity: product.stock,
-    quantityPurchase: 1,
-    action: "add to cart",
-    attributes: product.attributes as Record<string, string>,
-  };
-};
 
 export const productRouter = createTRPCRouter({
   getProductByIdAdmin: adminProcedure
@@ -61,23 +30,19 @@ export const productRouter = createTRPCRouter({
     return products;
   }),
 
-  getAllPretty: publicProcedure
-    .input(z.string().optional())
+  getAllByCategory: publicProcedure
+    .input(
+      z.object({
+        categoryId: z.string().optional(),
+      }),
+    )
     .query(async ({ ctx, input }) => {
-      const products = input
-        ? await ctx.db.product.findMany({
-            where: { categoryId: input },
-            include: { category: true },
-          })
-        : await ctx.db.product.findMany({
-            include: { category: true },
-          });
+      const products = await ctx.db.product.findMany({
+        where: input.categoryId ? { categoryId: input.categoryId } : {},
+        include: { category: true },
+      });
 
-      const prettifiedProducts = products.map(async (product) =>
-        prettifyProduct(product as ProductWithCategory),
-      );
-
-      return await Promise.all(prettifiedProducts);
+      return products;
     }),
 
   getProductById: publicProcedure
@@ -92,20 +57,8 @@ export const productRouter = createTRPCRouter({
         include: { category: true },
       });
 
-      return await prettifyProduct(product as ProductWithCategory);
+      return product;
     }),
-
-  getProductWithCategoryName: publicProcedure.query(async ({ ctx }) => {
-    const products = await ctx.db.product.findMany({
-      include: {
-        category: {
-          select: { name: true },
-        },
-      },
-    });
-
-    return products;
-  }),
 
   add: adminProcedure.input(productSchema).mutation(async ({ ctx, input }) => {
     const product = await ctx.db.product.create({

@@ -6,7 +6,7 @@ import { api } from "@/trpc/react";
 
 export default function ProductDataTable() {
   const [productsWithCategory] =
-    api.product.getProductWithCategoryName.useSuspenseQuery();
+    api.product.getAll.useSuspenseQuery();
 
   const mappedData = productsWithCategory.map((product) => ({
     ...product,

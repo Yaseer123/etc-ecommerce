@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { type ProductType } from "@/types/ProductType";
 import { useRouter } from "next/navigation";
 import { Heart, Eye, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
 import Rate from "../Rate";
@@ -11,9 +10,10 @@ import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewCo
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
+import { type Product } from "@prisma/client";
 
 interface ProductProps {
-  data: ProductType;
+  data: Product;
   type: string;
   style?: string;
 }
@@ -27,12 +27,9 @@ export default function Product({ data, type }: ProductProps) {
 
   const utils = api.useUtils();
 
-  const { data: wishlist = [] } = api.wishList.getWishList.useQuery(
-    undefined,
-    {
-      enabled: !!session?.user, // Only fetch wishlist if the user is logged in
-    },
-  );
+  const { data: wishlist = [] } = api.wishList.getWishList.useQuery(undefined, {
+    enabled: !!session?.user, // Only fetch wishlist if the user is logged in
+  });
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
     onSuccess: async () => {
@@ -93,7 +90,7 @@ export default function Product({ data, type }: ProductProps) {
               className="aspect-square w-full"
               width={5000}
               height={5000}
-              src={(data.images?.[0]) ?? "/images/products/1000x1000.png"}
+              src={data.images?.[0] ?? "/images/products/1000x1000.png"}
               alt="img"
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
@@ -145,7 +142,7 @@ export default function Product({ data, type }: ProductProps) {
             </div>
           </div>
           <div className="product-infor mt-4">
-            <span className="text-title">{data.name}</span>
+            <span className="text-title">{data.title}</span>
             <div className="mt-1 flex gap-0.5">
               <Rate currentRate={data.rate} size={16} />
             </div>

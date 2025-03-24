@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
-import { prettifyProduct } from "./product";
 
 export const wishListRouter = createTRPCRouter({
   getWishList: protectedProcedure.query(async ({ ctx }) => {
@@ -9,13 +8,7 @@ export const wishListRouter = createTRPCRouter({
       include: { product: true },
     });
 
-    const prettifiedWishList = wishLists.map((wishList) =>
-      prettifyProduct(wishList.product),
-    );
-
-    const finalWishList = await Promise.all(prettifiedWishList);
-
-    return finalWishList;
+    return wishLists;
   }),
 
   addToWishList: protectedProcedure

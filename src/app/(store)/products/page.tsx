@@ -7,8 +7,10 @@ export default async function ProductsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const category = (await searchParams).category as string;
-  const productData = await api.product.getAllPretty(category ?? "");
+  const category = (await searchParams).category ?? "";
+  const productData = await api.product.getAllByCategory({
+    categoryId: category as string,
+  });
 
   const breadcrumbItems = [
     {
@@ -28,10 +30,7 @@ export default async function ProductsPage({
   return (
     <>
       <Breadcrumb items={breadcrumbItems} pageTitle="Shop" />
-      <ShopFilterCanvas
-        data={productData}
-        productPerPage={12}
-      />
+      <ShopFilterCanvas data={productData} productPerPage={12} />
     </>
   );
 }

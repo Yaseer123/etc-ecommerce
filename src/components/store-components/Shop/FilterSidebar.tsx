@@ -2,7 +2,7 @@ import React from "react";
 import { X, CheckSquare } from "@phosphor-icons/react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { type ProductType } from "@/types/ProductType";
+import type { ProductWithCategory } from "@/types/ProductType";
 import FilterByCategory from "./FilterByCategory";
 
 interface SidebarProps {
@@ -13,7 +13,7 @@ interface SidebarProps {
   handleBrand: (brand: string) => void;
   priceRange: { min: number; max: number };
   brand: string | null | undefined;
-  data: Array<ProductType>;
+  data: Array<ProductWithCategory>;
 }
 
 const FilterSidebar: React.FC<SidebarProps> = ({
@@ -117,7 +117,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
                       data.filter(
                         (dataItem) =>
                           dataItem.brand === item &&
-                          dataItem.category === "fashion",
+                          dataItem.category.name === "fashion",
                       ).length
                     }
                     )

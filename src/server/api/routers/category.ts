@@ -26,12 +26,7 @@ interface CategoryWithProducts extends Category {
 const buildCategoryTreeWithProducts = (categories: CategoryWithProducts[]) => {
   return categories.map((category) => ({
     ...category,
-    products: category.products.map((product) => ({
-      id: product.id,
-      name: product.title,
-      price: product.price,
-      image: product.imageId,
-    })),
+    products: category.products
   }));
 }
 
