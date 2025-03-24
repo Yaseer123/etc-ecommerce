@@ -44,6 +44,10 @@ export default function AddProductForm() {
   const [showImageGallery, setShowImageGallery] = useState("");
   const { loadImages, images } = useProductImageStore();
 
+  const [specifications, setSpecifications] = useState<Record<string, string>>(
+    {},
+  );
+
   const handleShowImageGallery = (state: string) => {
     setShowImageGallery(state);
   };
@@ -83,6 +87,41 @@ export default function AddProductForm() {
 
   const [categories] = api.category.getAll.useSuspenseQuery();
 
+  const handleAddSpecification = () => {
+    setSpecifications((prev) => ({
+      ...prev,
+      "": "", // Add an empty key-value pair
+    }));
+  };
+
+  const handleSpecificationChange = (
+    key: string,
+    value: string,
+    isKey: boolean,
+  ) => {
+    setSpecifications((prev) => {
+      const updated = { ...prev };
+      if (isKey) {
+        // Handle key change
+        const existingValue = updated[key] ?? '';
+        delete updated[key];
+        updated[value] = existingValue;
+      } else {
+        // Handle value change
+        updated[key] = value;
+      }
+      return updated;
+    });
+  };
+
+  const handleRemoveSpecification = (key: string) => {
+    setSpecifications((prev) => {
+      const updated = { ...prev };
+      delete updated[key];
+      return updated;
+    });
+  };
+
   const handleSubmit = async (content: string) => {
     setPending(true);
     await renameImages(images);
@@ -95,6 +134,7 @@ export default function AddProductForm() {
       slug,
       categoryId: categoryId,
       description: content,
+      attributes: specifications, // Pass specifications as JSON
     });
   };
 
@@ -166,6 +206,38 @@ export default function AddProductForm() {
               onClose={handleShowImageGallery}
             />
           )}
+        </div>
+        <div className="col-span-2">
+          <Label>Specifications</Label>
+          <div className="space-y-2">
+            {Object.entries(specifications).map(([key, value], index) => (
+              <div key={index} className="flex items-center gap-2">
+                <Input
+                  type="text"
+                  placeholder="Key"
+                  value={key}
+                  onChange={(e) =>
+                    handleSpecificationChange(key, e.target.value, true)
+                  }
+                />
+                <Input
+                  type="text"
+                  placeholder="Value"
+                  value={value}
+                  onChange={(e) =>
+                    handleSpecificationChange(key, e.target.value, false)
+                  }
+                />
+                <Button
+                  variant="destructive"
+                  onClick={() => handleRemoveSpecification(key)}
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button onClick={handleAddSpecification}>Add Specification</Button>
+          </div>
         </div>
       </div>
     </RichEditor>

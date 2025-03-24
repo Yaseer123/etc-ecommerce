@@ -23,4 +23,5 @@ export interface ProductType {
   description: string;
   action: string;
   slug: string;
+  attributes: Record<string, string>;
 }

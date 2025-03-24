@@ -33,6 +33,7 @@ export const prettifyProduct = async (product: ProductWithCategory) => {
     quantity: product.stock,
     quantityPurchase: 1,
     action: "add to cart",
+    attributes: product.attributes as Record<string, string>,
   };
 };
 
@@ -120,6 +121,7 @@ export const productRouter = createTRPCRouter({
         stock: 10, // Add default stock value
         originPrice: input.price, // Set origin price same as price
         brand: "Default", // Set default brand
+        attributes: input.attributes, // Store JSON specifications
       },
     });
 
