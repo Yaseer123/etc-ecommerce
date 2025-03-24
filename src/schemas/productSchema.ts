@@ -16,6 +16,7 @@ export const productSchema = z.object({
     .uuid("Invalid description image ID")
     .optional(),
   attributes: z.record(z.string(), z.string()).optional(), // JSON specifications
+  images: z.string().array().optional(),
 });
 
 export type Product = z.infer<typeof productSchema>;
@@ -43,6 +44,7 @@ export const updateProductSchema = z.object({
     .uuid("Invalid description image ID")
     .optional(),
   attributes: z.record(z.string(), z.string()).optional(), // JSON specifications
+  images: z.string().array().optional(),
 });
 
 export type UpdateProduct = z.infer<typeof updateProductSchema>;

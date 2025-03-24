@@ -67,7 +67,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
     setSlug(name);
   }, [setSlug, title]);
 
-  const addProduct = api.product.update.useMutation({
+  const updateProduct = api.product.update.useMutation({
     onSuccess: () => {
       toast.success("Product updated successfully");
       selectedCategoriesRef.current = [];
@@ -119,9 +119,10 @@ export default function EditProductForm({ productId }: { productId: string }) {
   const handleSubmit = async (content: string) => {
     setPending(true);
     await renameImages(images);
-    addProduct.mutate({
+    updateProduct.mutate({
       id: productId,
       imageId,
+      images: images.map((image) => image.src),
       descriptionImageId,
       title,
       shortDescription,

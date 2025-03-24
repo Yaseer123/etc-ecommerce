@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
-import productData from "@/data/Product.json";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
@@ -64,7 +63,7 @@ export default function Menu({
   return (
     <>
       <div
-        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 md:pt-5`}
+        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 lg:pt-5`}
       >
         <div
           className={`header-menu style-eight h-[56px] w-full bg-white md:h-[74px] ${props}`}
@@ -112,17 +111,21 @@ export default function Menu({
                     <div
                       className={`login-popup box-shadow-sm absolute top-[74px] w-[320px] rounded-xl bg-white p-7 ${openLoginPopup ? "open" : ""}`}
                     >
-                      {isAuthenticated ? <Link
-                        href={"/api/auth/signout"}
-                        className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
-                      >
-                        Sign Out
-                      </Link> : <Link
-                        href={"/login"}
-                        className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
-                      >
-                        Login
-                      </Link>}
+                      {isAuthenticated ? (
+                        <Link
+                          href={"/api/auth/signout"}
+                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                        >
+                          Sign Out
+                        </Link>
+                      ) : (
+                        <Link
+                          href={"/login"}
+                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                        >
+                          Login
+                        </Link>
+                      )}
                       <div className="mt-3 pb-4 text-center text-secondary">
                         Don’t have an account?
                         <Link
@@ -352,8 +355,6 @@ export default function Menu({
       <MobileMenu
         openMenuMobile={openMenuMobile}
         handleMenuMobile={handleMenuMobile}
-        productData={productData}
-        pathname={pathname}
       />
     </>
   );

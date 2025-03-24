@@ -117,6 +117,7 @@ export const productRouter = createTRPCRouter({
         price: input.price,
         categoryId: input.categoryId,
         imageId: input.imageId,
+        images: input.images,
         descriptionImageId: input.descriptionImageId,
         stock: 10, // Add default stock value
         originPrice: input.price, // Set origin price same as price

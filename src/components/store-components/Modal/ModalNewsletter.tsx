@@ -3,14 +3,16 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { X } from "@phosphor-icons/react/dist/ssr";
-import productData from "@/data/Product.json";
 import Image from "next/image";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
+import { api } from "@/trpc/react";
 
 const ModalNewsletter = () => {
   const [open, setOpen] = useState<boolean>(false);
   const router = useRouter();
   const { openQuickView } = useModalQuickViewStore();
+
+  const [productData] = api.product.getAllPretty.useSuspenseQuery();
 
   const handleDetailProduct = (productId: string) => {
     // redirect to shop with category selected

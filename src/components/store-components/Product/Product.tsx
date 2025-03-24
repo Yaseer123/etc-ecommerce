@@ -93,7 +93,7 @@ export default function Product({ data, type }: ProductProps) {
               className="aspect-square w-full"
               width={5000}
               height={5000}
-              src={data.images[0] ?? ""}
+              src={(data.images?.[0]) ?? "/images/products/1000x1000.png"}
               alt="img"
             />
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">

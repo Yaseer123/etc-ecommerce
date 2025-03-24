@@ -127,6 +127,7 @@ export default function AddProductForm() {
     await renameImages(images);
     addProduct.mutate({
       imageId,
+      images: images.map((image) => image.src),
       descriptionImageId,
       title,
       shortDescription,
