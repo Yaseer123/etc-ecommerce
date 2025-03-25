@@ -6,18 +6,13 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
 import useLoginPopup from "@/hooks/useLoginPopup";
-import useShopDepartmentPopup from "@/hooks/useShopDepartmentPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
 import CategoryDropdown from "./Category/CategoryDropdown";
 import MobileMenu from "./MobileMenu";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
-import {
-  CaretDown,
-  Handbag,
-  Heart,
-  User,
-} from "@phosphor-icons/react/dist/ssr";
+import { Handbag, Heart, User } from "@phosphor-icons/react/dist/ssr";
+import TopNav from "./TopNav";
 
 export default function Menu({
   isAuthenticated,
@@ -28,8 +23,6 @@ export default function Menu({
 }) {
   const pathname = usePathname();
   const { openLoginPopup, handleLoginPopup } = useLoginPopup();
-  const { openShopDepartmentPopup, handleShopDepartmentPopup } =
-    useShopDepartmentPopup();
   const { openMenuMobile, handleMenuMobile } = useMenuMobile();
   const { openModalCart } = useModalCartStore();
   const { cartArray } = useCartStore();
@@ -62,6 +55,10 @@ export default function Menu({
 
   return (
     <>
+      <TopNav
+        props="style-one bg-black"
+        slogan="New customers save 10% with the code GET10"
+      />
       <div
         className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 lg:pt-5`}
       >
@@ -170,114 +167,8 @@ export default function Menu({
           <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
             <div className="top-nav-menu-main flex h-full items-center justify-between">
               <div className="left flex h-full items-center">
-                <div className="menu-department-block relative h-full">
-                  <div
-                    className="menu-department-btn relative flex h-full w-fit cursor-pointer items-center gap-4 bg-black px-4 sm:gap-5"
-                    onClick={handleShopDepartmentPopup}
-                  >
-                    <div className="whitespace-nowrap text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
-                      Shop By Department
-                    </div>
-                    <CaretDown
-                      color="#ffffff"
-                      className="text-xl max-sm:text-base"
-                    />
-                  </div>
-                  <div
-                    className={`sub-menu-department shop-department-popup box-shadow-sm absolute left-0 right-0 top-[44px] h-max rounded-b-2xl bg-white ${openShopDepartmentPopup ? "open" : ""}`}
-                  >
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Men’s Clothing
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Women’s Clothing
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Accessories
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Bags & Backpacks
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Shoes
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Jewelry
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Watches
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Beauty & Care
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Pets
-                      </Link>
-                    </div>
-                    <div className="item block">
-                      <Link
-                        href={"/shop/breadcrumb-img"}
-                        className="inline-block whitespace-nowrap py-1.5"
-                      >
-                        Kids & Baby
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                <div className="menu-main style-eight h-full pl-12 max-lg:hidden">
+                <div className="menu-main style-eight h-full max-lg:hidden">
                   <ul className="flex h-full items-center gap-8">
-                    <li className="h-full">
-                      <Link
-                        href="/categories"
-                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
-                      >
-                        Categories
-                      </Link>
-                    </li>
                     <li className="h-full">
                       <Link
                         href="/products"
@@ -318,14 +209,6 @@ export default function Menu({
                         className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
                       >
                         Contact Us
-                      </Link>
-                    </li>
-                    <li className="h-full">
-                      <Link
-                        href="/store-list"
-                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
-                      >
-                        Store list
                       </Link>
                     </li>
                     <li className="h-full">

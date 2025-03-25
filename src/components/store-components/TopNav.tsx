@@ -1,7 +1,5 @@
 "use client";
-import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
-import { useState } from "react";
 import {
   FaFacebookF,
   FaInstagram,
@@ -14,68 +12,11 @@ interface Props {
   slogan: string;
 }
 export default function TopNav({ props, slogan }: Props) {
-  const [isOpenLanguage, setIsOpenLanguage] = useState(false);
-  const [isOpenCurrency, setIsOpenCurrency] = useState(false);
-  const [language, setLanguage] = useState("English");
-  const [Currency, setCurrency] = useState("USD");
-
   return (
     <>
       <div className={`top-nav h-[30px] md:h-[44px] ${props}`}>
         <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
           <div className="top-nav-main flex h-full justify-between max-md:justify-center">
-            <div className="left-content flex items-center gap-5 max-md:hidden">
-              <div
-                className="choose-type choose-language flex items-center gap-1.5"
-                onClick={() => {
-                  setIsOpenLanguage(!isOpenLanguage);
-                  setIsOpenCurrency(false);
-                }}
-              >
-                <div className="select relative">
-                  <p className="selected caption2 text-white">{language}</p>
-                  <ul
-                    className={`list-option bg-white ${isOpenLanguage ? "open" : ""}`}
-                  >
-                    {["English", "Espana", "France"].map((item, index) => (
-                      <li
-                        key={index}
-                        className="caption2"
-                        onClick={() => setLanguage(item)}
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <CaretDown size={12} color="#fff" />
-              </div>
-              <div
-                className="choose-type choose-currency flex items-center gap-1.5"
-                onClick={() => {
-                  setIsOpenCurrency(!isOpenCurrency);
-                  setIsOpenLanguage(false);
-                }}
-              >
-                <div className="select relative">
-                  <p className="selected caption2 text-white">{Currency}</p>
-                  <ul
-                    className={`list-option bg-white ${isOpenCurrency ? "open" : ""}`}
-                  >
-                    {["USD", "EUR", "GBP"].map((item, index) => (
-                      <li
-                        key={index}
-                        className="caption2"
-                        onClick={() => setCurrency(item)}
-                      >
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <CaretDown size={12} color="#fff" />
-              </div>
-            </div>
             <div className="flex items-center text-center text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
               {slogan}
             </div>
