@@ -55,7 +55,7 @@ export const categoryRouter = createTRPCRouter({
 
       return hierarchy;
     }),
-    
+
   getAll: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
       orderBy: { updatedAt: "desc" },
@@ -64,18 +64,32 @@ export const categoryRouter = createTRPCRouter({
     return buildCategoryTree(categories);
   }),
 
-  getAllWithProducts: publicProcedure.query(async ({ ctx }) => {
+  // getAllWithProducts: publicProcedure.query(async ({ ctx }) => {
+  //   const categories = await ctx.db.category.findMany({
+  //     where: {
+  //       parentId: null,
+  //       products: {
+  //         some: {} // This ensures at least one product exists
+  //       }
+  //     },
+  //     include: {
+  //       products: {
+  //         take: 3,
+  //       },
+  //     },
+  //     orderBy: { updatedAt: "desc" },
+  //   });
+
+  //   return buildCategoryTreeWithProducts(categories);
+  // }),
+
+  getAllParent: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
       where: { parentId: null },
-      include: {
-        products: {
-          take: 3,
-        },
-      },
       orderBy: { updatedAt: "desc" },
     });
 
-    return buildCategoryTreeWithProducts(categories);
+    return categories;
   }),
 
   getOne: publicProcedure

@@ -31,45 +31,45 @@ export const productRouter = createTRPCRouter({
   }),
 
   getAllByCategory: publicProcedure
-    .input(
-      z.object({
-        categoryId: z.string().optional(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      if (!input.categoryId) {
-        return ctx.db.product.findMany({
-          include: { category: true },
-        });
-      }
-
-      // Fetch all child category IDs recursively
-      const getChildCategoryIds = async (
-        parentId: string,
-      ): Promise<string[]> => {
-        const subcategories = await ctx.db.category.findMany({
-          where: { parentId },
-          select: { id: true },
-        });
-
-        const childIds = subcategories.map((subcategory) => subcategory.id);
-        const nestedChildIds = await Promise.all(
-          childIds.map((id) => getChildCategoryIds(id)),
-        );
-
-        return [parentId, ...nestedChildIds.flat()];
-      };
-
-      const categoryIds = await getChildCategoryIds(input.categoryId);
-
-      // Fetch products for all category IDs
-      const products = await ctx.db.product.findMany({
-        where: { categoryId: { in: categoryIds } },
+  .input(
+    z.object({
+      categoryId: z.string().optional(),
+    }),
+  )
+  .query(async ({ ctx, input }) => {
+    if (!input.categoryId) {
+      return ctx.db.product.findMany({
         include: { category: true },
       });
+    }
 
-      return products;
-    }),
+    // Fetch all child category IDs recursively
+    const getChildCategoryIds = async (
+      parentId: string,
+    ): Promise<string[]> => {
+      const subcategories = await ctx.db.category.findMany({
+        where: { parentId },
+        select: { id: true },
+      });
+
+      const childIds = subcategories.map((subcategory) => subcategory.id);
+      const nestedChildIds = await Promise.all(
+        childIds.map((id) => getChildCategoryIds(id)),
+      );
+
+      return [parentId, ...nestedChildIds.flat()];
+    };
+
+    const categoryIds = await getChildCategoryIds(input.categoryId);
+
+    // Fetch products for all category IDs
+    const products = await ctx.db.product.findMany({
+      where: { categoryId: { in: categoryIds } },
+      include: { category: true },
+    });
+
+    return products;
+  }),
 
   getProductById: publicProcedure
     .input(
