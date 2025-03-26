@@ -26,11 +26,36 @@ interface CategoryWithProducts extends Category {
 const buildCategoryTreeWithProducts = (categories: CategoryWithProducts[]) => {
   return categories.map((category) => ({
     ...category,
-    products: category.products
+    products: category.products,
   }));
-}
+};
 
 export const categoryRouter = createTRPCRouter({
+  getHierarchy: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const hierarchy = [];
+      let currentCategory = await ctx.db.category.findUnique({
+        where: { id: input.id },
+        select: { id: true, name: true, parentId: true },
+      });
+
+      while (currentCategory) {
+        hierarchy.unshift({
+          id: currentCategory.id,
+          name: currentCategory.name,
+        });
+        currentCategory = currentCategory.parentId
+          ? await ctx.db.category.findUnique({
+              where: { id: currentCategory.parentId },
+              select: { id: true, name: true, parentId: true },
+            })
+          : null;
+      }
+
+      return hierarchy;
+    }),
+    
   getAll: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
       orderBy: { updatedAt: "desc" },
@@ -41,11 +66,11 @@ export const categoryRouter = createTRPCRouter({
 
   getAllWithProducts: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
-      where: {parentId: null},
-      include: { 
+      where: { parentId: null },
+      include: {
         products: {
-          take: 3
-        }
+          take: 3,
+        },
       },
       orderBy: { updatedAt: "desc" },
     });

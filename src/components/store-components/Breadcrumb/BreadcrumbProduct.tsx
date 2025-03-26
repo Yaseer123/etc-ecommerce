@@ -1,13 +1,42 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import type { ProductWithCategory } from "@/types/ProductType";
+import { api } from "@/trpc/react";
 
 interface Props {
   data: ProductWithCategory;
 }
 
 const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
+  const {
+    data: categoryHierarchy,
+    isLoading,
+    isError,
+  } = api.category.getHierarchy.useQuery({
+    id: data.categoryId!,
+  });
+
+  if (isLoading) {
+    return (
+      <div className="py-8 text-center">
+        <p className="text-secondary2">Loading...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="py-8 text-center">
+        <p className="text-red-500">
+          Failed to load category hierarchy. Please try again later.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <>
       <div>
@@ -21,11 +50,23 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 Homepage
               </Link>
               <CaretRight size={12} className="text-secondary2" />
-              <div className="text-base font-normal leading-[22] text-secondary2 md:text-[13px] md:leading-5">
-                Product
-              </div>
+              {categoryHierarchy?.map((cat, index) => (
+                <React.Fragment key={cat.id}>
+                  <Link
+                    href={`/products?category=${cat.id}`}
+                    className="text-base font-normal leading-[22] text-secondary2 hover:underline md:text-[13px] md:leading-5"
+                  >
+                    {cat.name}
+                  </Link>
+                  {index < categoryHierarchy.length - 1 && (
+                    <CaretRight size={12} className="text-secondary2" />
+                  )}
+                </React.Fragment>
+              ))}
               <CaretRight size={12} className="text-secondary2" />
-              <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">{`Product ${data.brand}`}</div>
+              <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+                {data.title}
+              </div>
             </div>
           </div>
         </div>
