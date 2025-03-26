@@ -4,7 +4,6 @@ import {
   createTRPCRouter,
   publicProcedure,
 } from "@/server/api/trpc";
-import { type Product } from "@prisma/client";
 import { z } from "zod";
 
 export const buildCategoryTree = (
@@ -17,17 +16,6 @@ export const buildCategoryTree = (
       ...category,
       subcategories: buildCategoryTree(categories, category.id),
     }));
-};
-
-interface CategoryWithProducts extends Category {
-  products: Product[];
-}
-
-const buildCategoryTreeWithProducts = (categories: CategoryWithProducts[]) => {
-  return categories.map((category) => ({
-    ...category,
-    products: category.products,
-  }));
 };
 
 export const categoryRouter = createTRPCRouter({
@@ -55,7 +43,7 @@ export const categoryRouter = createTRPCRouter({
 
       return hierarchy;
     }),
-    
+
   getAll: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
       orderBy: { updatedAt: "desc" },
@@ -64,18 +52,13 @@ export const categoryRouter = createTRPCRouter({
     return buildCategoryTree(categories);
   }),
 
-  getAllWithProducts: publicProcedure.query(async ({ ctx }) => {
+  getAllParent: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
       where: { parentId: null },
-      include: {
-        products: {
-          take: 3,
-        },
-      },
       orderBy: { updatedAt: "desc" },
     });
 
-    return buildCategoryTreeWithProducts(categories);
+    return categories;
   }),
 
   getOne: publicProcedure
