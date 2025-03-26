@@ -98,9 +98,9 @@ export const productRouter = createTRPCRouter({
         imageId: input.imageId,
         images: input.images,
         descriptionImageId: input.descriptionImageId,
-        stock: 10, // Add default stock value
+        stock: input.stock, // Add default stock value
         originPrice: input.price, // Set origin price same as price
-        brand: "Default", // Set default brand
+        brand: input.brand, // Set default brand
         attributes: input.attributes, // Store JSON specifications
       },
     });

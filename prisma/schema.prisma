@@ -64,6 +64,7 @@ model Product {
     slug               String
     shortDescription   String
     description        String?
+    published          Boolean   @default(false)
     price              Float
     originPrice        Float
     stock              Int
@@ -76,7 +77,6 @@ model Product {
     imageId            String
     images             String[]
     descriptionImageId String?
-    sizes              Size[]
     attributes         Json      @default("{}") // Store dynamic attributes as JSON
 
     reviews   Review[]

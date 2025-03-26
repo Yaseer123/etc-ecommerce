@@ -35,6 +35,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
   const [categoryId, setCategoryId] = useState<string>(
     product?.categoryId ?? "",
   );
+  const [stock, setStock] = useState(product?.stock ?? 0);
+  const [published, setPublished] = useState(product?.published ?? false);
 
   const [specifications, setSpecifications] = useState<Record<string, string>>(
     (product?.attributes as Record<string, string>) ?? {},
@@ -130,7 +132,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
       slug,
       categoryId: categoryId,
       description: content,
-      attributes: specifications, // Pass updated specifications as JSON
+      attributes: specifications,
+      stock, 
+      published, 
     });
   };
 
@@ -185,6 +189,23 @@ export default function EditProductForm({ productId }: { productId: string }) {
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label>Stock</Label>
+          <Input
+            type="number"
+            placeholder="Stock"
+            value={stock}
+            onChange={(e) => setStock(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label>Published</Label>
+          <Input
+            type="checkbox"
+            checked={published}
+            onChange={(e) => setPublished(e.target.checked)}
           />
         </div>
         <div className="mt-auto flex flex-col gap-y-1">

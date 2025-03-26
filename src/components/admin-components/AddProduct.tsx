@@ -36,6 +36,8 @@ export default function AddProductForm() {
   const [shortDescription, setShortDescription] = useState("");
   const [price, setPrice] = useState(0);
   const [slug, setSlug] = useState("");
+  const [stock, setStock] = useState(0); // New state for stock
+  const [brand, setBrand] = useState(""); // New state for brand
   const [pending, setPending] = useState(false);
   const [imageId] = useState(uuid());
   const [descriptionImageId] = useState(uuid());
@@ -103,7 +105,7 @@ export default function AddProductForm() {
       const updated = { ...prev };
       if (isKey) {
         // Handle key change
-        const existingValue = updated[key] ?? '';
+        const existingValue = updated[key] ?? "";
         delete updated[key];
         updated[value] = existingValue;
       } else {
@@ -132,10 +134,12 @@ export default function AddProductForm() {
       title,
       shortDescription,
       price,
+      stock,
+      brand,
       slug,
       categoryId: categoryId,
       description: content,
-      attributes: specifications, // Pass specifications as JSON
+      attributes: specifications,
     });
   };
 
@@ -194,6 +198,24 @@ export default function AddProductForm() {
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label>Stock</Label>
+          <Input
+            type="number"
+            placeholder="Stock"
+            value={stock}
+            onChange={(e) => setStock(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label>Brand</Label>
+          <Input
+            type="text"
+            placeholder="Brand"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
           />
         </div>
         <div className="mt-auto flex flex-col gap-y-1">

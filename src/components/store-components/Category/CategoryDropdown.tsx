@@ -2,17 +2,66 @@
 
 import Link from "next/link";
 import useCategoryPopup from "@/hooks/useCategoryPopup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { api } from "@/trpc/react";
 import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
+import type { CategoryTree } from "@/schemas/categorySchema";
 
 const CategoryDropdown = () => {
   const [categories, { error }] = api.category.getAll.useSuspenseQuery();
   const { openCategoryPopup, handleCategoryPopup } = useCategoryPopup();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [delayedHoveredCategory, setDelayedHoveredCategory] = useState<
+    string | null
+  >(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setDelayedHoveredCategory(hoveredCategory);
+    }, 300); // Increased delay to 300ms for smoother transitions
+    return () => clearTimeout(timeout);
+  }, [hoveredCategory]);
 
   if (error) return <div>Error: {error.message}</div>;
+
+  const renderSubcategories = (subcategories: CategoryTree[]) => {
+    return (
+      <motion.div
+        initial={{ opacity: 0, width: 0 }}
+        animate={{
+          opacity: 1,
+          width: "200px",
+        }}
+        transition={{ duration: 0.2, ease: "easeInOut" }}
+        className="absolute left-full top-0 z-10 min-w-[200px] overflow-hidden border border-gray-200 bg-white shadow-lg"
+        onMouseEnter={() => setHoveredCategory(delayedHoveredCategory)} // Keep dropdown visible
+        // onMouseLeave={() => setHoveredCategory(null)} // Allow smooth exit
+      >
+        {subcategories.map((sub) => (
+          <div
+            key={sub.id}
+            className="group relative px-4 py-2 hover:bg-gray-200"
+            onMouseEnter={() => setHoveredCategory(sub.id)}
+            onMouseLeave={() => setHoveredCategory(null)}
+          >
+            <Link
+              href={`/categories/${sub.id}`}
+              className="inline-block whitespace-nowrap"
+            >
+              {sub.name}
+            </Link>
+            {sub.subcategories?.length > 0 && (
+              <CaretRight className="absolute right-2 top-1/2 -translate-y-1/2" />
+            )}
+            {delayedHoveredCategory === sub.id &&
+              sub.subcategories?.length > 0 &&
+              renderSubcategories(sub.subcategories)}
+          </div>
+        ))}
+      </motion.div>
+    );
+  };
 
   return (
     <div className="relative h-full">
@@ -27,7 +76,7 @@ const CategoryDropdown = () => {
         <CaretDown color="#ffffff" />
       </div>
 
-      {/* Dropdown Menu with Width Animation */}
+      {/* Dropdown Menu */}
       <motion.div
         initial={{ opacity: 0, width: 0 }}
         animate={{
@@ -42,54 +91,32 @@ const CategoryDropdown = () => {
       >
         {categories.map((category) => (
           <div
-            key={category.name}
+            key={category.id}
             className="group relative"
-            onMouseEnter={() => setHoveredCategory(category.name)}
+            onMouseEnter={() => setHoveredCategory(category.id)}
             onMouseLeave={() => setHoveredCategory(null)}
           >
             {/* Parent Category */}
             <div className="flex cursor-pointer items-center justify-between px-4 py-2 hover:bg-gray-100">
               <Link
-                href={`/products?category=${category.id}`}
-                className="inline-block whitespace-nowrap"
+                href={`/categories/${category.id}`}
+                className="inline-block max-w-[180px] truncate" // Prevent text overflow
               >
                 {category.name}
               </Link>
-              {category.subcategories && (
+              {category.subcategories?.length > 0 && (
                 <CaretRight
                   className={`transition-transform ${
-                    hoveredCategory === category.name ? "rotate-90" : ""
+                    delayedHoveredCategory === category.id ? "rotate-90" : ""
                   }`}
                 />
               )}
             </div>
 
-            {/* Subcategories with Width Animation (Fully Visible) */}
-            {category.subcategories && (
-              <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{
-                  opacity: hoveredCategory === category.name ? 1 : 0,
-                  width: hoveredCategory === category.name ? "200px" : "0px",
-                }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
-                className="absolute left-full top-0 min-w-[200px] overflow-hidden border border-gray-200 bg-white shadow-lg"
-                style={{
-                  display: hoveredCategory === category.name ? "block" : "none", // Ensures visibility
-                }}
-              >
-                {category.subcategories.map((sub) => (
-                  <div key={sub.name} className="px-4 py-2 hover:bg-gray-200">
-                    <Link
-                      href={`categories/${category.name}/${sub.name}`}
-                      className="inline-block whitespace-nowrap"
-                    >
-                      {sub.name}
-                    </Link>
-                  </div>
-                ))}
-              </motion.div>
-            )}
+            {/* Render Subcategories */}
+            {delayedHoveredCategory === category.id &&
+              category.subcategories?.length > 0 &&
+              renderSubcategories(category.subcategories)}
           </div>
         ))}
       </motion.div>

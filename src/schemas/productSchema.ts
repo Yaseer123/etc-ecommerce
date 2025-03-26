@@ -17,6 +17,8 @@ export const productSchema = z.object({
     .optional(),
   attributes: z.record(z.string(), z.string()).optional(), // JSON specifications
   images: z.string().array().optional(),
+  stock: z.number(),
+  brand: z.string(),
 });
 
 export type Product = z.infer<typeof productSchema>;
@@ -39,6 +41,8 @@ export const updateProductSchema = z.object({
     .optional(),
   attributes: z.record(z.string(), z.string()).optional(), // JSON specifications
   images: z.string().array().optional(),
+  stock: z.number(),
+  published: z.boolean(),
 });
 
 export type UpdateProduct = z.infer<typeof updateProductSchema>;
