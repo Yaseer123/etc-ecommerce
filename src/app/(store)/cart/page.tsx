@@ -4,20 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
-import { countdownTime } from "@/utils/countdownTime";
 import { Minus, Plus, XCircle } from "@phosphor-icons/react/dist/ssr";
 
 const Cart = () => {
-  const [timeLeft, setTimeLeft] = useState(countdownTime());
   const router = useRouter();
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft(countdownTime());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   const { cartArray, updateCart, removeFromCart } = useCartStore();
 
@@ -52,19 +42,6 @@ const Cart = () => {
     }
   };
 
-  // if (totalCart < applyCode) {
-  //   setApplyCode(0);
-  //   setDiscountCart(0);
-  // }
-
-  // if (totalCart < moneyForFreeship) {
-  //   setShipCart(30);
-  // }
-
-  // if (cartArray.cartArray.length === 0) {
-  //   setShipCart(0);
-  // }
-
   const redirectToCheckout = () => {
     router.push(`/checkout?discount=${discountCart}&ship=${shipCart}`);
   };
@@ -78,57 +55,6 @@ const Cart = () => {
         <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex justify-between gap-y-8 max-xl:flex-col">
             <div className="w-full xl:w-2/3 xl:pr-3">
-              <div className="flex items-center rounded-lg bg-green px-5 py-3">
-                <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                  🔥
-                </div>
-                <div className="pl-2 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                  Your cart will expire in
-                  <span className="fw-700 text-base font-semibold capitalize leading-[26px] text-red md:text-base md:leading-6">
-                    {" "}
-                    {timeLeft.minutes}:
-                    {timeLeft.seconds < 10
-                      ? `0${timeLeft.seconds}`
-                      : timeLeft.seconds}
-                  </span>
-                  <span>
-                    {" "}
-                    minutes! Please checkout now before your items sell out!
-                  </span>
-                </div>
-              </div>
-              <div className="mt-5">
-                <div>
-                  Buy
-                  <span className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                    {" "}
-                    $
-                    <span>
-                      {moneyForFreeship - totalCart > 0 ? (
-                        <>{moneyForFreeship - totalCart}</>
-                      ) : (
-                        0
-                      )}
-                    </span>
-                    .00{" "}
-                  </span>
-                  <span>more to get </span>
-                  <span className="text-base font-semibold capitalize leading-[26px]">
-                    freeship
-                  </span>
-                </div>
-                <div className="relative mt-4 h-[4px] bg-outline">
-                  <div
-                    className="cart-progress-line absolute left-0 h-[4px] bg-[#3dab25]"
-                    style={{
-                      width:
-                        totalCart <= moneyForFreeship
-                          ? `${(totalCart / moneyForFreeship) * 100}%`
-                          : `100%`,
-                    }}
-                  ></div>
-                </div>
-              </div>
               <div className="mt-5 w-full sm:mt-7 sm:overflow-x-auto">
                 <div className="w-full">
                   <div className="heading bg-surface pb-4 pt-4">

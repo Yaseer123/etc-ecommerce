@@ -9,7 +9,7 @@ interface SidebarProps {
   openSidebar: boolean;
   handleOpenSidebar: () => void;
   handlePriceChange: (values: number | number[]) => void;
-  handleCategory: (categoryId: string, categoryName:string) => void;
+  handleCategory: (categoryId: string, categoryName: string) => void;
   handleBrand: (brand: string) => void;
   priceRange: { min: number; max: number };
   brand: string | null | undefined;
@@ -112,14 +112,7 @@ const FilterSidebar: React.FC<SidebarProps> = ({
                     </label>
                   </div>
                   <div className="text-secondary2">
-                    (
-                    {
-                      data.filter(
-                        (dataItem) =>
-                          dataItem.brand === item &&
-                          dataItem.category.name === "fashion",
-                      ).length
-                    }
+                    ({data.filter((dataItem) => dataItem.brand === item).length}
                     )
                   </div>
                 </div>

@@ -27,7 +27,7 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
         max: Math.max(acc.max, product.price),
         min: Math.min(acc.min, product.price),
       }),
-      { max: -Infinity, min: Infinity },
+      { max: Infinity, min: 0 },
     ),
   );
   const [currentPage, setCurrentPage] = useState(0);

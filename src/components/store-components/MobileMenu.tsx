@@ -91,17 +91,7 @@ const MobileMenu = ({
                     </span>
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    href="/order-tracking"
-                    className="mt-5 flex items-center justify-between text-xl font-semibold"
-                  >
-                    Track Order
-                    <span className="text-right">
-                      <CaretRight size={20} />
-                    </span>
-                  </Link>
-                </li>
+                
               </ul>
             </div>
           </div>

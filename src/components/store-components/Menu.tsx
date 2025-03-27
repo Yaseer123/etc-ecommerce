@@ -211,14 +211,6 @@ export default function Menu({
                         Contact Us
                       </Link>
                     </li>
-                    <li className="h-full">
-                      <Link
-                        href="/order-tracking"
-                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
-                      >
-                        Track Order
-                      </Link>
-                    </li>
                   </ul>
                 </div>
               </div>

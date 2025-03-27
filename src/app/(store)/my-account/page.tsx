@@ -12,14 +12,22 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Dashboard from "@/components/store-components/UserDashboard/Dashboard";
 import OrderHistory from "@/components/store-components/UserDashboard/OrderHistory";
 import AddressTab from "@/components/store-components/UserDashboard/Address";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const MyAccount = () => {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<string | undefined>("dashboard");
 
   const breadcrumbItems = [
     { label: "home", href: "/" },
     { label: "my-account" },
   ];
+
+  if (!session?.user) {
+    router.push("/login");
+  }
 
   return (
     <>
@@ -34,7 +42,7 @@ const MyAccount = () => {
                 <div className="heading flex flex-col items-center justify-center">
                   <div className="avatar">
                     <Image
-                      src={"/images/avatar/1.png"}
+                      src={session?.user.image ?? "/images/avatar/1.png"}
                       width={300}
                       height={300}
                       alt="avatar"
@@ -42,10 +50,10 @@ const MyAccount = () => {
                     />
                   </div>
                   <div className="name heading6 mt-4 text-center">
-                    Tony Nguyen
+                    {session?.user.name}
                   </div>
                   <div className="mail heading6 mt-1 text-center font-normal normal-case text-secondary">
-                    hi.avitex@gmail.com
+                    {session?.user.email}
                   </div>
                 </div>
                 <div className="menu-tab mt-6 w-full max-w-none lg:mt-10">

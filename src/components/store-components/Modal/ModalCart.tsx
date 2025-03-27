@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import type CountdownTimeType from "@/types/CountdownType";
-import { countdownTime } from "@/utils/countdownTime";
 import CartProductItem from "./CartProductItem";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import {
@@ -15,25 +13,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { useCartStore } from "@/context/store-context/CartContext";
 
-const ModalCart = ({
-  serverTimeLeft,
-}: {
-  serverTimeLeft: CountdownTimeType;
-}) => {
-  const [timeLeft, setTimeLeft] = useState(serverTimeLeft);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        const newTime = countdownTime();
-        return JSON.stringify(prevTime) === JSON.stringify(newTime)
-          ? prevTime
-          : newTime;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
+const ModalCart = () => {
   const [activeTab, setActiveTab] = useState<string | undefined>("");
   const { isModalOpen, closeModalCart } = useModalCartStore();
 
@@ -43,7 +23,6 @@ const ModalCart = ({
     setActiveTab(tab);
   };
 
-  const moneyForFreeship = 150;
   let [totalCart] = useState<number>(0);
 
   cartState.map((item) => (totalCart += item.price * item.quantity));
@@ -67,53 +46,7 @@ const ModalCart = ({
                 <X size={14} />
               </div>
             </div>
-            <div className="time px-6">
-              <div className="flex items-center gap-3 rounded-lg bg-green px-5 py-3">
-                <p className="text-3xl">🔥</p>
-                <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                  Your cart will expire in{" "}
-                  <span className="text-base font-semibold leading-[22] text-red md:text-[13px] md:leading-5">
-                    {timeLeft.minutes}:
-                    {timeLeft.seconds < 10
-                      ? `0${timeLeft.seconds}`
-                      : timeLeft.seconds}
-                  </span>{" "}
-                  minutes!
-                  <br />
-                  Please checkout now before your items sell out!
-                </div>
-              </div>
-            </div>
-            <div className="heading banner mt-3 px-6">
-              <div className="text">
-                Buy{" "}
-                <span className="text-button">
-                  {" "}
-                  $
-                  <span className="more-price">
-                    {moneyForFreeship - totalCart > 0 ? (
-                      <>{moneyForFreeship - totalCart}</>
-                    ) : (
-                      0
-                    )}
-                  </span>
-                  .00{" "}
-                </span>
-                <span>more to get </span>
-                <span className="text-button">freeship</span>
-              </div>
-              <div className="tow-bar-block mt-3">
-                <div
-                  className="progress-line"
-                  style={{
-                    width:
-                      totalCart <= moneyForFreeship
-                        ? `${(totalCart / moneyForFreeship) * 100}%`
-                        : `100%`,
-                  }}
-                ></div>
-              </div>
-            </div>
+
             <div className="list-product px-6">
               {cartState.map((item) => (
                 <div
