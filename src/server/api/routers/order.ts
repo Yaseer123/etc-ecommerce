@@ -14,11 +14,34 @@ export const orderRouter = createTRPCRouter({
     });
   }),
 
+  getOrderbyStatus: protectedProcedure
+    .input(
+      z.enum(["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"]).optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return await ctx.db.order.findMany({
+        where: {
+          userId: ctx.session.user.id,
+          ...(input && { status: input }),
+        },
+        include: { items: { include: { product: true } }, address: true },
+        orderBy: { createdAt: "desc" },
+      });
+    }),
+
+  getLatestOrder: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.db.order.findFirst({
+      where: { userId: ctx.session.user.id },
+      include: { items: { include: { product: true } }, address: true },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
+
   getOrderById: protectedProcedure
     .input(z.string()) // Order ID
     .query(async ({ ctx, input }) => {
       return await ctx.db.order.findUnique({
-        where: { id: input, userId: ctx.session.user.id },
+        where: { id: input },
         include: { items: { include: { product: true } }, address: true },
       });
     }),
@@ -26,33 +49,29 @@ export const orderRouter = createTRPCRouter({
   placeOrder: protectedProcedure
     .input(
       z.object({
+        cartItems: z.array(
+          z.object({
+            productId: z.string(),
+            quantity: z.number().min(1),
+          }),
+        ),
         addressId: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
 
-      // Get user's cart
-      const cart = await ctx.db.cart.findUnique({
-        where: { userId },
-        include: { items: true },
-      });
-
-      if (!cart || cart.items.length === 0) {
-        throw new Error("Cart is empty");
-      }
-
       // Get products for all cart items
       const products = await ctx.db.product.findMany({
         where: {
           id: {
-            in: cart.items.map((item) => item.productId),
+            in: input.cartItems.map((item) => item.productId),
           },
         },
       });
 
       // Check stock availability
-      for (const cartItem of cart.items) {
+      for (const cartItem of input.cartItems) {
         const product = products.find((p) => p.id === cartItem.productId);
         if (!product) {
           throw new Error(`Product not found: ${cartItem.productId}`);
@@ -68,7 +87,7 @@ export const orderRouter = createTRPCRouter({
       );
 
       // Calculate total price using product prices
-      const total = cart.items.reduce(
+      const total = input.cartItems.reduce(
         (acc, item) =>
           acc + item.quantity * (productPriceMap.get(item.productId) ?? 0),
         0,
@@ -77,7 +96,7 @@ export const orderRouter = createTRPCRouter({
       // Start transaction
       const order = await ctx.db.$transaction(async (tx) => {
         // Update product stock
-        for (const cartItem of cart.items) {
+        for (const cartItem of input.cartItems) {
           await tx.product.update({
             where: { id: cartItem.productId },
             data: {
@@ -95,7 +114,7 @@ export const orderRouter = createTRPCRouter({
             total,
             addressId: input.addressId,
             items: {
-              create: cart.items.map((item) => ({
+              create: input.cartItems.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
                 price: productPriceMap.get(item.productId) ?? 0,
@@ -104,9 +123,6 @@ export const orderRouter = createTRPCRouter({
           },
         });
       });
-
-      // Clear cart after placing order
-      await ctx.db.cartItem.deleteMany({ where: { cartId: cart.id } });
 
       return order;
     }),
@@ -135,7 +151,7 @@ export const orderRouter = createTRPCRouter({
     .input(z.string()) // Order ID
     .mutation(async ({ ctx, input }) => {
       const order = await ctx.db.order.findUnique({
-        where: { id: input, userId: ctx.session.user.id },
+        where: { id: input },
       });
 
       if (!order || order.status !== "PENDING") {

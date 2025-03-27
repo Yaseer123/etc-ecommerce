@@ -185,7 +185,8 @@ model Address {
     city      String
     state     String
     zipCode   String
-    country   String
+    phone     String
+    email     String
     isDefault Boolean @default(false)
 
     // Relationships

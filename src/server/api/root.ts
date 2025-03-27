@@ -7,6 +7,7 @@ import { orderRouter } from "./routers/order";
 import { questionRouter } from "./routers/question";
 import { wishListRouter } from "./routers/wishList";
 import { faqRouter } from "./routers/faq";
+import { addressRouter } from "./routers/address";
 
 /**
  * This is the primary router for your server.
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   order: orderRouter,
   question: questionRouter,
   wishList: wishListRouter,
+  address: addressRouter,
   faq: faqRouter,
 });
 
