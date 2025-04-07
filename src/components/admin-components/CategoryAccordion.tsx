@@ -21,17 +21,17 @@ import {
 } from "../ui/alert-dialog";
 import { useState } from "react";
 import { Input } from "../ui/input";
-import { useClickAway } from "@uidotdev/usehooks";
 import { api } from "@/trpc/react";
+import Image from "next/image"; // Import the Image component
+import { removeImage, uploadFile } from "@/app/actions/file";
+import type { Category } from "@prisma/client";
 
-interface Category {
-  id: string;
-  name: string;
+interface CategoryTree extends Category {
   subcategories: Category[];
 }
 
 interface CategoryAccordionProps {
-  categories: Category[];
+  categories: CategoryTree[];
   onDelete: (id: string) => void; // Callback for deleting a category
 }
 
@@ -56,7 +56,7 @@ function CategoryItem({
   category,
   onDelete,
 }: {
-  category: Category;
+  category: CategoryTree;
   onDelete: (id: string) => void;
 }) {
   const handleDelete = () => {
@@ -72,11 +72,69 @@ function CategoryItem({
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isRemovingImage, setIsRemovingImage] = useState(false); // New state for disabling the button
   const [newCategoryName, setNewCategoryName] = useState(category.name);
+  const [newImage, setNewImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    category.image,
+  );
 
-  const inputRef = useClickAway<HTMLInputElement>(() => {
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setNewImage(file);
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          setImagePreview(event.target.result as string);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveImage = async () => {
+    setIsRemovingImage(true); // Set loading state to true
+    try {
+      if (category.imageId) {
+        await removeImage(category.imageId); // Remove the old image from the server
+      }
+      setNewImage(null);
+      setImagePreview(null); // Clear the image preview
+    } finally {
+      setIsRemovingImage(false); // Reset loading state
+    }
+  };
+
+  const handleSave = async () => {
+    let imageUrl = category.image;
+    let imageId = category.imageId;
+
+    if (newImage) {
+      if (imageId) await removeImage(imageId); // Remove the old image if it exists
+      const formData = new FormData();
+      formData.append("file", newImage);
+
+      const uploadResponse = await uploadFile(formData);
+      if (uploadResponse) {
+        imageUrl = uploadResponse.secure_url;
+        imageId = uploadResponse.public_id;
+      }
+    } else if (!imagePreview) {
+      // If the image is removed, set the image URL and ID to null
+      imageUrl = null;
+      imageId = null;
+    }
+
+    editCategory.mutate({
+      id: category.id,
+      name: newCategoryName,
+      image: imageUrl,
+      imageId: imageId,
+    });
+
     setIsEditing(false);
-  });
+  };
 
   return (
     <AccordionItem
@@ -88,19 +146,24 @@ function CategoryItem({
           disabled={category.subcategories.length === 0}
           className="flex flex-1 gap-3 text-left"
         >
+          {/* Display the category image */}
+          {imagePreview && (
+            <Image
+              src={imagePreview}
+              alt={category.name}
+              width={40}
+              height={40}
+              className="mr-2 rounded-md object-cover"
+            />
+          )}
           {isEditing ? (
             <Input
-              ref={inputRef}
               type="text"
               value={newCategoryName}
               onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
+              onKeyDown={async (e) => {
                 if (e.key === "Enter") {
-                  editCategory.mutate({
-                    id: category.id,
-                    name: newCategoryName,
-                  });
-                  setIsEditing(false);
+                  await handleSave();
                 }
               }}
               onChange={(e) => setNewCategoryName(e.target.value)}
@@ -111,7 +174,7 @@ function CategoryItem({
           )}
         </AccordionTrigger>
         <div className="flex items-center gap-x-1">
-          <Button onClick={() => setIsEditing(true)}>
+          <Button onClick={() => setIsEditing((prev) => !prev)}>
             <MdEdit size={35} />
           </Button>
           <AlertDialog>
@@ -139,12 +202,47 @@ function CategoryItem({
         </div>
       </div>
 
+      {isEditing && (
+        <div className="p-3">
+          <label className="text-sm font-medium">{category.image ? "Edit Image" : "Add Image"}</label>
+          <Input
+            type="file"
+            onClick={(e) => e.stopPropagation()}
+            accept="image/*"
+            onChange={handleImageChange}
+            className="mt-2"
+          />
+          {imagePreview && (
+            <div className="mt-2 flex gap-4">
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                width={128}
+                height={128}
+                className="rounded-md object-cover"
+              />
+              <Button
+                variant="destructive"
+                onClick={handleRemoveImage}
+                disabled={isRemovingImage} // Disable the button while removing
+                className="mt-2"
+              >
+                {isRemovingImage ? "Removing..." : "Remove Image"}
+              </Button>
+            </div>
+          )}
+          <Button onClick={handleSave} className="mt-2">
+            Save Changes
+          </Button>
+        </div>
+      )}
+
       <AccordionContent className="p-3">
         {/* Recursive Rendering of Subcategories */}
         {category.subcategories.length > 0 && (
           <div className="ml-4 mt-2 border-l-2 pl-4">
             <CategoryAccordion
-              categories={category.subcategories}
+              categories={category.subcategories as CategoryTree[]}
               onDelete={onDelete} // Pass down the delete handler
             />
           </div>

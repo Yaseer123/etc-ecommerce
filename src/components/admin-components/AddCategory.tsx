@@ -19,10 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import Image from "next/image";
+import { uploadFile } from "@/app/actions/file";
 
 export default function AddCategoryForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const {
     register,
@@ -35,6 +38,7 @@ export default function AddCategoryForm() {
     defaultValues: {
       name: "",
       parentId: null,
+      image: undefined,
     },
   });
 
@@ -56,9 +60,29 @@ export default function AddCategoryForm() {
     },
   });
 
-  const onSubmit = (data: NewCategory) => {
+  const onSubmit = async (data: NewCategory) => {
     setIsSubmitting(true);
-    addCategory.mutate(data);
+    setImagePreview(null); // Reset image preview
+
+
+    const formData = new FormData();
+    if (data.image) {
+      const imageData = new FormData();
+      imageData.append("file", data.image);
+
+      const imageUploadResponse = await uploadFile(imageData);
+      if (imageUploadResponse) {
+        formData.append("imageUrl", imageUploadResponse.secure_url);
+        formData.append("imageId", imageUploadResponse.public_id);
+      }
+    }
+
+    addCategory.mutate({
+      name: data.name,
+      parentId: data.parentId,
+      imageId: formData.get("imageId") as string | undefined,
+      imageUrl: formData.get("imageUrl") as string | undefined,
+    });
   };
 
   return (
@@ -73,11 +97,48 @@ export default function AddCategoryForm() {
         <label className="text-sm font-medium">Category Name</label>
         <Input {...register("name")} placeholder="Enter category name" />
         {errors.name && (
-          <p className="text-sm text-red-500">{errors.name.message}</p>
+          <p className="text-red-500 text-sm">{errors.name.message}</p>
         )}
       </div>
 
-      {/* Category Selection */}
+      {/* Select Image */}
+      <div>
+        <label className="text-sm font-medium">Select Image</label>
+        <Input
+          type="file"
+          accept="image/*"
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setValue("image", file); // Manually set the file in the form state
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                if (event.target?.result) {
+                  setImagePreview(event.target.result as string);
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          }}
+          placeholder="Select category image"
+        />
+        {imagePreview && (
+          <div className="mt-2">
+            <Image
+              height={128}
+              width={128}
+              src={imagePreview}
+              alt="Preview"
+              className="h-full w-full rounded-md object-cover"
+            />
+          </div>
+        )}
+        {errors.image && (
+          <p className="text-red-500 text-sm">{errors.image.message}</p>
+        )}
+      </div>
+
+      {/* Parent Category */}
       <div>
         <label className="text-sm font-medium">Select parent category</label>
         <CategorySelector
@@ -93,12 +154,12 @@ export default function AddCategoryForm() {
           }}
         />
         {errors.parentId && (
-          <p className="text-sm text-red-500">{errors.parentId.message}</p>
+          <p className="text-red-500 text-sm">{errors.parentId.message}</p>
         )}
       </div>
 
       {/* Submit Button */}
-      <Button type="submit" disabled={isSubmitting} className="w-96">
+      <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? "Adding..." : "Add Category"}
       </Button>
     </form>

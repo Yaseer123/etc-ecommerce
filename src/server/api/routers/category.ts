@@ -76,13 +76,18 @@ export const categoryRouter = createTRPCRouter({
       z.object({
         parentId: z.string().nullable(),
         name: z.string(),
+        imageId: z.string().optional(),
+        imageUrl: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Create the category in the database
       const category = await ctx.db.category.create({
         data: {
           name: input.name,
           parentId: input.parentId ?? null,
+          imageId: input.imageId,
+          image: input.imageUrl,
         },
       });
 
@@ -94,12 +99,14 @@ export const categoryRouter = createTRPCRouter({
       z.object({
         id: z.string(),
         name: z.string(),
+        imageId: z.string().nullable(),
+        image: z.string().nullable(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const category = await ctx.db.category.update({
         where: { id: input.id },
-        data: { name: input.name },
+        data: { name: input.name, imageId: input.imageId, image: input.image },
       });
 
       return category;

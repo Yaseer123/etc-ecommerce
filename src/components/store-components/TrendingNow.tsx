@@ -53,14 +53,14 @@ const TrendingNow = () => {
                   className="trending-item relative block cursor-pointer"
                   onClick={() => handleCategoryClick(category.id)}
                 >
-                  <div className="bg-img overflow-hidden rounded-full">
+                  <div className="bg-img aspect-square overflow-hidden rounded-full">
                     <Image
-                      src={"/images/avatar/1.png"}
+                      src={category.image ?? "/images/avatar/1.png"}
                       width={1000}
                       height={1000}
                       alt={category.name}
                       priority={true}
-                      className="w-full"
+                      className="h-full w-full object-cover rounded-full"
                     />
                   </div>
                   <div className="trending-name mt-5 text-center duration-500">
