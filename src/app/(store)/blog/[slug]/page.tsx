@@ -66,7 +66,7 @@ export default async function BlogDetailsPage({
         <div className="blog-content flex items-center justify-center">
           <div className="main w-full md:w-5/6">
             <div className="blog-tag inline-block rounded-full bg-green px-2.5 py-1 text-sm font-semibold uppercase leading-5">
-              {blogMain.tags.join(", ")}
+              {blogMain.tags.map((tag) => tag.name).join(", ")}
             </div>
             <div className="mt-3 text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
               {blogMain.title}

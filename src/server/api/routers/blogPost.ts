@@ -13,22 +13,40 @@ export const blogPostRouter = createTRPCRouter({
     return blogPost;
   }),
 
-  getAllPretty: publicProcedure.query(async ({ ctx }) => {
-    const blogPost = await ctx.db.post.findMany({
-      where: { published: true },
-      orderBy: { updatedAt: "desc" },
-      include: {
-        createdBy: {
-          select: {
-            id: true,
-            name: true,
-          },
+  getAllPretty: publicProcedure
+    .input(
+      z
+        .object({
+          tag: z.string().optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.db.post.findMany({
+        where: {
+          published: true,
+          ...(input?.tag
+            ? {
+                tags: {
+                  some: {
+                    slug: input.tag,
+                  },
+                },
+              }
+            : {}),
         },
-      },
-    });
-
-    return blogPost;
-  }),
+        orderBy: { updatedAt: "desc" },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          tags: true,
+        },
+      });
+    }),
 
   getOne: publicProcedure
     .input(
@@ -46,11 +64,22 @@ export const blogPostRouter = createTRPCRouter({
               name: true,
             },
           },
+          tags: true,
         },
       });
 
       return post;
     }),
+
+  getAllTags: publicProcedure.query(async ({ ctx }) => {
+    const tags = await ctx.db.tag.findMany({
+      distinct: ["name", "slug"],
+      orderBy: {
+        name: "asc",
+      },
+    });
+    return tags;
+  }),
 
   // Add a new blog post
   add: protectedProcedure
@@ -64,7 +93,12 @@ export const blogPostRouter = createTRPCRouter({
         content: z.string(),
         createdBy: z.string(),
         imageId: z.string(),
-        tags: z.array(z.string()),
+        tags: z.array(
+          z.object({
+            name: z.string(),
+            slug: z.string(),
+          }),
+        ),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -78,7 +112,15 @@ export const blogPostRouter = createTRPCRouter({
           slug: input.slug,
           content: input.content,
           createdById: input.createdBy,
-          tags: input.tags,
+          tags: {
+            connectOrCreate: input.tags.map((tag) => ({
+              where: { slug: tag.slug },
+              create: { name: tag.name, slug: tag.slug },
+            })),
+          },
+        },
+        include: {
+          tags: true,
         },
       });
 
@@ -91,9 +133,16 @@ export const blogPostRouter = createTRPCRouter({
         id: z.string().cuid("Invalid post ID"),
         title: z.string().min(3, "Title must be at least 3 characters"),
         slug: z.string().min(1, "Slug field can't be empty"),
+        shortDescription: z.string(),
         content: z.string(),
         createdBy: z.string(),
         imageId: z.string(),
+        tags: z.array(
+          z.object({
+            name: z.string(),
+            slug: z.string(),
+          }),
+        ),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -104,7 +153,18 @@ export const blogPostRouter = createTRPCRouter({
           title: input.title,
           slug: input.slug,
           content: input.content,
+          shortDescription: input.shortDescription,
           createdById: input.createdBy,
+          tags: {
+            set: [], // First disconnect all existing tags
+            connectOrCreate: input.tags.map((tag) => ({
+              where: { slug: tag.slug },
+              create: { name: tag.name, slug: tag.slug },
+            })),
+          },
+        },
+        include: {
+          tags: true,
         },
       });
 

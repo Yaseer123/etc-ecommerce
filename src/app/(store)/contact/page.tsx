@@ -1,8 +1,40 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import React from "react";
+import { api } from "@/trpc/react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const contactMutation = api.contact.create.useMutation({
+    onSuccess: () => {
+      toast.success("Message sent successfully!");
+      setFormData({ name: "", email: "", message: "" });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    contactMutation.mutate(formData);
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
   const breadcrumbItems = [
     {
       label: "Home",
@@ -28,39 +60,49 @@ const ContactUs = () => {
               <div className="body1 mt-3 text-secondary2">
                 Use the form below to get in touch with the sales team
               </div>
-              <form className="mt-4 md:mt-6">
+              <form className="mt-4 md:mt-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 gap-4 gap-y-5 sm:grid-cols-2">
                   <div className="name">
                     <input
                       className="w-full rounded-lg border-line px-4 py-3"
-                      id="username"
+                      name="name"
                       type="text"
                       placeholder="Your Name *"
                       required
+                      value={formData.name}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="email">
                     <input
                       className="w-full rounded-lg border-line px-4 pb-3 pt-3"
-                      id="email"
+                      name="email"
                       type="email"
                       placeholder="Your Email *"
                       required
+                      value={formData.email}
+                      onChange={handleChange}
                     />
                   </div>
                   <div className="message sm:col-span-2">
                     <textarea
                       className="w-full rounded-lg border-line px-4 pb-3 pt-3"
-                      id="message"
+                      name="message"
                       rows={3}
                       placeholder="Your Message *"
                       required
+                      value={formData.message}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
                 <div className="mt-4 md:mt-6">
-                  <button className="duration-400 hover:bg-green-500 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3">
-                    Send message
+                  <button
+                    type="submit"
+                    disabled={contactMutation.isPending}
+                    className="duration-400 md:text-sm inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                  >
+                    {contactMutation.isPending ? "Sending..." : "Send message"}
                   </button>
                 </div>
               </form>

@@ -64,7 +64,10 @@ export default function AddBlogForm({ userId }: { userId: string }) {
       content: content,
       slug: slug,
       createdBy: userId,
-      tags: value.map((tag) => tag.value),
+      tags: value.map((tag) => ({
+        name: tag.label,
+        slug: tag.value.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      })),
     });
   };
   return (
@@ -77,8 +80,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
     >
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <div>
-          <Label htmlFor="title">Picture</Label>
-
+          <Label htmlFor="title">Title</Label>
           <Input
             type="text"
             placeholder="Title"
@@ -88,7 +90,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
           />
         </div>
         <div>
-          <Label htmlFor="slug">Picture</Label>
+          <Label htmlFor="slug">Slug</Label>
           <Input
             id="slug"
             type="text"
@@ -113,7 +115,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
           />
         </div>
         <div className="cursor-pointer">
-          <Label htmlFor="picture">Picture</Label>
+          <Label htmlFor="picture">Cover Image</Label>
           <Input
             id="picture"
             type="file"

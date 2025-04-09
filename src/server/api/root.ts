@@ -10,6 +10,7 @@ import { faqRouter } from "./routers/faq";
 import { addressRouter } from "./routers/address";
 import { sliderRouter } from "./routers/slider";
 import { saleBannerRouter } from "./routers/saleBanner";
+import { contactRouter } from "./routers/contact";
 
 /**
  * This is the primary router for your server.
@@ -28,6 +29,7 @@ export const appRouter = createTRPCRouter({
   faq: faqRouter,
   slider: sliderRouter,
   saleBanner: saleBannerRouter,
+  contact: contactRouter,
 });
 
 // export type definition of API

@@ -33,7 +33,7 @@ const BlogItem: React.FC<BlogProps> = ({ data }) => {
         </div>
         <div>
           <div className="blog-tag inline-block rounded-full bg-green px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-            {data.tags.join(", ")}
+            {data.tags.map((tag) => tag.name).join(", ")}
           </div>
           <div className="heading6 blog-title mt-3 duration-300">
             {data.title}

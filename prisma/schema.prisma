@@ -44,15 +44,24 @@ model Post {
     imageId          String   @unique
     coverImageId     String   @unique
     coverImageUrl    String
-    tags             String[]
     published        Boolean  @default(false)
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
 
     createdBy   User   @relation(fields: [createdById], references: [id])
     createdById String
+    tags        Tag[]
 
     @@index([slug, createdAt])
+}
+
+model Tag {
+    id        String   @id @default(cuid())
+    name      String   @unique
+    slug      String   @unique
+    posts     Post[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model Product {
@@ -256,7 +265,7 @@ model Slider {
     imageId     String
     link        String
     createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    updatedAt   DateTime @default(now())
 }
 
 model SaleBanner {
@@ -271,5 +280,14 @@ model SaleBanner {
     endDate     DateTime
     isActive    Boolean  @default(true)
     createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    updatedAt   DateTime @default(now())
+}
+
+model Contact {
+    id        String   @id @default(cuid())
+    name      String
+    email     String
+    message   String   @db.Text
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }

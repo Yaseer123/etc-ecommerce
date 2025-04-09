@@ -1,24 +1,21 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import BlogItem from "@/components/store-components/Blog/BlogItem";
-import HandlePagination from "@/components/store-components/HandlePagination";
 import { api } from "@/trpc/react";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import BlogList from "@/components/store-components/Blog/BlogList";
+import BlogSkeleton from "@/components/store-components/Blog/BlogSkeleton";
+import RecentPosts from "@/components/store-components/Blog/RecentPosts";
 
 const BlogsPage = () => {
-  const [blogPosts] = api.post.getAllPretty.useSuspenseQuery();
-  const [currentPage, setCurrentPage] = useState(0);
-  const productsPerPage = 4;
-  const offset = currentPage * productsPerPage;
-  const router = useRouter();
   const searchParams = useSearchParams();
-  const dataCategory = searchParams.get("category");
-  const [category, setCategory] = useState<string | null>(dataCategory);
+  const dataCategory = searchParams?.get("category");
+  const [category, setCategory] = useState<string | null | undefined>(
+    dataCategory,
+  );
+  const [tags] = api.post.getAllTags.useSuspenseQuery();
 
   const handleCategory = (category: string) => {
     setCategory((prevCategory) =>
@@ -26,23 +23,6 @@ const BlogsPage = () => {
     );
   };
 
-  const handleBlogClick = (blogId: string, slug: string) => {
-    router.push(`/blog/${slug}?id=${blogId}`);
-  };
-
-  const pageCount = Math.ceil(blogPosts.length / productsPerPage);
-
-  useEffect(() => {
-    if (pageCount === 0 && currentPage !== 0) {
-      setCurrentPage(0);
-    }
-  }, [pageCount, currentPage]);
-
-  const currentBlogs = blogPosts.slice(offset, offset + productsPerPage);
-
-  const handlePageChange = (selected: number) => {
-    setCurrentPage(selected);
-  };
   const breadcrumbItems = [
     { label: "Home", href: "/" },
     { label: "Categories", href: "/categories" },
@@ -56,19 +36,9 @@ const BlogsPage = () => {
         <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex justify-between gap-y-12 max-xl:flex-col">
             <div className="left xl:w-3/4 xl:pr-2">
-              <div className="list-blog flex flex-col gap-8 xl:gap-10">
-                {currentBlogs.map((item) => (
-                  <BlogItem key={item.id} data={item} />
-                ))}
-              </div>
-              {pageCount > 1 && (
-                <div className="list-pagination mt-6 flex w-full items-center md:mt-10">
-                  <HandlePagination
-                    pageCount={pageCount}
-                    onPageChange={handlePageChange}
-                  />
-                </div>
-              )}
+              <Suspense fallback={<BlogSkeleton />}>
+                <BlogList tag={category} />
+              </Suspense>
             </div>
             <div className="right xl:w-1/4 xl:pl-[52px]">
               <form className="form-search relative h-12 w-full">
@@ -81,64 +51,27 @@ const BlogsPage = () => {
                   <MagnifyingGlass className="heading6 absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-secondary duration-300 hover:text-black" />
                 </button>
               </form>
-              <div className="recent mt-6 border-b border-line pb-8 md:mt-10">
-                <div className="heading6">Recent Posts</div>
-                <div className="list-recent pt-1">
-                  {blogPosts.slice(0, 3).map((item) => (
-                    <div
-                      className="item mt-5 flex cursor-pointer gap-4"
-                      key={item.id}
-                      onClick={() => handleBlogClick(item.id, item.slug)}
-                    >
-                      <Image
-                        src={item.coverImageUrl}
-                        width={500}
-                        height={400}
-                        alt="blog cover image"
-                        className="h-20 w-20 flex-shrink-0 rounded-lg object-cover"
-                      />
-                      <div>
-                        <div className="blog-tag inline-block rounded-full bg-green px-2 py-0.5 text-xs font-semibold uppercase leading-5 whitespace-nowrap overflow-hidden text-ellipsis" style={{ maxWidth: '150px' }}>{item.tags.join(", ")}</div>
-                        <div className="text-title mt-1">{item.title}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
+              <Suspense
+                fallback={<div className="animate-pulse">Loading...</div>}
+              >
+                <RecentPosts />
+              </Suspense>
               <div className="filter-tags mt-6 md:mt-10">
                 <div className="heading6">Tags Cloud</div>
                 <div className="list-tags mt-4 flex flex-wrap items-center gap-3">
-                  <div
-                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "fashion" ? "active" : ""}`}
-                    onClick={() => handleCategory("fashion")}
-                  >
-                    fashion
-                  </div>
-                  <div
-                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "cosmetic" ? "active" : ""}`}
-                    onClick={() => handleCategory("cosmetic")}
-                  >
-                    cosmetic
-                  </div>
-                  <div
-                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "toy-kid" ? "active" : ""}`}
-                    onClick={() => handleCategory("toys-kid")}
-                  >
-                    toys kid
-                  </div>
-                  <div
-                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "yoga" ? "active" : ""}`}
-                    onClick={() => handleCategory("yoga")}
-                  >
-                    yoga
-                  </div>
-                  <div
-                    className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${category === "organic" ? "active" : ""}`}
-                    onClick={() => handleCategory("organic")}
-                  >
-                    organic
-                  </div>
+                  {tags.map((tag) => (
+                    <div
+                      key={tag.id}
+                      className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${
+                        category === tag.slug
+                          ? "active bg-black text-white"
+                          : ""
+                      }`}
+                      onClick={() => handleCategory(tag.slug)}
+                    >
+                      {tag.name}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
