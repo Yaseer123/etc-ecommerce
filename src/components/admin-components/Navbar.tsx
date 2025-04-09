@@ -22,6 +22,9 @@ export default async function Navbar() {
         <Button asChild variant="outline">
           <Link href="/admin/blog">Blogs</Link>
         </Button>
+        <Button asChild variant="outline">
+          <Link href="/admin/slider">Slider</Link>
+        </Button>
         {session && (
           <Button asChild variant="default">
             <Link href="/api/auth/signout">Sign out</Link>

@@ -1,4 +1,3 @@
-import Banner from "@/components/store-components/Banner";
 import Benefit from "@/components/store-components/Benefit";
 import Brand from "@/components/store-components/Brand";
 import ModalNewsletter from "@/components/store-components/Modal/ModalNewsletter";
@@ -17,7 +16,6 @@ export default function HomeEleven() {
       </div>
       <TrendingNow />
       <MenFashion/>
-      <Banner />
       <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" />
       <NewsInsight start={0} limit={3} />
       <Brand />

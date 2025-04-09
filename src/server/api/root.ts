@@ -8,6 +8,7 @@ import { questionRouter } from "./routers/question";
 import { wishListRouter } from "./routers/wishList";
 import { faqRouter } from "./routers/faq";
 import { addressRouter } from "./routers/address";
+import { sliderRouter } from "./routers/slider";
 
 /**
  * This is the primary router for your server.
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   wishList: wishListRouter,
   address: addressRouter,
   faq: faqRouter,
+  slider: sliderRouter,
 });
 
 // export type definition of API
