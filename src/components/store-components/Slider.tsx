@@ -7,16 +7,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css/bundle";
 import "swiper/css/effect-fade";
-import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import { SaleBanner } from "./SaleBanner";
 
 const Slider = () => {
-  const router = useRouter();
   const { data: sliderData, isLoading } = api.slider.getAll.useQuery();
-
-  const handleTypeClick = (type: string) => {
-    router.push(`/shop/breadcrumb1?type=${type}`);
-  };
 
   if (isLoading) {
     return (
@@ -35,109 +30,60 @@ const Slider = () => {
   }
 
   return (
-    <>
-      <div className="slider-block style-two w-full">
-        <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-y-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
-          <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px]">
-            <Swiper
-              spaceBetween={0}
-              slidesPerView={1}
-              loop={true}
-              pagination={{ clickable: true }}
-              modules={[Pagination]}
-              className="relative h-full w-full overflow-hidden rounded-3xl"
-              autoplay={{
-                delay: 4000,
-              }}
-            >
-              {sliderData?.map((slide) => (
-                <SwiperSlide key={slide.id}>
-                  <div className="slider-item bg-linear relative flex h-full w-full items-center">
-                    <div className="text-content relative z-[1] basis-1/2 pl-5 md:pl-[60px]">
-                      <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-                        {slide.subtitle}
-                      </div>
-                      <div className="heading2 mt-2 lg:mt-3">{slide.title}</div>
-                      <div className="body1 mt-3 lg:mt-4">
-                        {slide.description}
-                      </div>
-                      <Link
-                        href={slide.link}
-                        className="button-main mt-3 lg:mt-8"
-                      >
-                        Shop Now
-                      </Link>
+    <div className="slider-block style-two w-full">
+      <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-y-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
+        {/* Slider */}
+        {/* <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px]"></div> */}
+        <div className="slider-main min-h-[60vh] w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px] lg:last:pr-0">
+          <Swiper
+            spaceBetween={0}
+            slidesPerView={1}
+            loop={true}
+            pagination={{ clickable: true }}
+            modules={[Pagination]}
+            className="relative h-full w-full overflow-hidden rounded-3xl"
+            autoplay={{
+              delay: 4000,
+            }}
+          >
+            {sliderData?.map((slide) => (
+              <SwiperSlide key={slide.id}>
+                <div className="slider-item bg-linear relative flex h-full min-h-[60vh] w-full items-center">
+                  <div className="text-content relative z-[1] basis-1/2 pl-5 md:pl-[60px]">
+                    <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                      {slide.subtitle}
                     </div>
-                    <div className="sub-img absolute -right-10 bottom-0 top-0 sm:right-[20px] md:right-[40px] lg:right-[20px] xl:right-[50px]">
-                      <Image
-                        src={slide.imageUrl}
-                        width={2000}
-                        height={1936}
-                        alt={slide.title}
-                        priority={true}
-                        className="h-full w-full"
-                      />
+                    <div className="heading2 mt-2 lg:mt-3">{slide.title}</div>
+                    <div className="body1 mt-3 lg:mt-4">
+                      {slide.description}
                     </div>
+                    <Link
+                      href={slide.link}
+                      className="button-main mt-3 lg:mt-8"
+                    >
+                      Shop Now
+                    </Link>
                   </div>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </div>
-          <div className="banner-ads-block w-full gap-5 max-lg:grid sm:grid-cols-2 lg:w-1/3 lg:pl-[15px]">
-            <div
-              className="banner-ads-item bg-linear relative cursor-pointer overflow-hidden rounded-2xl"
-              onClick={() => handleTypeClick("swimwear")}
-            >
-              <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
-                  Save $10
+                  <div className="sub-img absolute -right-10 bottom-0 top-0 h-full sm:right-[20px] md:right-[40px] lg:right-[20px] xl:right-[50px]">
+                    <Image
+                      src={slide.imageUrl}
+                      width={2000}
+                      height={1936}
+                      alt={slide.title}
+                      priority={true}
+                      className="h-full w-full object-cover object-center"
+                    />
+                  </div>
                 </div>
-                <div className="heading6 mt-2">
-                  Dive into Savings <br />
-                  on Swimwear
-                </div>
-                <div className="body1 mt-3 text-secondary">
-                  Starting at <span className="text-red">$59.99</span>
-                </div>
-              </div>
-              <Image
-                src={"/images/slider/bg2-2.png"}
-                width={200}
-                height={100}
-                alt="bg-img"
-                priority={true}
-                className="absolute right-0 top-0 basis-1/3"
-              />
-            </div>
-            <div
-              className="banner-ads-item bg-linear relative cursor-pointer overflow-hidden rounded-2xl lg:mt-8"
-              onClick={() => handleTypeClick("accessories")}
-            >
-              <div className="text-content relative z-[1] py-12 pl-8">
-                <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-sm font-semibold uppercase leading-5 text-white md:text-xs md:leading-4">
-                  Save $10
-                </div>
-                <div className="heading6 mt-2">
-                  20% off <br />
-                  accessories
-                </div>
-                <div className="body1 mt-3 text-secondary">
-                  Starting at <span className="text-red">$59.99</span>
-                </div>
-              </div>
-              <Image
-                src={"/images/other/bg-feature.png"}
-                width={200}
-                height={100}
-                alt="bg-img"
-                priority={true}
-                className="absolute right-0 top-0 basis-1/3"
-              />
-            </div>
-          </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
         </div>
+
+        {/* Sale Banner */}
+        <SaleBanner />
       </div>
-    </>
+    </div>
   );
 };
 

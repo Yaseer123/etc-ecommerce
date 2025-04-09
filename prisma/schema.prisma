@@ -258,3 +258,18 @@ model Slider {
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
 }
+
+model SaleBanner {
+    id          String   @id @default(cuid())
+    title       String
+    subtitle    String?
+    description String?
+    imageUrl    String
+    imageId     String
+    link        String?
+    startDate   DateTime
+    endDate     DateTime
+    isActive    Boolean  @default(true)
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
