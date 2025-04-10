@@ -21,15 +21,18 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
     name: string;
   } | null>(null);
   const [brand, setBrand] = useState<string | null>(null);
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>(
-    data.reduce(
-      (acc, product) => ({
-        max: Math.max(acc.max, product.price),
-        min: Math.min(acc.min, product.price),
-      }),
-      { max: Infinity, min: 0 },
-    ),
-  );
+  
+  const initialPriceRange = (() => {
+    const prices = data.map((product) => product.price);
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices),
+    };
+  })();
+
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>(initialPriceRange);
+  
+
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = productPerPage;
   const offset = currentPage * productsPerPage;
@@ -58,8 +61,8 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
   };
 
   const handlePriceChange = (values: number | number[]) => {
-    if (Array.isArray(values) && values.length >= 2) {
-      setPriceRange({ min: Number(values[0]), max: Number(values[1]) });
+    if (Array.isArray(values)) {
+      setPriceRange({ min: values[0] ?? 0, max: values[1] ?? 0 });
       setCurrentPage(0);
     }
   };
@@ -88,7 +91,7 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
 
       let isBrandMatched = true;
       if (brand) {
-        isBrandMatched = product.brand === brand;
+        isBrandMatched = product.brand.toLowerCase() === brand.toLowerCase();
       }
 
       let isCategoryMatched = true;
@@ -107,16 +110,6 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
 
   const sortedData = useMemo(() => {
     const sorted = [...filteredData];
-    if (sortOption === "soldQuantityHighToLow") {
-      return sorted.sort((a, b) => b.sold - a.sold);
-    }
-    if (sortOption === "discountHighToLow") {
-      return sorted.sort(
-        (a, b) =>
-          Math.floor(100 - (b.price / b.originPrice) * 100) -
-          Math.floor(100 - (a.price / a.originPrice) * 100),
-      );
-    }
     if (sortOption === "priceHighToLow") {
       return sorted.sort((a, b) => b.price - a.price);
     }
@@ -137,6 +130,22 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
     setCurrentPage(selected);
   };
 
+  const uniqueBrands = useMemo(() => {
+    return Array.from(new Set(data.map((item) => item.brand.toLowerCase())));
+  }, [data]);
+
+  const brandCounts = useMemo(() => {
+    return uniqueBrands.reduce(
+      (acc, brand) => {
+        acc[brand] = data.filter(
+          (item) => item.brand.toLowerCase() === brand,
+        ).length;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
+  }, [uniqueBrands, data]);
+
   return (
     <>
       <FilterSidebar
@@ -147,7 +156,9 @@ const ShopFilterCanvas: React.FC<Props> = ({ data, productPerPage }) => {
         handleCategory={handleCategory}
         priceRange={priceRange}
         brand={brand}
-        data={data}
+        brands={uniqueBrands}
+        brandCounts={brandCounts}
+        initialPriceRange={initialPriceRange}
       />
 
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">

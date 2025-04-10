@@ -187,8 +187,6 @@ const FilterBlock: React.FC<FilterBlockProps> = ({
               <option value="Sorting" disabled>
                 Sorting
               </option>
-              <option value="soldQuantityHighToLow">Best Selling</option>
-              <option value="discountHighToLow">Best Discount</option>
               <option value="priceHighToLow">Price High To Low</option>
               <option value="priceLowToHigh">Price Low To High</option>
             </select>

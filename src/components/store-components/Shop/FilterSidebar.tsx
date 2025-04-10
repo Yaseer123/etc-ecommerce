@@ -2,7 +2,6 @@ import React from "react";
 import { X, CheckSquare } from "@phosphor-icons/react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import type { ProductWithCategory } from "@/types/ProductType";
 import FilterByCategory from "./FilterByCategory";
 
 interface SidebarProps {
@@ -13,7 +12,9 @@ interface SidebarProps {
   handleBrand: (brand: string) => void;
   priceRange: { min: number; max: number };
   brand: string | null | undefined;
-  data: Array<ProductWithCategory>;
+  brands: string[];
+  brandCounts: Record<string, number>;
+  initialPriceRange: { min: number; max: number };
 }
 
 const FilterSidebar: React.FC<SidebarProps> = ({
@@ -24,7 +25,9 @@ const FilterSidebar: React.FC<SidebarProps> = ({
   handleBrand,
   priceRange,
   brand,
-  data,
+  brands,
+  brandCounts,
+  initialPriceRange,
 }) => {
   return (
     <div
@@ -58,9 +61,10 @@ const FilterSidebar: React.FC<SidebarProps> = ({
           <div className="heading6">Price Range</div>
           <Slider
             range
-            defaultValue={[priceRange.min, priceRange.max]}
-            min={priceRange.min}
-            max={priceRange.max}
+            defaultValue={[0, 1000]}
+            min={initialPriceRange.min}
+            max={initialPriceRange.max}
+            allowCross={false}
             onChange={handlePriceChange}
             className="mt-5"
           />
@@ -83,41 +87,36 @@ const FilterSidebar: React.FC<SidebarProps> = ({
         <div className="filter-brand mt-8 pb-8">
           <div className="heading6">Brands</div>
           <div className="list-brand mt-4">
-            {["adidas", "hermes", "zara", "nike", "gucci"].map(
-              (item, index) => (
-                <div
-                  key={index}
-                  className="brand-item flex items-center justify-between"
-                >
-                  <div className="left flex cursor-pointer items-center">
-                    <div className="block-input">
-                      <input
-                        type="checkbox"
-                        name={item}
-                        id={item}
-                        checked={brand === item}
-                        onChange={() => handleBrand(item)}
-                      />
-                      <CheckSquare
-                        size={20}
-                        weight="fill"
-                        className="icon-checkbox"
-                      />
-                    </div>
-                    <label
-                      htmlFor={item}
-                      className="brand-name cursor-pointer pl-2 capitalize"
-                    >
-                      {item}
-                    </label>
+            {brands.map((item, index) => (
+              <div
+                key={index}
+                className="brand-item flex items-center justify-between"
+              >
+                <div className="left flex cursor-pointer items-center">
+                  <div className="block-input">
+                    <input
+                      type="checkbox"
+                      name={item}
+                      id={item}
+                      checked={brand?.toLowerCase() === item}
+                      onChange={() => handleBrand(item)}
+                    />
+                    <CheckSquare
+                      size={20}
+                      weight="fill"
+                      className="icon-checkbox"
+                    />
                   </div>
-                  <div className="text-secondary2">
-                    ({data.filter((dataItem) => dataItem.brand === item).length}
-                    )
-                  </div>
+                  <label
+                    htmlFor={item}
+                    className="brand-name cursor-pointer pl-2 capitalize"
+                  >
+                    {item}
+                  </label>
                 </div>
-              ),
-            )}
+                <div className="text-secondary2">({brandCounts[item]})</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
