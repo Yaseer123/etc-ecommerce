@@ -173,7 +173,10 @@ const Cart = () => {
                     className="h-full w-full rounded-lg border border-line bg-surface pl-4 pr-14"
                     required
                   />
-                  <button className="duration-400 absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-lg bg-black px-5 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3">
+                  <button
+                    onClick={() => null}
+                    className="duration-400 absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-lg bg-black px-5 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                  >
                     Apply Code
                   </button>
                 </form>
@@ -246,22 +249,14 @@ const Cart = () => {
                   <div className="flex gap-12">
                     <div className="left">
                       <div>
-                        {moneyForFreeship - totalCart > 0 ? (
-                          <input
-                            id="shipping"
-                            type="radio"
-                            name="ship"
-                            disabled
-                          />
-                        ) : (
-                          <input
-                            id="shipping"
-                            type="radio"
-                            name="ship"
-                            checked={shipCart === 0}
-                            onChange={() => setShipCart(0)}
-                          />
-                        )}
+                        <input
+                          id="shipping"
+                          type="radio"
+                          name="ship"
+                          checked={shipCart === 0}
+                          onChange={() => setShipCart(0)}
+                          disabled={moneyForFreeship - totalCart > 0}
+                        />
                         <label className="pl-1" htmlFor="shipping">
                           Free Shipping:
                         </label>

@@ -206,12 +206,14 @@ model Address {
 }
 
 model Order {
-    id        String      @id @default(cuid())
-    userId    String
-    status    OrderStatus @default(PENDING)
-    total     Float
-    createdAt DateTime    @default(now())
-    updatedAt DateTime    @updatedAt
+    id         String      @id @default(cuid())
+    userId     String
+    status     OrderStatus @default(PENDING)
+    total      Float
+    couponId   String?
+    couponUsed Boolean     @default(false)
+    createdAt  DateTime    @default(now())
+    updatedAt  DateTime    @updatedAt
 
     // Relationships
     user      User        @relation(fields: [userId], references: [id])
@@ -233,8 +235,6 @@ model OrderItem {
     order   Order   @relation(fields: [orderId], references: [id])
     product Product @relation(fields: [productId], references: [id])
 }
-
-// Faq model
 
 model FaqCategory {
     id        String    @id @default(cuid())
