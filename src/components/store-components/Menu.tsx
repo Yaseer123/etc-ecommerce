@@ -80,6 +80,7 @@ export default function Menu({
               </Link>
               <div className="form-search flex h-[44px] w-2/3 items-center pl-8 max-lg:hidden">
                 <CategoryDropdown />
+
                 <div className="flex h-full w-full items-center">
                   <input
                     type="text"
@@ -206,7 +207,7 @@ export default function Menu({
                     <li className="h-full">
                       <Link
                         href="/contact"
-                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname.includes("/pages") ? "active" : ""}`}
+                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname?.includes("/pages") ? "active" : ""}`}
                       >
                         Contact Us
                       </Link>

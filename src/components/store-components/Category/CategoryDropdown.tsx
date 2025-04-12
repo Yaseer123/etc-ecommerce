@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import useCategoryPopup from "@/hooks/useCategoryPopup";
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import { api } from "@/trpc/react";
 import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
 import type { CategoryTree } from "@/schemas/categorySchema";
@@ -11,115 +10,118 @@ import type { CategoryTree } from "@/schemas/categorySchema";
 const CategoryDropdown = () => {
   const [categories, { error }] = api.category.getAll.useSuspenseQuery();
   const { openCategoryPopup, handleCategoryPopup } = useCategoryPopup();
-  const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
-  const [delayedHoveredCategory, setDelayedHoveredCategory] = useState<
-    string | null
-  >(null);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setDelayedHoveredCategory(hoveredCategory);
-    }, 300); // Increased delay to 300ms for smoother transitions
-    return () => clearTimeout(timeout);
-  }, [hoveredCategory]);
+  const [activeCategories, setActiveCategories] = useState<string[]>([]);
 
   if (error) return <div>Error: {error.message}</div>;
 
-  const renderSubcategories = (subcategories: CategoryTree[]) => {
+  // Utility function to convert string to title case
+  const toTitleCase = (str: string) => {
+    return str.replace(
+      /\w\S*/g,
+      (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(),
+    );
+  };
+
+  const handleCategoryHover = (categoryId: string, level: number) => {
+    setActiveCategories((prev) => {
+      const newActive = [...prev];
+      newActive[level] = categoryId;
+      return newActive.slice(0, level + 1);
+    });
+  };
+
+  const renderSubcategories = (subcategories: CategoryTree[], level = 1) => {
     return (
-      <motion.div
-        initial={{ opacity: 0, width: 0 }}
-        animate={{
-          opacity: 1,
-          width: "200px",
-        }}
-        transition={{ duration: 0.2, ease: "easeInOut" }}
-        className="absolute left-full top-0 z-10 min-w-[200px] overflow-hidden border border-gray-200 bg-white shadow-lg"
-        onMouseEnter={() => setHoveredCategory(delayedHoveredCategory)} // Keep dropdown visible
-        // onMouseLeave={() => setHoveredCategory(null)} // Allow smooth exit
+      <div
+        id={`dropdown-level-${level}`}
+        className="absolute left-full top-0 z-10 w-max divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white shadow-lg"
+        style={{ zIndex: 10 + level }} // Ensure higher levels appear above lower levels
       >
-        {subcategories.map((sub) => (
-          <div
-            key={sub.id}
-            className="group relative px-4 py-2 hover:bg-gray-200"
-            onMouseEnter={() => setHoveredCategory(sub.id)}
-            onMouseLeave={() => setHoveredCategory(null)}
-          >
-            <Link
-              href={`/categories/${sub.id}`}
-              className="inline-block whitespace-nowrap"
-            >
-              {sub.name}
-            </Link>
-            {sub.subcategories?.length > 0 && (
-              <CaretRight className="absolute right-2 top-1/2 -translate-y-1/2" />
-            )}
-            {delayedHoveredCategory === sub.id &&
-              sub.subcategories?.length > 0 &&
-              renderSubcategories(sub.subcategories)}
-          </div>
-        ))}
-      </motion.div>
+        <ul className="py-2 text-sm text-gray-800">
+          {subcategories.map((sub) => (
+            <li key={sub.id}>
+              {sub.subcategories?.length > 0 ? (
+                <>
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between text-nowrap px-5 py-2.5 text-sm font-medium hover:bg-gray-200"
+                    onMouseEnter={() => handleCategoryHover(sub.id, level)}
+                  >
+                    <Link href={`/products?category=${sub.id}`}>
+                      {toTitleCase(sub.name)}
+                    </Link>
+                    <CaretRight className="ms-3 h-3 w-3 text-gray-600" />
+                  </button>
+                  {activeCategories[level] === sub.id &&
+                    renderSubcategories(sub.subcategories, level + 1)}
+                </>
+              ) : (
+                <Link
+                  href={`/products?category=${sub.id}`}
+                  className="block px-5 py-2.5 text-sm font-medium hover:bg-gray-200"
+                >
+                  {toTitleCase(sub.name)}
+                </Link>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     );
   };
 
   return (
     <div className="relative h-full">
       {/* Main Category Button */}
-      <div
-        className="relative flex h-full w-fit cursor-pointer items-center gap-6 rounded-l bg-black px-4 py-2"
+      <button
+        id="multiLevelDropdownButton"
+        className="inline-flex h-full items-center text-nowrap rounded-l-md bg-black px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none"
         onClick={handleCategoryPopup}
+        type="button"
       >
-        <div className="whitespace-nowrap text-base font-semibold capitalize leading-[26px] text-white md:text-base md:leading-6">
-          All Categories
-        </div>
-        <CaretDown color="#ffffff" />
-      </div>
+        All Categories
+        <CaretDown className="ms-3 h-3 w-3" />
+      </button>
 
       {/* Dropdown Menu */}
-      <motion.div
-        initial={{ opacity: 0, width: 0 }}
-        animate={{
-          opacity: openCategoryPopup ? 1 : 0,
-          width: openCategoryPopup ? "100%" : "0%",
-        }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-        className={`box-shadow-sm absolute left-0 right-0 top-[44px] h-max rounded-b-2xl bg-white ${
-          openCategoryPopup ? "visible" : "invisible"
-        }`}
-        onMouseLeave={() => setHoveredCategory(null)}
+      <div
+        id="multi-dropdown"
+        className={`z-10 ${openCategoryPopup ? "block" : "hidden"} absolute left-0 top-full mt-1 w-max divide-y divide-gray-100 rounded-lg border border-gray-200 bg-white shadow-lg`}
+        onMouseLeave={() => setActiveCategories([])}
       >
-        {categories.map((category) => (
-          <div
-            key={category.id}
-            className="group relative"
-            onMouseEnter={() => setHoveredCategory(category.id)}
-            onMouseLeave={() => setHoveredCategory(null)}
-          >
-            {/* Parent Category */}
-            <div className="flex cursor-pointer items-center justify-between px-4 py-2 hover:bg-gray-100">
-              <Link
-                href={`/categories/${category.id}`}
-                className="inline-block max-w-[180px] truncate" // Prevent text overflow
-              >
-                {category.name}
-              </Link>
-              {category.subcategories?.length > 0 && (
-                <CaretRight
-                  className={`transition-transform ${
-                    delayedHoveredCategory === category.id ? "rotate-90" : ""
-                  }`}
-                />
+        <ul
+          className="py-2 text-sm text-gray-800"
+          aria-labelledby="multiLevelDropdownButton"
+        >
+          {categories.map((category) => (
+            <li key={category.id}>
+              {category.subcategories?.length > 0 ? (
+                <div className="relative">
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-between text-nowrap px-5 py-2.5 text-sm font-medium hover:bg-gray-200"
+                    onMouseEnter={() => handleCategoryHover(category.id, 0)}
+                  >
+                    <Link href={`/products?category=${category.id}`}>
+                      {toTitleCase(category.name)}
+                    </Link>
+                    <CaretRight className="ms-3 h-3 w-3 text-gray-600" />
+                  </button>
+                  {activeCategories[0] === category.id &&
+                    renderSubcategories(category.subcategories)}
+                </div>
+              ) : (
+                <Link
+                  href={`/products?category=${category.id}`}
+                  className="block px-5 py-2.5 text-sm font-medium hover:bg-gray-200"
+                >
+                  {toTitleCase(category.name)}
+                </Link>
               )}
-            </div>
-
-            {/* Render Subcategories */}
-            {delayedHoveredCategory === category.id &&
-              category.subcategories?.length > 0 &&
-              renderSubcategories(category.subcategories)}
-          </div>
-        ))}
-      </motion.div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
