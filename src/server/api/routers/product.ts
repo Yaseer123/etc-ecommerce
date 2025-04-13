@@ -32,45 +32,45 @@ export const productRouter = createTRPCRouter({
   }),
 
   getAllByCategory: publicProcedure
-  .input(
-    z.object({
-      categoryId: z.string().optional(),
-    }),
-  )
-  .query(async ({ ctx, input }) => {
-    if (!input.categoryId) {
-      return ctx.db.product.findMany({
+    .input(
+      z.object({
+        categoryId: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      if (!input.categoryId) {
+        return ctx.db.product.findMany({
+          include: { category: true },
+        });
+      }
+
+      // Fetch all child category IDs recursively
+      const getChildCategoryIds = async (
+        parentId: string,
+      ): Promise<string[]> => {
+        const subcategories = await ctx.db.category.findMany({
+          where: { parentId },
+          select: { id: true },
+        });
+
+        const childIds = subcategories.map((subcategory) => subcategory.id);
+        const nestedChildIds = await Promise.all(
+          childIds.map((id) => getChildCategoryIds(id)),
+        );
+
+        return [parentId, ...nestedChildIds.flat()];
+      };
+
+      const categoryIds = await getChildCategoryIds(input.categoryId);
+
+      // Fetch products for all category IDs
+      const products = await ctx.db.product.findMany({
+        where: { categoryId: { in: categoryIds } },
         include: { category: true },
       });
-    }
 
-    // Fetch all child category IDs recursively
-    const getChildCategoryIds = async (
-      parentId: string,
-    ): Promise<string[]> => {
-      const subcategories = await ctx.db.category.findMany({
-        where: { parentId },
-        select: { id: true },
-      });
-
-      const childIds = subcategories.map((subcategory) => subcategory.id);
-      const nestedChildIds = await Promise.all(
-        childIds.map((id) => getChildCategoryIds(id)),
-      );
-
-      return [parentId, ...nestedChildIds.flat()];
-    };
-
-    const categoryIds = await getChildCategoryIds(input.categoryId);
-
-    // Fetch products for all category IDs
-    const products = await ctx.db.product.findMany({
-      where: { categoryId: { in: categoryIds } },
-      include: { category: true },
-    });
-
-    return products;
-  }),
+      return products;
+    }),
 
   getProductById: publicProcedure
     .input(
@@ -100,10 +100,10 @@ export const productRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       const { categoryId, onSale, brand, minPrice, maxPrice, sort } = input;
-      
+
       // Use Prisma's type system for filters
       const filters: Prisma.ProductWhereInput = {};
-      
+
       // Category filter with recursive children lookup
       if (categoryId) {
         // Fetch all child category IDs recursively
@@ -126,50 +126,94 @@ export const productRouter = createTRPCRouter({
         const categoryIds = await getChildCategoryIds(categoryId);
         filters.categoryId = { in: categoryIds };
       }
-      
+
       // Sale filter
       if (onSale === true) {
         filters.sale = true;
       }
-      
+
       // Brand filter
       if (brand) {
         filters.brand = {
           equals: brand,
-          mode: 'insensitive' as Prisma.QueryMode, // Case insensitive search with type assertion
+          mode: "insensitive" as Prisma.QueryMode, // Case insensitive search with type assertion
         };
       }
-      
+
       // Price range filter
       if (minPrice !== undefined || maxPrice !== undefined) {
         filters.price = {};
-        
+
         if (minPrice !== undefined) {
           filters.price.gte = minPrice;
         }
-        
+
         if (maxPrice !== undefined) {
           filters.price.lte = maxPrice;
         }
       }
-      
+
       // Build sort options
       let orderBy: Prisma.ProductOrderByWithRelationInput | undefined;
       if (sort) {
-        if (sort === 'priceHighToLow') {
-          orderBy = { price: 'desc' };
-        } else if (sort === 'priceLowToHigh') {
-          orderBy = { price: 'asc' };
+        if (sort === "priceHighToLow") {
+          orderBy = { price: "desc" };
+        } else if (sort === "priceLowToHigh") {
+          orderBy = { price: "asc" };
         }
       }
-      
+
       // Fetch products with filters and sorting in a single query
       const products = await ctx.db.product.findMany({
         where: filters,
         include: { category: true },
         orderBy: orderBy,
       });
-      
+
+      return products;
+    }),
+
+  search: publicProcedure
+    .input(
+      z.object({
+        query: z.string().min(1),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { query } = input;
+
+      const products = await ctx.db.product.findMany({
+        where: {
+          OR: [
+            {
+              title: {
+                contains: query,
+                mode: "insensitive" as Prisma.QueryMode,
+              },
+            },
+            {
+              shortDescription: {
+                contains: query,
+                mode: "insensitive" as Prisma.QueryMode,
+              },
+            },
+            {
+              brand: {
+                contains: query,
+                mode: "insensitive" as Prisma.QueryMode,
+              },
+            },
+            {
+              slug: {
+                contains: query,
+                mode: "insensitive" as Prisma.QueryMode,
+              },
+            },
+          ],
+        },
+        include: { category: true },
+      });
+
       return products;
     }),
 

@@ -2,83 +2,44 @@
 import React, { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { type ProductType } from "@/types/ProductType";
-import productData from "@/data/Product.json";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
+import { api } from "@/trpc/react";
 
 export default function Page() {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(0);
   const productsPerPage = 8;
   const offset = currentPage * productsPerPage;
-  let filteredData = productData;
 
   const router = useRouter();
-
-  const handleSearch = (value: string) => {
-    router.push(`/search-result?query=${value}`);
-    setSearchKeyword("");
-  };
-
   const searchParams = useSearchParams();
-  let query = searchParams.get("query")!;
+  const query = searchParams?.get("query") ?? "";
 
-  if (query === null) {
-    query = "dress";
-  } else {
-    filteredData = productData.filter(
-      (product) =>
-        product.name.toLowerCase().includes(query.toLowerCase()) ||
-        product.type.toLowerCase().includes(query.toLowerCase()),
-    );
-  }
+  // Use the search endpoint with suspense
+  const { data: products, isLoading } = api.product.search.useQuery(
+    { query: query.length > 0 ? query : "default" },
+    {
+      enabled: query.length > 0,
+      // If no query, return an empty array
+      initialData: [],
+    },
+  );
 
-  if (filteredData.length === 0) {
-    filteredData = [
-      {
-        id: "no-data",
-        category: "no-data",
-        type: "no-data",
-        name: "no-data",
-        gender: "no-data",
-        new: false,
-        sale: false,
-        rate: 0,
-        price: 0,
-        originPrice: 0,
-        brand: "no-data",
-        sold: 0,
-        quantity: 0,
-        quantityPurchase: 0,
-        sizes: [],
-        variation: [],
-        thumbImage: [],
-        images: [],
-        description: "no-data",
-        action: "no-data",
-        slug: "no-data",
-      },
-    ];
-  }
-
-  // Find page number base on filteredData
-  const pageCount = Math.ceil(filteredData.length / productsPerPage);
-
-  // If page number 0, set current page = 0
-  if (pageCount === 0) {
-    setCurrentPage(0);
-  }
+  // Find page number based on filteredData
+  const pageCount = Math.ceil((products?.length || 0) / productsPerPage);
 
   // Get product data for current page
-  let currentProducts: ProductType[];
+  const currentProducts =
+    products?.slice(offset, offset + productsPerPage) || [];
 
-  if (filteredData.length > 0) {
-    currentProducts = filteredData.slice(offset, offset + productsPerPage);
-  } else {
-    currentProducts = [];
-  }
+  const handleSearch = (value: string) => {
+    if (value.trim()) {
+      router.push(`/search-result?query=${encodeURIComponent(value.trim())}`);
+      setSearchKeyword("");
+    }
+  };
 
   const handlePageChange = (selected: number) => {
     setCurrentPage(selected);
@@ -103,9 +64,17 @@ export default function Page() {
         <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex flex-col items-center">
             <div className="text-center text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-              Found {filteredData.length} results for {String.raw`"`}
-              {query}
-              {String.raw`"`}
+              {isLoading ? (
+                "Searching..."
+              ) : query ? (
+                <>
+                  Found {products.length} results for {String.raw`"`}
+                  {query}
+                  {String.raw`"`}
+                </>
+              ) : (
+                "Search for products"
+              )}
             </div>
             <div className="mt-5 h-[44px] w-full sm:mt-8 sm:w-3/5 md:h-[52px] lg:w-1/2">
               <div className="relative h-full w-full">
@@ -129,28 +98,37 @@ export default function Page() {
             </div>
           </div>
           <div className="list-product-block relative pt-6 md:pt-10">
-            <div className="heading6">product Search: {query}</div>
-            <div
-              className={`list-product hide-product-sold mt-5 grid grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px] lg:grid-cols-4`}
-            >
-              {currentProducts.map((item) =>
-                item.id === "no-data" ? (
-                  <div key={item.id} className="no-data-product">
-                    No products match the selected criteria.
+            {query && <div className="heading6">product Search: {query}</div>}
+
+            {isLoading ? (
+              <div className="flex h-60 items-center justify-center">
+                <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+              </div>
+            ) : (
+              <>
+                {products.length === 0 && query ? (
+                  <div className="my-10 text-center">
+                    No products match your search criteria.
                   </div>
                 ) : (
-                  <Product key={item.id} data={item} type="grid" style="" />
-                ),
-              )}
-            </div>
+                  <div
+                    className={`list-product hide-product-sold mt-5 grid grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px] lg:grid-cols-4`}
+                  >
+                    {currentProducts.map((item) => (
+                      <Product key={item.id} data={item} type="marketplace" />
+                    ))}
+                  </div>
+                )}
 
-            {pageCount > 1 && (
-              <div className="list-pagination mt-7 flex items-center justify-center md:mt-10">
-                <HandlePagination
-                  pageCount={pageCount}
-                  onPageChange={handlePageChange}
-                />
-              </div>
+                {pageCount > 1 && (
+                  <div className="list-pagination mt-7 flex items-center justify-center md:mt-10">
+                    <HandlePagination
+                      pageCount={pageCount}
+                      onPageChange={handlePageChange}
+                    />
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
