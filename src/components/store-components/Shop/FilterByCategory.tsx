@@ -7,7 +7,7 @@ const CategoryItem = ({
   handleCategory,
 }: {
   category: CategoryTree;
-  handleCategory: (categoryId: string, categoryName: string) => void;
+  handleCategory: (id: string, name: string) => void;
 }) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -50,7 +50,7 @@ const CategoryItem = ({
 export default function FilterByCategory({
   handleCategory,
 }: {
-  handleCategory: (categoryId: string, categoryName: string) => void;
+  handleCategory: (id: string, name: string) => void;
 }) {
   const [categories] = api.category.getAll.useSuspenseQuery();
   return (

@@ -5,6 +5,7 @@ import {
 } from "@/server/api/trpc";
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 import { z } from "zod";
+import type { Prisma } from "@prisma/client";
 
 export const productRouter = createTRPCRouter({
   getProductByIdAdmin: adminProcedure
@@ -84,6 +85,92 @@ export const productRouter = createTRPCRouter({
       });
 
       return product;
+    }),
+
+  getAllWithFilters: publicProcedure
+    .input(
+      z.object({
+        categoryId: z.string().optional(),
+        onSale: z.boolean().optional(),
+        brand: z.string().optional(),
+        minPrice: z.number().optional(),
+        maxPrice: z.number().optional(),
+        sort: z.string().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { categoryId, onSale, brand, minPrice, maxPrice, sort } = input;
+      
+      // Use Prisma's type system for filters
+      const filters: Prisma.ProductWhereInput = {};
+      
+      // Category filter with recursive children lookup
+      if (categoryId) {
+        // Fetch all child category IDs recursively
+        const getChildCategoryIds = async (
+          parentId: string,
+        ): Promise<string[]> => {
+          const subcategories = await ctx.db.category.findMany({
+            where: { parentId },
+            select: { id: true },
+          });
+
+          const childIds = subcategories.map((subcategory) => subcategory.id);
+          const nestedChildIds = await Promise.all(
+            childIds.map((id) => getChildCategoryIds(id)),
+          );
+
+          return [parentId, ...nestedChildIds.flat()];
+        };
+
+        const categoryIds = await getChildCategoryIds(categoryId);
+        filters.categoryId = { in: categoryIds };
+      }
+      
+      // Sale filter
+      if (onSale === true) {
+        filters.sale = true;
+      }
+      
+      // Brand filter
+      if (brand) {
+        filters.brand = {
+          equals: brand,
+          mode: 'insensitive' as Prisma.QueryMode, // Case insensitive search with type assertion
+        };
+      }
+      
+      // Price range filter
+      if (minPrice !== undefined || maxPrice !== undefined) {
+        filters.price = {};
+        
+        if (minPrice !== undefined) {
+          filters.price.gte = minPrice;
+        }
+        
+        if (maxPrice !== undefined) {
+          filters.price.lte = maxPrice;
+        }
+      }
+      
+      // Build sort options
+      let orderBy: Prisma.ProductOrderByWithRelationInput | undefined;
+      if (sort) {
+        if (sort === 'priceHighToLow') {
+          orderBy = { price: 'desc' };
+        } else if (sort === 'priceLowToHigh') {
+          orderBy = { price: 'asc' };
+        }
+      }
+      
+      // Fetch products with filters and sorting in a single query
+      const products = await ctx.db.product.findMany({
+        where: filters,
+        include: { category: true },
+        orderBy: orderBy,
+      });
+      
+      return products;
     }),
 
   add: adminProcedure.input(productSchema).mutation(async ({ ctx, input }) => {
