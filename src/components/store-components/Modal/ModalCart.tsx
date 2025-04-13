@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import CartProductItem from "./CartProductItem";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
-import { X, NotePencil, Tag } from "@phosphor-icons/react/dist/ssr";
+import { X, NotePencil, Tag, Trash } from "@phosphor-icons/react/dist/ssr";
 import { useCartStore } from "@/context/store-context/CartContext";
 
 const ModalCart = () => {
@@ -16,6 +16,7 @@ const ModalCart = () => {
     coupon,
     setNote,
     setCoupon,
+    removeFromCart,
   } = useCartStore();
   const [tempNote, setTempNote] = useState(note);
   const [tempCoupon, setTempCoupon] = useState(coupon);
@@ -63,9 +64,18 @@ const ModalCart = () => {
                       <CartProductItem item={item} />
                     </div>
                     <div className="flex flex-1 flex-col">
-                      <h4 className="mb-1 text-sm font-medium text-gray-900">
-                        {item.name}
-                      </h4>
+                      <div className="flex justify-between">
+                        <h4 className="mb-1 text-sm font-medium text-gray-900">
+                          {item.name}
+                        </h4>
+                        <button
+                          className="hover:text-red-500 text-gray-400 transition-colors"
+                          onClick={() => removeFromCart(item.id)}
+                          aria-label="Remove item"
+                        >
+                          <Trash size={18} />
+                        </button>
+                      </div>
                       <div className="mb-2 text-xs text-gray-500">
                         SKU: {item.id}
                       </div>

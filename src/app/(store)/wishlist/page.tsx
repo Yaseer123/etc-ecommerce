@@ -38,21 +38,12 @@ export default function WishlistPage() {
   const sortedData = useMemo(() => {
     if (!wishList) return [];
     const sorted = [...wishList];
-    if (sortOption === "soldQuantityHighToLow") {
-      return sorted.sort((a, b) => b.sold - a.sold);
-    }
-    if (sortOption === "discountHighToLow") {
-      return sorted.sort(
-        (a, b) =>
-          Math.floor(100 - (b.price / b.originPrice) * 100) -
-          Math.floor(100 - (a.price / a.originPrice) * 100),
-      );
-    }
+
     if (sortOption === "priceHighToLow") {
-      return sorted.sort((a, b) => b.price - a.price);
+      return sorted.sort((a, b) => b.product.price - a.product.price);
     }
     if (sortOption === "priceLowToHigh") {
-      return sorted.sort((a, b) => a.price - b.price);
+      return sorted.sort((a, b) => a.product.price - b.product.price);
     }
     return sorted;
   }, [wishList, sortOption]);
@@ -242,7 +233,12 @@ export default function WishlistPage() {
                     No products match the selected criteria.
                   </div>
                 ) : (
-                  <Product key={item.id} data={item} type="grid" style="" />
+                  <Product
+                    key={item.id}
+                    data={item.product}
+                    type="grid"
+                    style=""
+                  />
                 ),
               )}
             </div>
