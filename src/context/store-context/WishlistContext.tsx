@@ -1,11 +1,12 @@
 // wishlistStore.ts
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { type ProductType } from "@/types/ProductType";
+// import { type ProductType } from "@/types/ProductType";
+import type { Product } from '@prisma/client';
 
 interface WishlistState {
-  wishlistArray: ProductType[];
-  addToWishlist: (item: ProductType) => void;
+  wishlistArray: Product[];
+  addToWishlist: (item: Product) => void;
   removeFromWishlist: (itemId: string) => void;
 }
 
@@ -14,7 +15,7 @@ export const useWishlistStore = create<WishlistState>()(
     (set) => ({
       wishlistArray: [],
       
-      addToWishlist: (item: ProductType) => 
+      addToWishlist: (item: Product) => 
         set((state) => ({
           wishlistArray: [...state.wishlistArray, { ...item }]
         })),

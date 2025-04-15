@@ -1,7 +1,7 @@
 "use client";
 
 // QuickView.tsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
@@ -23,44 +23,51 @@ import {
 
 const ModalQuickView = () => {
   const { selectedProduct, closeQuickView } = useModalQuickViewStore();
-  const [activeSize, setActiveSize] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
   const { addToWishlist, removeFromWishlist, wishlistArray } =
     useWishlistStore();
   const { openModalWishlist } = useModalWishlistStore();
+
+  // Reset quantity when selected product changes
+  useEffect(() => {
+    setQuantity(1);
+  }, [selectedProduct]);
+
   const percentSale =
     selectedProduct &&
     Math.floor(
       100 - (selectedProduct.price / selectedProduct.originPrice) * 100,
     );
 
-  const handleActiveSize = (item: string) => {
-    setActiveSize(item);
-  };
-
   const handleIncreaseQuantity = () => {
-    if (selectedProduct) {
-      selectedProduct.quantityPurchase += 1;
-      updateCart(selectedProduct.id, selectedProduct.quantityPurchase + 1);
-    }
+    setQuantity((prev) => prev + 1);
   };
 
   const handleDecreaseQuantity = () => {
-    if (selectedProduct && selectedProduct.quantityPurchase > 1) {
-      selectedProduct.quantityPurchase -= 1;
-      updateCart(selectedProduct.id, selectedProduct.quantityPurchase - 1);
+    if (quantity > 1) {
+      setQuantity((prev) => prev - 1);
     }
   };
 
   const handleAddToCart = () => {
     if (selectedProduct) {
       if (!cartArray.find((item) => item.id === selectedProduct.id)) {
-        addToCart({ ...selectedProduct });
-        updateCart(selectedProduct.id, selectedProduct.quantityPurchase);
-      } else {
-        updateCart(selectedProduct.id, selectedProduct.quantityPurchase);
+        // Create a new item to add to cart
+        addToCart({
+          ...selectedProduct,
+          // Ensure the Product object has the expected structure for addToCart
+          id: selectedProduct.id,
+          title: selectedProduct.title,
+          images: selectedProduct.images,
+          price: selectedProduct.price,
+        });
       }
+
+      // Always update the quantity whether it's a new item or existing one
+      updateCart(selectedProduct.id, quantity);
+
       openModalCart();
       closeQuickView();
     }
@@ -124,7 +131,7 @@ const ModalQuickView = () => {
                 <div className="flex justify-between">
                   <div>
                     <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                      {selectedProduct?.name}
+                      {selectedProduct?.title}
                     </div>
                   </div>
                   <div
@@ -152,11 +159,11 @@ const ModalQuickView = () => {
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
                   <div className="product-price heading5">
-                    ${selectedProduct?.price}.00
+                    ${selectedProduct.price}.00
                   </div>
                   <div className="h-4 w-px bg-line"></div>
                   <div className="product-origin-price font-normal text-secondary2">
-                    <del>${selectedProduct?.originPrice}.00</del>
+                    <del>${selectedProduct.originPrice}.00</del>
                   </div>
                   {selectedProduct?.originPrice && (
                     <div className="product-sale caption2 inline-block rounded-full bg-green px-3 py-0.5 font-semibold">
@@ -164,39 +171,18 @@ const ModalQuickView = () => {
                     </div>
                   )}
                   <div className="desc mt-3 text-secondary">
-                    {selectedProduct?.description}
+                    {selectedProduct.shortDescription}
                   </div>
                 </div>
                 <div className="list-action mt-6">
-                  <div className="choose-size mt-5">
-                    <div className="heading flex items-center justify-between">
-                      <div className="text-title">
-                        Size:{" "}
-                        <span className="text-title size">{activeSize}</span>
-                      </div>
-                    </div>
-                    <div className="list-size mt-3 flex flex-wrap items-center gap-2">
-                      {selectedProduct?.sizes.map((item, index) => (
-                        <div
-                          className={`size-item ${item === "freesize" ? "px-3 py-2" : "h-12 w-12"} flex items-center justify-center rounded-full border border-line bg-white text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6 ${activeSize === item ? "active" : ""}`}
-                          key={index}
-                          onClick={() => handleActiveSize(item)}
-                        >
-                          {item}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                   <div className="text-title mt-5">Quantity:</div>
                   <div className="choose-quantity mt-3 flex items-center gap-5 max-xl:flex-wrap lg:justify-between">
                     <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
                       <Minus
                         onClick={handleDecreaseQuantity}
-                        className={`${selectedProduct?.quantityPurchase === 1 ? "disabled" : ""} body1 cursor-pointer`}
+                        className={`${quantity === 1 ? "disabled" : ""} body1 cursor-pointer`}
                       />
-                      <div className="body1 font-semibold">
-                        {selectedProduct?.quantityPurchase}
-                      </div>
+                      <div className="body1 font-semibold">{quantity}</div>
                       <Plus
                         onClick={handleIncreaseQuantity}
                         className="body1 cursor-pointer"
@@ -252,9 +238,9 @@ const ModalQuickView = () => {
                       <div className="text-secondary">53453412</div>
                     </div>
                     <div className="mt-3 flex items-center gap-1">
-                      <div className="text-title">Categories:</div>
+                      <div className="text-title">Category:</div>
                       <div className="text-secondary">
-                        {selectedProduct?.category}
+                        {selectedProduct?.categoryId}
                       </div>
                     </div>
                   </div>
