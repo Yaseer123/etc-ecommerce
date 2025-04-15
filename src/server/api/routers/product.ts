@@ -251,4 +251,31 @@ export const productRouter = createTRPCRouter({
 
       return product;
     }),
+
+  getPriceRange: publicProcedure.query(async ({ ctx }) => {
+    // Find the lowest priced product
+    const minPriceProduct = await ctx.db.product.findFirst({
+      orderBy: {
+        price: "asc",
+      },
+      select: {
+        price: true,
+      },
+    });
+
+    // Find the highest priced product
+    const maxPriceProduct = await ctx.db.product.findFirst({
+      orderBy: {
+        price: "desc",
+      },
+      select: {
+        price: true,
+      },
+    });
+
+    return {
+      min: minPriceProduct?.price ?? 0,
+      max: maxPriceProduct?.price ?? 1000,
+    };
+  }),
 });

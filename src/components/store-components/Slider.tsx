@@ -16,13 +16,13 @@ const Slider = () => {
   if (isLoading) {
     return (
       <div className="slider-block style-two w-full animate-pulse">
-        <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-y-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
-          <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px]">
+        <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
+          <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3">
             <div className="relative h-full w-full overflow-hidden rounded-3xl bg-gray-200" />
           </div>
-          <div className="banner-ads-block w-full gap-5 max-lg:grid sm:grid-cols-2 lg:w-1/3 lg:pl-[15px]">
+          <div className="banner-ads-block flex w-full flex-col gap-5 max-lg:mt-5 lg:w-1/3">
             <div className="banner-ads-item relative h-[200px] overflow-hidden rounded-2xl bg-gray-200" />
-            <div className="banner-ads-item relative h-[200px] overflow-hidden rounded-2xl bg-gray-200 lg:mt-8" />
+            <div className="banner-ads-item relative h-[200px] overflow-hidden rounded-2xl bg-gray-200" />
           </div>
         </div>
       </div>
@@ -31,10 +31,9 @@ const Slider = () => {
 
   return (
     <div className="slider-block style-two w-full">
-      <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-y-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
+      <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
         {/* Slider */}
-        {/* <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px]"></div> */}
-        <div className="slider-main min-h-[60vh] w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 lg:pr-[15px] lg:last:pr-0">
+        <div className="slider-main min-h-[60vh] w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3">
           <Swiper
             spaceBetween={0}
             slidesPerView={1}

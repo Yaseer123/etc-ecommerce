@@ -50,34 +50,35 @@ export default function ProductsPage() {
     sort: sortOption || undefined,
   });
 
-  // Set default price range based on available products
-  const [initialPriceRangeSet, setInitialPriceRangeSet] = useState(false);
+  // Fetch global price range from all products in database
+  const { data: globalPriceRange } = api.product.getPriceRange.useQuery();
+
+  // Set default price range based on global min/max from database
   const [initialPriceRange, setInitialPriceRange] = useState({
-    min: minPrice ?? 0,
-    max: maxPrice ?? 1000,
+    min: 0,
+    max: 1000,
   });
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: minPrice ?? 0,
     max: maxPrice ?? 1000,
   });
 
-  // Setup initial price range based on products
+  // Setup initial price range based on global product prices from database
   useEffect(() => {
-    if (products && products.length > 0 && !initialPriceRangeSet) {
-      const prices = products.map((product) => product.price);
-      const minPrice = Math.min(...prices);
-      const maxPrice = Math.max(...prices);
+    if (globalPriceRange) {
+      const dbMinPrice = globalPriceRange.min;
+      const dbMaxPrice = globalPriceRange.max;
 
-      setInitialPriceRange({ min: minPrice, max: maxPrice });
+      // Set the initial range from database values
+      setInitialPriceRange({ min: dbMinPrice, max: dbMaxPrice });
 
-      // Only update the price range if not already set in URL
-      if (!searchParams?.get("minPrice") && !searchParams?.get("maxPrice")) {
-        setPriceRange({ min: minPrice, max: maxPrice });
-      }
-
-      setInitialPriceRangeSet(true);
+      // Set current range based on URL params if present, otherwise use global range
+      setPriceRange({
+        min: minPrice ?? dbMinPrice,
+        max: maxPrice ?? dbMaxPrice,
+      });
     }
-  }, [products, initialPriceRangeSet, searchParams]); // Remove searchParams from the dependency array
+  }, [globalPriceRange, minPrice, maxPrice]);
 
   // When category is loaded, update the name
   useEffect(() => {
