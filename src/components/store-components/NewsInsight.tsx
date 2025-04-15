@@ -1,7 +1,7 @@
 import React from "react";
 
 import { api } from "@/trpc/server";
-import BlogItem from "./Blog/BlogItem";
+import NewsInsightItem from "./NewsInsightItem";
 
 interface Props {
   start: number;
@@ -20,7 +20,7 @@ export default async function NewsInsight({ start, limit }: Props) {
           </div>
           <div className="list-blog mt-6 grid gap-[30px] md:mt-10 md:grid-cols-3">
             {blogData.slice(start, limit).map((prd, index) => (
-              <BlogItem key={index} data={prd} />
+              <NewsInsightItem key={index} data={prd} type="style-one" />
             ))}
           </div>
         </div>
