@@ -24,7 +24,7 @@ export default function AnalyticsScript() {
 
     // ✅ Google Analytics Page Tracking
     window.gtag?.("config", GA_TRACKING_ID, {
-      page_path: pathname,
+      page_path: pathname ?? '/',
     });
 
     // ✅ Track page views only if fbq exists
