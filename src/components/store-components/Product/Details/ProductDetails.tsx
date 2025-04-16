@@ -31,6 +31,8 @@ import ParseContent from "../../Blog/ParseContent";
 import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import type { ProductWithCategory } from "@/types/ProductType";
+import { toast } from "sonner";
+import { formatDistanceToNow } from "date-fns";
 
 export default function ProductDetails({
   productMain,
@@ -47,6 +49,11 @@ export default function ProductDetails({
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
   const [activeTab, setActiveTab] = useState<string | undefined>("description");
   const [productQuantity, setProductQuantity] = useState<number>(1);
+  const [reviewForm, setReviewForm] = useState({
+    rating: 5,
+    comment: "",
+  });
+  const [reviewSortOrder, setReviewSortOrder] = useState("newest");
 
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
@@ -55,6 +62,42 @@ export default function ProductDetails({
 
   const [wishlistResponse] = api.wishList.getWishList.useSuspenseQuery();
   const wishlist = wishlistResponse ?? [];
+
+  const { data: reviews, refetch: refetchReviews } =
+    api.review.getReviewsByProduct.useQuery(productMain.id, {
+      initialData: [],
+    });
+
+  const { data: reviewStats } = api.review.getReviewStats.useQuery(
+    productMain.id,
+    {
+      initialData: {
+        totalCount: 0,
+        averageRating: "0.0",
+        ratingPercentages: {
+          1: 0,
+          2: 0,
+          3: 0,
+          4: 0,
+          5: 0,
+        },
+      },
+    },
+  );
+
+  const sortedReviews = [...reviews].sort((a, b) => {
+    if (reviewSortOrder === "newest") {
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    } else {
+      // Parse the star rating from the sort order (e.g., "5star" -> 5)
+      const targetRating = parseInt(reviewSortOrder.replace("star", ""));
+      // First group by matching the target rating
+      if (a.rating === targetRating && b.rating !== targetRating) return -1;
+      if (a.rating !== targetRating && b.rating === targetRating) return 1;
+      // Then sort by date within each group
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    }
+  });
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
     onSuccess: async () => {
@@ -68,6 +111,19 @@ export default function ProductDetails({
         await utils.wishList.getWishList.invalidate();
       },
     });
+
+  const addReviewMutation = api.review.addReview.useMutation({
+    onSuccess: async () => {
+      toast.success("Review submitted successfully!");
+      setReviewForm({ rating: 5, comment: "" });
+      await utils.review.getReviewsByProduct.invalidate(productMain.id);
+      await utils.review.getReviewStats.invalidate(productMain.id);
+      void refetchReviews();
+    },
+    onError: (error) => {
+      toast.error(`Error submitting review: ${error.message}`);
+    },
+  });
 
   const percentSale = Math.floor(
     100 - (productMain.price / productMain.originPrice) * 100,
@@ -100,7 +156,7 @@ export default function ProductDetails({
   };
 
   const isInWishlist = (itemId: string): boolean => {
-    return wishlist.some((item: { id: string }) => item?.id === itemId);
+    return wishlist.some((item) => item.productId === itemId);
   };
 
   const handleAddToWishlist = () => {
@@ -108,7 +164,7 @@ export default function ProductDetails({
       // **Optimistic UI Update: Remove item immediately**
       utils.wishList.getWishList.setData(
         undefined,
-        (old) => old?.filter((item) => item.id !== productMain.id) ?? [],
+        (old) => old?.filter((item) => item.productId !== productMain.id) ?? [],
       );
 
       removeFromWishlistMutation.mutate(
@@ -149,6 +205,24 @@ export default function ProductDetails({
 
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab);
+  };
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!session?.user) {
+      toast.error("Please sign in to submit a review");
+      return;
+    }
+
+    addReviewMutation.mutate({
+      productId: productMain.id,
+      rating: reviewForm.rating,
+      comment: reviewForm.comment,
+    });
+  };
+
+  const handleReviewSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setReviewSortOrder(e.target.value);
   };
 
   return (
@@ -255,24 +329,24 @@ export default function ProductDetails({
                   </div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white ${wishlist.some((item) => item.id === productMain.id) ? "active" : ""}`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border ${isInWishlist(productMain.id) ? "border-black bg-black" : "border-line bg-white"} duration-300 hover:bg-black hover:text-white`}
                   onClick={handleAddToWishlist}
                 >
-                  {wishlist.some((item) => item.id === productMain.id) ? (
-                    <>
-                      <Heart size={24} weight="fill" className="text-white" />
-                    </>
+                  {isInWishlist(productMain.id) ? (
+                    <Heart size={24} weight="fill" className="text-white" />
                   ) : (
-                    <>
-                      <Heart size={24} />
-                    </>
+                    <Heart size={24} />
                   )}
                 </div>
               </div>
               <div className="mt-3 flex items-center">
-                <Rate currentRate={productMain.rate} size={14} />
+                <Rate
+                  currentRate={parseFloat(reviewStats.averageRating)}
+                  size={14}
+                />
                 <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
-                  (1.234 reviews)
+                  ({reviewStats.totalCount}{" "}
+                  {reviewStats.totalCount === 1 ? "review" : "reviews"})
                 </span>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -495,7 +569,7 @@ export default function ProductDetails({
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
-                <div className="w-full sm:w-3/4 lg:w-1/2">
+                <div className="w-full sm:w-3/4 lg:w-1/2 mx-auto">
                   {productMain.attributes &&
                     Object.entries(productMain.attributes).map(
                       ([key, value], index) => (
@@ -518,83 +592,43 @@ export default function ProductDetails({
                 <div className="top-overview flex items-center justify-between gap-12 gap-y-4 max-sm:flex-col">
                   <div className="left flex w-full items-center justify-between gap-y-4 max-sm:flex-col sm:w-2/3 sm:pr-5 lg:w-1/2">
                     <div className="rating black-start flex flex-col items-center">
-                      <div className="text-display">4.6</div>
-                      <Rate currentRate={5} size={18} />
+                      <div className="text-display">
+                        {reviewStats.averageRating}
+                      </div>
+                      <Rate
+                        currentRate={parseFloat(reviewStats.averageRating)}
+                        size={18}
+                      />
                       <div className="mt-1 whitespace-nowrap text-center">
-                        (1,968 Ratings)
+                        ({reviewStats.totalCount}{" "}
+                        {reviewStats.totalCount === 1 ? "Rating" : "Ratings"})
                       </div>
                     </div>
                     <div className="list-rating w-2/3">
-                      <div className="item flex items-center justify-end gap-1.5">
-                        <div className="flex items-center gap-1">
-                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                            5
+                      {[5, 4, 3, 2, 1].map((rating) => (
+                        <div
+                          key={rating}
+                          className="item flex items-center justify-end gap-1.5"
+                        >
+                          <div className="flex items-center gap-1">
+                            <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                              {rating}
+                            </div>
+                            <Star size={14} weight="fill" />
                           </div>
-                          <Star size={14} weight="fill" />
-                        </div>
-                        <div className="progress relative h-2 w-3/4 bg-line">
-                          <div className="progress-percent absolute left-0 top-0 h-full w-[50%] bg-black"></div>
-                        </div>
-                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                          50%
-                        </div>
-                      </div>
-                      <div className="item mt-1 flex items-center justify-end gap-1.5">
-                        <div className="flex items-center gap-1">
-                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                            4
+                          <div className="progress relative h-2 w-3/4 bg-line">
+                            <div
+                              className="progress-percent absolute left-0 top-0 h-full bg-black"
+                              style={{
+                                width: `${reviewStats.ratingPercentages[rating]}%`,
+                              }}
+                            ></div>
                           </div>
-                          <Star size={14} weight="fill" />
-                        </div>
-                        <div className="progress relative h-2 w-3/4 bg-line">
-                          <div className="progress-percent absolute left-0 top-0 h-full w-[20%] bg-black"></div>
-                        </div>
-                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                          20%
-                        </div>
-                      </div>
-                      <div className="item mt-1 flex items-center justify-end gap-1.5">
-                        <div className="flex items-center gap-1">
                           <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                            3
+                            {reviewStats.ratingPercentages[rating]}%
                           </div>
-                          <Star size={14} weight="fill" />
                         </div>
-                        <div className="progress relative h-2 w-3/4 bg-line">
-                          <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
-                        </div>
-                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                          10%
-                        </div>
-                      </div>
-                      <div className="item mt-1 flex items-center justify-end gap-1.5">
-                        <div className="flex items-center gap-1">
-                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                            2
-                          </div>
-                          <Star size={14} weight="fill" />
-                        </div>
-                        <div className="progress relative h-2 w-3/4 bg-line">
-                          <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
-                        </div>
-                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                          10%
-                        </div>
-                      </div>
-                      <div className="item mt-1 flex items-center justify-end gap-1.5">
-                        <div className="flex items-center gap-2">
-                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                            1
-                          </div>
-                          <Star size={14} weight="fill" />
-                        </div>
-                        <div className="progress relative h-2 w-3/4 bg-line">
-                          <div className="progress-percent absolute left-0 top-0 h-full w-[10%] bg-black"></div>
-                        </div>
-                        <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                          10%
-                        </div>
-                      </div>
+                      ))}
                     </div>
                   </div>
                   <div className="right">
@@ -609,7 +643,8 @@ export default function ProductDetails({
                 <div className="mt-8">
                   <div className="heading flex flex-wrap items-center justify-between gap-4">
                     <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                      03 Comments
+                      {reviewStats.totalCount}{" "}
+                      {reviewStats.totalCount === 1 ? "Comment" : "Comments"}
                     </div>
                     <div className="right flex items-center gap-3">
                       <label htmlFor="select-filter" className="uppercase">
@@ -620,11 +655,9 @@ export default function ProductDetails({
                           id="select-filter"
                           name="select-filter"
                           className="rounded-lg border border-line bg-white py-2 pl-3 pr-10 text-base font-semibold capitalize leading-[26px] md:pr-14 md:text-base md:leading-6"
-                          defaultValue={"Sorting"}
+                          value={reviewSortOrder}
+                          onChange={handleReviewSortChange}
                         >
-                          <option value="Sorting" disabled>
-                            Sorting
-                          </option>
                           <option value="newest">Newest</option>
                           <option value="5star">5 Star</option>
                           <option value="4star">4 Star</option>
@@ -640,216 +673,124 @@ export default function ProductDetails({
                     </div>
                   </div>
                   <div className="list-review mt-6">
-                    <div className="item">
-                      <div className="heading flex items-center justify-between">
-                        <div className="user-infor flex gap-4">
-                          <div className="avatar">
-                            <Image
-                              src={"/images/avatar/1.png"}
-                              width={200}
-                              height={200}
-                              alt="img"
-                              className="aspect-square w-[52px] rounded-full"
-                            />
-                          </div>
-                          <div className="user">
-                            <div className="flex items-center gap-2">
-                              <div className="text-title">Tony Nguyen</div>
-                              <div className="span text-line">-</div>
-                              <Rate currentRate={5} size={12} />
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="text-secondary2">1 days ago</div>
-                              <div className="text-secondary2">-</div>
-                              <div className="text-secondary2">
-                                <span>Yellow</span> / <span>XL</span>
+                    {sortedReviews.length === 0 ? (
+                      <div className="py-6 text-center">
+                        No reviews yet. Be the first to review!
+                      </div>
+                    ) : (
+                      sortedReviews.map((review) => (
+                        <div className="item mb-8" key={review.id}>
+                          <div className="heading flex items-center justify-between">
+                            <div className="user-infor flex gap-4">
+                              <div className="avatar">
+                                <Image
+                                  src={
+                                    review.user?.image ??
+                                    "/images/avatar/default.png"
+                                  }
+                                  width={200}
+                                  height={200}
+                                  alt={review.user?.name ?? "Anonymous"}
+                                  className="aspect-square w-[52px] rounded-full object-cover"
+                                />
+                              </div>
+                              <div className="user">
+                                <div className="flex items-center gap-2">
+                                  <div className="text-title">
+                                    {review.user?.name ?? "Anonymous"}
+                                  </div>
+                                  <div className="span text-line">-</div>
+                                  <Rate currentRate={review.rating} size={12} />
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <div className="text-secondary2">
+                                    {formatDistanceToNow(
+                                      new Date(review.createdAt),
+                                      { addSuffix: true },
+                                    )}
+                                  </div>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        </div>
-                        <div className="more-action cursor-pointer">
-                          <DotsThree size={24} weight="bold" />
-                        </div>
-                      </div>
-                      <div className="mt-3">
-                        I can{String.raw`'t`} get enough of the fashion pieces
-                        from this brand. They have a great selection for every
-                        occasion and the prices are reasonable. The shipping is
-                        fast and the items always arrive in perfect condition.
-                      </div>
-                      <div className="action mt-3">
-                        <div className="flex items-center gap-4">
-                          <div className="like-btn flex cursor-pointer items-center gap-1">
-                            <HandsClapping size={18} />
-                            <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                              20
+                            <div className="more-action cursor-pointer">
+                              <DotsThree size={24} weight="bold" />
                             </div>
                           </div>
-                          <Link
-                            href={"#form-review"}
-                            className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
-                          >
-                            Reply
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="item mt-8">
-                      <div className="heading flex items-center justify-between">
-                        <div className="user-infor flex gap-4">
-                          <div className="avatar">
-                            <Image
-                              src={"/images/avatar/2.png"}
-                              width={200}
-                              height={200}
-                              alt="img"
-                              className="aspect-square w-[52px] rounded-full"
-                            />
+                          <div className="mt-3">
+                            {review.comment ?? "No comment provided."}
                           </div>
-                          <div className="user">
-                            <div className="flex items-center gap-2">
-                              <div className="text-title">Guy Hawkins</div>
-                              <div className="span text-line">-</div>
-                              <Rate currentRate={4} size={12} />
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="text-secondary2">1 days ago</div>
-                              <div className="text-secondary2">-</div>
-                              <div className="text-secondary2">
-                                <span>Yellow</span> / <span>XL</span>
+                          <div className="action mt-3">
+                            <div className="flex items-center gap-4">
+                              <div className="like-btn flex cursor-pointer items-center gap-1">
+                                <HandsClapping size={18} />
+                                <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                                  0
+                                </div>
                               </div>
+                              <Link
+                                href={"#form-review"}
+                                className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
+                              >
+                                Reply
+                              </Link>
                             </div>
                           </div>
                         </div>
-                        <div className="more-action cursor-pointer">
-                          <DotsThree size={24} weight="bold" />
-                        </div>
-                      </div>
-                      <div className="mt-3">
-                        I can{String.raw`'t`} get enough of the fashion pieces
-                        from this brand. They have a great selection for every
-                        occasion and the prices are reasonable. The shipping is
-                        fast and the items always arrive in perfect condition.
-                      </div>
-                      <div className="action mt-3">
-                        <div className="flex items-center gap-4">
-                          <div className="like-btn flex cursor-pointer items-center gap-1">
-                            <HandsClapping size={18} />
-                            <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                              20
-                            </div>
-                          </div>
-                          <Link
-                            href={"#form-review"}
-                            className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
-                          >
-                            Reply
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="item mt-8">
-                      <div className="heading flex items-center justify-between">
-                        <div className="user-infor flex gap-4">
-                          <div className="avatar">
-                            <Image
-                              src={"/images/avatar/3.png"}
-                              width={200}
-                              height={200}
-                              alt="img"
-                              className="aspect-square w-[52px] rounded-full"
-                            />
-                          </div>
-                          <div className="user">
-                            <div className="flex items-center gap-2">
-                              <div className="text-title">John Smith</div>
-                              <div className="span text-line">-</div>
-                              <Rate currentRate={5} size={12} />
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="text-secondary2">1 days ago</div>
-                              <div className="text-secondary2">-</div>
-                              <div className="text-secondary2">
-                                <span>Yellow</span> / <span>XL</span>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="more-action cursor-pointer">
-                          <DotsThree size={24} weight="bold" />
-                        </div>
-                      </div>
-                      <div className="mt-3">
-                        I can{String.raw`'t`} get enough of the fashion pieces
-                        from this brand. They have a great selection for every
-                        occasion and the prices are reasonable. The shipping is
-                        fast and the items always arrive in perfect condition.
-                      </div>
-                      <div className="action mt-3">
-                        <div className="flex items-center gap-4">
-                          <div className="like-btn flex cursor-pointer items-center gap-1">
-                            <HandsClapping size={18} />
-                            <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                              20
-                            </div>
-                          </div>
-                          <Link
-                            href={"#form-review"}
-                            className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
-                          >
-                            Reply
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+                      ))
+                    )}
                   </div>
                   <div id="form-review" className="form-review pt-6">
                     <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                       Leave A comment
                     </div>
-                    <form className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6">
-                      <div className="name">
-                        <input
-                          className="w-full rounded-lg border-line px-4 pb-3 pt-3"
-                          id="username"
-                          type="text"
-                          placeholder="Your Name *"
-                          required
-                        />
-                      </div>
-                      <div className="mail">
-                        <input
-                          className="w-full rounded-lg border-line px-4 pb-3 pt-3"
-                          id="email"
-                          type="email"
-                          placeholder="Your Email *"
-                          required
-                        />
+                    <form
+                      className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6"
+                      onSubmit={handleReviewSubmit}
+                    >
+                      <div className="col-span-2 flex items-center gap-4">
+                        <div className="text-title">Your Rating:</div>
+                        <div className="flex cursor-pointer">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star
+                              key={star}
+                              size={24}
+                              weight={
+                                star <= reviewForm.rating ? "fill" : "regular"
+                              }
+                              className="text-yellow-500 transition-all hover:scale-110"
+                              onClick={() =>
+                                setReviewForm({ ...reviewForm, rating: star })
+                              }
+                            />
+                          ))}
+                        </div>
                       </div>
                       <div className="message col-span-full">
                         <textarea
                           className="w-full rounded-lg border border-line px-4 py-3"
                           id="message"
-                          name="message"
-                          placeholder="Your message *"
+                          name="comment"
+                          placeholder="Your review *"
                           required
+                          value={reviewForm.comment}
+                          onChange={(e) =>
+                            setReviewForm({
+                              ...reviewForm,
+                              comment: e.target.value,
+                            })
+                          }
                         ></textarea>
                       </div>
-                      <div className="col-span-full -mt-2 flex items-start gap-2">
-                        <input
-                          type="checkbox"
-                          id="saveAccount"
-                          name="saveAccount"
-                          className="mt-1.5"
-                        />
-                        <label className="" htmlFor="saveAccount">
-                          Save my name, email, and website in this browser for
-                          the next time I comment.
-                        </label>
-                      </div>
+
                       <div className="col-span-full sm:pt-3">
-                        <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
-                          Submit Reviews
+                        <button
+                          type="submit"
+                          disabled={addReviewMutation.isPending}
+                          className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                        >
+                          {addReviewMutation.isPending
+                            ? "Submitting..."
+                            : "Submit Review"}
                         </button>
                       </div>
                     </form>
@@ -859,26 +800,6 @@ export default function ProductDetails({
             </div>
           </div>
         </div>
-
-        {/* <div className="related-product py-10 md:py-20">
-          <div className="mx-auto w-full !max-w-[1322px] px-4">
-            <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
-              Related Products
-            </div>
-            <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-5 md:mt-10 md:gap-[30px] lg:grid-cols-4">
-              {data
-                .slice(Number(productId), Number(productId) + 4)
-                .map((item, index) => (
-                  <Product
-                    key={index}
-                    data={item}
-                    type="grid"
-                    style="style-1"
-                  />
-                ))}
-            </div>
-          </div>
-        </div> */}
       </div>
     </>
   );

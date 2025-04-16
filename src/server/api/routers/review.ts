@@ -3,17 +3,71 @@ import {
   createTRPCRouter,
   protectedProcedure,
   adminProcedure,
+  publicProcedure,
 } from "@/server/api/trpc";
 
 export const reviewRouter = createTRPCRouter({
-  getReviewsByProduct: protectedProcedure
+  getReviewsByProduct: publicProcedure
     .input(z.string()) // Product ID
     .query(async ({ ctx, input }) => {
       return await ctx.db.review.findMany({
         where: { productId: input },
-        include: { user: { select: { name: true } } },
+        include: {
+          user: {
+            select: {
+              name: true,
+              image: true,
+            },
+          },
+        },
         orderBy: { createdAt: "desc" },
       });
+    }),
+
+  getReviewStats: publicProcedure
+    .input(z.string()) // Product ID
+    .query(async ({ ctx, input }) => {
+      // Get total count
+      const totalCount = await ctx.db.review.count({
+        where: { productId: input },
+      });
+
+      // Get average rating
+      const avgRating = await ctx.db.$queryRaw<{ average: number }[]>`
+        SELECT AVG(rating)::float as average
+        FROM "Review"
+        WHERE "productId" = ${input};
+      `;
+
+      // Get counts by rating
+      const ratingCounts = await ctx.db.review.groupBy({
+        by: ["rating"],
+        where: { productId: input },
+        _count: true,
+      });
+
+      // Format rating counts as percentages
+      const ratingPercentages: Record<number, number> = {};
+      ratingCounts.forEach((count) => {
+        ratingPercentages[count.rating] =
+          totalCount > 0 ? Math.round((count._count * 100) / totalCount) : 0;
+      });
+
+      // Ensure all ratings have a percentage value
+      for (let i = 1; i <= 5; i++) {
+        if (!ratingPercentages[i]) {
+          ratingPercentages[i] = 0;
+        }
+      }
+
+      return {
+        totalCount,
+        averageRating:
+          totalCount > 0 && avgRating[0]
+            ? Number(avgRating[0].average).toFixed(1)
+            : "0.0",
+        ratingPercentages,
+      };
     }),
 
   addReview: protectedProcedure
@@ -25,6 +79,26 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Check if user already reviewed this product
+      const existingReview = await ctx.db.review.findFirst({
+        where: {
+          userId: ctx.session.user.id,
+          productId: input.productId,
+        },
+      });
+
+      if (existingReview) {
+        // Update existing review
+        return await ctx.db.review.update({
+          where: { id: existingReview.id },
+          data: {
+            rating: input.rating,
+            comment: input.comment,
+          },
+        });
+      }
+
+      // Create new review
       return await ctx.db.review.create({
         data: {
           userId: ctx.session.user.id,
