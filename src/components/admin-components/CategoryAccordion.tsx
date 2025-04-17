@@ -7,7 +7,8 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete } from "react-icons/md";
+import { FaGear } from "react-icons/fa6"; // Import gear/settings icon
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,9 +23,10 @@ import {
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { api } from "@/trpc/react";
-import Image from "next/image"; // Import the Image component
+import Image from "next/image";
 import { removeImage, uploadFile } from "@/app/actions/file";
 import type { Category } from "@prisma/client";
+import Link from "next/link"; // Import Link component
 
 interface CategoryTree extends Category {
   subcategories: Category[];
@@ -174,9 +176,13 @@ function CategoryItem({
           )}
         </AccordionTrigger>
         <div className="flex items-center gap-x-1">
-          <Button onClick={() => setIsEditing((prev) => !prev)}>
-            <MdEdit size={35} />
-          </Button>
+          {/* Replace Edit button with Link to category management page */}
+          <Link href={`/admin/category/${category.id}`}>
+            <Button variant="outline" className="flex items-center gap-1">
+              <FaGear size={20} />
+              <span className="hidden sm:inline">Manage</span>
+            </Button>
+          </Link>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="ml-2">

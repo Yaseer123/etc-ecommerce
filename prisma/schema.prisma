@@ -140,6 +140,7 @@ model Category {
     parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade) // Cascade deletion
     subcategories Category[] @relation("CategoryToParent")
     products      Product[]  @relation("CategoryToProduct") // Optional: Cascade delete products if needed
+    attributes    Json       @default("[]") // Store category attributes as JSON array
     createdAt     DateTime   @default(now())
     updatedAt     DateTime   @updatedAt
 }

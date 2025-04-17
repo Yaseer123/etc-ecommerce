@@ -1,4 +1,3 @@
-import { type Category as PrismaCategory } from "@prisma/client";
 import { z } from "zod";
 
 // Category Schema for validation
@@ -8,11 +7,28 @@ export const newCategorySchema = z.object({
   image: z.instanceof(File).optional(),
 });
 
-// TypeScript Type for Category
+export const categoryAttributeSchema = z.object({
+  name: z.string(),
+  type: z.enum(["text", "number", "boolean", "select"]),
+  options: z.array(z.string()).optional(),
+  required: z.boolean().default(false),
+});
+
+export const categorySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  parentId: z.string().nullable(),
+  imageId: z.string().nullable(),
+  image: z.string().nullable(),
+  attributes: z.array(categoryAttributeSchema).default([]),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
 export type NewCategory = z.infer<typeof newCategorySchema>;
 
-export type Category = PrismaCategory;
+export type Category = z.infer<typeof categorySchema>;
 
-export interface CategoryTree extends Category {
+export type CategoryTree = Category & {
   subcategories: CategoryTree[];
-}
+};

@@ -49,7 +49,10 @@ export const categoryRouter = createTRPCRouter({
       orderBy: { updatedAt: "desc" },
     });
 
-    return buildCategoryTree(categories);
+    return buildCategoryTree(categories.map(cat => ({
+      ...cat,
+      attributes: (cat.attributes as { name: string; type: "number" | "boolean" | "text" | "select"; required: boolean; options?: string[] }[]) ?? []
+    })));
   }),
 
   getAllParent: publicProcedure.query(async ({ ctx }) => {
@@ -116,5 +119,38 @@ export const categoryRouter = createTRPCRouter({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       await ctx.db.category.delete({ where: { id: input.id } });
+    }),
+
+  getById: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const category = await ctx.db.category.findUnique({
+        where: { id: input.id },
+      });
+
+      return category;
+    }),
+
+  updateAttributes: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        attributes: z.array(
+          z.object({
+            name: z.string(),
+            type: z.enum(["text", "number", "boolean", "select"]),
+            options: z.array(z.string()).optional(),
+            required: z.boolean().default(false),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const category = await ctx.db.category.update({
+        where: { id: input.id },
+        data: { attributes: input.attributes },
+      });
+
+      return category;
     }),
 });

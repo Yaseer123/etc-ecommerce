@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Heart, Eye, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
 import Rate from "../Rate";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
@@ -48,8 +48,6 @@ export default function Product({ data, type }: ProductProps) {
     return wishlist.some((item) => item.id === itemId);
   };
 
-  const router = useRouter();
-
   const handleAddToCart = () => {
     addToCart(data);
     openModalCart();
@@ -74,25 +72,20 @@ export default function Product({ data, type }: ProductProps) {
     openQuickView(data);
   };
 
-  const handleDetailProduct = (productId: string) => {
-    router.push(`/products/${data.slug}?id=${productId}`);
-  };
-
   return (
     <>
       {type === "marketplace" && (
-        <div
-          className="product-item style-marketplace rounded-2xl border border-line p-4"
-          onClick={() => handleDetailProduct(data.id)}
-        >
+        <div className="product-item style-marketplace rounded-2xl border border-line p-4">
           <div className="bg-img relative w-full">
-            <Image
-              className="aspect-square w-full"
-              width={5000}
-              height={5000}
-              src={data.images?.[0] ?? "/images/products/1000x1000.png"}
-              alt="img"
-            />
+            <Link href={`/products/${data.slug}?id=${data.id}`}>
+              <Image
+                className="aspect-square w-full cursor-pointer"
+                width={5000}
+                height={5000}
+                src={data.images?.[0] ?? "/images/products/1000x1000.png"}
+                alt="img"
+              />
+            </Link>
             <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
               <span
                 className={`add-wishlistState-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${
@@ -142,7 +135,9 @@ export default function Product({ data, type }: ProductProps) {
             </div>
           </div>
           <div className="product-infor mt-4">
-            <span className="text-title">{data.title}</span>
+            <Link href={`/products/${data.slug}?id=${data.id}`}>
+              <span className="text-title cursor-pointer">{data.title}</span>
+            </Link>
             <div className="mt-1 flex gap-0.5">
               <Rate currentRate={data.rate} size={16} />
             </div>
