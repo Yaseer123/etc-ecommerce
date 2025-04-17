@@ -5,7 +5,6 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 import { z } from "zod";
-import { TRPCError } from "@trpc/server";
 
 export const buildCategoryTree = (
   categories: Category[],
@@ -23,109 +22,53 @@ export const categoryRouter = createTRPCRouter({
   getHierarchy: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      try {
-        const hierarchy = [];
-        let currentCategory = await ctx.db.category.findUnique({
-          where: { id: input.id },
-          select: { id: true, name: true, parentId: true },
+      const hierarchy = [];
+      let currentCategory = await ctx.db.category.findUnique({
+        where: { id: input.id },
+        select: { id: true, name: true, parentId: true },
+      });
+
+      while (currentCategory) {
+        hierarchy.unshift({
+          id: currentCategory.id,
+          name: currentCategory.name,
         });
-
-        if (!currentCategory) {
-          return [];
-        }
-
-        while (currentCategory) {
-          hierarchy.unshift({
-            id: currentCategory.id,
-            name: currentCategory.name,
-          });
-          currentCategory = currentCategory.parentId
-            ? await ctx.db.category.findUnique({
-                where: { id: currentCategory.parentId },
-                select: { id: true, name: true, parentId: true },
-              })
-            : null;
-        }
-
-        return hierarchy;
-      } catch (error) {
-        console.error("Error fetching category hierarchy:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch category hierarchy",
-        });
+        currentCategory = currentCategory.parentId
+          ? await ctx.db.category.findUnique({
+              where: { id: currentCategory.parentId },
+              select: { id: true, name: true, parentId: true },
+            })
+          : null;
       }
+
+      return hierarchy;
     }),
 
   getAll: publicProcedure.query(async ({ ctx }) => {
-    try {
-      const categories = await ctx.db.category.findMany({
-        orderBy: { updatedAt: "desc" },
-      });
+    const categories = await ctx.db.category.findMany({
+      orderBy: { updatedAt: "desc" },
+    });
 
-      return buildCategoryTree(
-        categories.map((cat) => ({
-          ...cat,
-          attributes:
-            (cat.attributes as {
-              name: string;
-              type: "number" | "boolean" | "text" | "select";
-              required: boolean;
-              options?: string[];
-            }[]) ?? [],
-        })),
-      );
-    } catch (error) {
-      console.error("Error fetching categories:", error);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch categories",
-      });
-    }
+    return buildCategoryTree(categories as Category[]);
   }),
 
   getAllParent: publicProcedure.query(async ({ ctx }) => {
-    try {
-      const categories = await ctx.db.category.findMany({
-        where: { parentId: null },
-        orderBy: { updatedAt: "desc" },
-      });
+    const categories = await ctx.db.category.findMany({
+      where: { parentId: null },
+      orderBy: { updatedAt: "desc" },
+    });
 
-      return categories;
-    } catch (error) {
-      console.error("Error fetching parent categories:", error);
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to fetch parent categories",
-      });
-    }
+    return categories;
   }),
 
   getOne: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      try {
-        const category = await ctx.db.category.findUnique({
-          where: { id: input.id },
-        });
+      const category = await ctx.db.category.findUnique({
+        where: { id: input.id },
+      });
 
-        if (!category) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Category not found",
-          });
-        }
-
-        return category;
-      } catch (error) {
-        if (error instanceof TRPCError) throw error;
-
-        console.error("Error fetching category:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch category",
-        });
-      }
+      return category;
     }),
 
   add: adminProcedure
@@ -138,24 +81,17 @@ export const categoryRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      try {
-        const category = await ctx.db.category.create({
-          data: {
-            name: input.name,
-            parentId: input.parentId ?? null,
-            imageId: input.imageId,
-            image: input.imageUrl,
-          },
-        });
+      // Create the category in the database
+      const category = await ctx.db.category.create({
+        data: {
+          name: input.name,
+          parentId: input.parentId ?? null,
+          imageId: input.imageId,
+          image: input.imageUrl,
+        },
+      });
 
-        return category;
-      } catch (error) {
-        console.error("Error creating category:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to create category",
-        });
-      }
+      return category;
     }),
 
   edit: adminProcedure
@@ -168,65 +104,28 @@ export const categoryRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      try {
-        const category = await ctx.db.category.update({
-          where: { id: input.id },
-          data: {
-            name: input.name,
-            imageId: input.imageId,
-            image: input.image,
-          },
-        });
+      const category = await ctx.db.category.update({
+        where: { id: input.id },
+        data: { name: input.name, imageId: input.imageId, image: input.image },
+      });
 
-        return category;
-      } catch (error) {
-        console.error("Error updating category:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update category",
-        });
-      }
+      return category;
     }),
 
   delete: adminProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      try {
-        await ctx.db.category.delete({ where: { id: input.id } });
-      } catch (error) {
-        console.error("Error deleting category:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to delete category",
-        });
-      }
+      await ctx.db.category.delete({ where: { id: input.id } });
     }),
 
   getById: publicProcedure
     .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
-      try {
-        const category = await ctx.db.category.findUnique({
-          where: { id: input.id },
-        });
+      const category = await ctx.db.category.findUnique({
+        where: { id: input.id },
+      });
 
-        if (!category) {
-          throw new TRPCError({
-            code: "NOT_FOUND",
-            message: "Category not found",
-          });
-        }
-
-        return category;
-      } catch (error) {
-        if (error instanceof TRPCError) throw error;
-
-        console.error("Error fetching category:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to fetch category",
-        });
-      }
+      return category;
     }),
 
   updateAttributes: adminProcedure
@@ -244,19 +143,11 @@ export const categoryRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      try {
-        const category = await ctx.db.category.update({
-          where: { id: input.id },
-          data: { attributes: input.attributes },
-        });
+      const category = await ctx.db.category.update({
+        where: { id: input.id },
+        data: { attributes: input.attributes },
+      });
 
-        return category;
-      } catch (error) {
-        console.error("Error updating category attributes:", error);
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Failed to update category attributes",
-        });
-      }
+      return category;
     }),
 });

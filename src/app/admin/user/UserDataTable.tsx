@@ -1,16 +1,14 @@
-"use client";
-
-import { api } from "@/trpc/react";
+import { api } from "@/trpc/server";
 import { columns } from "@/app/admin/user/Columns";
 import { DataTable } from "@/components/admin-components/DataTable";
 
-export default function UserDataTable() {
-  const [users] = api.user.getAll.useSuspenseQuery();
+export default async function UserDataTable() {
+  const data = await api.user.getAll();
 
   return (
     <DataTable
       columns={columns}
-      data={users}
+      data={data}
       searchPlaceHolder="Filter users by name"
     />
   );

@@ -1,22 +1,19 @@
+"use client";
+
 import CategoryAttributesManager from "@/components/admin-components/CategoryAttributesManager";
-import { HydrateClient } from "@/trpc/server";
-import { Suspense } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-export const dynamic = "force-dynamic";
+export default function CategoryPage() {
+  const params = useParams<{ id: string }>();
+  const router = useRouter();
 
-export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
+  if (!params?.id) {
+    return router.push("/admin/category");
+  }
+
   return (
-    <Suspense fallback={<div className="p-10">Loading category...</div>}>
-      <HydrateClient>
-        <div className="min-h-[80vh] p-10">
-          <CategoryAttributesManager categoryId={id} />
-        </div>
-      </HydrateClient>
-    </Suspense>
+    <div className="min-h-[80vh] p-10">
+      <CategoryAttributesManager categoryId={params.id} />
+    </div>
   );
 }

@@ -4,7 +4,12 @@ import { CategoryAccordion } from "./CategoryAccordion";
 import { api } from "@/trpc/react";
 
 export default function CategoryAccordionManager() {
-  const [categories] = api.category.getAll.useSuspenseQuery();
+  const { data: categories, error, isLoading } = api.category.getAll.useQuery();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!categories || categories.length === 0)
+    return <div>No categories found</div>;
 
   const utils = api.useUtils();
   const deleteCategory = api.category.delete.useMutation({
