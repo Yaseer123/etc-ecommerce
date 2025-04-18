@@ -14,6 +14,8 @@ export const categoryAttributeSchema = z.object({
   required: z.boolean().default(false),
 });
 
+export type CategoryAttribute = z.infer<typeof categoryAttributeSchema>;
+
 export const categorySchema = z.object({
   id: z.string(),
   name: z.string(),

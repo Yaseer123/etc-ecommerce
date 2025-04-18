@@ -54,6 +54,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface CategoryAttributesManagerProps {
   categoryId: string;
@@ -106,10 +116,57 @@ export default function CategoryAttributesManager({
       },
     });
 
+  // Add mutation for removing all attributes from database
+  const { mutate: removeAllAttributes, isPending: isRemovingAllAttributes } =
+    api.category.updateAttributes.useMutation({
+      onSuccess: () => {
+        toast.success("All attributes have been removed from the category.");
+        attributesForm.reset({ attributes: [] });
+        setIsDeleteDialogOpen(false);
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to remove attributes");
+      },
+    });
+
+  // Add mutation for removing a single attribute
+  const {
+    mutate: removeSingleAttribute,
+    isPending: isRemovingSingleAttribute,
+  } = api.category.removeAttribute.useMutation({
+    onSuccess: (data) => {
+      toast.success("Attribute has been removed successfully.");
+
+      // Update the form with the returned attributes
+      try {
+        if (typeof data.attributes === "string") {
+          const attrs = JSON.parse(
+            data.attributes,
+          ) as AttributeFormType["attributes"];
+          if (Array.isArray(attrs)) {
+            attributesForm.reset({ attributes: attrs });
+          }
+        } else if (Array.isArray(data.attributes)) {
+          attributesForm.reset({
+            attributes: data.attributes as AttributeFormType["attributes"],
+          });
+        }
+      } catch (error) {
+        console.error("Failed to parse updated attributes:", error);
+      }
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to remove attribute");
+    },
+  });
+
   // State for image handling
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isRemovingImage, setIsRemovingImage] = useState(false);
+
+  // State for handling attribute removal confirmation
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   // Initialize form for category details
   const detailsForm = useForm<DetailsFormType>({
@@ -230,6 +287,27 @@ export default function CategoryAttributesManager({
       id: categoryId,
       attributes: data.attributes,
     });
+  };
+
+  // Handle removing all attributes from database
+  const handleRemoveAllAttributes = () => {
+    removeAllAttributes({
+      id: categoryId,
+      attributes: [],
+    });
+  };
+
+  // Handle removing a single attribute
+  const handleRemoveSingleAttribute = (index: number) => {
+    const currentAttributes = attributesForm.getValues().attributes;
+    const attributeName = currentAttributes[index]?.name;
+
+    if (category && attributeName) {
+      removeSingleAttribute({
+        categoryId: categoryId,
+        attributeName: attributeName,
+      });
+    }
   };
 
   if (isLoading) {
@@ -524,7 +602,21 @@ export default function CategoryAttributesManager({
                                   type="button"
                                   variant="ghost"
                                   size="sm"
-                                  onClick={() => remove(index)}
+                                  onClick={() => {
+                                    // If this is an existing attribute in the database, remove it from there
+                                    if (
+                                      category &&
+                                      attributesForm.watch(
+                                        `attributes.${index}.name`,
+                                      )
+                                    ) {
+                                      handleRemoveSingleAttribute(index);
+                                    } else {
+                                      // Otherwise just remove it from the form
+                                      remove(index);
+                                    }
+                                  }}
+                                  disabled={isRemovingSingleAttribute}
                                   className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10 hover:text-destructive"
                                 >
                                   <X className="h-4 w-4" />
@@ -654,20 +746,64 @@ export default function CategoryAttributesManager({
                   </div>
 
                   {fields.length > 0 && (
-                    <Button
-                      type="submit"
-                      disabled={isSavingAttributes}
-                      size="lg"
-                      className="w-full gap-2 sm:w-auto"
-                    >
-                      <Save className="h-4 w-4" />
-                      {isSavingAttributes ? "Saving..." : "Save All Attributes"}
-                    </Button>
+                    <div className="flex flex-wrap gap-3">
+                      <Button
+                        type="submit"
+                        disabled={isSavingAttributes}
+                        size="lg"
+                        className="gap-2 sm:w-auto"
+                      >
+                        <Save className="h-4 w-4" />
+                        {isSavingAttributes
+                          ? "Saving..."
+                          : "Save All Attributes"}
+                      </Button>
+
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="lg"
+                        onClick={() => setIsDeleteDialogOpen(true)}
+                        className="gap-2 border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive sm:w-auto"
+                        disabled={isRemovingAllAttributes}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        {isRemovingAllAttributes
+                          ? "Removing..."
+                          : "Remove All Attributes"}
+                      </Button>
+                    </div>
                   )}
                 </form>
               </Form>
             </CardContent>
           </Card>
+
+          {/* Confirmation Dialog for removing all attributes */}
+          <AlertDialog
+            open={isDeleteDialogOpen}
+            onOpenChange={setIsDeleteDialogOpen}
+          >
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Remove All Attributes</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove all attributes for this category. Products
+                  using these attributes may be affected. This action cannot be
+                  undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleRemoveAllAttributes}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  Remove All
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </TabsContent>
       </Tabs>
     </div>

@@ -1,9 +1,15 @@
-import type { Category, CategoryTree } from "@/schemas/categorySchema";
+import type {
+  Category,
+  CategoryAttribute,
+  CategoryTree,
+} from "@/schemas/categorySchema";
 import {
   adminProcedure,
   createTRPCRouter,
   publicProcedure,
+  protectedProcedure,
 } from "@/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const buildCategoryTree = (
@@ -149,5 +155,61 @@ export const categoryRouter = createTRPCRouter({
       });
 
       return category;
+    }),
+
+  removeAttribute: protectedProcedure
+    .input(
+      z.object({
+        categoryId: z.string(),
+        attributeName: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { categoryId, attributeName } = input;
+
+      // Fetch the current category to get its attributes
+      const category = await ctx.db.category.findUnique({
+        where: { id: categoryId },
+        select: { attributes: true },
+      });
+
+      if (!category) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Category not found",
+        });
+      }
+
+      let attributes: CategoryAttribute[] = [];
+
+      // Parse the existing attributes
+      try {
+        if (typeof category.attributes === "string") {
+          attributes = JSON.parse(category.attributes) as CategoryAttribute[];
+        } else if (Array.isArray(category.attributes)) {
+          attributes = category.attributes as CategoryAttribute[];
+        }
+      } catch (error) {
+        console.error("Failed to parse category attributes:", error);
+      }
+
+      // Filter out the attribute with the specified name
+      const updatedAttributes = attributes.filter(
+        (attr) => attr.name !== attributeName,
+      );
+
+      // Update the category with the new attributes list
+      const updatedCategory = await ctx.db.category.update({
+        where: { id: categoryId },
+        data: {
+          attributes: updatedAttributes,
+        },
+        select: {
+          id: true,
+          attributes: true,
+        },
+      });
+
+      return updatedCategory;
     }),
 });
