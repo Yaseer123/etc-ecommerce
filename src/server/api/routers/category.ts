@@ -149,12 +149,34 @@ export const categoryRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const category = await ctx.db.category.update({
+      // First check if this is a parent category
+      const category = await ctx.db.category.findUnique({
+        where: { id: input.id },
+        select: { parentId: true },
+      });
+
+      if (!category) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Category not found",
+        });
+      }
+
+      // Prevent adding attributes to parent categories
+      if (category.parentId === null && input.attributes.length > 0) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "Cannot add attributes to parent categories. Attributes are only allowed on subcategories.",
+        });
+      }
+
+      const updatedCategory = await ctx.db.category.update({
         where: { id: input.id },
         data: { attributes: input.attributes },
       });
 
-      return category;
+      return updatedCategory;
     }),
 
   removeAttribute: protectedProcedure
@@ -170,13 +192,21 @@ export const categoryRouter = createTRPCRouter({
       // Fetch the current category to get its attributes
       const category = await ctx.db.category.findUnique({
         where: { id: categoryId },
-        select: { attributes: true },
+        select: { attributes: true, parentId: true },
       });
 
       if (!category) {
         throw new TRPCError({
           code: "NOT_FOUND",
           message: "Category not found",
+        });
+      }
+
+      // Ensure this is not a parent category
+      if (category.parentId === null) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Cannot modify attributes on parent categories",
         });
       }
 
