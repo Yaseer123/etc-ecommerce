@@ -1,48 +1,60 @@
 import { z } from "zod";
 
-// Product Schema for validation
+// Define the attribute value schema
+const attributeValueSchema = z.record(
+  z.string(),
+  z.union([z.string(), z.number(), z.boolean()]),
+);
+
 export const productSchema = z.object({
-  title: z.string().min(2, "Product name must be at least 2 characters"),
-  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  title: z.string().min(1, { message: "Title is required" }),
   shortDescription: z
     .string()
-    .min(2, "Short description must be at least 2 characters"),
-  description: z.string().nullable(),
-  price: z.number().positive("Price must be a positive number"),
-  categoryId: z.string().cuid("Invalid category ID"),
-  imageId: z.string().uuid("Invalid image ID"),
-  descriptionImageId: z
-    .string()
-    .uuid("Invalid description image ID")
-    .optional(),
-  attributes: z.record(z.string(), z.string()).optional(), // JSON specifications
-  images: z.string().array().optional(),
-  stock: z.number(),
+    .min(1, { message: "Short description is required" }),
+  slug: z.string().min(1, { message: "Slug is required" }),
+  description: z.string().optional(),
+  price: z
+    .number()
+    .min(0, { message: "Price must be greater than or equal to 0" }),
+  categoryId: z.string().optional(),
+  imageId: z.string(),
+  images: z.array(z.string()),
+  descriptionImageId: z.string().optional(),
+  attributes: z.record(z.string(), z.string()).default({}),
+  attributeValues: attributeValueSchema.optional().default({}),
+  stock: z
+    .number()
+    .min(0, { message: "Stock must be greater than or equal to 0" }),
   brand: z.string(),
 });
 
-export type Product = z.infer<typeof productSchema>;
+export type ProductInput = z.infer<typeof productSchema>;
 
-// Update Product Schema
 export const updateProductSchema = z.object({
-  id: z.string().cuid("Invalid product ID"),
-  title: z.string().min(2, "Product name must be at least 2 characters"),
-  slug: z.string().min(2, "Slug must be at least 2 characters"),
+  id: z.string().cuid(),
+  title: z.string().min(1, { message: "Title is required" }).optional(),
   shortDescription: z
     .string()
-    .min(2, "Short description must be at least 2 characters"),
-  description: z.string().nullable(),
-  price: z.number().positive("Price must be a positive number"),
-  categoryId: z.string().cuid("Invalid category ID"),
-  imageId: z.string().uuid("Invalid image ID"),
-  descriptionImageId: z
-    .string()
-    .uuid("Invalid description image ID")
+    .min(1, { message: "Short description is required" })
     .optional(),
-  attributes: z.record(z.string(), z.string()).optional(), // JSON specifications
-  images: z.string().array().optional(),
-  stock: z.number(),
-  published: z.boolean(),
+  slug: z.string().min(1, { message: "Slug is required" }).optional(),
+  description: z.string().optional(),
+  price: z
+    .number()
+    .min(0, { message: "Price must be greater than or equal to 0" })
+    .optional(),
+  categoryId: z.string().optional(),
+  images: z.array(z.string()).optional(),
+  descriptionImageId: z.string().optional(),
+  attributes: z.record(z.string(), z.string()).optional(),
+  attributeValues: attributeValueSchema.optional(),
+  stock: z
+    .number()
+    .min(0, { message: "Stock must be greater than or equal to 0" })
+    .optional(),
+  brand: z.string().optional(),
+  new: z.boolean().optional(),
+  sale: z.boolean().optional(),
 });
 
-export type UpdateProduct = z.infer<typeof updateProductSchema>;
+export type UpdateProductInput = z.infer<typeof updateProductSchema>;

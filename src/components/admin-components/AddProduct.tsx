@@ -17,7 +17,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { type CategoryTree } from "@/schemas/categorySchema";
+import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
 import RichEditor from "../rich-editor";
 import { v4 as uuid } from "uuid";
 import { Label } from "../ui/label";
@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { renameImages } from "@/app/actions/file";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import { Switch } from "../ui/switch";
 
 export default function AddProductForm() {
   const router = useRouter();
@@ -42,6 +43,10 @@ export default function AddProductForm() {
   const [imageId] = useState(uuid());
   const [descriptionImageId] = useState(uuid());
   const [categoryId, setCategoryId] = useState<string>("");
+  const [attributes, setAttributes] = useState<CategoryAttribute[]>([]);
+  const [attributeValues, setAttributeValues] = useState<
+    Record<string, string | number | boolean>
+  >({});
 
   const [showImageGallery, setShowImageGallery] = useState("");
   const { loadImages, images } = useProductImageStore();
@@ -72,6 +77,38 @@ export default function AddProductForm() {
 
     setSlug(name);
   }, [setSlug, title]);
+
+  // Initialize attributeValues when attributes change
+  useEffect(() => {
+    const initialValues: Record<string, string | number | boolean> = {};
+    attributes.forEach((attr) => {
+      // Set default values based on type
+      if (attr.type === "boolean") {
+        initialValues[attr.name] = false;
+      } else if (attr.type === "number") {
+        initialValues[attr.name] = 0;
+      } else if (
+        attr.type === "select" &&
+        attr.options &&
+        attr.options.length > 0
+      ) {
+        initialValues[attr.name] = attr.options[0] ?? "";
+      } else {
+        initialValues[attr.name] = "";
+      }
+    });
+    setAttributeValues(initialValues);
+  }, [attributes]);
+
+  const handleAttributeChange = (
+    name: string,
+    value: string | number | boolean,
+  ) => {
+    setAttributeValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const addProduct = api.product.add.useMutation({
     onSuccess: () => {
@@ -140,6 +177,7 @@ export default function AddProductForm() {
       categoryId: categoryId,
       description: content,
       attributes: specifications,
+      attributeValues: attributeValues,
     });
   };
 
@@ -181,6 +219,7 @@ export default function AddProductForm() {
         <div>
           <Label className="text-sm font-medium">Category</Label>
           <CategorySelector
+            setAttributes={setAttributes}
             setCategoryId={setCategoryId}
             categories={categories}
             placeholder="Select Category"
@@ -230,6 +269,85 @@ export default function AddProductForm() {
             />
           )}
         </div>
+
+        {/* Category Attribute Fields */}
+        {attributes.length > 0 && (
+          <div className="col-span-2 mt-4">
+            <h3 className="mb-3 text-lg font-medium">Category Attributes</h3>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {attributes.map((attr) => (
+                <div key={attr.name} className="flex flex-col gap-2">
+                  <Label htmlFor={attr.name}>
+                    {attr.name}{" "}
+                    {attr.required && <span className="text-red-500">*</span>}
+                  </Label>
+
+                  {attr.type === "text" && (
+                    <Input
+                      id={attr.name}
+                      type="text"
+                      value={attributeValues[attr.name]?.toString() ?? ""}
+                      onChange={(e) =>
+                        handleAttributeChange(attr.name, e.target.value)
+                      }
+                      required={attr.required}
+                      placeholder={`Enter ${attr.name}`}
+                    />
+                  )}
+
+                  {attr.type === "number" && (
+                    <Input
+                      id={attr.name}
+                      type="number"
+                      value={attributeValues[attr.name]?.toString() ?? "0"}
+                      onChange={(e) =>
+                        handleAttributeChange(attr.name, Number(e.target.value))
+                      }
+                      required={attr.required}
+                      placeholder={`Enter ${attr.name}`}
+                    />
+                  )}
+
+                  {attr.type === "boolean" && (
+                    <div className="flex items-center space-x-2">
+                      <Switch
+                        id={attr.name}
+                        checked={Boolean(attributeValues[attr.name])}
+                        onCheckedChange={(checked) =>
+                          handleAttributeChange(attr.name, checked)
+                        }
+                      />
+                      <Label htmlFor={attr.name}>
+                        {Boolean(attributeValues[attr.name]) ? "Yes" : "No"}
+                      </Label>
+                    </div>
+                  )}
+
+                  {attr.type === "select" && attr.options && (
+                    <Select
+                      value={attributeValues[attr.name]?.toString() ?? ""}
+                      onValueChange={(value) =>
+                        handleAttributeChange(attr.name, value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={`Select ${attr.name}`} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {attr.options.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="col-span-2">
           <Label>Specifications</Label>
           <div className="space-y-2">
@@ -269,6 +387,7 @@ export default function AddProductForm() {
 
 function CategorySelector({
   setCategoryId,
+  setAttributes,
   categories,
   placeholder,
   depth = 0, // Tracks category level
@@ -276,6 +395,7 @@ function CategorySelector({
   onCategoryChange, // Function to reset child selection
 }: {
   setCategoryId: Dispatch<SetStateAction<string>>;
+  setAttributes: Dispatch<SetStateAction<CategoryAttribute[]>>;
   categories: CategoryTree[];
   placeholder: string;
   depth?: number;
@@ -293,6 +413,29 @@ function CategorySelector({
           // Find selected category
           const category = categories.find((cat) => cat.id === value);
           setSubCategories(category?.subcategories ?? []);
+
+          // Check if the category has attributes and update the state
+          if (category?.attributes) {
+            // Handle both string and array formats for attributes
+            if (typeof category.attributes === "string") {
+              try {
+                const parsedAttributes = JSON.parse(
+                  category.attributes,
+                ) as CategoryAttribute[];
+                setAttributes(parsedAttributes);
+              } catch (error) {
+                console.error("Failed to parse category attributes:", error);
+                setAttributes([]);
+              }
+            } else if (Array.isArray(category.attributes)) {
+              setAttributes(category.attributes);
+            } else {
+              setAttributes([]);
+            }
+          } else {
+            // Reset attributes if none found
+            setAttributes([]);
+          }
 
           // Update ref with selected category at current depth
           selectedCategoriesRef.current[depth] = value;
@@ -320,6 +463,7 @@ function CategorySelector({
           <CategorySelector
             placeholder="Select subcategory"
             setCategoryId={setCategoryId}
+            setAttributes={setAttributes}
             categories={subCategories}
             depth={depth + 1}
             selectedCategoriesRef={selectedCategoriesRef}

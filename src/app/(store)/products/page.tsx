@@ -40,6 +40,31 @@ export default function ProductsPage() {
     name: string;
   } | null>(categoryId ? { id: categoryId, name: "" } : null);
 
+  // Add a dedicated query to fetch category information
+  const { data: categoryData } = api.category.getById.useQuery(
+    { id: categoryId },
+    {
+      enabled: !!categoryId,
+      staleTime: Infinity,
+      gcTime: Infinity,
+    },
+  );
+
+  // Update category name when category data is fetched
+  useEffect(() => {
+    if (categoryId && categoryData) {
+      setCategory({ id: categoryId, name: categoryData.name });
+    }
+  }, [categoryId, categoryData]);
+
+  // Define the possible types for attribute filter values
+  type AttributeFilterValue = string | string[];
+
+  // Add state for category attributes
+  const [attributeFilters, setAttributeFilters] = useState<
+    Record<string, AttributeFilterValue>
+  >({});
+
   // Fetch products with filters
   const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
     categoryId: categoryId || undefined,
@@ -48,7 +73,36 @@ export default function ProductsPage() {
     minPrice,
     maxPrice,
     sort: sortOption || undefined,
+    attributes:
+      Object.keys(attributeFilters).length > 0 ? attributeFilters : undefined,
   });
+
+  // Fetch brands based on selected category
+  const { data: categoryBrands = [] } =
+    api.product.getBrandsByCategory.useQuery(
+      {
+        categoryId: categoryId || undefined,
+      },
+      {
+        // Prevent automatic refetching when other parameters change
+        staleTime: Infinity,
+        // Force cache to remain valid unless categoryId changes
+        gcTime: Infinity,
+        // Equivalent behavior to keepPreviousData
+        placeholderData: (previousData) => previousData,
+      },
+    );
+
+  // Fetch category attributes when a category is selected
+  const { data: categoryAttributes = [] } =
+    api.product.getCategoryAttributes.useQuery(
+      { categoryId },
+      {
+        enabled: !!categoryId,
+        staleTime: Infinity,
+        gcTime: Infinity,
+      },
+    );
 
   // Fetch global price range from all products in database
   const { data: globalPriceRange } = api.product.getPriceRange.useQuery();
@@ -62,41 +116,6 @@ export default function ProductsPage() {
     min: minPrice ?? 0,
     max: maxPrice ?? 1000,
   });
-
-  // Setup initial price range based on global product prices from database
-  useEffect(() => {
-    if (globalPriceRange) {
-      const dbMinPrice = globalPriceRange.min;
-      const dbMaxPrice = globalPriceRange.max;
-
-      // Set the initial range from database values
-      setInitialPriceRange({ min: dbMinPrice, max: dbMaxPrice });
-
-      // Set current range based on URL params if present, otherwise use global range
-      setPriceRange({
-        min: minPrice ?? dbMinPrice,
-        max: maxPrice ?? dbMaxPrice,
-      });
-    }
-  }, [globalPriceRange, minPrice, maxPrice]);
-
-  // When category is loaded, update the name
-  useEffect(() => {
-    if (
-      categoryId &&
-      products &&
-      products.length > 0 &&
-      category?.id === categoryId &&
-      !category.name
-    ) {
-      const categoryItem = products.find(
-        (p) => p.categoryId === categoryId,
-      )?.category;
-      if (categoryItem?.name) {
-        setCategory({ id: categoryId, name: categoryItem.name });
-      }
-    }
-  }, [products, categoryId, category?.id, category?.name]); // Remove category from the dependency array
 
   // Update URL when filters change - use a memoized function to prevent recreation
   const updateUrlParams = useMemo(() => {
@@ -123,6 +142,114 @@ export default function ProductsPage() {
       router.replace(newUrl, { scroll: false });
     };
   }, [searchParams, router]);
+
+  // Setup initial price range based on global product prices from database
+  useEffect(() => {
+    if (globalPriceRange) {
+      const dbMinPrice = globalPriceRange.min;
+      const dbMaxPrice = globalPriceRange.max;
+
+      // Set the initial range from database values
+      setInitialPriceRange({ min: dbMinPrice, max: dbMaxPrice });
+
+      // Set current range based on URL params if present, otherwise use global range
+      setPriceRange({
+        min: minPrice ?? dbMinPrice,
+        max: maxPrice ?? dbMaxPrice,
+      });
+    }
+  }, [globalPriceRange, minPrice, maxPrice]);
+
+  // When category is loaded, update the name - keep as fallback
+  useEffect(() => {
+    if (
+      categoryId &&
+      products &&
+      products.length > 0 &&
+      category?.id === categoryId &&
+      !category.name &&
+      !categoryData // Only use this fallback if the dedicated query didn't work
+    ) {
+      const categoryItem = products.find(
+        (p) => p.categoryId === categoryId,
+      )?.category;
+      if (categoryItem?.name) {
+        setCategory({ id: categoryId, name: categoryItem.name });
+      }
+    }
+
+    // Check if current brand exists in the new category
+    if (
+      categoryId &&
+      categoryBrands &&
+      brand &&
+      !categoryBrands.includes(brand.toLowerCase())
+    ) {
+      setBrand(null);
+      updateUrlParams({ brand: null });
+    }
+
+    // If category is cleared, also clear brand selection
+    if (!categoryId && brand) {
+      setBrand(null);
+      updateUrlParams({ brand: null });
+    }
+  }, [
+    products,
+    categoryId,
+    category?.id,
+    category?.name,
+    categoryBrands,
+    brand,
+    updateUrlParams,
+    categoryData,
+  ]);
+
+  // Initialize attribute filters from URL on category change
+  useEffect(() => {
+    if (categoryId && categoryAttributes.length > 0) {
+      const newFilters: Record<string, string | string[]> = {};
+      let hasFilters = false;
+
+      // Look for attributes in URL params
+      categoryAttributes.forEach((attr) => {
+        const paramValue = searchParams?.get(attr.name);
+        if (paramValue) {
+          hasFilters = true;
+
+          // All attributes are now "select" type only
+          if (paramValue.includes(",")) {
+            // Handle multiple values (array)
+            newFilters[attr.name] = paramValue.split(",");
+          } else {
+            newFilters[attr.name] = paramValue;
+          }
+        }
+      });
+
+      // Only update state if there are new filters and they're different from current filters
+      if (
+        hasFilters &&
+        JSON.stringify(newFilters) !== JSON.stringify(attributeFilters)
+      ) {
+        setAttributeFilters(newFilters);
+      }
+    } else if (!categoryId && Object.keys(attributeFilters).length > 0) {
+      // Clear attribute filters when category is removed
+      setAttributeFilters({});
+    }
+  }, [categoryId, categoryAttributes, searchParams, attributeFilters]);
+
+  // Separate effect specifically for clearing filters when category changes
+  useEffect(() => {
+    // When category changes, clear attribute filters
+    if (!categoryId) {
+      // Only clear if there are filters to clear
+      if (Object.keys(attributeFilters).length > 0) {
+        setAttributeFilters({});
+      }
+    }
+  }, [attributeFilters, categoryId]);
 
   // Filter handlers
   const handleCategory = (categoryId: string, categoryName: string) => {
@@ -169,6 +296,58 @@ export default function ProductsPage() {
     updateUrlParams({ brand: updatedBrand });
   };
 
+  const handleAttributeChange = (
+    name: string,
+    value: string | string[] | null,
+  ) => {
+    // Clone the current filters
+    const updatedFilters = { ...attributeFilters };
+
+    if (value === null) {
+      // If the attribute already doesn't exist, no need to update
+      if (!(name in updatedFilters)) {
+        return;
+      }
+
+      // Remove the filter
+      delete updatedFilters[name];
+    } else {
+      // If the value is the same as current, no need to update
+      if (JSON.stringify(updatedFilters[name]) === JSON.stringify(value)) {
+        return;
+      }
+
+      // Add/update the filter
+      updatedFilters[name] = value;
+    }
+
+    // Update state
+    setAttributeFilters(updatedFilters);
+
+    // Update URL parameter
+    if (value === null) {
+      updateUrlParams({ [name]: null });
+    } else {
+      const paramValue = Array.isArray(value) ? value.join(",") : value;
+      updateUrlParams({ [name]: paramValue });
+    }
+  };
+
+  const clearAttributeFilters = () => {
+    // Generate parameters to clear all attribute URL parameters
+    const attrParams: Record<string, null> = {};
+    Object.keys(attributeFilters).forEach((key) => {
+      attrParams[key] = null;
+    });
+
+    // Clear attribute filter state
+    if (Object.keys(attributeFilters).length > 0) {
+      setAttributeFilters({});
+    }
+
+    return attrParams;
+  };
+
   const handleClearAll = () => {
     setBrand(null);
     setPriceRange(initialPriceRange);
@@ -176,7 +355,10 @@ export default function ProductsPage() {
     setShowOnlySale(false);
     setCurrentSortOption("");
 
-    // Clear all filter params
+    // Clear attribute filters and get URL parameters to reset
+    const attrParams = clearAttributeFilters();
+
+    // Clear all filter params, including attribute filters
     updateUrlParams({
       category: null,
       brand: null,
@@ -185,6 +367,7 @@ export default function ProductsPage() {
       sale: null,
       sort: null,
       page: "0",
+      ...attrParams,
     });
   };
 
@@ -204,18 +387,10 @@ export default function ProductsPage() {
     return products?.slice(offset, offset + productsPerPage) ?? [];
   }, [products, offset, productsPerPage]);
 
-  // Extract unique brands from products
-  const uniqueBrands = useMemo(() => {
-    if (!products) return [];
-    return Array.from(
-      new Set(products.map((item) => item.brand.toLowerCase())),
-    );
-  }, [products]);
-
-  // Count products per brand
+  // Count products per brand - now using the category-filtered brands
   const brandCounts = useMemo(() => {
     if (!products) return {};
-    return uniqueBrands.reduce(
+    return categoryBrands.reduce(
       (acc, brand) => {
         acc[brand] = products.filter(
           (item) => item.brand.toLowerCase() === brand,
@@ -224,7 +399,7 @@ export default function ProductsPage() {
       },
       {} as Record<string, number>,
     );
-  }, [uniqueBrands, products]);
+  }, [categoryBrands, products]);
 
   const breadcrumbItems = [
     {
@@ -278,43 +453,135 @@ export default function ProductsPage() {
                 </div>
               </div>
 
-              <div className="filter-brand mt-8">
-                <div className="heading6">Brands</div>
-                <div className="list-brand mt-4">
-                  {uniqueBrands.map((item, index) => (
-                    <div
-                      key={index}
-                      className="brand-item flex items-center justify-between"
-                    >
-                      <div className="left flex cursor-pointer items-center">
-                        <div className="block-input">
-                          <input
-                            type="checkbox"
-                            name={item}
-                            id={item}
-                            checked={brand === item}
-                            onChange={() => handleBrand(item)}
-                          />
-                          <CheckSquare
-                            size={20}
-                            weight="fill"
-                            className="icon-checkbox"
-                          />
-                        </div>
-                        <label
-                          htmlFor={item}
-                          className="brand-name cursor-pointer pl-2 capitalize"
+              {/* Only show brands filter when a category is selected */}
+              {category && categoryId && (
+                <div className="filter-brand mt-8">
+                  <div className="heading6">Brands</div>
+                  <div className="list-brand mt-4">
+                    {isLoading ? (
+                      <div className="my-2 text-secondary">
+                        Loading brands...
+                      </div>
+                    ) : categoryBrands.length === 0 ? (
+                      <div className="my-2 text-secondary">
+                        No brands available
+                      </div>
+                    ) : (
+                      categoryBrands.map((item, index) => (
+                        <div
+                          key={index}
+                          className="brand-item flex items-center justify-between"
                         >
-                          {item}
-                        </label>
-                      </div>
-                      <div className="text-secondary2">
-                        ({brandCounts[item] ?? 0})
-                      </div>
-                    </div>
-                  ))}
+                          <div className="left flex cursor-pointer items-center">
+                            <div className="block-input">
+                              <input
+                                type="checkbox"
+                                name={item}
+                                id={item}
+                                checked={brand === item}
+                                onChange={() => handleBrand(item)}
+                              />
+                              <CheckSquare
+                                size={20}
+                                weight="fill"
+                                className="icon-checkbox"
+                              />
+                            </div>
+                            <label
+                              htmlFor={item}
+                              className="brand-name cursor-pointer pl-2 capitalize"
+                            >
+                              {item}
+                            </label>
+                          </div>
+                          <div className="text-secondary2">
+                            ({brandCounts[item] ?? 0})
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
+
+              {/* Category attribute filters - simplified for select-only attributes */}
+              {category && categoryId && categoryAttributes.length > 0 && (
+                <div className="filter-attributes mt-8 border-t border-line pt-8">
+                  <div className="heading6">Specifications</div>
+
+                  {categoryAttributes.map((attr, index) => {
+                    // Skip if no available options
+                    const options = attr.options || attr.availableValues || [];
+                    if (options.length === 0) {
+                      return null;
+                    }
+
+                    // Format attribute name for display
+                    const displayName = attr.name
+                      .replace(/_/g, " ")
+                      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+                    return (
+                      <div
+                        key={index}
+                        className="filter-attribute border-b border-line py-4"
+                      >
+                        <div className="caption1 mb-3 font-medium">
+                          {displayName}
+                        </div>
+
+                        {/* All attributes are select type now */}
+                        <div className="flex flex-col gap-2">
+                          {options.map((option, idx) => (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between"
+                            >
+                              <div className="left flex cursor-pointer items-center">
+                                <div className="block-input">
+                                  <input
+                                    type="checkbox"
+                                    id={`${attr.name}-${option}`}
+                                    checked={
+                                      Array.isArray(attributeFilters[attr.name])
+                                        ? attributeFilters[attr.name]?.includes(
+                                            option,
+                                          )
+                                        : attributeFilters[attr.name] === option
+                                    }
+                                    onChange={() => {
+                                      // Single-select behavior
+                                      const newValue =
+                                        attributeFilters[attr.name] === option
+                                          ? null
+                                          : option;
+                                      handleAttributeChange(
+                                        attr.name,
+                                        newValue,
+                                      );
+                                    }}
+                                  />
+                                  <CheckSquare
+                                    size={20}
+                                    weight="fill"
+                                    className="icon-checkbox"
+                                  />
+                                </div>
+                                <label
+                                  htmlFor={`${attr.name}-${option}`}
+                                  className="cursor-pointer pl-2 capitalize"
+                                >
+                                  {option}
+                                </label>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Main content area */}
@@ -363,18 +630,19 @@ export default function ProductsPage() {
                 </div>
               </div>
 
-              <div className="list-filtered mt-4 flex items-center gap-3">
+              <div className="list-filtered mt-4 flex flex-wrap items-center gap-3">
                 <div className="total-product">
                   {totalProducts}
                   <span className="pl-1 text-secondary">Products Found</span>
                 </div>
                 {(category ??
                   brand ??
-                  (priceRange.min !== initialPriceRange.min ||
+                  (Object.keys(attributeFilters).length > 0 ||
+                    priceRange.min !== initialPriceRange.min ||
                     priceRange.max !== initialPriceRange.max ||
                     showOnlySale)) && (
                   <>
-                    <div className="list flex items-center gap-3">
+                    <div className="list flex flex-wrap items-center gap-3">
                       <div className="h-4 w-px bg-line"></div>
                       {category && (
                         <div
@@ -427,6 +695,36 @@ export default function ProductsPage() {
                           <span>On Sale</span>
                         </div>
                       )}
+                      {/* Attribute filter pills */}
+                      {Object.entries(attributeFilters).map(([key, value]) => {
+                        // Format key for display
+                        const displayKey = key
+                          .replace(/_/g, " ")
+                          .replace(/\b\w/g, (c) => c.toUpperCase());
+
+                        // Format value for display
+                        const displayValue = Array.isArray(value)
+                          ? value.join(", ")
+                          : typeof value === "boolean"
+                            ? "Yes"
+                            : String(value);
+
+                        return (
+                          <div
+                            key={key}
+                            className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1"
+                            onClick={() => {
+                              // Use the handler directly without modifying state again
+                              handleAttributeChange(key, null);
+                            }}
+                          >
+                            <X className="cursor-pointer" />
+                            <span>
+                              {displayKey}: {displayValue}
+                            </span>
+                          </div>
+                        );
+                      })}
                     </div>
                     <div
                       className="clear-btn flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"

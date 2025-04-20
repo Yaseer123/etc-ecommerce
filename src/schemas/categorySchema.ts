@@ -9,8 +9,8 @@ export const newCategorySchema = z.object({
 
 export const categoryAttributeSchema = z.object({
   name: z.string(),
-  type: z.enum(["text", "number", "boolean", "select"]),
-  options: z.array(z.string()).optional(),
+  type: z.literal("select"), // Only allow "select" type
+  options: z.array(z.string()).min(1, "At least one option is required"),
   required: z.boolean().default(false),
 });
 
