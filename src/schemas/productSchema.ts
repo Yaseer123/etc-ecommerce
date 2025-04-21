@@ -55,6 +55,7 @@ export const updateProductSchema = z.object({
   brand: z.string().optional(),
   new: z.boolean().optional(),
   sale: z.boolean().optional(),
+  published: z.boolean().optional(),
 });
 
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;

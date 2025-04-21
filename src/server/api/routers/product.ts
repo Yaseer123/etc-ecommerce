@@ -267,7 +267,6 @@ export const productRouter = createTRPCRouter({
     // Merge specifications and attributeValues into the attributes JSON field
     const attributesData = {
       ...input.attributes,
-      categoryAttributes: input.attributeValues || {},
     };
 
     const product = await ctx.db.product.create({

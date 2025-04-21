@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+
 import { toast } from "sonner";
 import { api } from "@/trpc/react";
 import { useEffect, useRef, useState } from "react";
@@ -14,6 +15,75 @@ import { Textarea } from "../ui/textarea";
 import PreSelectedCategory from "./PreSelectedCategory";
 import { renameImages } from "@/app/actions/file";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
+import { CSS } from "@dnd-kit/utilities";
+import { GripVertical } from "lucide-react";
+
+// Sortable item component for specifications
+function SortableSpecificationItem({
+  id,
+  spec,
+  index,
+  onRemove,
+  onChange,
+}: {
+  id: string;
+  spec: { key: string; value: string };
+  index: number;
+  onRemove: (index: number) => void;
+  onChange: (index: number, field: "key" | "value", value: string) => void;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="mb-2 flex items-center gap-2 rounded-md bg-gray-50 p-2"
+    >
+      <div {...attributes} {...listeners} className="cursor-grab touch-none">
+        <GripVertical className="h-5 w-5 text-gray-400" />
+      </div>
+      <Input
+        type="text"
+        placeholder="Key"
+        value={spec.key}
+        onChange={(e) => onChange(index, "key", e.target.value)}
+      />
+      <Input
+        type="text"
+        placeholder="Value"
+        value={spec.value}
+        onChange={(e) => onChange(index, "value", e.target.value)}
+      />
+      <Button variant="destructive" onClick={() => onRemove(index)}>
+        Remove
+      </Button>
+    </div>
+  );
+}
 
 export default function EditProductForm({ productId }: { productId: string }) {
   const [product] = api.product.getProductByIdAdmin.useSuspenseQuery({
@@ -36,15 +106,29 @@ export default function EditProductForm({ productId }: { productId: string }) {
     product?.categoryId ?? "",
   );
   const [stock, setStock] = useState(product?.stock ?? 0);
+  const [brand, setBrand] = useState(product?.brand ?? "");
   const [published, setPublished] = useState(product?.published ?? false);
 
-  const [specifications, setSpecifications] = useState<Record<string, string>>(
-    (product?.attributes as Record<string, string>) ?? {},
-  );
+  // Convert specifications object to array format for drag and drop
+  const [specifications, setSpecifications] = useState<
+    Array<{ key: string; value: string }>
+  >(() => {
+    const attrs = product?.attributes as Record<string, string> | undefined;
+    return attrs
+      ? Object.entries(attrs).map(([key, value]) => ({ key, value }))
+      : [];
+  });
 
   const { loadImages, images } = useProductImageStore();
-
   const [showImageGallery, setShowImageGallery] = useState("");
+
+  // Configure sensors for drag-and-drop
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
 
   useEffect(() => {
     void (async () => {
@@ -84,46 +168,65 @@ export default function EditProductForm({ productId }: { productId: string }) {
   });
 
   const handleAddSpecification = () => {
-    setSpecifications((prev) => ({
-      ...prev,
-      "": "", // Add an empty key-value pair
-    }));
+    setSpecifications((prev) => [...prev, { key: "", value: "" }]);
   };
 
   const handleSpecificationChange = (
-    key: string,
+    index: number,
+    fieldName: "key" | "value",
     value: string,
-    isKey: boolean,
   ) => {
     setSpecifications((prev) => {
-      const updated = { ...prev };
-      if (isKey) {
-        // Handle key change
-        const existingValue = updated[key] ?? "";
-        delete updated[key];
-        updated[value] = existingValue;
-      } else {
-        // Handle value change
-        updated[key] = value;
-      }
+      const updated = [...prev];
+      const currentSpec = updated[index];
+      if (!currentSpec) return updated;
+
+      updated[index] = {
+        key: fieldName === "key" ? value : currentSpec.key,
+        value: fieldName === "value" ? value : currentSpec.value,
+      };
       return updated;
     });
   };
 
-  const handleRemoveSpecification = (key: string) => {
-    setSpecifications((prev) => {
-      const updated = { ...prev };
-      delete updated[key];
-      return updated;
-    });
+  const handleRemoveSpecification = (index: number) => {
+    setSpecifications((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id) {
+      setSpecifications((items) => {
+        const oldIndex = items.findIndex(
+          (_, index) => `spec-${index}` === active.id,
+        );
+        const newIndex = items.findIndex(
+          (_, index) => `spec-${index}` === over.id,
+        );
+
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
   };
 
   const handleSubmit = async (content: string) => {
     setPending(true);
     await renameImages(images);
+
+    // Convert specifications array back to object for submission
+    const specsObject = specifications.reduce(
+      (acc, { key, value }) => {
+        if (key) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+
     updateProduct.mutate({
       id: productId,
-      imageId,
       images: images.map((image) => image.src),
       descriptionImageId,
       title,
@@ -132,9 +235,10 @@ export default function EditProductForm({ productId }: { productId: string }) {
       slug,
       categoryId: categoryId,
       description: content,
-      attributes: specifications,
-      stock, 
-      published, 
+      attributes: specsObject,
+      stock,
+      brand,
+      published,
     });
   };
 
@@ -201,9 +305,22 @@ export default function EditProductForm({ productId }: { productId: string }) {
           />
         </div>
         <div>
-          <Label>Published</Label>
+          <Label>Brand</Label>
           <Input
+            type="text"
+            placeholder="Brand"
+            value={brand}
+            onChange={(e) => setBrand(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <Label htmlFor="published" className="cursor-pointer">
+            Published
+          </Label>
+          <Input
+            id="published"
             type="checkbox"
+            className="h-4 w-4"
             checked={published}
             onChange={(e) => setPublished(e.target.checked)}
           />
@@ -223,32 +340,28 @@ export default function EditProductForm({ productId }: { productId: string }) {
         <div className="col-span-2">
           <Label>Specifications</Label>
           <div className="space-y-2">
-            {Object.entries(specifications).map(([key, value], index) => (
-              <div key={index} className="flex items-center gap-2">
-                <Input
-                  type="text"
-                  placeholder="Key"
-                  value={key}
-                  onChange={(e) =>
-                    handleSpecificationChange(key, e.target.value, true)
-                  }
-                />
-                <Input
-                  type="text"
-                  placeholder="Value"
-                  value={value}
-                  onChange={(e) =>
-                    handleSpecificationChange(key, e.target.value, false)
-                  }
-                />
-                <Button
-                  variant="destructive"
-                  onClick={() => handleRemoveSpecification(key)}
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis]}
+            >
+              <SortableContext
+                items={specifications.map((_, index) => `spec-${index}`)}
+                strategy={verticalListSortingStrategy}
+              >
+                {specifications.map((spec, index) => (
+                  <SortableSpecificationItem
+                    key={`spec-${index}`}
+                    id={`spec-${index}`}
+                    spec={spec}
+                    index={index}
+                    onChange={handleSpecificationChange}
+                    onRemove={handleRemoveSpecification}
+                  />
+                ))}
+              </SortableContext>
+            </DndContext>
             <Button onClick={handleAddSpecification}>Add Specification</Button>
           </div>
         </div>
