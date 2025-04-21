@@ -1,10 +1,6 @@
 import React from "react";
-import Link from "next/link";
-import {
-  CaretRight,
-  MagnifyingGlass,
-  X,
-} from "@phosphor-icons/react/dist/ssr";
+import { useRouter } from "next/navigation";
+import { CaretRight, MagnifyingGlass, X } from "@phosphor-icons/react/dist/ssr";
 
 interface MobileMenuProps {
   openMenuMobile: boolean;
@@ -15,6 +11,14 @@ const MobileMenu = ({
   openMenuMobile,
   handleMenuMobile,
 }: MobileMenuProps) => {
+  const router = useRouter();
+
+  // Function to handle navigation and close menu
+  const handleNavigation = (path: string) => {
+    handleMenuMobile(); // First close the menu
+    router.push(path); // Then navigate to the path
+  };
+
   return (
     <div id="menu-mobile" className={`${openMenuMobile ? "open" : ""}`}>
       <div className="menu-w-full mx-auto h-full !max-w-[1322px] bg-white px-4">
@@ -27,12 +31,12 @@ const MobileMenu = ({
               >
                 <X size={14} />
               </div>
-              <Link
-                href={"/"}
-                className="logo text-center text-3xl font-semibold"
+              <div
+                onClick={() => handleNavigation("/")}
+                className="logo cursor-pointer text-center text-3xl font-semibold"
               >
                 Rinors
-              </Link>
+              </div>
             </div>
             <div className="form-search relative mt-2">
               <MagnifyingGlass
@@ -48,50 +52,49 @@ const MobileMenu = ({
             <div className="list-nav mt-6">
               <ul>
                 <li>
-                  <Link
-                    href="/products"
-                    className="mt-5 flex items-center justify-between text-xl font-semibold"
+                  <div
+                    onClick={() => handleNavigation("/products")}
+                    className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Products
                     <span className="text-right">
                       <CaretRight size={20} />
                     </span>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link
-                    href="/blog"
-                    className="mt-5 flex items-center justify-between text-xl font-semibold"
+                  <div
+                    onClick={() => handleNavigation("/blog")}
+                    className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Blog
                     <span className="text-right">
                       <CaretRight size={20} />
                     </span>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link
-                    href="/about"
-                    className="mt-5 flex items-center justify-between text-xl font-semibold"
+                  <div
+                    onClick={() => handleNavigation("/about")}
+                    className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     About Us
                     <span className="text-right">
                       <CaretRight size={20} />
                     </span>
-                  </Link>
+                  </div>
                 </li>
                 <li>
-                  <Link
-                    href="/contact"
-                    className="mt-5 flex items-center justify-between text-xl font-semibold"
+                  <div
+                    onClick={() => handleNavigation("/contact")}
+                    className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Contact Us
                     <span className="text-right">
                       <CaretRight size={20} />
                     </span>
-                  </Link>
+                  </div>
                 </li>
-                
               </ul>
             </div>
           </div>
