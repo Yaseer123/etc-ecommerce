@@ -1,29 +1,52 @@
-"use client"
+"use client";
 
 import React from "react";
-import parse from "html-react-parser";
 import DOMPurify from "dompurify";
+import parse, {
+  type HTMLReactParserOptions,
+  Element,
+} from "html-react-parser";
 
-type ParseContentProps = { content?: string | null };
+interface ParseContentProps {
+  content: string | null;
+}
 
-const ParseContent: React.FC<ParseContentProps> = ({ content }) => (
-  <div className="body1 prose prose-sm mt-3 outline-none sm:prose-base lg:prose-lg xl:prose-2xl">
-    {content && parse(DOMPurify.sanitize(content))}
-  </div>
-);
+const ParseContent: React.FC<ParseContentProps> = ({ content }) => {
+  if (!content) return null;
+
+  const options: HTMLReactParserOptions = {
+    replace: (domNode) => {
+      if (domNode instanceof Element && domNode.name === "iframe") {
+        const { src, width, height, allow, allowfullscreen } =
+          domNode.attribs;
+
+        return (
+          <div className="video-container relative my-4 w-full pt-[56.25%]">
+            <iframe
+              src={src}
+              width={width ?? "100%"}
+              height={height ?? "100%"}
+              allow={
+                allow ??
+                "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              }
+              allowFullScreen={allowfullscreen !== undefined}
+              className="absolute left-0 top-0 h-full w-full rounded-lg"
+            />
+          </div>
+        );
+      }
+    },
+  };
+
+  const sanitizedContent = DOMPurify.sanitize(content, {
+    ADD_TAGS: ["iframe"],
+    ADD_ATTR: ["allow", "allowfullscreen", "frameborder", "scrolling"],
+  });
+
+  return (
+    <div className="prose max-w-none">{parse(sanitizedContent, options)}</div>
+  );
+};
 
 export default ParseContent;
-
-// import DOMPurify from "dompurify";
-
-// export default function ParseContent({content}: {content: string}) {
-//     return (
-//         <div
-//                 className="body1 prose prose-sm mt-3 outline-none sm:prose-base lg:prose-lg xl:prose-2xl"
-//                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-//                 dangerouslySetInnerHTML={{
-//                   __html: DOMPurify.sanitize(content),
-//                 }}
-//               />
-//     );
-// }

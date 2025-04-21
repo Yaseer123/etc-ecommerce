@@ -27,7 +27,6 @@ import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import { renameImages } from "@/app/actions/file";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
-import { Switch } from "../ui/switch";
 
 export default function AddProductForm() {
   const router = useRouter();
@@ -83,15 +82,7 @@ export default function AddProductForm() {
     const initialValues: Record<string, string | number | boolean> = {};
     attributes.forEach((attr) => {
       // Set default values based on type
-      if (attr.type === "boolean") {
-        initialValues[attr.name] = false;
-      } else if (attr.type === "number") {
-        initialValues[attr.name] = 0;
-      } else if (
-        attr.type === "select" &&
-        attr.options &&
-        attr.options.length > 0
-      ) {
+      if (attr.type === "select" && attr.options && attr.options.length > 0) {
         initialValues[attr.name] = attr.options[0] ?? "";
       } else {
         initialValues[attr.name] = "";
@@ -281,47 +272,6 @@ export default function AddProductForm() {
                     {attr.name}{" "}
                     {attr.required && <span className="text-red-500">*</span>}
                   </Label>
-
-                  {attr.type === "text" && (
-                    <Input
-                      id={attr.name}
-                      type="text"
-                      value={attributeValues[attr.name]?.toString() ?? ""}
-                      onChange={(e) =>
-                        handleAttributeChange(attr.name, e.target.value)
-                      }
-                      required={attr.required}
-                      placeholder={`Enter ${attr.name}`}
-                    />
-                  )}
-
-                  {attr.type === "number" && (
-                    <Input
-                      id={attr.name}
-                      type="number"
-                      value={attributeValues[attr.name]?.toString() ?? "0"}
-                      onChange={(e) =>
-                        handleAttributeChange(attr.name, Number(e.target.value))
-                      }
-                      required={attr.required}
-                      placeholder={`Enter ${attr.name}`}
-                    />
-                  )}
-
-                  {attr.type === "boolean" && (
-                    <div className="flex items-center space-x-2">
-                      <Switch
-                        id={attr.name}
-                        checked={Boolean(attributeValues[attr.name])}
-                        onCheckedChange={(checked) =>
-                          handleAttributeChange(attr.name, checked)
-                        }
-                      />
-                      <Label htmlFor={attr.name}>
-                        {Boolean(attributeValues[attr.name]) ? "Yes" : "No"}
-                      </Label>
-                    </div>
-                  )}
 
                   {attr.type === "select" && attr.options && (
                     <Select

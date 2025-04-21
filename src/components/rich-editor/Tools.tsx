@@ -1,4 +1,4 @@
-import { type ChangeEventHandler, type FC } from "react";
+import { type ChangeEventHandler, type FC, useState, useEffect } from "react";
 import {
   BiAlignLeft,
   BiAlignMiddle,
@@ -12,15 +12,18 @@ import {
   BiListUl,
   BiStrikethrough,
   BiUnderline,
+  BiVideo,
 } from "react-icons/bi";
 import ToolButton from "./ToolButton";
 import { BubbleMenu, type ChainedCommands, type Editor } from "@tiptap/react";
 import LinkForm from "./LinkForm";
 import LinkEditForm from "./LinkEditForm";
+import YoutubeDialog from "./YoutubeDialog";
 
 interface Props {
   editor: Editor | null;
   onImageSelection: () => void;
+  onYoutubeInsert: (url: string) => void;
 }
 
 const tools = [
@@ -72,6 +75,10 @@ const tools = [
     task: "image",
     icon: <BiImageAlt size={20} />,
   },
+  {
+    task: "youtube",
+    icon: <BiVideo size={20} />,
+  },
 ] as const;
 
 const headingOptions = [
@@ -106,7 +113,33 @@ const chainMethods = (
 type TaskType = (typeof tools)[number]["task"];
 type HeadingType = (typeof headingOptions)[number]["task"];
 type FontSizeType = (typeof fontSizeOptions)[number]["task"];
-const Tools: FC<Props> = ({ editor, onImageSelection }) => {
+const Tools: FC<Props> = ({ editor, onImageSelection, onYoutubeInsert }) => {
+  const [showYoutubeDialog, setShowYoutubeDialog] = useState(false);
+
+  // Add keyboard shortcut to delete selected YouTube videos
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check if a YouTube node is selected and Delete/Backspace is pressed
+      if (
+        (event.key === "Delete" || event.key === "Backspace") &&
+        editor.isActive("youtube")
+      ) {
+        editor.commands.deleteSelection();
+        event.preventDefault();
+      }
+    };
+
+    // Add the event listener to the editor's DOM element
+    const editorElement = editor.view.dom;
+    editorElement.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      editorElement.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [editor]);
+
   const handleOnClick = (task: TaskType) => {
     switch (task) {
       case "bold":
@@ -133,6 +166,8 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
         return chainMethods(editor, (chain) => chain.setTextAlign("right"));
       case "image":
         return onImageSelection();
+      case "youtube":
+        return setShowYoutubeDialog(true);
     }
   };
 
@@ -249,8 +284,6 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
           initialState={getInitialLink()}
           onSubmit={handleLinkSubmission}
         />
-        {/* <div className="bg-white w-96 p-2 rounded shadow-md z-50">
-        </div> */}
       </BubbleMenu>
 
       {tools.map(({ icon, task }) => {
@@ -266,6 +299,12 @@ const Tools: FC<Props> = ({ editor, onImageSelection }) => {
           </ToolButton>
         );
       })}
+
+      <YoutubeDialog
+        isOpen={showYoutubeDialog}
+        onClose={() => setShowYoutubeDialog(false)}
+        onSubmit={onYoutubeInsert}
+      />
     </div>
   );
 };

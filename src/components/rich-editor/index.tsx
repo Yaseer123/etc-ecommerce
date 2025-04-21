@@ -13,6 +13,7 @@ import Link from "@tiptap/extension-link";
 import { Button } from "../ui/button";
 import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./extensions/fontSize";
+import { Youtube } from "./extensions/youtube";
 import { useImageStore } from "@/context/admin-context/ImageProvider";
 
 const extensions = [
@@ -39,7 +40,14 @@ const extensions = [
     placeholder: "Write something...",
   }),
   TextStyle,
-  FontSize.configure({ defaultSize: "14pt" }), // Set default size here,
+  FontSize.configure({ defaultSize: "14pt" }), // Set default size here
+  Youtube.configure({
+    width: 560,
+    height: 315,
+    HTMLAttributes: {
+      class: "w-full aspect-video mx-auto my-4",
+    },
+  }),
 ];
 
 export default function RichEditor({
@@ -70,6 +78,7 @@ export default function RichEditor({
     })();
   }, [loadImages, imageId]);
 
+  // Enhanced editor setup
   const editor = useEditor({
     extensions,
     immediatelyRender: false,
@@ -80,6 +89,10 @@ export default function RichEditor({
       },
     },
     content: content,
+    onUpdate: ({ editor }) => {
+      // Log content for debugging
+      console.log("Editor content updated:", editor.getHTML());
+    },
   });
 
   const onImageSelect = (image: string) => {
@@ -90,12 +103,60 @@ export default function RichEditor({
       .run();
   };
 
+  const onYoutubeVideoAdd = (url: string) => {
+    editor
+      ?.chain()
+      .focus()
+      .setYoutubeVideo({
+        src: url,
+      })
+      .run();
+  };
+
   const handleShowImageGallery = (state: string) => {
     setShowImageGallery(state);
   };
 
+  // Enhanced submit handler to ensure YouTube videos are preserved
+  const handleFormSubmit = () => {
+    if (!editor) return;
+
+    const htmlContent = editor.getHTML();
+    console.log("Submitting content:", htmlContent);
+    handleSubmit(htmlContent);
+  };
+
   return (
     <>
+      <style jsx global>{`
+        .youtube-video-wrapper {
+          position: relative;
+          width: 100%;
+          padding-bottom: 56.25%; /* 16:9 aspect ratio for videos */
+          height: 0;
+          margin: 1rem 0;
+        }
+
+        .youtube-video-iframe {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          border: none;
+        }
+
+        .ProseMirror-selectednode .youtube-video-wrapper::after {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.1);
+          pointer-events: none;
+        }
+      `}</style>
       <div className="flex flex-col space-y-4">
         {children}
         <div className="flex min-h-[65vh] flex-col items-center justify-center space-y-4 rounded-md border p-5">
@@ -103,6 +164,7 @@ export default function RichEditor({
             <Tools
               editor={editor}
               onImageSelection={() => handleShowImageGallery(imageId)}
+              onYoutubeInsert={onYoutubeVideoAdd}
             />
           </div>
           <div className="mr-auto flex-1 text-sm">
@@ -110,13 +172,7 @@ export default function RichEditor({
           </div>
         </div>
         <div className="p-4 text-right">
-          <Button
-            onClick={() => {
-              handleSubmit(editor?.getHTML() ?? "");
-              // editor?.commands.clearContent();
-            }}
-            disabled={pending}
-          >
+          <Button onClick={handleFormSubmit} disabled={pending}>
             {pending ? "Submitting..." : submitButtonText}
           </Button>
         </div>
