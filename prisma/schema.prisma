@@ -65,28 +65,29 @@ model Tag {
 }
 
 model Product {
-    id                 String    @id @default(cuid())
-    title              String
-    new                Boolean   @default(true)
-    sale               Boolean   @default(false)
-    rate               Float     @default(0)
-    slug               String
-    shortDescription   String
-    description        String?
-    published          Boolean   @default(false)
-    price              Float
-    originPrice        Float
-    stock              Int
-    brand              String
-    sold               Int       @default(0)
-    categoryId         String? // Foreign key to Category
-    category           Category? @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
-    createdAt          DateTime  @default(now())
-    updatedAt          DateTime  @updatedAt
-    imageId            String
-    images             String[]
-    descriptionImageId String?
-    attributes         Json      @default("{}") // Store dynamic attributes as JSON
+    id                    String    @id @default(cuid())
+    title                 String
+    new                   Boolean   @default(true)
+    sale                  Boolean   @default(false)
+    rate                  Float     @default(0)
+    slug                  String
+    shortDescription      String
+    description           String?
+    published             Boolean   @default(false)
+    price                 Float
+    originPrice           Float
+    stock                 Int
+    brand                 String
+    sold                  Int       @default(0)
+    estimatedDeliveryTime Int? // Changed to Int to represent days
+    categoryId            String? // Foreign key to Category
+    category              Category? @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
+    createdAt             DateTime  @default(now())
+    updatedAt             DateTime  @updatedAt
+    imageId               String
+    images                String[]
+    descriptionImageId    String?
+    attributes            Json      @default("{}") // Store dynamic attributes as JSON
 
     reviews   Review[]
     orders    OrderItem[]
@@ -253,7 +254,7 @@ model FaqItem {
     answer     String      @db.Text
     order      Int         @default(0)
     createdAt  DateTime    @default(now())
-    updatedAt  DateTime    @updatedAt
+    updatedAt  DateTime    @default(now())
     category   FaqCategory @relation(fields: [categoryId], references: [id])
 }
 

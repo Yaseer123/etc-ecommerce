@@ -13,6 +13,7 @@ export const productSchema = z.object({
     .min(1, { message: "Short description is required" }),
   slug: z.string().min(1, { message: "Slug is required" }),
   description: z.string().optional(),
+  estimatedDeliveryTime: z.number().int().positive().optional(),
   price: z
     .number()
     .min(0, { message: "Price must be greater than or equal to 0" }),
@@ -39,6 +40,7 @@ export const updateProductSchema = z.object({
     .optional(),
   slug: z.string().min(1, { message: "Slug is required" }).optional(),
   description: z.string().optional(),
+  estimatedDeliveryTime: z.number().int().positive().optional(),
   price: z
     .number()
     .min(0, { message: "Price must be greater than or equal to 0" })

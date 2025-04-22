@@ -107,6 +107,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
   );
   const [stock, setStock] = useState(product?.stock ?? 0);
   const [brand, setBrand] = useState(product?.brand ?? "");
+  const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState<
+    number | undefined
+  >(product?.estimatedDeliveryTime ?? undefined);
   const [published, setPublished] = useState(product?.published ?? false);
 
   // Convert specifications object to array format for drag and drop
@@ -239,6 +242,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       stock,
       brand,
       published,
+      estimatedDeliveryTime: estimatedDeliveryTime,
     });
   };
 
@@ -311,6 +315,20 @@ export default function EditProductForm({ productId }: { productId: string }) {
             placeholder="Brand"
             value={brand}
             onChange={(e) => setBrand(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label>Estimated Delivery Time (Days)</Label>
+          <Input
+            type="number"
+            placeholder="Delivery Time in Days"
+            min="1"
+            value={estimatedDeliveryTime ?? ""}
+            onChange={(e) =>
+              setEstimatedDeliveryTime(
+                e.target.value ? Number(e.target.value) : undefined,
+              )
+            }
           />
         </div>
         <div className="flex items-center gap-2">

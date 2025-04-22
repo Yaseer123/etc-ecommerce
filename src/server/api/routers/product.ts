@@ -283,6 +283,7 @@ export const productRouter = createTRPCRouter({
         stock: input.stock,
         originPrice: input.price,
         brand: input.brand,
+        estimatedDeliveryTime: input.estimatedDeliveryTime,
         attributes: attributesData, // Store both regular attributes and category attributes
       },
     });

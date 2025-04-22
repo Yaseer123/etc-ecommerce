@@ -107,6 +107,9 @@ export default function AddProductForm() {
   const [slug, setSlug] = useState("");
   const [stock, setStock] = useState(0); // New state for stock
   const [brand, setBrand] = useState(""); // New state for brand
+  const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState<
+    number | undefined
+  >(undefined);
   const [pending, setPending] = useState(false);
   const [imageId] = useState(uuid());
   const [descriptionImageId] = useState(uuid());
@@ -263,6 +266,7 @@ export default function AddProductForm() {
       description: content,
       attributes: specsObject,
       attributeValues: attributeValues,
+      estimatedDeliveryTime: estimatedDeliveryTime,
     });
   };
 
@@ -342,16 +346,27 @@ export default function AddProductForm() {
             onChange={(e) => setBrand(e.target.value)}
           />
         </div>
+        <div>
+          <Label>Estimated Delivery Time (Days)</Label>
+          <Input
+            type="number"
+            placeholder="Delivery Time in Days"
+            min="1"
+            value={estimatedDeliveryTime ?? ""}
+            onChange={(e) =>
+              setEstimatedDeliveryTime(
+                e.target.value ? Number(e.target.value) : undefined,
+              )
+            }
+          />
+        </div>
         <div className="mt-auto flex flex-col gap-y-1">
           <Label>Images</Label>
           <Button onClick={() => setShowImageGallery(imageId)}>
             Show Image Gallery
           </Button>
           {showImageGallery && (
-            <DndImageGallery
-              imageId={imageId}
-              onClose={setShowImageGallery}
-            />
+            <DndImageGallery imageId={imageId} onClose={setShowImageGallery} />
           )}
         </div>
 

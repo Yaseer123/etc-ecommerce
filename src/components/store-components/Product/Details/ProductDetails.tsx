@@ -32,7 +32,7 @@ import { v4 as uuid } from "uuid";
 import { useSession } from "next-auth/react";
 import type { ProductWithCategory } from "@/types/ProductType";
 import { toast } from "sonner";
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format, addDays } from "date-fns";
 
 export default function ProductDetails({
   productMain,
@@ -223,6 +223,16 @@ export default function ProductDetails({
 
   const handleReviewSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setReviewSortOrder(e.target.value);
+  };
+
+  // Calculate estimated delivery date based on the product's estimatedDeliveryTime
+  const calculateEstimatedDeliveryDate = () => {
+    if (!productMain.estimatedDeliveryTime) {
+      return "Not available";
+    }
+    const today = new Date();
+    const deliveryDate = addDays(today, productMain.estimatedDeliveryTime);
+    return format(deliveryDate, "dd MMMM");
   };
 
   return (
@@ -417,7 +427,7 @@ export default function ProductDetails({
                     <Timer className="body1" />
                     <div className="text-title">Estimated Delivery:</div>
                     <div className="text-secondary">
-                      14 January - 18 January
+                      {calculateEstimatedDeliveryDate()}
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
@@ -569,7 +579,7 @@ export default function ProductDetails({
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
-                <div className="w-full sm:w-3/4 lg:w-1/2 mx-auto">
+                <div className="mx-auto w-full sm:w-3/4 lg:w-1/2">
                   {productMain.attributes &&
                     Object.entries(productMain.attributes).map(
                       ([key, value], index) => (
