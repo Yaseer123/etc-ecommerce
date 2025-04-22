@@ -25,7 +25,7 @@ export const productSchema = z.object({
   stock: z
     .number()
     .min(0, { message: "Stock must be greater than or equal to 0" }),
-  brand: z.string(),
+  brand: z.string().min(1, { message: "Brand is required" }),
 });
 
 export type ProductInput = z.infer<typeof productSchema>;
