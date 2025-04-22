@@ -22,6 +22,7 @@ export const categorySchema = z.object({
   parentId: z.string().nullable(),
   imageId: z.string().nullable(),
   image: z.string().nullable(),
+  order: z.number().default(0),
   attributes: z.array(categoryAttributeSchema).default([]),
   createdAt: z.date(),
   updatedAt: z.date(),

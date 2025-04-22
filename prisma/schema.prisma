@@ -138,6 +138,7 @@ model Category {
     parentId      String?
     imageId       String?
     image         String?
+    order         Int        @default(0) // Add this field for ordering
     parent        Category?  @relation("CategoryToParent", fields: [parentId], references: [id], onDelete: Cascade) // Cascade deletion
     subcategories Category[] @relation("CategoryToParent")
     products      Product[]  @relation("CategoryToProduct") // Optional: Cascade delete products if needed
@@ -243,7 +244,7 @@ model FaqCategory {
     title     String
     order     Int       @default(0)
     createdAt DateTime  @default(now())
-    updatedAt DateTime  @updatedAt
+    updatedAt DateTime  @default(now())
     faqItems  FaqItem[]
 }
 

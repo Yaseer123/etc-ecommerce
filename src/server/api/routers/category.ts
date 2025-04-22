@@ -52,7 +52,11 @@ export const categoryRouter = createTRPCRouter({
 
   getAll: publicProcedure.query(async ({ ctx }) => {
     const categories = await ctx.db.category.findMany({
-      orderBy: { updatedAt: "desc" },
+      orderBy: [
+        { parentId: "asc" }, // First by parent (null first)
+        { order: "asc" }, // Then by order
+        { name: "asc" }, // Then by name as fallback
+      ],
     });
 
     return buildCategoryTree(categories as Category[]);
@@ -241,5 +245,33 @@ export const categoryRouter = createTRPCRouter({
       });
 
       return updatedCategory;
+    }),
+
+  reorder: adminProcedure
+    .input(
+      z.object({
+        items: z.array(
+          z.object({
+            id: z.string(),
+            order: z.number(),
+          }),
+        ),
+        parentId: z.string().nullable(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { items } = input;
+
+      // Create a transaction to update all items at once
+      const updates = items.map((item) =>
+        ctx.db.category.update({
+          where: { id: item.id },
+          data: { order: item.order },
+        }),
+      );
+
+      // Execute all updates in a transaction
+      const result = await ctx.db.$transaction(updates);
+      return result;
     }),
 });

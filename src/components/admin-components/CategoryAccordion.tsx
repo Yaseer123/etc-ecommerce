@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { MdDelete } from "react-icons/md";
-import { FaGear } from "react-icons/fa6"; // Import gear/settings icon
+import { FaGear } from "react-icons/fa6";
+import { FaArrowsAlt } from "react-icons/fa";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,61 +21,211 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "../ui/input";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 import { removeImage, uploadFile } from "@/app/actions/file";
 import type { Category } from "@prisma/client";
-import Link from "next/link"; // Import Link component
+import Link from "next/link";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { toast } from "sonner";
+import type { DraggableAttributes } from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 interface CategoryTree extends Category {
-  subcategories: Category[];
+  subcategories: CategoryTree[];
+  order: number;
 }
 
 interface CategoryAccordionProps {
   categories: CategoryTree[];
-  onDelete: (id: string) => void; // Callback for deleting a category
+  onDelete: (id: string) => void;
+  onReorder?: (
+    items: { id: string; order: number }[],
+    parentId: string | null,
+  ) => void;
+  parentId?: string | null;
 }
 
 export function CategoryAccordion({
   categories,
   onDelete,
+  onReorder,
+  parentId = null,
 }: CategoryAccordionProps) {
+  const [items, setItems] = useState<CategoryTree[]>(categories);
+  // Track if we're currently reordering to prevent multiple toasts
+  const [isReordering, setIsReordering] = useState(false);
+
+  useEffect(() => {
+    setItems(categories);
+  }, [categories]);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (over && active.id !== over.id && !isReordering) {
+      setIsReordering(true);
+
+      setItems((prevItems) => {
+        const oldIndex = prevItems.findIndex((item) => item.id === active.id);
+        const newIndex = prevItems.findIndex((item) => item.id === over.id);
+
+        const newItems = arrayMove(prevItems, oldIndex, newIndex);
+
+        // Update order property for each item
+        const updatedItems = newItems.map((item, index) => ({
+          ...item,
+          order: index,
+        }));
+
+        // Call the onReorder callback with the new order
+        if (onReorder) {
+          // Use setTimeout to ensure we complete the current state update first
+          setTimeout(() => {
+            onReorder(
+              updatedItems.map((item) => ({ id: item.id, order: item.order })),
+              parentId,
+            );
+            // Reset the reordering flag after a short delay
+            setTimeout(() => setIsReordering(false), 500);
+          }, 0);
+        } else {
+          setIsReordering(false);
+        }
+
+        return updatedItems;
+      });
+    }
+  };
+
   return (
-    <Accordion type="single" collapsible className="w-full">
-      {categories.map((category) => (
-        <CategoryItem
-          key={category.id}
-          category={category}
-          onDelete={onDelete}
-        />
-      ))}
-    </Accordion>
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCenter}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext
+        items={items.map((item) => item.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        <Accordion type="single" collapsible className="w-full">
+          {items.map((category) => (
+            <SortableCategoryItem
+              key={category.id}
+              category={category}
+              onDelete={onDelete}
+              onReorder={onReorder}
+            />
+          ))}
+        </Accordion>
+      </SortableContext>
+    </DndContext>
+  );
+}
+
+function SortableCategoryItem({
+  category,
+  onDelete,
+  onReorder,
+}: {
+  category: CategoryTree;
+  onDelete: (id: string) => void;
+  onReorder?: (
+    items: { id: string; order: number }[],
+    parentId: string | null,
+  ) => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: category.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1 : 0,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      <CategoryItem
+        category={category}
+        onDelete={onDelete}
+        dragAttributes={attributes}
+        dragListeners={listeners}
+        onReorder={onReorder}
+      />
+    </div>
   );
 }
 
 function CategoryItem({
   category,
   onDelete,
+  dragAttributes,
+  dragListeners,
+  onReorder,
 }: {
   category: CategoryTree;
   onDelete: (id: string) => void;
+  dragAttributes?: DraggableAttributes;
+  dragListeners?: SyntheticListenerMap;
+  onReorder?: (
+    items: { id: string; order: number }[],
+    parentId: string | null,
+  ) => void;
 }) {
   const handleDelete = () => {
-    onDelete(category.id); // Pass the category ID for deletion
+    onDelete(category.id);
   };
 
   const utils = api.useUtils();
   const editCategory = api.category.edit.useMutation({
     onSuccess: async () => {
-      // Invalidate the query to refresh the data
       await utils.category.getAll.invalidate();
+      toast.success("Category updated successfully");
+    },
+    onError: (error) => {
+      toast.error(`Error updating category: ${error.message}`);
     },
   });
 
   const [isEditing, setIsEditing] = useState(false);
-  const [isRemovingImage, setIsRemovingImage] = useState(false); // New state for disabling the button
+  const [isRemovingImage, setIsRemovingImage] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState(category.name);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
@@ -96,15 +247,19 @@ function CategoryItem({
   };
 
   const handleRemoveImage = async () => {
-    setIsRemovingImage(true); // Set loading state to true
+    setIsRemovingImage(true);
     try {
       if (category.imageId) {
-        await removeImage(category.imageId); // Remove the old image from the server
+        await removeImage(category.imageId);
       }
       setNewImage(null);
-      setImagePreview(null); // Clear the image preview
+      setImagePreview(null);
+      toast.success("Image removed successfully");
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to remove image");
     } finally {
-      setIsRemovingImage(false); // Reset loading state
+      setIsRemovingImage(false);
     }
   };
 
@@ -112,30 +267,34 @@ function CategoryItem({
     let imageUrl = category.image;
     let imageId = category.imageId;
 
-    if (newImage) {
-      if (imageId) await removeImage(imageId); // Remove the old image if it exists
-      const formData = new FormData();
-      formData.append("file", newImage);
+    try {
+      if (newImage) {
+        if (imageId) await removeImage(imageId);
+        const formData = new FormData();
+        formData.append("file", newImage);
 
-      const uploadResponse = await uploadFile(formData);
-      if (uploadResponse) {
-        imageUrl = uploadResponse.secure_url;
-        imageId = uploadResponse.public_id;
+        const uploadResponse = await uploadFile(formData);
+        if (uploadResponse) {
+          imageUrl = uploadResponse.secure_url;
+          imageId = uploadResponse.public_id;
+        }
+      } else if (!imagePreview) {
+        imageUrl = null;
+        imageId = null;
       }
-    } else if (!imagePreview) {
-      // If the image is removed, set the image URL and ID to null
-      imageUrl = null;
-      imageId = null;
+
+      editCategory.mutate({
+        id: category.id,
+        name: newCategoryName,
+        image: imageUrl,
+        imageId: imageId,
+      });
+
+      setIsEditing(false);
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to save changes");
     }
-
-    editCategory.mutate({
-      id: category.id,
-      name: newCategoryName,
-      image: imageUrl,
-      imageId: imageId,
-    });
-
-    setIsEditing(false);
   };
 
   return (
@@ -144,39 +303,51 @@ function CategoryItem({
       className="mb-2 rounded-lg border"
     >
       <div className="flex items-center justify-between rounded-md bg-gray-100 p-3">
-        <AccordionTrigger
-          disabled={category.subcategories.length === 0}
-          className="flex flex-1 gap-3 text-left"
-        >
-          {/* Display the category image */}
-          {imagePreview && (
-            <Image
-              src={imagePreview}
-              alt={category.name}
-              width={40}
-              height={40}
-              className="mr-2 rounded-md object-cover"
-            />
-          )}
-          {isEditing ? (
-            <Input
-              type="text"
-              value={newCategoryName}
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={async (e) => {
-                if (e.key === "Enter") {
-                  await handleSave();
-                }
-              }}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              className="bg-white"
-            />
-          ) : (
-            category.name
-          )}
-        </AccordionTrigger>
+        <div className="flex flex-1 items-center">
+          {/* Drag handle */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="mr-2 cursor-grab"
+            {...dragAttributes}
+            {...dragListeners}
+          >
+            <FaArrowsAlt className="text-gray-500" />
+          </Button>
+
+          <AccordionTrigger
+            disabled={category.subcategories.length === 0}
+            className="flex flex-1 gap-3 text-left"
+          >
+            {imagePreview && (
+              <Image
+                src={imagePreview}
+                alt={category.name}
+                width={40}
+                height={40}
+                className="mr-2 rounded-md object-cover"
+              />
+            )}
+            {isEditing ? (
+              <Input
+                type="text"
+                value={newCategoryName}
+                onClick={(e) => e.stopPropagation()}
+                onKeyDown={async (e) => {
+                  if (e.key === "Enter") {
+                    await handleSave();
+                  }
+                }}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                className="bg-white"
+              />
+            ) : (
+              category.name
+            )}
+          </AccordionTrigger>
+        </div>
+
         <div className="flex items-center gap-x-1">
-          {/* Replace Edit button with Link to category management page */}
           <Link href={`/admin/category/${category.id}`}>
             <Button variant="outline" className="flex items-center gap-1">
               <FaGear size={20} />
@@ -210,7 +381,9 @@ function CategoryItem({
 
       {isEditing && (
         <div className="p-3">
-          <label className="text-sm font-medium">{category.image ? "Edit Image" : "Add Image"}</label>
+          <label className="text-sm font-medium">
+            {category.image ? "Edit Image" : "Add Image"}
+          </label>
           <Input
             type="file"
             onClick={(e) => e.stopPropagation()}
@@ -230,7 +403,7 @@ function CategoryItem({
               <Button
                 variant="destructive"
                 onClick={handleRemoveImage}
-                disabled={isRemovingImage} // Disable the button while removing
+                disabled={isRemovingImage}
                 className="mt-2"
               >
                 {isRemovingImage ? "Removing..." : "Remove Image"}
@@ -244,12 +417,13 @@ function CategoryItem({
       )}
 
       <AccordionContent className="p-3">
-        {/* Recursive Rendering of Subcategories */}
         {category.subcategories.length > 0 && (
           <div className="ml-4 mt-2 border-l-2 pl-4">
             <CategoryAccordion
-              categories={category.subcategories as CategoryTree[]}
-              onDelete={onDelete} // Pass down the delete handler
+              categories={category.subcategories}
+              onDelete={onDelete}
+              onReorder={onReorder}
+              parentId={category.id}
             />
           </div>
         )}
