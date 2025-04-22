@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import CartProductItem from "./CartProductItem";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
-import { X, NotePencil, Tag, Trash } from "@phosphor-icons/react/dist/ssr";
+import { X, NotePencil, Trash } from "@phosphor-icons/react/dist/ssr";
 import { useCartStore } from "@/context/store-context/CartContext";
 
 const ModalCart = () => {
@@ -13,13 +13,10 @@ const ModalCart = () => {
   const {
     cartArray: cartState,
     note,
-    coupon,
     setNote,
-    setCoupon,
     removeFromCart,
   } = useCartStore();
   const [tempNote, setTempNote] = useState(note);
-  const [tempCoupon, setTempCoupon] = useState(coupon);
 
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab);
@@ -108,15 +105,6 @@ const ModalCart = () => {
                     Note
                   </div>
                 </div>
-                <div
-                  className="item flex cursor-pointer items-center gap-3"
-                  onClick={() => handleActiveTab("coupon")}
-                >
-                  <Tag className="text-xl" />
-                  <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                    Coupon
-                  </div>
-                </div>
               </div>
               <div className="flex flex-col gap-2 px-6 pt-6">
                 <div className="flex items-center justify-between text-gray-600">
@@ -185,54 +173,6 @@ const ModalCart = () => {
                     }}
                   >
                     Save
-                  </div>
-                  <div
-                    onClick={() => setActiveTab("")}
-                    className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
-                  >
-                    Cancel
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className={`tab-item note-block ${activeTab === "coupon" ? "active" : ""}`}
-              >
-                <div className="border-b border-line px-6 py-4">
-                  <div className="item flex cursor-pointer items-center gap-3">
-                    <Tag className="text-xl" />
-                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                      Add A Coupon Code
-                    </div>
-                  </div>
-                </div>
-                <div className="form px-6 pt-4">
-                  <div className="">
-                    <label
-                      htmlFor="select-discount"
-                      className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5"
-                    >
-                      Enter Code
-                    </label>
-                    <input
-                      className="mt-3 w-full rounded-xl border-line px-5 py-3"
-                      id="select-discount"
-                      type="text"
-                      placeholder="Discount code"
-                      value={tempCoupon}
-                      onChange={(e) => setTempCoupon(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="block-button px-6 pb-6 pt-4 text-center">
-                  <div
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
-                    onClick={() => {
-                      setCoupon(tempCoupon);
-                      setActiveTab("");
-                    }}
-                  >
-                    Apply
                   </div>
                   <div
                     onClick={() => setActiveTab("")}

@@ -17,9 +17,7 @@ interface CartState {
   removeFromCart: (itemId: string) => void;
   updateCart: (itemId: string, quantity: number) => void;
   note: string;
-  coupon: string;
   setNote: (note: string) => void;
-  setCoupon: (coupon: string) => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -64,9 +62,7 @@ export const useCartStore = create<CartState>()(
           ),
         })),
       note: '',
-      coupon: '',
       setNote: (note) => set({ note }),
-      setCoupon: (coupon) => set({ coupon }),
     }),
     {
       name: "cart-storage", // unique name for localStorage
