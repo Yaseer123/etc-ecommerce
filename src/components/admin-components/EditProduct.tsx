@@ -34,6 +34,8 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import type { CategoryAttribute } from "@/schemas/categorySchema";
 
 // Sortable item component for specifications
 function SortableSpecificationItem({
@@ -112,6 +114,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
   >(product?.estimatedDeliveryTime ?? undefined);
   const [published, setPublished] = useState(product?.published ?? false);
 
+  // Add states for category attributes
+  const [attributes, setAttributes] = useState<CategoryAttribute[]>([]);
+  const [attributeValues, setAttributeValues] = useState<
+    Record<string, string | number | boolean>
+  >({});
+
   // Convert specifications object to array format for drag and drop
   const [specifications, setSpecifications] = useState<
     Array<{ key: string; value: string }>
@@ -132,6 +140,96 @@ export default function EditProductForm({ productId }: { productId: string }) {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  // Load category attributes when component mounts or category changes
+  const [categories] = api.category.getAll.useSuspenseQuery();
+
+  useEffect(() => {
+    if (categoryId) {
+      // Find the category in the tree structure
+      const findCategory = (cats: typeof categories, id: string): typeof categories[0] | undefined => {
+        for (const category of cats) {
+          if (category.id === id) {
+            return category;
+          }
+          if (category.subcategories?.length) {
+            const found = findCategory(category.subcategories, id);
+            if (found) return found;
+          }
+        }
+        return undefined;
+      };
+      
+      const category = findCategory(categories, categoryId);
+      
+      if (category?.attributes) {
+        // Handle both string and array formats for attributes
+        if (typeof category.attributes === "string") {
+          try {
+            const parsedAttributes = JSON.parse(
+              category.attributes,
+            ) as CategoryAttribute[];
+            setAttributes(parsedAttributes);
+          } catch (error) {
+            console.error("Failed to parse category attributes:", error);
+            setAttributes([]);
+          }
+        } else if (Array.isArray(category.attributes)) {
+          setAttributes(category.attributes);
+        } else {
+          setAttributes([]);
+        }
+      } else {
+        setAttributes([]);
+      }
+    }
+  }, [categoryId, categories]);
+
+  // Initialize attribute values from product data
+  useEffect(() => {
+    if (product?.attributes) {
+      setAttributeValues(product.attributes as Record<string, string | number | boolean>);
+    }
+  }, [product]);
+
+  // Initialize attributeValues when attributes change
+  useEffect(() => {
+    // Only run this effect when attributes change, not when attributeValues changes
+    const initialValues: Record<string, string | number | boolean> = {};
+    
+    attributes.forEach((attr) => {
+      // Check if we already have a value for this attribute from the product
+      if (attributeValues[attr.name] !== undefined) {
+        initialValues[attr.name] = attributeValues[attr.name] ?? "";
+      } else if (attr.type === "select" && attr.options && attr.options.length > 0) {
+        initialValues[attr.name] = attr.options[0] ?? "";
+      } else {
+        initialValues[attr.name] = "";
+      }
+    });
+    
+    // Only update if there are differences to avoid infinite loops
+    const needsUpdate = attributes.some(attr => 
+      initialValues[attr.name] !== attributeValues[attr.name]
+    );
+    
+    if (needsUpdate) {
+      setAttributeValues(prev => ({
+        ...prev,
+        ...initialValues
+      }));
+    }
+  }, [attributeValues, attributes]); // Remove attributeValues from dependencies
+
+  const handleAttributeChange = (
+    name: string,
+    value: string | number | boolean,
+  ) => {
+    setAttributeValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   useEffect(() => {
     void (async () => {
@@ -243,6 +341,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       brand,
       published,
       estimatedDeliveryTime: estimatedDeliveryTime,
+      attributeValues: attributeValues, // Include attribute values in update
     });
   };
 
@@ -355,6 +454,44 @@ export default function EditProductForm({ productId }: { productId: string }) {
             />
           )}
         </div>
+
+        {/* Category Attribute Fields */}
+        {attributes.length > 0 && (
+          <div className="col-span-2 mt-4">
+            <h3 className="mb-3 text-lg font-medium">Category Attributes</h3>
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {attributes.map((attr) => (
+                <div key={attr.name} className="flex flex-col gap-2">
+                  <Label htmlFor={attr.name}>
+                    {attr.name}{" "}
+                    {attr.required && <span className="text-red-500">*</span>}
+                  </Label>
+
+                  {attr.type === "select" && attr.options && (
+                    <Select
+                      value={attributeValues[attr.name]?.toString() ?? ""}
+                      onValueChange={(value) =>
+                        handleAttributeChange(attr.name, value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={`Select ${attr.name}`} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {attr.options.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="col-span-2">
           <Label>Specifications</Label>
           <div className="space-y-2">
