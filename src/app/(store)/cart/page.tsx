@@ -116,7 +116,7 @@ const Cart = () => {
                           </div>
                           <div className="flex w-1/12 items-center justify-center">
                             <div className="text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                              ${product.price}.00
+                              ৳{product.price}.00
                             </div>
                           </div>
                           <div className="flex w-1/6 items-center justify-center">
@@ -148,7 +148,7 @@ const Cart = () => {
                           </div>
                           <div className="total-price flex w-1/6 items-center justify-center">
                             <div className="text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                              ${product.quantity * product.price}.00
+                              ৳{product.quantity * product.price}.00
                             </div>
                           </div>
                           <div className="flex w-1/12 items-center justify-center">
@@ -197,7 +197,7 @@ const Cart = () => {
                     <div className="right">
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         For all orders <br />
-                        from 200$
+                        from 200৳
                       </div>
                     </div>
                   </div>
@@ -227,7 +227,7 @@ const Cart = () => {
                     Subtotal
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    $<span>{totalCart}</span>
+                    ৳<span>{totalCart}</span>
                     <span>.00</span>
                   </div>
                 </div>
@@ -237,7 +237,7 @@ const Cart = () => {
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     {" "}
-                    <span>-$</span>
+                    <span>-৳</span>
                     <span>{discountCart}</span>
                     <span>.00</span>
                   </div>
@@ -289,9 +289,9 @@ const Cart = () => {
                       </div>
                     </div>
                     <div className="right">
-                      <div className="ship">$0.00</div>
-                      <div className="local mt-1">$30.00</div>
-                      <div className="flat mt-1">$40.00</div>
+                      <div className="ship">৳0.00</div>
+                      <div className="local mt-1">৳30.00</div>
+                      <div className="flat mt-1">৳40.00</div>
                     </div>
                   </div>
                 </div>
@@ -300,7 +300,7 @@ const Cart = () => {
                     Total
                   </div>
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                    $
+                    ৳
                     <span className="total-cart text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                       {totalCart - discountCart + shipCart}
                     </span>

@@ -88,10 +88,10 @@ const ModalNewsletter = () => {
                         <div className="name text-button">{item.title}</div>
                         <div className="mt-2 flex items-center gap-2">
                           <div className="product-price text-title">
-                            ${item.price}.00
+                            ৳{item.price}.00
                           </div>
                           <div className="product-origin-price text-title text-secondary2">
-                            <del>${item.originPrice}.00</del>
+                            <del>৳{item.originPrice}.00</del>
                           </div>
                         </div>
                       </div>

@@ -34,7 +34,7 @@ export default function ComingSoon() {
                   <div className="days time heading1">
                     {timeLeft.days < 10 ? `0${timeLeft.days}` : timeLeft.days}
                   </div>
-                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                  <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     Days
                   </div>
                 </div>
@@ -47,7 +47,7 @@ export default function ComingSoon() {
                       ? `0${timeLeft.hours}`
                       : timeLeft.hours}
                   </div>
-                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                  <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     Hours
                   </div>
                 </div>

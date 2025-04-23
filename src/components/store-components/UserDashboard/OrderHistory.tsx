@@ -145,7 +145,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
                     <div className="text-title">
                       <span className="prd_quantity">{item.quantity}</span>
                       <span> X </span>
-                      <span className="prd_price">${item.product.price}</span>
+                      <span className="prd_price">৳{item.product.price}</span>
                     </div>
                   </div>
                 ))}

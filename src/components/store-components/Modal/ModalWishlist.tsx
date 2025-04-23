@@ -159,10 +159,10 @@ const ModalWishlist = () => {
                     </div>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="product-price text-title">
-                        ${w.product.price}.00
+                        ৳{w.product.price}.00
                       </div>
                       <div className="product-origin-price text-title text-secondary2">
-                        <del>${w.product.originPrice}.00</del>
+                        <del>৳{w.product.originPrice}.00</del>
                       </div>
                     </div>
                   </div>

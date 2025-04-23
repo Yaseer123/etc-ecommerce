@@ -294,11 +294,26 @@ export const productRouter = createTRPCRouter({
   update: adminProcedure
     .input(updateProductSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, ...updateData } = input;
+      const { id, categoryId, attributeValues, ...updateData } = input;
+
+      // Prepare the attributes by combining with attributeValues
+      const attributes = updateData.attributes ?? {};
+
+      // If attributeValues exists, add them to the attributes as categoryAttributes
+      if (attributeValues && Object.keys(attributeValues).length > 0) {
+        // Create a merged attributes object
+        updateData.attributes = {
+          ...attributes,
+          categoryAttributes: JSON.stringify(attributeValues),
+        };
+      }
 
       const product = await ctx.db.product.update({
         where: { id },
-        data: updateData,
+        data: {
+          ...updateData,
+          category: categoryId ? { connect: { id: categoryId } } : undefined,
+        },
       });
 
       return product;

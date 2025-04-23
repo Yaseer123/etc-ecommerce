@@ -79,14 +79,14 @@ const ModalCart = () => {
                       <div className="mt-auto flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium text-gray-900">
-                            ${item.price.toFixed(2)}
+                            ৳{item.price.toFixed(2)}
                           </span>
                           <span className="text-xs text-gray-500">
                             × {item.quantity}
                           </span>
                         </div>
                         <span className="font-medium text-black">
-                          ${(item.price * item.quantity).toFixed(2)}
+                          ৳{(item.price * item.quantity).toFixed(2)}
                         </span>
                       </div>
                     </div>
@@ -109,12 +109,12 @@ const ModalCart = () => {
               <div className="flex flex-col gap-2 px-6 pt-6">
                 <div className="flex items-center justify-between text-gray-600">
                   <span>Items ({cartState.length})</span>
-                  <span>${totalCart.toFixed(2)}</span>
+                  <span>৳{totalCart.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="heading5">Total</div>
                   <div className="heading5 text-xl">
-                    ${totalCart.toFixed(2)}
+                    ৳{totalCart.toFixed(2)}
                   </div>
                 </div>
               </div>

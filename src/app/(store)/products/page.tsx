@@ -441,13 +441,13 @@ export default function ProductsPage() {
                   <div className="min flex items-center gap-1">
                     <div>Min price:</div>
                     <div className="price-min">
-                      $<span>{priceRange.min}</span>
+                      ৳<span>{priceRange.min}</span>
                     </div>
                   </div>
                   <div className="min flex items-center gap-1">
                     <div>Max price:</div>
                     <div className="price-max">
-                      $<span>{priceRange.max}</span>
+                      ৳<span>{priceRange.max}</span>
                     </div>
                   </div>
                 </div>
@@ -679,7 +679,7 @@ export default function ProductsPage() {
                         >
                           <X className="cursor-pointer" />
                           <span>
-                            ${priceRange.min} - ${priceRange.max}
+                            ৳{priceRange.min} - ৳{priceRange.max}
                           </span>
                         </div>
                       )}

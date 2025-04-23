@@ -361,11 +361,11 @@ export default function ProductDetails({
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <div className="product-price heading5">
-                  ${productMain.price}.00
+                  ৳{productMain.price}.00
                 </div>
                 <div className="h-4 w-px bg-line"></div>
                 <div className="product-origin-price font-normal text-secondary2">
-                  <del>${productMain.originPrice}.00</del>
+                  <del>৳{productMain.originPrice}.00</del>
                 </div>
                 {productMain.originPrice && (
                   <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">

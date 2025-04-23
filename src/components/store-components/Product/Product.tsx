@@ -142,7 +142,7 @@ export default function Product({ data, type }: ProductProps) {
               <Rate currentRate={data.rate} size={16} />
             </div>
             <span className="text-title mt-1 inline-block">
-              ${data.price}.00
+              ৳{data.price}.00
             </span>
           </div>
         </div>

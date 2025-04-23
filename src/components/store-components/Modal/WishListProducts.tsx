@@ -71,10 +71,10 @@ export default function WishListProducts() {
               </div>
               <div className="mt-2 flex items-center gap-2">
                 <div className="product-price text-title">
-                  ${item.product.price}.00
+                  ৳{item.product.price}.00
                 </div>
                 <div className="product-origin-price text-title text-secondary2">
-                  <del>${item.product.originPrice}.00</del>
+                  <del>৳{item.product.originPrice}.00</del>
                 </div>
               </div>
             </div>

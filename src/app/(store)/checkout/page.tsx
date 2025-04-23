@@ -512,7 +512,7 @@ const Checkout = () => {
               {renderPaymentSection()}
               <div className="mt-6 md:mt-10">
                 <button
-                  className="duration-400 hover:bg-green inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                  className="duration-400 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   onClick={() => {
                     if (!session) {
                       router.push("/login?redirect=/checkout");
@@ -562,7 +562,7 @@ const Checkout = () => {
                           <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                             <span className="quantity">{product.quantity}</span>
                             <span className="px-1">x</span>
-                            <span>${product.price}.00</span>
+                            <span>৳{product.price}.00</span>
                           </div>
                         </div>
                       </div>
@@ -574,7 +574,7 @@ const Checkout = () => {
                     Discounts
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    -$<span className="discount">{discount}</span>
+                    -৳<span className="discount">{discount}</span>
                     <span>.00</span>
                   </div>
                 </div>
@@ -583,7 +583,7 @@ const Checkout = () => {
                     Shipping
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    {Number(ship) === 0 ? "Free" : `$${ship}.00`}
+                    {Number(ship) === 0 ? "Free" : `৳${ship}.00`}
                   </div>
                 </div>
                 <div className="flex justify-between pt-5">
@@ -591,7 +591,7 @@ const Checkout = () => {
                     Total
                   </div>
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                    ${totalCart - Number(discount) + Number(ship)}.00
+                    ৳{totalCart - Number(discount) + Number(ship)}.00
                   </div>
                 </div>
               </div>
