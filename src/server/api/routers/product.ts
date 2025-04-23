@@ -281,7 +281,7 @@ export const productRouter = createTRPCRouter({
         images: input.images,
         descriptionImageId: input.descriptionImageId,
         stock: input.stock,
-        originPrice: input.price,
+        originPrice: input.originPrice,
         brand: input.brand,
         estimatedDeliveryTime: input.estimatedDeliveryTime,
         attributes: attributesData, // Store both regular attributes and category attributes
@@ -294,19 +294,7 @@ export const productRouter = createTRPCRouter({
   update: adminProcedure
     .input(updateProductSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, categoryId, attributeValues, ...updateData } = input;
-
-      // Prepare the attributes by combining with attributeValues
-      const attributes = updateData.attributes ?? {};
-
-      // If attributeValues exists, add them to the attributes as categoryAttributes
-      if (attributeValues && Object.keys(attributeValues).length > 0) {
-        // Create a merged attributes object
-        updateData.attributes = {
-          ...attributes,
-          categoryAttributes: JSON.stringify(attributeValues),
-        };
-      }
+      const { id, categoryId, ...updateData } = input;
 
       const product = await ctx.db.product.update({
         where: { id },

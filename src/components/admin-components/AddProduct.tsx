@@ -104,6 +104,7 @@ export default function AddProductForm() {
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [price, setPrice] = useState(0);
+  const [originPrice, setOriginPrice] = useState(0);
   const [slug, setSlug] = useState("");
   const [stock, setStock] = useState(0); // New state for stock
   const [brand, setBrand] = useState(""); // New state for brand
@@ -259,13 +260,14 @@ export default function AddProductForm() {
       title,
       shortDescription,
       price,
+      originPrice,
       stock,
       brand,
       slug,
       categoryId: categoryId,
       description: content,
       attributes: specsObject,
-      attributeValues: attributeValues,
+      // attributeValues: attributeValues,
       estimatedDeliveryTime: estimatedDeliveryTime,
     });
   };
@@ -326,6 +328,15 @@ export default function AddProductForm() {
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label>Origin Price</Label>
+          <Input
+            type="number"
+            placeholder="Origin Price"
+            value={originPrice}
+            onChange={(e) => setOriginPrice(Number(e.target.value))}
           />
         </div>
         <div>

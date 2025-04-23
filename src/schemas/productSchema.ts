@@ -17,6 +17,10 @@ export const productSchema = z.object({
   price: z
     .number()
     .min(0, { message: "Price must be greater than or equal to 0" }),
+  originPrice: z
+    .number()
+    .min(0, { message: "Origin price must be greater than or equal to 0" })
+    .optional(),
   categoryId: z.string().optional(),
   imageId: z.string(),
   images: z.array(z.string()),
@@ -44,6 +48,10 @@ export const updateProductSchema = z.object({
   price: z
     .number()
     .min(0, { message: "Price must be greater than or equal to 0" })
+    .optional(),
+  originPrice: z
+    .number()
+    .min(0, { message: "Origin price must be greater than or equal to 0" })
     .optional(),
   categoryId: z.string().optional(),
   images: z.array(z.string()).optional(),

@@ -75,7 +75,7 @@ model Product {
     description           String?
     published             Boolean   @default(false)
     price                 Float
-    originPrice           Float
+    originPrice           Float?
     stock                 Int
     brand                 String
     sold                  Int       @default(0)

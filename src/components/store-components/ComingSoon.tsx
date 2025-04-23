@@ -60,7 +60,7 @@ export default function ComingSoon() {
                       ? `0${timeLeft.minutes}`
                       : timeLeft.minutes}
                   </div>
-                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                  <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     Minutes
                   </div>
                 </div>
@@ -73,7 +73,7 @@ export default function ComingSoon() {
                       ? `0${timeLeft.seconds}`
                       : timeLeft.seconds}
                   </div>
-                  <div className="text-sm font-medium font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                  <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                     Seconds
                   </div>
                 </div>

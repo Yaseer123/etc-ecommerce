@@ -36,7 +36,7 @@ const ModalQuickView = () => {
   }, [selectedProduct]);
 
   const percentSale =
-    selectedProduct &&
+    selectedProduct?.originPrice &&
     Math.floor(
       100 - (selectedProduct.price / selectedProduct.originPrice) * 100,
     );
@@ -161,15 +161,18 @@ const ModalQuickView = () => {
                   <div className="product-price heading5">
                     ৳{selectedProduct.price}.00
                   </div>
-                  <div className="h-4 w-px bg-line"></div>
-                  <div className="product-origin-price font-normal text-secondary2">
-                    <del>৳{selectedProduct.originPrice}.00</del>
-                  </div>
-                  {selectedProduct?.originPrice && (
-                    <div className="product-sale caption2 inline-block rounded-full bg-green px-3 py-0.5 font-semibold">
-                      -{percentSale}%
-                    </div>
-                  )}
+                  {selectedProduct?.originPrice &&
+                    selectedProduct.originPrice > 0 && (
+                      <>
+                        <div className="h-4 w-px bg-line"></div>
+                        <div className="product-origin-price font-normal text-secondary2">
+                          <del>৳{selectedProduct.originPrice}.00</del>
+                        </div>
+                        <div className="product-sale caption2 inline-block rounded-full bg-green px-3 py-0.5 font-semibold">
+                          -{percentSale}%
+                        </div>
+                      </>
+                    )}
                   <div className="desc mt-3 text-secondary">
                     {selectedProduct.shortDescription}
                   </div>

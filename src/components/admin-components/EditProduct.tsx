@@ -34,7 +34,13 @@ import {
 import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { CategoryAttribute } from "@/schemas/categorySchema";
 
 // Sortable item component for specifications
@@ -100,6 +106,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
     product?.shortDescription ?? "",
   );
   const [price, setPrice] = useState(product?.price ?? 0);
+  const [originPrice, setOriginPrice] = useState(product?.originPrice ?? 0);
   const [slug, setSlug] = useState(product?.slug ?? "");
   const [pending, setPending] = useState(false);
   const [imageId] = useState(product?.imageId ?? uuid());
@@ -147,7 +154,10 @@ export default function EditProductForm({ productId }: { productId: string }) {
   useEffect(() => {
     if (categoryId) {
       // Find the category in the tree structure
-      const findCategory = (cats: typeof categories, id: string): typeof categories[0] | undefined => {
+      const findCategory = (
+        cats: typeof categories,
+        id: string,
+      ): (typeof categories)[0] | undefined => {
         for (const category of cats) {
           if (category.id === id) {
             return category;
@@ -159,9 +169,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
         }
         return undefined;
       };
-      
+
       const category = findCategory(categories, categoryId);
-      
+
       if (category?.attributes) {
         // Handle both string and array formats for attributes
         if (typeof category.attributes === "string") {
@@ -188,7 +198,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
   // Initialize attribute values from product data
   useEffect(() => {
     if (product?.attributes) {
-      setAttributeValues(product.attributes as Record<string, string | number | boolean>);
+      setAttributeValues(
+        product.attributes as Record<string, string | number | boolean>,
+      );
     }
   }, [product]);
 
@@ -196,27 +208,31 @@ export default function EditProductForm({ productId }: { productId: string }) {
   useEffect(() => {
     // Only run this effect when attributes change, not when attributeValues changes
     const initialValues: Record<string, string | number | boolean> = {};
-    
+
     attributes.forEach((attr) => {
       // Check if we already have a value for this attribute from the product
       if (attributeValues[attr.name] !== undefined) {
         initialValues[attr.name] = attributeValues[attr.name] ?? "";
-      } else if (attr.type === "select" && attr.options && attr.options.length > 0) {
+      } else if (
+        attr.type === "select" &&
+        attr.options &&
+        attr.options.length > 0
+      ) {
         initialValues[attr.name] = attr.options[0] ?? "";
       } else {
         initialValues[attr.name] = "";
       }
     });
-    
+
     // Only update if there are differences to avoid infinite loops
-    const needsUpdate = attributes.some(attr => 
-      initialValues[attr.name] !== attributeValues[attr.name]
+    const needsUpdate = attributes.some(
+      (attr) => initialValues[attr.name] !== attributeValues[attr.name],
     );
-    
+
     if (needsUpdate) {
-      setAttributeValues(prev => ({
+      setAttributeValues((prev) => ({
         ...prev,
-        ...initialValues
+        ...initialValues,
       }));
     }
   }, [attributeValues, attributes]); // Remove attributeValues from dependencies
@@ -333,6 +349,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       title,
       shortDescription,
       price,
+      originPrice,
       slug,
       categoryId: categoryId,
       description: content,
@@ -341,7 +358,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       brand,
       published,
       estimatedDeliveryTime: estimatedDeliveryTime,
-      attributeValues: attributeValues, // Include attribute values in update
+      // attributeValues: attributeValues, // Include attribute values in update
     });
   };
 
@@ -396,6 +413,15 @@ export default function EditProductForm({ productId }: { productId: string }) {
             placeholder="Price"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
+          />
+        </div>
+        <div>
+          <Label>Origin Price</Label>
+          <Input
+            type="number"
+            placeholder="Origin Price"
+            value={originPrice}
+            onChange={(e) => setOriginPrice(Number(e.target.value))}
           />
         </div>
         <div>

@@ -125,9 +125,9 @@ export default function ProductDetails({
     },
   });
 
-  const percentSale = Math.floor(
-    100 - (productMain.price / productMain.originPrice) * 100,
-  );
+  const percentSale =
+    productMain.originPrice &&
+    Math.floor(100 - (productMain.price / productMain.originPrice) * 100);
 
   const handleSwiper = (swiper: SwiperCore) => {
     setThumbsSwiper(swiper);
@@ -363,14 +363,16 @@ export default function ProductDetails({
                 <div className="product-price heading5">
                   ৳{productMain.price}.00
                 </div>
-                <div className="h-4 w-px bg-line"></div>
-                <div className="product-origin-price font-normal text-secondary2">
-                  <del>৳{productMain.originPrice}.00</del>
-                </div>
-                {productMain.originPrice && (
-                  <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
-                    -{percentSale}%
-                  </div>
+                {productMain.originPrice && productMain.originPrice > 0 && (
+                  <>
+                    <div className="h-4 w-px bg-line"></div>
+                    <div className="product-origin-price font-normal text-secondary2">
+                      <del>৳{productMain.originPrice}.00</del>
+                    </div>
+                    <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
+                      -{percentSale}%
+                    </div>
+                  </>
                 )}
               </div>
               <div className="desc mt-5 block border-b border-line pb-6 text-secondary">
