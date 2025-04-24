@@ -1,17 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { CaretRight, MagnifyingGlass, X } from "@phosphor-icons/react/dist/ssr";
+import { CaretRight, X } from "@phosphor-icons/react/dist/ssr";
+import MobileSearch from "./MobileSearch";
+import MobileSearchDialog from "./MobileSearchDialog";
 
 interface MobileMenuProps {
   openMenuMobile: boolean;
   handleMenuMobile: () => void;
 }
 
-const MobileMenu = ({
-  openMenuMobile,
-  handleMenuMobile,
-}: MobileMenuProps) => {
+const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
   const router = useRouter();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Function to handle navigation and close menu
   const handleNavigation = (path: string) => {
@@ -38,17 +38,8 @@ const MobileMenu = ({
                 Rinors
               </div>
             </div>
-            <div className="form-search relative mt-2">
-              <MagnifyingGlass
-                size={20}
-                className="absolute left-3 top-1/2 -translate-y-1/2 cursor-pointer"
-              />
-              <input
-                type="text"
-                placeholder="What are you looking for?"
-                className="h-12 w-full rounded-lg border border-line pl-10 pr-4 text-sm"
-              />
-            </div>
+            <MobileSearch />
+
             <div className="list-nav mt-6">
               <ul>
                 <li>
@@ -100,6 +91,9 @@ const MobileMenu = ({
           </div>
         </div>
       </div>
+
+      {/* Search Dialog */}
+      <MobileSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </div>
   );
 };
