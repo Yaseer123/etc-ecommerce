@@ -2,17 +2,38 @@
 
 import Link from "next/link";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function Navbar() {
   const session = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isMenuOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target as Node)
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   const navLinks = [
     { href: "/admin/user", label: "Users" },
@@ -47,6 +68,7 @@ export default function Navbar() {
 
         {/* Mobile Hamburger Button */}
         <button
+          ref={menuButtonRef}
           className="p-2 md:hidden"
           onClick={toggleMenu}
           aria-label="Toggle menu"
@@ -57,7 +79,10 @@ export default function Navbar() {
 
       {/* Mobile Navigation Menu */}
       {isMenuOpen && (
-        <div className="absolute left-0 right-0 top-full z-50 bg-gray-100 px-5 py-3 shadow-md md:hidden">
+        <div
+          ref={menuRef}
+          className="absolute left-0 right-0 top-full z-50 bg-gray-100 px-5 py-3 shadow-md md:hidden"
+        >
           <div className="flex flex-col gap-y-3">
             {navLinks.map((link) => (
               <Button
