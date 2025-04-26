@@ -1,12 +1,14 @@
 import {
   adminProcedure,
   createTRPCRouter,
+  protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
 import type { CategoryAttribute } from "@/schemas/categorySchema";
+import { TRPCError } from "@trpc/server";
 
 export const productRouter = createTRPCRouter({
   getProductByIdAdmin: adminProcedure
@@ -521,5 +523,29 @@ export const productRouter = createTRPCRouter({
       });
 
       return resultAttributes;
+    }),
+
+  updateStockStatus: protectedProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        stockStatus: z.enum(["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"]),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id, stockStatus } = input;
+
+      // Ensure the user is an admin
+      if (ctx.session.user.role !== "ADMIN") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Only admins can update product status",
+        });
+      }
+
+      return ctx.db.product.update({
+        where: { id },
+        data: { stockStatus },
+      });
     }),
 });

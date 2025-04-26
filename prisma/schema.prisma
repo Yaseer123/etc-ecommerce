@@ -35,6 +35,12 @@ enum Size {
     XXL
 }
 
+enum StockStatus {
+    IN_STOCK
+    OUT_OF_STOCK
+    PRE_ORDER
+}
+
 model Post {
     id               String   @id @default(cuid())
     title            String
@@ -65,29 +71,30 @@ model Tag {
 }
 
 model Product {
-    id                    String    @id @default(cuid())
+    id                    String      @id @default(cuid())
     title                 String
-    new                   Boolean   @default(true)
-    sale                  Boolean   @default(false)
-    rate                  Float     @default(0)
+    new                   Boolean     @default(true)
+    sale                  Boolean     @default(false)
+    rate                  Float       @default(0)
     slug                  String
     shortDescription      String
     description           String?
-    published             Boolean   @default(false)
+    published             Boolean     @default(false)
     price                 Float
     originPrice           Float?
     stock                 Int
+    stockStatus           StockStatus @default(IN_STOCK)
     brand                 String
-    sold                  Int       @default(0)
+    sold                  Int         @default(0)
     estimatedDeliveryTime Int? // Changed to Int to represent days
     categoryId            String? // Foreign key to Category
-    category              Category? @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
-    createdAt             DateTime  @default(now())
-    updatedAt             DateTime  @updatedAt
+    category              Category?   @relation("CategoryToProduct", fields: [categoryId], references: [id], onDelete: SetNull)
+    createdAt             DateTime    @default(now())
+    updatedAt             DateTime    @updatedAt
     imageId               String
     images                String[]
     descriptionImageId    String?
-    attributes            Json      @default("{}") // Store dynamic attributes as JSON
+    attributes            Json        @default("{}") // Store dynamic attributes as JSON
 
     reviews   Review[]
     orders    OrderItem[]
