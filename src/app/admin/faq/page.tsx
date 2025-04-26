@@ -51,6 +51,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   AlertCircle,
   Edit,
+  FileQuestion,
+  FolderOpenDot,
   Loader2,
   MoreVertical,
   Plus,
@@ -326,15 +328,17 @@ export default function AdminFAQsPage() {
   }
 
   return (
-    <div className="container py-8">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="container max-w-7xl px-4 py-6 sm:px-6 lg:py-8">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">FAQ Management</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">
+            FAQ Management
+          </h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">
             Create and manage frequently asked questions for your website.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <Button
             onClick={() => {
               setNewFaqItem({
@@ -344,6 +348,7 @@ export default function AdminFAQsPage() {
               });
               setFaqItemDialogOpen(true);
             }}
+            className="w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" /> Add FAQ
           </Button>
@@ -354,6 +359,7 @@ export default function AdminFAQsPage() {
               setNewCategory("");
               setCategoryDialogOpen(true);
             }}
+            className="w-full sm:w-auto"
           >
             <Plus className="mr-2 h-4 w-4" /> Add Category
           </Button>
@@ -362,10 +368,11 @@ export default function AdminFAQsPage() {
 
       {/* Overview Cards */}
       <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card>
+        <Card className="overflow-hidden border-2 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Categories
+            <CardTitle className="flex items-center gap-2 text-sm font-medium">
+              <FolderOpenDot className="h-4 w-4" />
+              <span>Total Categories</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -373,10 +380,11 @@ export default function AdminFAQsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="overflow-hidden border-2 shadow-sm transition-all hover:shadow-md">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total FAQs
+            <CardTitle className="flex items-center gap-2 text-sm font-medium">
+              <FileQuestion className="h-4 w-4" />
+              <span>Total FAQs</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -386,191 +394,237 @@ export default function AdminFAQsPage() {
       </div>
 
       {/* Tabs for Categories and FAQs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-8">
-        <TabsList className="grid w-full max-w-md grid-cols-2">
-          <TabsTrigger value="categories">Categories</TabsTrigger>
-          <TabsTrigger value="faqs">All FAQs</TabsTrigger>
-        </TabsList>
+      <div className="mb-8 rounded-lg border-2 bg-background p-1 shadow-sm">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-2 sm:w-[400px]">
+            <TabsTrigger value="categories" className="font-medium">
+              Categories
+            </TabsTrigger>
+            <TabsTrigger value="faqs" className="font-medium">
+              All FAQs
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Categories Tab Content */}
-        <TabsContent value="categories">
-          {allFaqs?.length === 0 ? (
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>No categories found</AlertTitle>
-              <AlertDescription>
-                Get started by adding your first FAQ category.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {allFaqs?.map((category) => (
-                <Card key={category.id} className="overflow-hidden">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <CardTitle>{category.title}</CardTitle>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                            <span className="sr-only">Actions</span>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                          <DropdownMenuSeparator />
-                          <DropdownMenuItem
-                            onClick={() => openEditCategoryDialog(category)}
-                          >
-                            <Edit className="mr-2 h-4 w-4" /> Edit
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              handleDeleteCategory(category.id, category.title)
-                            }
-                            className="text-destructive focus:text-destructive"
-                          >
-                            <Trash className="mr-2 h-4 w-4" /> Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                    <CardDescription>
-                      {category.faqItems.length} FAQs
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="pb-3">
-                    {category.faqItems.length > 0 ? (
-                      <ScrollArea className="h-32">
-                        <ul className="space-y-1">
-                          {category.faqItems.slice(0, 5).map((faq) => (
-                            <li key={faq.id} className="truncate text-sm">
-                              • {faq.question}
-                            </li>
-                          ))}
-                          {category.faqItems.length > 5 && (
-                            <li className="pt-1 text-xs text-muted-foreground">
-                              + {category.faqItems.length - 5} more
-                            </li>
-                          )}
-                        </ul>
-                      </ScrollArea>
-                    ) : (
-                      <p className="text-sm text-muted-foreground">
-                        No FAQs in this category yet
-                      </p>
-                    )}
-                  </CardContent>
-                  <CardFooter>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full"
-                      onClick={() => openCreateFaqItemDialog(category.id)}
-                    >
-                      <Plus className="mr-2 h-4 w-4" /> Add FAQ to this category
-                    </Button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-
-        {/* FAQs Tab Content */}
-        <TabsContent value="faqs">
-          {totalFaqCount === 0 ? (
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>No FAQs found</AlertTitle>
-              <AlertDescription>
-                Get started by adding your first FAQ.
-              </AlertDescription>
-            </Alert>
-          ) : (
-            <div className="space-y-6">
-              {allFaqs?.map(
-                (category) =>
-                  category.faqItems.length > 0 && (
-                    <Card key={category.id}>
-                      <CardHeader>
-                        <CardTitle className="flex items-center justify-between">
-                          <span>{category.title}</span>
-                          <Badge variant="outline">
-                            {category.faqItems.length}
-                          </Badge>
+          {/* Categories Tab Content */}
+          <TabsContent value="categories" className="mt-6 space-y-4 p-1">
+            {allFaqs?.length === 0 ? (
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>No categories found</AlertTitle>
+                <AlertDescription>
+                  Get started by adding your first FAQ category.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {allFaqs?.map((category) => (
+                  <Card
+                    key={category.id}
+                    className="overflow-hidden border transition-all hover:border-black hover:shadow-md"
+                  >
+                    <CardHeader className="pb-2">
+                      <div className="flex items-start justify-between">
+                        <CardTitle className="line-clamp-2">
+                          {category.title}
                         </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <Accordion type="single" collapsible className="w-full">
-                          {category.faqItems.map((faq) => (
-                            <AccordionItem key={faq.id} value={faq.id}>
-                              <div className="flex items-center justify-between">
-                                <AccordionTrigger className="text-base">
-                                  {faq.question}
-                                </AccordionTrigger>
-                                <div className="mr-6 flex gap-2">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      openEditFaqItemDialog(faq);
-                                    }}
-                                  >
-                                    <Edit className="h-4 w-4" />
-                                  </Button>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="text-destructive hover:text-destructive"
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleDeleteFaqItem(faq.id, faq.question);
-                                    }}
-                                  >
-                                    <Trash className="h-4 w-4" />
-                                  </Button>
-                                </div>
-                              </div>
-                              <AccordionContent>
-                                <div className="prose prose-sm max-w-none dark:prose-invert">
-                                  {faq.answer
-                                    .split("\n")
-                                    .map((paragraph, idx) => (
-                                      <p
-                                        key={idx}
-                                        className="mb-2 text-muted-foreground"
-                                      >
-                                        {paragraph}
-                                      </p>
-                                    ))}
-                                </div>
-                              </AccordionContent>
-                            </AccordionItem>
-                          ))}
-                        </Accordion>
-                      </CardContent>
-                      <CardFooter className="flex justify-center border-t pt-4">
-                        <Button
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full hover:bg-black hover:text-white"
+                            >
+                              <MoreVertical className="h-4 w-4" />
+                              <span className="sr-only">Actions</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => openEditCategoryDialog(category)}
+                            >
+                              <Edit className="mr-2 h-4 w-4" /> Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleDeleteCategory(
+                                  category.id,
+                                  category.title,
+                                )
+                              }
+                              className="text-destructive focus:text-destructive"
+                            >
+                              <Trash className="mr-2 h-4 w-4" /> Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <CardDescription className="mt-1 flex items-center gap-1">
+                        <Badge
                           variant="outline"
-                          onClick={() => openCreateFaqItemDialog(category.id)}
+                          className="rounded-sm px-1.5 py-0.5 text-xs font-normal"
                         >
-                          <Plus className="mr-2 h-4 w-4" /> Add FAQ to this
-                          category
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ),
-              )}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+                          {category.faqItems.length}
+                        </Badge>
+                        <span className="text-xs">
+                          {category.faqItems.length === 1 ? "FAQ" : "FAQs"}
+                        </span>
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pb-3">
+                      {category.faqItems.length > 0 ? (
+                        <ScrollArea className="h-32 pr-2">
+                          <ul className="space-y-2">
+                            {category.faqItems.slice(0, 5).map((faq) => (
+                              <li
+                                key={faq.id}
+                                className="group flex items-start gap-1.5 rounded-sm border-l-2 border-l-gray-300 bg-gray-50 px-3 py-2 text-sm transition-colors hover:border-l-black hover:bg-gray-100"
+                              >
+                                <span className="min-w-0 flex-1 truncate">
+                                  {faq.question}
+                                </span>
+                              </li>
+                            ))}
+                            {category.faqItems.length > 5 && (
+                              <li className="pt-1 text-center text-xs text-gray-500">
+                                + {category.faqItems.length - 5} more
+                              </li>
+                            )}
+                          </ul>
+                        </ScrollArea>
+                      ) : (
+                        <div className="flex h-32 items-center justify-center rounded-md border border-dashed border-gray-300 text-center text-sm">
+                          <p>No FAQs in this category yet</p>
+                        </div>
+                      )}
+                    </CardContent>
+                    <CardFooter className="border-t pt-3">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full border border-gray-300 bg-white hover:bg-gray-100 hover:text-black"
+                        onClick={() => openCreateFaqItemDialog(category.id)}
+                      >
+                        <Plus className="mr-2 h-4 w-4" /> Add FAQ
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* FAQs Tab Content */}
+          <TabsContent value="faqs" className="mt-6 space-y-6 p-1">
+            {totalFaqCount === 0 ? (
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>No FAQs found</AlertTitle>
+                <AlertDescription>
+                  Get started by adding your first FAQ.
+                </AlertDescription>
+              </Alert>
+            ) : (
+              <div className="space-y-6">
+                {allFaqs?.map(
+                  (category) =>
+                    category.faqItems.length > 0 && (
+                      <Card key={category.id} className="overflow-hidden">
+                        <CardHeader className="border-b bg-gray-50 pb-2">
+                          <CardTitle className="flex items-center justify-between text-lg">
+                            <span>{category.title}</span>
+                            <Badge
+                              variant="outline"
+                              className="bg-white font-normal"
+                            >
+                              {category.faqItems.length}{" "}
+                              {category.faqItems.length === 1 ? "FAQ" : "FAQs"}
+                            </Badge>
+                          </CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-0 sm:p-6">
+                          <Accordion
+                            type="single"
+                            collapsible
+                            className="w-full"
+                          >
+                            {category.faqItems.map((faq) => (
+                              <AccordionItem
+                                key={faq.id}
+                                value={faq.id}
+                                className="border-b px-4 hover:bg-gray-50 sm:px-0"
+                              >
+                                <div className="flex items-center justify-between">
+                                  <AccordionTrigger className="py-4 text-sm font-medium sm:text-base">
+                                    {faq.question}
+                                  </AccordionTrigger>
+                                  <div className="flex gap-1 sm:mr-6 sm:gap-2">
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-7 w-7 rounded-full hover:bg-black hover:text-white sm:h-8 sm:w-8"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        openEditFaqItemDialog(faq);
+                                      }}
+                                    >
+                                      <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                      <span className="sr-only">Edit</span>
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="hover:bg-red-500 h-7 w-7 rounded-full hover:text-white sm:h-8 sm:w-8"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDeleteFaqItem(
+                                          faq.id,
+                                          faq.question,
+                                        );
+                                      }}
+                                    >
+                                      <Trash className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                      <span className="sr-only">Delete</span>
+                                    </Button>
+                                  </div>
+                                </div>
+                                <AccordionContent className="pb-4 pt-2">
+                                  <div className="prose prose-sm max-w-none rounded-md border bg-white p-4 shadow-sm dark:prose-invert sm:p-5">
+                                    {faq.answer
+                                      .split("\n")
+                                      .map((paragraph, idx) => (
+                                        <p
+                                          key={idx}
+                                          className="mb-2 text-sm last:mb-0 sm:text-base"
+                                        >
+                                          {paragraph}
+                                        </p>
+                                      ))}
+                                  </div>
+                                </AccordionContent>
+                              </AccordionItem>
+                            ))}
+                          </Accordion>
+                        </CardContent>
+                        <CardFooter className="flex justify-center border-t bg-gray-50 p-4">
+                          <Button
+                            variant="outline"
+                            className="gap-2 border border-gray-300 bg-white hover:bg-gray-100 hover:text-black"
+                            onClick={() => openCreateFaqItemDialog(category.id)}
+                          >
+                            <Plus className="h-4 w-4" /> Add FAQ to this
+                            category
+                          </Button>
+                        </CardFooter>
+                      </Card>
+                    ),
+                )}
+              </div>
+            )}
+          </TabsContent>
+        </Tabs>
+      </div>
 
       {/* Category Dialog */}
       <Dialog open={categoryDialogOpen} onOpenChange={setCategoryDialogOpen}>
@@ -603,14 +657,16 @@ export default function AdminFAQsPage() {
               />
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
             <Button
               variant="outline"
+              className="w-full sm:w-auto"
               onClick={() => setCategoryDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
+              className="w-full sm:w-auto"
               onClick={
                 editingCategory ? handleUpdateCategory : handleCreateCategory
               }
@@ -627,7 +683,7 @@ export default function AdminFAQsPage() {
 
       {/* FAQ Item Dialog */}
       <Dialog open={faqItemDialogOpen} onOpenChange={setFaqItemDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>
               {editingFaqItem ? "Edit FAQ" : "Add New FAQ"}
@@ -712,20 +768,23 @@ export default function AdminFAQsPage() {
                       })
                 }
                 rows={5}
+                className="min-h-[120px]"
               />
               <p className="text-xs text-muted-foreground">
                 Use line breaks for paragraphs. HTML formatting is supported.
               </p>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
             <Button
               variant="outline"
+              className="w-full sm:w-auto"
               onClick={() => setFaqItemDialogOpen(false)}
             >
               Cancel
             </Button>
             <Button
+              className="w-full sm:w-auto"
               onClick={
                 editingFaqItem ? handleUpdateFaqItem : handleCreateFaqItem
               }

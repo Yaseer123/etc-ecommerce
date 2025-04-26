@@ -20,6 +20,7 @@ export default function Navbar() {
     { href: "/admin/product", label: "Products" },
     { href: "/admin/blog", label: "Blogs" },
     { href: "/admin/slider", label: "Slider" },
+    { href: "/admin/faq", label: "FAQ" },
   ];
 
   return (
