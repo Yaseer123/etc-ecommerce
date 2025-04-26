@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { api } from "@/trpc/react";
-import LoadingSpinner from "@/components/store-components/LoadingSpinner";
 
 const breadcrumbItems = [
   { label: "Home", href: "/" },
@@ -45,9 +44,34 @@ const Faqs = () => {
     );
   };
 
-  if (categoriesLoading) {
-    return <LoadingSpinner />;
-  }
+  // Category skeleton loader
+  const CategorySkeleton = () => (
+    <div className="menu-tab flex flex-col gap-5">
+      {Array.from({ length: 5 }).map((_, index) => (
+        <div
+          key={index}
+          className="h-7 w-32 animate-pulse rounded bg-gray-200"
+        ></div>
+      ))}
+    </div>
+  );
+
+  // FAQ item skeleton loader
+  const FaqItemSkeleton = () => (
+    <div className="tab-question flex flex-col gap-5">
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div
+          key={index}
+          className="question-item overflow-hidden rounded-[20px] border border-line px-7 py-5"
+        >
+          <div className="heading flex items-center justify-between gap-6">
+            <div className="h-6 w-3/4 animate-pulse rounded bg-gray-200"></div>
+            <div className="h-6 w-6 animate-pulse rounded bg-gray-200"></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 
   return (
     <>
@@ -58,53 +82,59 @@ const Faqs = () => {
         <div className="container">
           <div className="flex justify-between">
             <div className="left w-full md:w-1/4">
-              <div className="menu-tab flex flex-col gap-5">
-                {faqCategories && faqCategories.length > 0 ? (
-                  faqCategories.map((category) => (
-                    <div
-                      key={category.id}
-                      className={`tab-item inline-block w-fit heading6 has-line-before text-secondary2 hover:text-black duration-300 cursor-pointer ${
-                        activeTab === category.id ? 'active' : ''
-                      }`}
-                      onClick={() => handleActiveTab(category.id)}
-                    >
-                      {category.title}
+              {categoriesLoading ? (
+                <CategorySkeleton />
+              ) : (
+                <div className="menu-tab flex flex-col gap-5">
+                  {faqCategories && faqCategories.length > 0 ? (
+                    faqCategories.map((category) => (
+                      <div
+                        key={category.id}
+                        className={`tab-item heading6 has-line-before inline-block w-fit cursor-pointer text-secondary2 duration-300 hover:text-black ${
+                          activeTab === category.id ? "active" : ""
+                        }`}
+                        onClick={() => handleActiveTab(category.id)}
+                      >
+                        {category.title}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="py-8 text-center">
+                      <p className="body1 text-secondary">
+                        No FAQ categories found.
+                      </p>
                     </div>
-                  ))
-                ) : (
-                  <div className="py-8 text-center">
-                    <p className="body1 text-secondary">
-                      No FAQ categories found.
-                    </p>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
+              )}
             </div>
             <div className="right w-full md:w-2/3">
               {faqsLoading ? (
-                <LoadingSpinner />
+                <FaqItemSkeleton />
               ) : (
-                <div className={`tab-question flex flex-col gap-5 ${activeTab ? 'active' : ''}`}>
+                <div
+                  className={`tab-question flex flex-col gap-5 ${activeTab ? "active" : ""}`}
+                >
                   {faqItems && faqItems.length > 0 ? (
                     faqItems.map((faq) => (
                       <div
                         key={faq.id}
-                        className={`question-item px-7 py-5 rounded-[20px] overflow-hidden border border-line cursor-pointer ${
-                          activeQuestion === faq.id ? 'open' : ''
+                        className={`question-item cursor-pointer overflow-hidden rounded-[20px] border border-line px-7 py-5 ${
+                          activeQuestion === faq.id ? "open" : ""
                         }`}
                         onClick={() => handleActiveQuestion(faq.id)}
                       >
                         <div className="heading flex items-center justify-between gap-6">
                           <div className="heading6">{faq.question}</div>
-                          <CaretRight 
-                            size={24} 
+                          <CaretRight
+                            size={24}
                             className={`transition-transform duration-300 ${
                               activeQuestion === faq.id ? "rotate-90" : ""
                             }`}
                           />
                         </div>
                         {activeQuestion === faq.id && (
-                          <div className="content body1 text-secondary mt-4">
+                          <div className="content body1 mt-4 text-secondary">
                             {faq.answer}
                           </div>
                         )}
