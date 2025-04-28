@@ -12,14 +12,47 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { DataTableColumnHeader } from "@/components/admin-components/DataTableColumnHeader";
 import type { Category, Product, StockStatus } from "@prisma/client";
 import Link from "next/link";
 import { StockStatusModal } from "./StockStatusModal";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 // Create a separate component for the actions cell
 function ActionCell({ product }: { product: ProductColumns }) {
   const [isStockModalOpen, setIsStockModalOpen] = React.useState(false);
+  const [isDeleteAlertOpen, setIsDeleteAlertOpen] = React.useState(false);
+  const utils = api.useUtils();
+
+  const deleteProduct = api.product.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Product deleted", {
+        description: `The product "${product.title}" was successfully deleted.`,
+      });
+      void utils.product.getAll.invalidate();
+    },
+    onError: (error) => {
+      toast.error("Error", {
+        description: `Failed to delete product: ${error.message}`,
+      });
+    },
+  });
+
+  const handleDelete = () => {
+    deleteProduct.mutate({ id: product.id });
+    setIsDeleteAlertOpen(false);
+  };
 
   return (
     <>
@@ -46,6 +79,12 @@ function ActionCell({ product }: { product: ProductColumns }) {
           <DropdownMenuItem>
             <Link href={`/admin/product/edit/${product.id}`}>Edit product</Link>
           </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => setIsDeleteAlertOpen(true)}
+            className="text-red-600"
+          >
+            Delete product
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -55,6 +94,28 @@ function ActionCell({ product }: { product: ProductColumns }) {
         productId={product.id}
         currentStatus={product.stockStatus}
       />
+
+      <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the
+              product &quot;{product.title}&quot; and remove it from our
+              servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-red/90 hover:bg-red/100"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

@@ -548,4 +548,19 @@ export const productRouter = createTRPCRouter({
         data: { stockStatus },
       });
     }),
+
+  delete: adminProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { id } = input;
+
+      // Delete the product
+      return ctx.db.product.delete({
+        where: { id },
+      });
+    }),
 });
