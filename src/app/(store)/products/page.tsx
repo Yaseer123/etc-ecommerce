@@ -34,7 +34,10 @@ export default function ProductsPage() {
   const [showOnlySale, setShowOnlySale] = useState(onSale);
   const [currentSortOption, setCurrentSortOption] = useState(sortOption);
   const [currentPage, setCurrentPage] = useState(pageParam);
-  const [brand, setBrand] = useState<string | null>(brandParam || null);
+  // Change from string to string array for multiple brands
+  const [brands, setBrands] = useState<string[]>(
+    brandParam ? brandParam.split(",") : [],
+  );
   const [category, setCategory] = useState<{
     id: string;
     name: string;
@@ -69,7 +72,7 @@ export default function ProductsPage() {
   const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
     categoryId: categoryId || undefined,
     onSale: onSale || undefined,
-    brand: brandParam || undefined,
+    brands: brands.length > 0 ? brands : undefined, // Update parameter name to match server
     minPrice,
     maxPrice,
     sort: sortOption || undefined,
@@ -77,19 +80,25 @@ export default function ProductsPage() {
       Object.keys(attributeFilters).length > 0 ? attributeFilters : undefined,
   });
 
-  // Fetch brands based on selected category
+  // Fetch brands based on selected category - Improved caching strategy
   const { data: categoryBrands = [] } =
     api.product.getBrandsByCategory.useQuery(
       {
         categoryId: categoryId || undefined,
       },
       {
+        // Only fetch when the category changes
+        enabled: true,
         // Prevent automatic refetching when other parameters change
         staleTime: Infinity,
-        // Force cache to remain valid unless categoryId changes
+        // Force cache to remain valid unless manually invalidated
         gcTime: Infinity,
         // Equivalent behavior to keepPreviousData
         placeholderData: (previousData) => previousData,
+        // Prevent refetches on window focus
+        refetchOnWindowFocus: false,
+        // Prevent refetches when reconnecting
+        refetchOnReconnect: false,
       },
     );
 
@@ -178,20 +187,26 @@ export default function ProductsPage() {
       }
     }
 
-    // Check if current brand exists in the new category
-    if (
-      categoryId &&
-      categoryBrands &&
-      brand &&
-      !categoryBrands.includes(brand.toLowerCase())
-    ) {
-      setBrand(null);
-      updateUrlParams({ brand: null });
+    // Check if current brands exist in the new category
+    if (categoryId && categoryBrands && brands.length > 0) {
+      const validBrands = brands.filter((brand) =>
+        categoryBrands.includes(brand.toLowerCase()),
+      );
+
+      // If any brands were removed, update state and URL
+      if (validBrands.length !== brands.length) {
+        setBrands(validBrands);
+        if (validBrands.length === 0) {
+          updateUrlParams({ brand: null });
+        } else {
+          updateUrlParams({ brand: validBrands.join(",") });
+        }
+      }
     }
 
     // If category is cleared, also clear brand selection
-    if (!categoryId && brand) {
-      setBrand(null);
+    if (!categoryId && brands.length > 0) {
+      setBrands([]);
       updateUrlParams({ brand: null });
     }
   }, [
@@ -200,7 +215,7 @@ export default function ProductsPage() {
     category?.id,
     category?.name,
     categoryBrands,
-    brand,
+    brands,
     updateUrlParams,
     categoryData,
   ]);
@@ -253,8 +268,38 @@ export default function ProductsPage() {
 
   // Filter handlers
   const handleCategory = (categoryId: string, categoryName: string) => {
+    // Reset all filter states
+    setBrands([]);
+    setPriceRange(initialPriceRange);
+    setShowOnlySale(false);
+    setCurrentSortOption("");
+    setCurrentPage(0);
+
+    // Clear attribute filters
+    if (Object.keys(attributeFilters).length > 0) {
+      setAttributeFilters({});
+    }
+
+    // Set the new category
     setCategory({ id: categoryId, name: categoryName });
-    updateUrlParams({ category: categoryId });
+
+    // Get parameters to clear all attribute URL parameters
+    const attrParams: Record<string, null> = {};
+    Object.keys(attributeFilters).forEach((key) => {
+      attrParams[key] = null;
+    });
+
+    // Update URL with only the new category and reset page to 0
+    updateUrlParams({
+      category: categoryId,
+      brand: null,
+      minPrice: null,
+      maxPrice: null,
+      sale: null,
+      sort: null,
+      page: "0",
+      ...attrParams,
+    });
   };
 
   const handleShowOnlySale = () => {
@@ -290,10 +335,26 @@ export default function ProductsPage() {
     }
   };
 
-  const handleBrand = (newBrand: string) => {
-    const updatedBrand = brand === newBrand ? null : newBrand;
-    setBrand(updatedBrand);
-    updateUrlParams({ brand: updatedBrand });
+  // Modified to handle multiple brands
+  const handleBrand = (brandName: string) => {
+    let updatedBrands: string[];
+
+    if (brands.includes(brandName)) {
+      // Remove if already selected
+      updatedBrands = brands.filter((b) => b !== brandName);
+    } else {
+      // Add if not already selected
+      updatedBrands = [...brands, brandName];
+    }
+
+    setBrands(updatedBrands);
+
+    // Update URL parameter
+    if (updatedBrands.length === 0) {
+      updateUrlParams({ brand: null });
+    } else {
+      updateUrlParams({ brand: updatedBrands.join(",") });
+    }
   };
 
   const handleAttributeChange = (
@@ -312,23 +373,53 @@ export default function ProductsPage() {
       // Remove the filter
       delete updatedFilters[name];
     } else {
-      // If the value is the same as current, no need to update
-      if (JSON.stringify(updatedFilters[name]) === JSON.stringify(value)) {
-        return;
-      }
+      // Get the current value of the attribute if it exists
+      const currentValue = updatedFilters[name];
 
-      // Add/update the filter
-      updatedFilters[name] = value;
+      if (typeof value === "string") {
+        if (!currentValue) {
+          // If no current value, set as array with single value
+          updatedFilters[name] = [value];
+        } else if (Array.isArray(currentValue)) {
+          // If current value is array, toggle the value
+          if (currentValue.includes(value)) {
+            // Remove if already selected
+            const newValues = currentValue.filter((v) => v !== value);
+            if (newValues.length === 0) {
+              // Remove attribute if no values left
+              delete updatedFilters[name];
+            } else {
+              updatedFilters[name] = newValues;
+            }
+          } else {
+            // Add if not already selected
+            updatedFilters[name] = [...currentValue, value];
+          }
+        } else {
+          // If current value is a string, convert to array
+          updatedFilters[name] = [currentValue, value];
+        }
+      } else if (Array.isArray(value)) {
+        // Direct array assignment (used when loading from URL)
+        if (value.length === 0) {
+          delete updatedFilters[name];
+        } else {
+          updatedFilters[name] = value;
+        }
+      }
     }
 
     // Update state
     setAttributeFilters(updatedFilters);
 
     // Update URL parameter
-    if (value === null) {
+    if (value === null || (Array.isArray(value) && value.length === 0)) {
       updateUrlParams({ [name]: null });
     } else {
-      const paramValue = Array.isArray(value) ? value.join(",") : value;
+      const arrayValue = Array.isArray(updatedFilters[name])
+        ? updatedFilters[name]
+        : [updatedFilters[name]!];
+      const paramValue = arrayValue.join(",");
       updateUrlParams({ [name]: paramValue });
     }
   };
@@ -349,7 +440,7 @@ export default function ProductsPage() {
   };
 
   const handleClearAll = () => {
-    setBrand(null);
+    setBrands([]); // Update to clear brands array
     setPriceRange(initialPriceRange);
     setCategory(null);
     setShowOnlySale(false);
@@ -388,18 +479,6 @@ export default function ProductsPage() {
   }, [products, offset, productsPerPage]);
 
   // Count products per brand - now using the category-filtered brands
-  const brandCounts = useMemo(() => {
-    if (!products) return {};
-    return categoryBrands.reduce(
-      (acc, brand) => {
-        acc[brand] = products.filter(
-          (item) => item.brand.toLowerCase() === brand,
-        ).length;
-        return acc;
-      },
-      {} as Record<string, number>,
-    );
-  }, [categoryBrands, products]);
 
   const breadcrumbItems = [
     {
@@ -478,7 +557,7 @@ export default function ProductsPage() {
                                 type="checkbox"
                                 name={item}
                                 id={item}
-                                checked={brand === item}
+                                checked={brands.includes(item)}
                                 onChange={() => handleBrand(item)}
                               />
                               <CheckSquare
@@ -494,9 +573,6 @@ export default function ProductsPage() {
                               {item}
                             </label>
                           </div>
-                          <div className="text-secondary2">
-                            ({brandCounts[item] ?? 0})
-                          </div>
                         </div>
                       ))
                     )}
@@ -504,7 +580,7 @@ export default function ProductsPage() {
                 </div>
               )}
 
-              {/* Category attribute filters - simplified for select-only attributes */}
+              {/* Category attribute filters section */}
               {category && categoryId && categoryAttributes.length > 0 && (
                 <div className="filter-attributes mt-8 border-t border-line pt-8">
                   <div className="heading6">Specifications</div>
@@ -530,52 +606,53 @@ export default function ProductsPage() {
                           {displayName}
                         </div>
 
-                        {/* All attributes are select type now */}
+                        {/* Updated to support multi-select */}
                         <div className="flex flex-col gap-2">
-                          {options.map((option, idx) => (
-                            <div
-                              key={idx}
-                              className="flex items-center justify-between"
-                            >
-                              <div className="left flex cursor-pointer items-center">
-                                <div className="block-input">
-                                  <input
-                                    type="checkbox"
-                                    id={`${attr.name}-${option}`}
-                                    checked={
-                                      Array.isArray(attributeFilters[attr.name])
-                                        ? attributeFilters[attr.name]?.includes(
-                                            option,
-                                          )
-                                        : attributeFilters[attr.name] === option
-                                    }
-                                    onChange={() => {
-                                      // Single-select behavior
-                                      const newValue =
-                                        attributeFilters[attr.name] === option
-                                          ? null
-                                          : option;
-                                      handleAttributeChange(
-                                        attr.name,
-                                        newValue,
-                                      );
-                                    }}
-                                  />
-                                  <CheckSquare
-                                    size={20}
-                                    weight="fill"
-                                    className="icon-checkbox"
-                                  />
+                          {options.map((option, idx) => {
+                            // Check if this option is selected
+                            const isSelected = Array.isArray(
+                              attributeFilters[attr.name],
+                            )
+                              ? (
+                                  attributeFilters[attr.name] as string[]
+                                )?.includes(option)
+                              : attributeFilters[attr.name] === option;
+
+                            return (
+                              <div
+                                key={idx}
+                                className="flex items-center justify-between"
+                              >
+                                <div className="left flex cursor-pointer items-center">
+                                  <div className="block-input">
+                                    <input
+                                      type="checkbox"
+                                      id={`${attr.name}-${option}`}
+                                      checked={isSelected}
+                                      onChange={() => {
+                                        // Multi-select behavior
+                                        handleAttributeChange(
+                                          attr.name,
+                                          option,
+                                        );
+                                      }}
+                                    />
+                                    <CheckSquare
+                                      size={20}
+                                      weight="fill"
+                                      className="icon-checkbox"
+                                    />
+                                  </div>
+                                  <label
+                                    htmlFor={`${attr.name}-${option}`}
+                                    className="cursor-pointer pl-2 capitalize"
+                                  >
+                                    {option}
+                                  </label>
                                 </div>
-                                <label
-                                  htmlFor={`${attr.name}-${option}`}
-                                  className="cursor-pointer pl-2 capitalize"
-                                >
-                                  {option}
-                                </label>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     );
@@ -636,7 +713,7 @@ export default function ProductsPage() {
                   <span className="pl-1 text-secondary">Products Found</span>
                 </div>
                 {(category ??
-                  brand ??
+                  brands.length > 0 ??
                   (Object.keys(attributeFilters).length > 0 ||
                     priceRange.min !== initialPriceRange.min ||
                     priceRange.max !== initialPriceRange.max ||
@@ -656,18 +733,17 @@ export default function ProductsPage() {
                           <span>{category.name}</span>
                         </div>
                       )}
-                      {brand && (
+                      {/* Modified to show all selected brands */}
+                      {brands.map((brandName, index) => (
                         <div
+                          key={`brand-${index}`}
                           className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
-                          onClick={() => {
-                            setBrand(null);
-                            updateUrlParams({ brand: null });
-                          }}
+                          onClick={() => handleBrand(brandName)}
                         >
                           <X className="cursor-pointer" />
-                          <span>{brand}</span>
+                          <span>{brandName}</span>
                         </div>
-                      )}
+                      ))}
                       {(priceRange.min !== initialPriceRange.min ||
                         priceRange.max !== initialPriceRange.max) && (
                         <div

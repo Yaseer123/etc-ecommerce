@@ -198,9 +198,14 @@ export default function EditProductForm({ productId }: { productId: string }) {
   // Initialize attribute values from product data
   useEffect(() => {
     if (product?.attributes) {
-      setAttributeValues(
-        product.attributes as Record<string, string | number | boolean>,
-      );
+      // Check if there are any category attributes in the existing product
+      const productData = product.attributes as {
+        categoryAttributes?: Record<string, string | number | boolean>;
+      };
+
+      if (productData.categoryAttributes) {
+        setAttributeValues(productData.categoryAttributes);
+      }
     }
   }, [product]);
 
@@ -353,12 +358,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
       slug,
       categoryId: categoryId,
       description: content,
-      attributes: specsObject,
+      attributes: specsObject, // Only include specifications here
+      categoryAttributes: attributeValues, // Pass category attributes separately
       stock,
       brand,
       published,
       estimatedDeliveryTime: estimatedDeliveryTime,
-      // attributeValues: attributeValues, // Include attribute values in update
     });
   };
 

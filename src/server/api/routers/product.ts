@@ -7,7 +7,8 @@ import {
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 import { z } from "zod";
 import type { Prisma } from "@prisma/client";
-import type { CategoryAttribute } from "@/schemas/categorySchema";
+import { type CategoryAttribute } from "@/schemas/categorySchema";
+import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
 import { TRPCError } from "@trpc/server";
 
 export const productRouter = createTRPCRouter({
@@ -95,20 +96,21 @@ export const productRouter = createTRPCRouter({
       z.object({
         categoryId: z.string().optional(),
         onSale: z.boolean().optional(),
-        brand: z.string().optional(),
+        // Change from single brand to array of brands
+        brands: z.array(z.string()).optional(),
         minPrice: z.number().optional(),
         maxPrice: z.number().optional(),
         sort: z.string().optional(),
         attributes: z
-          .record(z.string(), z.union([z.string(), z.array(z.string())]))
-          .optional(), // Only string or string[] for select attributes
+          .record(z.union([z.string(), z.array(z.string())]))
+          .optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
       const {
         categoryId,
         onSale,
-        brand,
+        brands, // Changed from brand to brands
         minPrice,
         maxPrice,
         sort,
@@ -146,10 +148,10 @@ export const productRouter = createTRPCRouter({
         filters.sale = true;
       }
 
-      // Brand filter
-      if (brand) {
+      // Brand filter - updated for multiple brands
+      if (brands && brands.length > 0) {
         filters.brand = {
-          equals: brand,
+          in: brands,
           mode: "insensitive" as Prisma.QueryMode, // Case insensitive search with type assertion
         };
       }
@@ -167,12 +169,10 @@ export const productRouter = createTRPCRouter({
         }
       }
 
-      // Add attribute filters if provided - updated for only select attributes
+      // Add attribute filters if provided - Updated for multiple selection support
       if (attributes && Object.keys(attributes).length > 0) {
-        // For each attribute, create a filter
         Object.entries(attributes).forEach(([key, value]) => {
           if (value !== null && value !== undefined) {
-            // Make sure filters.AND is always an array
             if (!filters.AND) {
               filters.AND = [];
             } else if (!Array.isArray(filters.AND)) {
@@ -180,19 +180,20 @@ export const productRouter = createTRPCRouter({
             }
 
             if (Array.isArray(value)) {
-              // Multi-select: handle array of options
+              // Multiple values selected - any match is valid (OR condition)
               const orConditions = value.map((val) => ({
-                attributes: {
-                  path: ["categoryAttributes", key],
+                categoryAttributes: {
+                  path: [key],
                   equals: val,
                 },
               }));
+
               filters.AND.push({ OR: orConditions });
             } else {
-              // Single select: handle single string option
+              // Single value selected
               filters.AND.push({
-                attributes: {
-                  path: ["categoryAttributes", key],
+                categoryAttributes: {
+                  path: [key],
                   equals: value,
                 },
               });
@@ -266,11 +267,49 @@ export const productRouter = createTRPCRouter({
     }),
 
   add: adminProcedure.input(productSchema).mutation(async ({ ctx, input }) => {
-    // Merge specifications and attributeValues into the attributes JSON field
-    const attributesData = {
-      ...input.attributes,
-    };
+    const { categoryAttributes, categoryId } = input;
 
+    // Get category details to validate attributes
+    if (categoryId) {
+      const category = await ctx.db.category.findUnique({
+        where: { id: categoryId },
+        select: { attributes: true },
+      });
+
+      if (category) {
+        // Parse the category attributes
+        let categoryAttributeDefinitions: CategoryAttribute[] = [];
+
+        try {
+          if (typeof category.attributes === "string") {
+            categoryAttributeDefinitions = JSON.parse(
+              category.attributes,
+            ) as CategoryAttribute[];
+          } else if (Array.isArray(category.attributes)) {
+            categoryAttributeDefinitions =
+              category.attributes as CategoryAttribute[];
+          }
+
+          // Validate that the product satisfies the category's required attributes
+          const validation = validateCategoryAttributes(
+            categoryAttributes || {},
+            categoryAttributeDefinitions,
+          );
+
+          if (!validation.isValid) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: `Category attribute validation failed: ${validation.errors.join(", ")}`,
+            });
+          }
+        } catch (error) {
+          if (error instanceof TRPCError) throw error;
+          console.error("Failed to parse category attributes:", error);
+        }
+      }
+    }
+
+    // Create the product with validated attributes
     const product = await ctx.db.product.create({
       data: {
         title: input.title,
@@ -286,7 +325,8 @@ export const productRouter = createTRPCRouter({
         originPrice: input.originPrice,
         brand: input.brand,
         estimatedDeliveryTime: input.estimatedDeliveryTime,
-        attributes: attributesData, // Store both regular attributes and category attributes
+        attributes: input.attributes, // Store regular specifications
+        categoryAttributes: categoryAttributes || {}, // Store category-specific attributes
       },
     });
 
@@ -296,12 +336,52 @@ export const productRouter = createTRPCRouter({
   update: adminProcedure
     .input(updateProductSchema)
     .mutation(async ({ ctx, input }) => {
-      const { id, categoryId, ...updateData } = input;
+      const { id, categoryId, categoryAttributes, ...updateData } = input;
+
+      // If category or attributes are being updated, validate them
+      if (categoryId && categoryAttributes) {
+        const category = await ctx.db.category.findUnique({
+          where: { id: categoryId },
+          select: { attributes: true },
+        });
+
+        if (category) {
+          // Parse the category attributes
+          let categoryAttributeDefinitions: CategoryAttribute[] = [];
+          try {
+            if (typeof category.attributes === "string") {
+              categoryAttributeDefinitions = JSON.parse(
+                category.attributes,
+              ) as CategoryAttribute[];
+            } else if (Array.isArray(category.attributes)) {
+              categoryAttributeDefinitions =
+                category.attributes as CategoryAttribute[];
+            }
+
+            // Validate that the product satisfies the category's required attributes
+            const validation = validateCategoryAttributes(
+              categoryAttributes || {},
+              categoryAttributeDefinitions,
+            );
+
+            if (!validation.isValid) {
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: `Category attribute validation failed: ${validation.errors.join(", ")}`,
+              });
+            }
+          } catch (error) {
+            if (error instanceof TRPCError) throw error;
+            console.error("Failed to parse category attributes:", error);
+          }
+        }
+      }
 
       const product = await ctx.db.product.update({
         where: { id },
         data: {
           ...updateData,
+          categoryAttributes: categoryAttributes ?? {}, // Update category attributes separately
           category: categoryId ? { connect: { id: categoryId } } : undefined,
         },
       });
@@ -466,46 +546,44 @@ export const productRouter = createTRPCRouter({
 
       const categoryIds = await getChildCategoryIds(categoryId);
 
-      // Get products with their attributes
+      // Get products with their categoryAttributes (updated from attributes)
       const products = await ctx.db.product.findMany({
         where: {
           categoryId: { in: categoryIds },
         },
         select: {
-          attributes: true,
+          categoryAttributes: true, // Select categoryAttributes directly
         },
       });
 
       // Extract available values for each attribute
       const attributeValues: Record<string, Set<string>> = {}; // Only string values now
 
-      // For each product, extract attribute values
+      // For each product, extract attribute values directly from categoryAttributes
       products.forEach((product) => {
-        if (!product.attributes) return;
+        if (!product.categoryAttributes) return;
 
-        const attrs = product.attributes as Record<string, unknown>;
-        if (attrs.categoryAttributes) {
-          Object.entries(attrs.categoryAttributes).forEach(([key, value]) => {
-            if (!attributeValues[key]) {
-              attributeValues[key] = new Set();
-            }
+        const attrs = product.categoryAttributes as Record<string, unknown>;
+        Object.entries(attrs).forEach(([key, value]) => {
+          if (!attributeValues[key]) {
+            attributeValues[key] = new Set();
+          }
 
-            // Only handle string values or arrays of strings
-            if (typeof value === "string") {
-              attributeValues[key].add(value);
-            } else if (Array.isArray(value)) {
-              value.forEach((v) => {
-                if (typeof v === "string") {
-                  // Re-check existence since we're inside a closure
-                  if (!attributeValues[key]) {
-                    attributeValues[key] = new Set();
-                  }
-                  attributeValues[key].add(v);
+          // Only handle string values or arrays of strings
+          if (typeof value === "string") {
+            attributeValues[key].add(value);
+          } else if (Array.isArray(value)) {
+            value.forEach((v) => {
+              if (typeof v === "string") {
+                // Re-check existence since we're inside a closure
+                if (!attributeValues[key]) {
+                  attributeValues[key] = new Set();
                 }
-              });
-            }
-          });
-        }
+                attributeValues[key].add(v);
+              }
+            });
+          }
+        });
       });
 
       // Combine attribute definitions with available values

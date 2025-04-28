@@ -1,71 +1,49 @@
 import { z } from "zod";
 
-// Define the attribute value schema
-const attributeValueSchema = z.record(
-  z.string(),
-  z.union([z.string(), z.number(), z.boolean()]),
+// Define a schema for category attribute values
+// This is more flexible than the full category attribute definition
+export const categoryAttributeValueSchema = z.record(
+  z.string(), // The attribute name
+  z.union([z.string(), z.number(), z.boolean()]), // Possible values
 );
 
 export const productSchema = z.object({
-  title: z.string().min(1, { message: "Title is required" }),
-  shortDescription: z
-    .string()
-    .min(1, { message: "Short description is required" }),
-  slug: z.string().min(1, { message: "Slug is required" }),
+  title: z.string().min(3),
+  slug: z.string().min(3),
+  shortDescription: z.string().min(3),
   description: z.string().optional(),
-  estimatedDeliveryTime: z.number().int().positive().optional(),
-  price: z
-    .number()
-    .min(0, { message: "Price must be greater than or equal to 0" }),
-  originPrice: z
-    .number()
-    .min(0, { message: "Origin price must be greater than or equal to 0" })
-    .optional(),
-  categoryId: z.string().optional(),
+  published: z.boolean().default(false),
+  price: z.number().positive(),
+  originPrice: z.number().optional(),
+  stock: z.number().int().nonnegative(),
+  brand: z.string(),
   imageId: z.string(),
   images: z.array(z.string()),
+  categoryId: z.string(),
   descriptionImageId: z.string().optional(),
   attributes: z.record(z.string(), z.string()).default({}),
-  attributeValues: attributeValueSchema.optional().default({}),
-  stock: z
-    .number()
-    .min(0, { message: "Stock must be greater than or equal to 0" }),
-  brand: z.string().min(1, { message: "Brand is required" }),
+  estimatedDeliveryTime: z.number().int().positive().optional(),
+  categoryAttributes: categoryAttributeValueSchema.default({}), // Add categoryAttributes field
 });
-
-export type ProductInput = z.infer<typeof productSchema>;
 
 export const updateProductSchema = z.object({
-  id: z.string().cuid(),
-  title: z.string().min(1, { message: "Title is required" }).optional(),
-  shortDescription: z
-    .string()
-    .min(1, { message: "Short description is required" })
-    .optional(),
-  slug: z.string().min(1, { message: "Slug is required" }).optional(),
+  id: z.string(),
+  title: z.string().min(3).optional(),
+  slug: z.string().min(3).optional(),
+  shortDescription: z.string().min(3).optional(),
   description: z.string().optional(),
-  estimatedDeliveryTime: z.number().int().positive().optional(),
-  price: z
-    .number()
-    .min(0, { message: "Price must be greater than or equal to 0" })
-    .optional(),
-  originPrice: z
-    .number()
-    .min(0, { message: "Origin price must be greater than or equal to 0" })
-    .optional(),
-  categoryId: z.string().optional(),
+  published: z.boolean().optional(),
+  price: z.number().positive().optional(),
+  originPrice: z.number().optional(),
+  stock: z.number().int().nonnegative().optional(),
+  brand: z.string().optional(),
   images: z.array(z.string()).optional(),
+  categoryId: z.string().optional(),
   descriptionImageId: z.string().optional(),
   attributes: z.record(z.string(), z.string()).optional(),
-  attributeValues: attributeValueSchema.optional(),
-  stock: z
-    .number()
-    .min(0, { message: "Stock must be greater than or equal to 0" })
-    .optional(),
-  brand: z.string().optional(),
-  new: z.boolean().optional(),
-  sale: z.boolean().optional(),
-  published: z.boolean().optional(),
+  estimatedDeliveryTime: z.number().int().positive().optional(),
+  categoryAttributes: categoryAttributeValueSchema.optional(), // Add categoryAttributes field
 });
 
-export type UpdateProductInput = z.infer<typeof updateProductSchema>;
+export type Product = z.infer<typeof productSchema>;
+export type UpdateProduct = z.infer<typeof updateProductSchema>;

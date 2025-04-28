@@ -266,8 +266,8 @@ export default function AddProductForm() {
       slug,
       categoryId: categoryId,
       description: content,
-      attributes: specsObject,
-      // attributeValues: attributeValues,
+      attributes: specsObject, // Only include specifications here
+      categoryAttributes: attributeValues, // Pass category attributes separately
       estimatedDeliveryTime: estimatedDeliveryTime,
     });
   };
