@@ -26,12 +26,14 @@ import { DataTableColumnHeader } from "@/components/admin-components/DataTableCo
 import type { Category, Product, StockStatus } from "@prisma/client";
 import Link from "next/link";
 import { StockStatusModal } from "./StockStatusModal";
+import { FeaturedProductModal } from "./FeaturedProductModal";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
 
 // Create a separate component for the actions cell
 function ActionCell({ product }: { product: ProductColumns }) {
   const [isStockModalOpen, setIsStockModalOpen] = React.useState(false);
+  const [isFeaturedModalOpen, setIsFeaturedModalOpen] = React.useState(false);
   const [isDeleteAlertOpen, setIsDeleteAlertOpen] = React.useState(false);
   const utils = api.useUtils();
 
@@ -76,6 +78,9 @@ function ActionCell({ product }: { product: ProductColumns }) {
           <DropdownMenuItem onClick={() => setIsStockModalOpen(true)}>
             Change Stock Status
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setIsFeaturedModalOpen(true)}>
+            {product.featured ? "Remove from Featured" : "Add to Featured"}
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Link href={`/admin/product/edit/${product.id}`}>Edit product</Link>
           </DropdownMenuItem>
@@ -93,6 +98,13 @@ function ActionCell({ product }: { product: ProductColumns }) {
         onClose={() => setIsStockModalOpen(false)}
         productId={product.id}
         currentStatus={product.stockStatus}
+      />
+
+      <FeaturedProductModal
+        isOpen={isFeaturedModalOpen}
+        onClose={() => setIsFeaturedModalOpen(false)}
+        productId={product.id}
+        currentFeaturedStatus={product.featured}
       />
 
       <AlertDialog open={isDeleteAlertOpen} onOpenChange={setIsDeleteAlertOpen}>
@@ -219,6 +231,31 @@ export const columns: ColumnDef<ProductColumns>[] = [
     cell: ({ row }) => {
       const product = row.original;
       return <ActionCell product={product} />;
+    },
+  },
+  {
+    accessorKey: "featured",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Featured" />;
+    },
+    cell: ({ row }) => {
+      const featured = row.getValue("featured");
+
+      return (
+        <div className="flex justify-center">
+          {featured ? (
+            <div className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+              <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+              Featured
+            </div>
+          ) : (
+            <div className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600">
+              <span className="mr-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+              Not Featured
+            </div>
+          )}
+        </div>
+      );
     },
   },
 ];

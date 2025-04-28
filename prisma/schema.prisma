@@ -75,6 +75,7 @@ model Product {
     title                 String
     new                   Boolean     @default(true)
     sale                  Boolean     @default(false)
+    featured              Boolean     @default(false) // New field for featured products
     rate                  Float       @default(0)
     slug                  String
     shortDescription      String

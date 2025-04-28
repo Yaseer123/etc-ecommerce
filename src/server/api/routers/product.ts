@@ -563,4 +563,46 @@ export const productRouter = createTRPCRouter({
         where: { id },
       });
     }),
+
+  // Add these procedures to your product router
+
+  getFeaturedProducts: publicProcedure
+    .input(
+      z.object({
+        limit: z.number().optional().default(4),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      return ctx.db.product.findMany({
+        where: {
+          featured: true,
+          published: true,
+        },
+        take: input.limit,
+        include: {
+          category: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+    }),
+
+  updateFeaturedStatus: adminProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        featured: z.boolean(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.product.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          featured: input.featured,
+        },
+      });
+    }),
 });

@@ -7,6 +7,7 @@ import Slider from "@/components/store-components/Slider";
 import TrendingNow from "@/components/store-components/TrendingNow";
 import React from "react";
 import MenFashion from "@/components/store-components/Fashion";
+import FeaturedProducts from "@/components/store-components/FeaturedProducts";
 
 export default function HomeEleven() {
   return (
@@ -16,6 +17,7 @@ export default function HomeEleven() {
       </div>
       <TrendingNow />
       <MenFashion />
+      <FeaturedProducts />
       <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" />
       <NewsInsight start={0} limit={3} />
       <Brand />
