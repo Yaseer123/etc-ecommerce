@@ -225,14 +225,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
     header: "Category",
     accessorFn: (row) => row.category?.name ?? "No Category",
   },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => {
-      const product = row.original;
-      return <ActionCell product={product} />;
-    },
-  },
+
   {
     accessorKey: "featured",
     header: ({ column }) => {
@@ -242,7 +235,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
       const featured = row.getValue("featured");
 
       return (
-        <div className="flex justify-center">
+        <div>
           {featured ? (
             <div className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
               <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
@@ -256,6 +249,14 @@ export const columns: ColumnDef<ProductColumns>[] = [
           )}
         </div>
       );
+    },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const product = row.original;
+      return <ActionCell product={product} />;
     },
   },
 ];

@@ -80,7 +80,7 @@ export default function ProductsPage() {
       Object.keys(attributeFilters).length > 0 ? attributeFilters : undefined,
   });
 
-  // Fetch brands based on selected category - Improved caching strategy
+  // Prevent category brands query from refreshing when brand selection changes
   const { data: categoryBrands = [] } =
     api.product.getBrandsByCategory.useQuery(
       {
@@ -234,8 +234,8 @@ export default function ProductsPage() {
 
           // All attributes are now "select" type only
           if (paramValue.includes(",")) {
-            // Handle multiple values (array)
-            newFilters[attr.name] = paramValue.split(",");
+            // Handle multiple values (array) and deduplicate
+            newFilters[attr.name] = [...new Set(paramValue.split(","))];
           } else {
             newFilters[attr.name] = paramValue;
           }
@@ -349,7 +349,7 @@ export default function ProductsPage() {
 
     setBrands(updatedBrands);
 
-    // Update URL parameter
+    // Update URL parameter without causing a page reload or revalidation
     if (updatedBrands.length === 0) {
       updateUrlParams({ brand: null });
     } else {
@@ -365,62 +365,79 @@ export default function ProductsPage() {
     const updatedFilters = { ...attributeFilters };
 
     if (value === null) {
-      // If the attribute already doesn't exist, no need to update
-      if (!(name in updatedFilters)) {
-        return;
-      }
+      // Remove the filter if it exists
+      if (name in updatedFilters) {
+        delete updatedFilters[name];
 
-      // Remove the filter
-      delete updatedFilters[name];
-    } else {
-      // Get the current value of the attribute if it exists
+        // Update state immediately for better responsiveness
+        setAttributeFilters(updatedFilters);
+
+        // Then update URL
+        updateUrlParams({ [name]: null });
+      }
+      return;
+    }
+
+    if (typeof value === "string") {
       const currentValue = updatedFilters[name];
 
-      if (typeof value === "string") {
-        if (!currentValue) {
-          // If no current value, set as array with single value
-          updatedFilters[name] = [value];
-        } else if (Array.isArray(currentValue)) {
-          // If current value is array, toggle the value
-          if (currentValue.includes(value)) {
-            // Remove if already selected
-            const newValues = currentValue.filter((v) => v !== value);
-            if (newValues.length === 0) {
-              // Remove attribute if no values left
-              delete updatedFilters[name];
-            } else {
-              updatedFilters[name] = newValues;
-            }
+      if (!currentValue) {
+        // If no current value, set as single string (not array)
+        updatedFilters[name] = [value];
+      } else if (Array.isArray(currentValue)) {
+        // If current value is array, toggle the value
+        if (currentValue.includes(value)) {
+          // Remove the value
+          const newValues = currentValue.filter((v) => v !== value);
+
+          if (newValues.length === 0) {
+            // If no values left, remove the attribute completely
+            delete updatedFilters[name];
           } else {
-            // Add if not already selected
-            updatedFilters[name] = [...currentValue, value];
+            // Otherwise keep the remaining values
+            updatedFilters[name] = newValues;
           }
         } else {
-          // If current value is a string, convert to array
-          updatedFilters[name] = [currentValue, value];
+          // Add the value (no duplicates)
+          updatedFilters[name] = [...currentValue, value];
         }
-      } else if (Array.isArray(value)) {
-        // Direct array assignment (used when loading from URL)
-        if (value.length === 0) {
+      } else {
+        // If current value is a string, toggle it
+        if (currentValue === value) {
+          // If trying to deselect the only value, remove the attribute entirely
           delete updatedFilters[name];
         } else {
-          updatedFilters[name] = value;
+          // Otherwise add the new value to create an array
+          updatedFilters[name] = [currentValue, value];
         }
+      }
+    } else if (Array.isArray(value)) {
+      // Direct array assignment (used when loading from URL)
+      if (value.length === 0) {
+        delete updatedFilters[name];
+      } else {
+        // Ensure no duplicates
+        updatedFilters[name] = [...new Set(value)];
       }
     }
 
-    // Update state
+    // Update state immediately for better UI responsiveness
     setAttributeFilters(updatedFilters);
 
-    // Update URL parameter
-    if (value === null || (Array.isArray(value) && value.length === 0)) {
-      updateUrlParams({ [name]: null });
-    } else {
+    // Then update URL with the final value
+    if (name in updatedFilters) {
       const arrayValue = Array.isArray(updatedFilters[name])
         ? updatedFilters[name]
         : [updatedFilters[name]!];
+
+      // Convert to string for URL param
       const paramValue = arrayValue.join(",");
+
+      // Update URL immediately rather than with a delay
       updateUrlParams({ [name]: paramValue });
+    } else {
+      // The attribute was removed, so remove it from URL
+      updateUrlParams({ [name]: null });
     }
   };
 
@@ -537,7 +554,7 @@ export default function ProductsPage() {
                 <div className="filter-brand mt-8">
                   <div className="heading6">Brands</div>
                   <div className="list-brand mt-4">
-                    {isLoading ? (
+                    {isLoading && !categoryBrands.length ? (
                       <div className="my-2 text-secondary">
                         Loading brands...
                       </div>

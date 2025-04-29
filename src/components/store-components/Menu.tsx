@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { usePathname } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
@@ -17,6 +16,7 @@ import {
   User,
   MagnifyingGlass,
   SpinnerGap,
+  CaretDown,
 } from "@phosphor-icons/react/dist/ssr";
 import TopNav from "./TopNav";
 import { api } from "@/trpc/react";
@@ -31,7 +31,6 @@ export default function Menu({
   isAuthenticated: boolean;
   props?: string;
 }) {
-  const pathname = usePathname();
   const { openLoginPopup, handleLoginPopup } = useLoginPopup();
   const { openMenuMobile, handleMenuMobile } = useMenuMobile();
   const { openModalCart } = useModalCartStore();
@@ -44,6 +43,23 @@ export default function Menu({
 
   // Use the useDebounce hook with 300ms delay
   const debouncedSearchTerm = useDebounce(searchKeyword, 300);
+
+  // Simplified sticky header implementation - only for category nav
+  const [isSticky, setIsSticky] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Make category navbar sticky when scrolled past the main header
+      // We're using a smaller threshold (50px) for just the navbar
+      const scrollPosition = window.scrollY;
+      setIsSticky(scrollPosition > 120); // Adjusted threshold for just the navbar
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleSearch = (value: string) => {
     if (!value.trim()) return;
@@ -85,13 +101,12 @@ export default function Menu({
     };
   }, []);
 
-  const [fixedHeader, setFixedHeader] = useState(false);
+  // Keep the lastScrollPosition state for potential future use
   const [lastScrollPosition, setLastScrollPosition] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollPosition = window.scrollY;
-      setFixedHeader(scrollPosition > 0 && scrollPosition < lastScrollPosition);
       setLastScrollPosition(scrollPosition);
     };
 
@@ -104,15 +119,25 @@ export default function Menu({
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // Fetch categories for the navigation menu
+  const { data: categories } = api.category.getAll.useQuery(undefined, {
+    staleTime: 60000, // Cache for 1 minute
+  });
+
+  // Utility function to convert string to title case
+  const toTitleCase = (str: string) => {
+    return str.replace(
+      /\w\S*/g,
+      (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(),
+    );
+  };
+
   return (
     <>
-      <TopNav
-        props="style-one bg-black"
-        slogan="New customers save 10% with the code GET10"
-      />
-      <div
-        className={`${fixedHeader ? "fixed" : "relative"} header-menu top-0 z-10 w-full bg-white duration-500 lg:pt-5`}
-      >
+      <TopNav props="style-one bg-black" />
+
+      {/* Main header - not sticky */}
+      <div className="header-menu relative w-full bg-white lg:pt-5">
         <div
           className={`header-menu style-eight h-[56px] w-full bg-white md:h-[74px] ${props}`}
         >
@@ -291,70 +316,84 @@ export default function Menu({
             </div>
           </div>
         </div>
+      </div>
 
-        <div className="top-nav-menu relative z-10 h-[44px] border-b border-t border-line bg-white max-lg:hidden">
-          <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
-            <div className="top-nav-menu-main flex h-full items-center justify-between">
-              <div className="left flex h-full items-center">
-                <div className="menu-main style-eight h-full max-lg:hidden">
-                  <ul className="flex h-full items-center gap-8">
-                    <li className="h-full">
-                      <Link
-                        href="/products"
-                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
-                      >
-                        Products
-                      </Link>
-                    </li>
+      {/* Category navbar - can be sticky */}
+      <div
+        className={`${
+          isSticky ? "fixed top-0 animate-slideDown shadow-lg" : "relative"
+        } z-30 w-full border-y border-gray-100 bg-white transition-all duration-300 max-lg:hidden`}
+      >
+        <div className="mx-auto h-full w-full !max-w-[1322px]">
+          <div className="flex h-full items-center justify-between">
+            {/* Category navigation menu - left side */}
+            <div className="left flex h-full items-center">
+              {categories?.map((category) => (
+                <div key={category.id} className="group relative h-full">
+                  <Link
+                    href={`/products?category=${category.id}`}
+                    className="relative flex h-full items-center px-4 text-sm font-medium text-gray-700 transition-colors hover:text-orange-500"
+                  >
+                    <span className="py-3.5">
+                      {toTitleCase(category.name)}
+                      {category.subcategories?.length > 0 && (
+                        <CaretDown className="ml-1 inline-block h-3 w-3 transform text-orange-400 transition-transform duration-200 group-hover:rotate-180" />
+                      )}
+                    </span>
+                    <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+                  </Link>
+                  {/* Category dropdown */}
+                  {category.subcategories?.length > 0 && (
+                    <div className="submenu absolute left-0 top-[calc(100%-1px)] z-50 hidden min-w-[240px] rounded-b-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-opacity duration-300 group-hover:block group-hover:opacity-100">
+                      {/* Add invisible bridge element to prevent hover gap issues */}
+                      <div className="absolute -top-2 left-0 h-2 w-full"></div>
+                      {category.subcategories.map((subcat) => (
+                        <div key={subcat.id} className="group/sub relative">
+                          <Link
+                            href={`/products?category=${subcat.id}`}
+                            className="flex w-full items-center justify-between whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
+                          >
+                            {toTitleCase(subcat.name)}
+                            {subcat.subcategories?.length > 0 && (
+                              <span className="ml-1 text-orange-400">›</span>
+                            )}
+                          </Link>
 
-                    <li className="relative h-full">
-                      <Link
-                        href="/blog"
-                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
-                      >
-                        Blog
-                      </Link>
-                    </li>
-                    <li className="h-full">
-                      <Link
-                        href="/about"
-                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
-                      >
-                        About Us
-                      </Link>
-                    </li>
+                          {subcat.subcategories?.length > 0 && (
+                            <div className="nested-submenu absolute left-full top-0 z-50 hidden min-w-[220px] rounded-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-all duration-200 group-hover/sub:block group-hover/sub:opacity-100">
+                              {subcat.subcategories.map((childCat) => (
+                                <Link
+                                  key={childCat.id}
+                                  href={`/products?category=${childCat.id}`}
+                                  className="block whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
+                                >
+                                  {toTitleCase(childCat.name)}
+                                </Link>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
 
-                    <li className="h-full">
-                      <Link
-                        href="/faqs"
-                        className="flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4"
-                      >
-                        FAQ
-                      </Link>
-                    </li>
-                    <li className="h-full">
-                      <Link
-                        href="/contact"
-                        className={`flex h-full items-center justify-center text-sm font-semibold uppercase leading-5 duration-300 md:text-xs md:leading-4 ${pathname?.includes("/pages") ? "active" : ""}`}
-                      >
-                        Contact Us
-                      </Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <div className="right flex items-center gap-1">
-                <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                  Hotline:
-                </div>
-                <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-                  +01 1234 8888
-                </div>
+            {/* Hotline - right side */}
+            <div className="right flex items-center gap-2 border-l border-gray-100 pl-4">
+              <div className="text-sm text-gray-500">Hotline:</div>
+              <div className="text-sm font-semibold transition-colors hover:text-orange-600">
+                +01 1234 8888
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Add placeholder height when navbar is sticky to prevent content jump */}
+      {isSticky && <div className="h-[46px] max-lg:hidden"></div>}
+
       {/* Mobile Menu Component */}
       <MobileMenu
         openMenuMobile={openMenuMobile}

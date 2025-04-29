@@ -87,7 +87,18 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      animation: {
+        // Add slide down animation
+        slideDown: "slideDown 0.3s ease-in-out forwards",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
       keyframes: {
+        // Define the slideDown animation
+        slideDown: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
         "accordion-down": {
           from: {
             height: "0",
@@ -104,10 +115,6 @@ export default {
             height: "0",
           },
         },
-      },
-      animation: {
-        "accordion-down": "accordion-down 0.2s ease-out",
-        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
