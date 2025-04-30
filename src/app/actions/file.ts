@@ -1,13 +1,26 @@
 "use server";
 
-import { v2 as cloud, type UploadApiResponse } from "cloudinary";
+import { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command, CopyObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import { randomUUID } from "crypto";
 
-cloud.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure: true,
+// Define a type to match Cloudinary's UploadApiResponse structure
+type UploadApiResponse = {
+  public_id: string;
+  secure_url: string;
+  resource_type?: string;
+  [key: string]: unknown;
+};
+
+// Initialize S3 client
+const s3Client = new S3Client({
+  region: process.env.AWS_BUCKET_REGION!,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY!,
+    secretAccessKey: process.env.AWS_SECRET_KEY!,
+  }
 });
+
+const bucketName = process.env.AWS_BUCKET_NAME!;
 
 export const uploadFile = async (
   data: FormData,
@@ -17,22 +30,35 @@ export const uploadFile = async (
 
   if (file instanceof File && file.type.startsWith("image")) {
     const buffer = Buffer.from(await file.arrayBuffer());
+    
+    // Create a unique file name with appropriate folder structure
+    const fileExtension = file.name.split('.').pop();
+    const uniqueFileName = `${randomUUID()}.${fileExtension}`;
+    const key = filter ? `${filter}/${uniqueFileName}` : uniqueFileName;
 
-    return new Promise((resolve, reject) => {
-      cloud.uploader
-        .upload_stream(
-          { folder: filter, timeout: 120000 }, // Increased timeout
-          (error, result) => {
-            if (error) {
-              console.error("Upload Error:", error);
-              reject(new Error(error.message ?? "Upload failed"));
-            } else {
-              resolve(result);
-            }
-          },
-        )
-        .end(buffer);
-    });
+    try {
+      // Upload to S3
+      await s3Client.send(new PutObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+        Body: buffer,
+        ContentType: file.type,
+      }));
+      
+      // Generate secure URL
+      const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${key}`;
+      
+      // Return format similar to Cloudinary response
+      return {
+        public_id: key,
+        secure_url: url,
+        resource_type: "image",
+        original_filename: file.name,
+      };
+    } catch (error) {
+      console.error("Upload Error:", error);
+      throw new Error(error instanceof Error ? error.message : "Upload failed");
+    }
   } else {
     throw new Error("Invalid file type. Only images are allowed.");
   }
@@ -43,10 +69,8 @@ export const readImagesBulk = async (imageIds: string[]) => {
     const results = await Promise.all(
       imageIds.map(async (id) => {
         try {
-          const { secure_url } = (await cloud.api.resource(
-            id,
-          )) as UploadApiResponse;
-          return { id, secure_url };
+          const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${id}`;
+          return { id, secure_url: url };
         } catch (error) {
           console.error(`Error fetching image ${id}:`, error);
           return null;
@@ -64,53 +88,83 @@ export const readImagesBulk = async (imageIds: string[]) => {
 
 export const readAllImages = async (filter: string) => {
   try {
-    const { resources } = (await cloud.api.resources({
-      prefix: filter,
-      resource_type: "image",
-      type: "upload",
-    })) as { resources: UploadApiResponse[] };
-
-    return resources
-      .sort((a, b) => a.public_id.localeCompare(b.public_id))
-      .map(({ secure_url, public_id }) => ({ secure_url, public_id }));
+    const command = new ListObjectsV2Command({
+      Bucket: bucketName,
+      Prefix: filter,
+    });
+    
+    const { Contents } = await s3Client.send(command);
+    
+    if (!Contents) return [];
+    
+    return Contents
+      .sort((a, b) => (a.Key ?? '').localeCompare(b.Key ?? ''))
+      .map(item => ({
+        public_id: item.Key ?? '',
+        secure_url: `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${item.Key}`,
+      }));
   } catch (error) {
     console.log(error);
+    return [];
   }
-
-  return [];
 };
 
 export const readImage = async (id: string) => {
-  const { secure_url } = (await cloud.api.resource(id)) as UploadApiResponse;
-  return secure_url;
+  const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${id}`;
+  return url;
 };
 
 export const removeImage = async (id: string) => {
-  await cloud.uploader.destroy(id);
+  await s3Client.send(new DeleteObjectCommand({
+    Bucket: bucketName,
+    Key: id,
+  }));
 };
 
 export const renameImages = async (images: { id: string; src: string }[]) => {
   for (let i = 0; i < images.length; i++) {
     const publicId = images[i]?.id;
     if (!publicId) continue;
+    
     const parts = publicId.split("/");
     const prefix = parts.slice(0, -1).join("/");
     const newPublicId = `${prefix}/${String(i + 1).padStart(3, "0")}_${parts.pop()}`;
-    await cloud.uploader.rename(publicId, newPublicId);
+    
+    // In S3 you copy then delete to rename
+    await s3Client.send(new CopyObjectCommand({
+      Bucket: bucketName,
+      CopySource: `${bucketName}/${publicId}`,
+      Key: newPublicId,
+    }));
+    
+    await s3Client.send(new DeleteObjectCommand({
+      Bucket: bucketName,
+      Key: publicId,
+    }));
   }
 };
 
 // remove image with prefix
 export const removeImageByPrefix = async (prefix: string) => {
-  const { resources } = (await cloud.api.resources({
-    type: "upload",
-    prefix: prefix,
-    max_results: 100,
-  })) as { resources: UploadApiResponse[] };
-
-  // 2. Extract public IDs
-  const publicIds = resources.map((resource) => resource.public_id);
-
-  // 3. Delete images by public ID
-  await cloud.api.delete_resources(publicIds);
+  // List objects with the prefix
+  const listCommand = new ListObjectsV2Command({
+    Bucket: bucketName,
+    Prefix: prefix,
+    MaxKeys: 100,
+  });
+  
+  const { Contents } = await s3Client.send(listCommand);
+  
+  if (!Contents || Contents.length === 0) return;
+  
+  // Delete objects in batch
+  const deleteCommand = new DeleteObjectsCommand({
+    Bucket: bucketName,
+    Delete: {
+      Objects: Contents.map(item => ({ Key: item.Key })),
+      Quiet: false,
+    }
+  });
+  
+  await s3Client.send(deleteCommand);
 };

@@ -9,6 +9,12 @@ import { withSentryConfig } from "@sentry/nextjs";
 const config = {
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "rinorsestore.s3.ap-southeast-1.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
       { protocol: "https", hostname: "res.cloudinary.com" },
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
     ],
