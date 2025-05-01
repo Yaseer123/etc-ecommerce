@@ -3,14 +3,14 @@
 import { readAllImages } from "@/app/actions/file";
 import { create } from "zustand";
 
-export interface ProductImage {
+export type ProductImage = {
   id: string;
   src: string;
-}
+};
 
 interface ProductImageStore {
   images: ProductImage[];
-  loadImages: (filter: string) => Promise<void>; // Load images with optional filter
+  loadImages: (filter: string) => Promise<void>;
   setImages: (images: ProductImage[]) => void;
   updateImages: (images: ProductImage[]) => void;
   removeOldImage: (src: string) => void;
@@ -19,15 +19,15 @@ interface ProductImageStore {
 export const useProductImageStore = create<ProductImageStore>((set) => ({
   images: [],
 
-  // Load images from API (optionally with filter)
   loadImages: async (filter: string) => {
     try {
-      const images = await readAllImages(filter);
-      const imagesWithId = images.map((image) => ({
-        id: image.public_id,
-        src: image.secure_url,
-      }));
-      set({ images: imagesWithId });
+      const response = await readAllImages(filter);
+      set({
+        images: response.map((image) => ({
+          id: image.public_id,
+          src: image.secure_url,
+        })),
+      });
     } catch (error) {
       console.error("Failed to load images:", error);
     }
@@ -35,20 +35,20 @@ export const useProductImageStore = create<ProductImageStore>((set) => ({
 
   setImages: (images: ProductImage[]) => {
     set({ images });
+    // Log for debugging image reordering
+    console.log(
+      "Images order updated:",
+      images.map((img) => img.src),
+    );
   },
 
-  // Add new images
-  updateImages: (newImages) => {
-    newImages.map((image) => {
-      set((state) => ({
-        images: [...state.images, image],
-      }));
-    });
-    // set((state) => ({ images: [...state.images, ] }));
+  updateImages: (newImages: ProductImage[]) => {
+    set((state) => ({
+      images: [...state.images, ...newImages],
+    }));
   },
 
-  // Remove image by source
-  removeOldImage: (src) => {
+  removeOldImage: (src: string) => {
     set((state) => ({
       images: state.images.filter((img) => img.src !== src),
     }));

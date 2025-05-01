@@ -42,7 +42,16 @@ export default function DndImageGallery({
     if (active.id !== over.id) {
       const oldIndex = images.findIndex((img) => img.id === active.id);
       const newIndex = images.findIndex((img) => img.id === over.id);
-      setImages(arrayMove(images, oldIndex, newIndex));
+
+      // Update the order in state - this will be used when submitting the form
+      const reorderedImages = arrayMove(images, oldIndex, newIndex);
+      setImages(reorderedImages);
+
+      // Log for debugging
+      console.log(
+        "Images reordered:",
+        reorderedImages.map((img) => img.src),
+      );
     }
   };
 

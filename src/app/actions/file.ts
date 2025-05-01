@@ -1,6 +1,12 @@
 "use server";
 
-import { S3Client, PutObjectCommand, DeleteObjectCommand, ListObjectsV2Command, CopyObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+  ListObjectsV2Command,
+  DeleteObjectsCommand,
+} from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 
 // Define a type to match Cloudinary's UploadApiResponse structure
@@ -17,7 +23,7 @@ const s3Client = new S3Client({
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY!,
     secretAccessKey: process.env.AWS_SECRET_KEY!,
-  }
+  },
 });
 
 const bucketName = process.env.AWS_BUCKET_NAME!;
@@ -30,24 +36,26 @@ export const uploadFile = async (
 
   if (file instanceof File && file.type.startsWith("image")) {
     const buffer = Buffer.from(await file.arrayBuffer());
-    
+
     // Create a unique file name with appropriate folder structure
-    const fileExtension = file.name.split('.').pop();
+    const fileExtension = file.name.split(".").pop();
     const uniqueFileName = `${randomUUID()}.${fileExtension}`;
     const key = filter ? `${filter}/${uniqueFileName}` : uniqueFileName;
 
     try {
       // Upload to S3
-      await s3Client.send(new PutObjectCommand({
-        Bucket: bucketName,
-        Key: key,
-        Body: buffer,
-        ContentType: file.type,
-      }));
-      
+      await s3Client.send(
+        new PutObjectCommand({
+          Bucket: bucketName,
+          Key: key,
+          Body: buffer,
+          ContentType: file.type,
+        }),
+      );
+
       // Generate secure URL
       const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${key}`;
-      
+
       // Return format similar to Cloudinary response
       return {
         public_id: key,
@@ -92,17 +100,17 @@ export const readAllImages = async (filter: string) => {
       Bucket: bucketName,
       Prefix: filter,
     });
-    
+
     const { Contents } = await s3Client.send(command);
-    
+
     if (!Contents) return [];
-    
-    return Contents
-      .sort((a, b) => (a.Key ?? '').localeCompare(b.Key ?? ''))
-      .map(item => ({
-        public_id: item.Key ?? '',
-        secure_url: `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${item.Key}`,
-      }));
+
+    return Contents.sort((a, b) =>
+      (a.Key ?? "").localeCompare(b.Key ?? ""),
+    ).map((item) => ({
+      public_id: item.Key ?? "",
+      secure_url: `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${item.Key}`,
+    }));
   } catch (error) {
     console.log(error);
     return [];
@@ -115,33 +123,12 @@ export const readImage = async (id: string) => {
 };
 
 export const removeImage = async (id: string) => {
-  await s3Client.send(new DeleteObjectCommand({
-    Bucket: bucketName,
-    Key: id,
-  }));
-};
-
-export const renameImages = async (images: { id: string; src: string }[]) => {
-  for (let i = 0; i < images.length; i++) {
-    const publicId = images[i]?.id;
-    if (!publicId) continue;
-    
-    const parts = publicId.split("/");
-    const prefix = parts.slice(0, -1).join("/");
-    const newPublicId = `${prefix}/${String(i + 1).padStart(3, "0")}_${parts.pop()}`;
-    
-    // In S3 you copy then delete to rename
-    await s3Client.send(new CopyObjectCommand({
+  await s3Client.send(
+    new DeleteObjectCommand({
       Bucket: bucketName,
-      CopySource: `${bucketName}/${publicId}`,
-      Key: newPublicId,
-    }));
-    
-    await s3Client.send(new DeleteObjectCommand({
-      Bucket: bucketName,
-      Key: publicId,
-    }));
-  }
+      Key: id,
+    }),
+  );
 };
 
 // remove image with prefix
@@ -152,19 +139,19 @@ export const removeImageByPrefix = async (prefix: string) => {
     Prefix: prefix,
     MaxKeys: 100,
   });
-  
+
   const { Contents } = await s3Client.send(listCommand);
-  
+
   if (!Contents || Contents.length === 0) return;
-  
+
   // Delete objects in batch
   const deleteCommand = new DeleteObjectsCommand({
     Bucket: bucketName,
     Delete: {
-      Objects: Contents.map(item => ({ Key: item.Key })),
+      Objects: Contents.map((item) => ({ Key: item.Key })),
       Quiet: false,
-    }
+    },
   });
-  
+
   await s3Client.send(deleteCommand);
 };

@@ -13,7 +13,6 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import PreSelectedCategory from "./PreSelectedCategory";
-import { renameImages } from "@/app/actions/file";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 import {
   DndContext,
@@ -334,7 +333,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
 
   const handleSubmit = async (content: string) => {
     setPending(true);
-    await renameImages(images);
 
     // Convert specifications array back to object for submission
     const specsObject = specifications.reduce(
@@ -347,8 +345,15 @@ export default function EditProductForm({ productId }: { productId: string }) {
       {} as Record<string, string>,
     );
 
+    // Log the image order being submitted to database
+    console.log(
+      "Updating product with images in order:",
+      images.map((img) => img.src),
+    );
+
     updateProduct.mutate({
       id: productId,
+      // Use ordered images from state - these reflect drag and drop ordering
       images: images.map((image) => image.src),
       descriptionImageId,
       title,

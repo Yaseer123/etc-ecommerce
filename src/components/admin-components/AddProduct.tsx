@@ -25,7 +25,6 @@ import DndImageGallery from "../rich-editor/DndImageGallery";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
-import { renameImages } from "@/app/actions/file";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 import {
   DndContext,
@@ -240,7 +239,6 @@ export default function AddProductForm() {
 
   const handleSubmit = async (content: string) => {
     setPending(true);
-    await renameImages(images);
 
     // Convert specifications array back to object for submission
     const specsObject = specifications.reduce(
@@ -253,8 +251,15 @@ export default function AddProductForm() {
       {} as Record<string, string>,
     );
 
+    // Log the image order being submitted to database
+    console.log(
+      "Submitting images in order:",
+      images.map((img) => img.src),
+    );
+
     addProduct.mutate({
       imageId,
+      // Use ordered images from state - these reflect drag and drop ordering
       images: images.map((image) => image.src),
       descriptionImageId,
       title,
