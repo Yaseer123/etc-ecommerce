@@ -6,7 +6,12 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { api } from "@/trpc/react";
 import { type ProductWithCategory } from "@/types/ProductType";
 import ProductList from "@/components/store-components/Shop/ProductList";
-import { CheckSquare, CaretDown, X } from "@phosphor-icons/react/dist/ssr";
+import {
+  CheckSquare,
+  CaretDown,
+  X,
+  Funnel,
+} from "@phosphor-icons/react/dist/ssr";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import FilterByCategory from "@/components/store-components/Shop/FilterByCategory";
@@ -14,6 +19,9 @@ import FilterByCategory from "@/components/store-components/Shop/FilterByCategor
 export default function ProductsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Mobile filter state
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   // Extract filter parameters from URL
   const categoryId = searchParams?.get("category") ?? "";
@@ -124,6 +132,18 @@ export default function ProductsPage() {
   const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
     min: minPrice ?? 0,
     max: maxPrice ?? 1000,
+  });
+
+  // State for handling custom slider styling
+  const [sliderStyle] = useState({
+    trackStyle: { backgroundColor: "#f97316", height: 4 },
+    railStyle: { backgroundColor: "#e5e7eb", height: 4 },
+    handleStyle: {
+      borderColor: "#f97316",
+      backgroundColor: "#ffffff",
+      opacity: 1,
+      boxShadow: "0 0 0 2px rgba(249, 115, 22, 0.2)",
+    },
   });
 
   // Update URL when filters change - use a memoized function to prevent recreation
@@ -265,6 +285,33 @@ export default function ProductsPage() {
       }
     }
   }, [attributeFilters, categoryId]);
+
+  // Toggle mobile filter sidebar
+  const toggleMobileFilter = () => {
+    setShowMobileFilter(!showMobileFilter);
+    // Prevent body scroll when filter is open
+    if (!showMobileFilter) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  };
+
+  // Close mobile filter on resize if screen becomes larger
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && showMobileFilter) {
+        setShowMobileFilter(false);
+        document.body.style.overflow = "";
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.body.style.overflow = "";
+    };
+  }, [showMobileFilter]);
 
   // Filter handlers
   const handleCategory = (categoryId: string, categoryName: string) => {
@@ -514,168 +561,10 @@ export default function ProductsPage() {
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
         <div className="container">
           <div className="flex gap-y-8 max-md:flex-col-reverse max-md:flex-wrap">
-            {/* Sidebar */}
-            <div className="sidebar w-full md:w-1/3 md:pr-12 lg:w-1/4">
-              <div className="filter-type pb-4">
-                <div className="heading6">Categories</div>
-                <div className="list-type mt-4">
-                  <FilterByCategory handleCategory={handleCategory} />
-                </div>
-              </div>
-
-              <div className="filter-price mt-8 border-b border-line pb-8">
-                <div className="heading6">Price Range</div>
-                <Slider
-                  range
-                  value={[priceRange.min, priceRange.max]}
-                  min={initialPriceRange.min}
-                  max={initialPriceRange.max}
-                  onChange={handlePriceChange}
-                  className="mt-5"
-                />
-                <div className="price-block mt-4 flex flex-col gap-3">
-                  <div className="min flex items-center gap-1">
-                    <div>Min price:</div>
-                    <div className="price-min">
-                      ৳<span>{priceRange.min}</span>
-                    </div>
-                  </div>
-                  <div className="min flex items-center gap-1">
-                    <div>Max price:</div>
-                    <div className="price-max">
-                      ৳<span>{priceRange.max}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Only show brands filter when a category is selected */}
-              {category && categoryId && (
-                <div className="filter-brand mt-8">
-                  <div className="heading6">Brands</div>
-                  <div className="list-brand mt-4">
-                    {isLoading && !categoryBrands.length ? (
-                      <div className="my-2 text-secondary">
-                        Loading brands...
-                      </div>
-                    ) : categoryBrands.length === 0 ? (
-                      <div className="my-2 text-secondary">
-                        No brands available
-                      </div>
-                    ) : (
-                      categoryBrands.map((item, index) => (
-                        <div
-                          key={index}
-                          className="brand-item flex items-center justify-between"
-                        >
-                          <div className="left flex cursor-pointer items-center">
-                            <div className="block-input">
-                              <input
-                                type="checkbox"
-                                name={item}
-                                id={item}
-                                checked={brands.includes(item)}
-                                onChange={() => handleBrand(item)}
-                              />
-                              <CheckSquare
-                                size={20}
-                                weight="fill"
-                                className="icon-checkbox"
-                              />
-                            </div>
-                            <label
-                              htmlFor={item}
-                              className="brand-name cursor-pointer pl-2 capitalize"
-                            >
-                              {item}
-                            </label>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Category attribute filters section */}
-              {category && categoryId && categoryAttributes.length > 0 && (
-                <div className="filter-attributes mt-8 border-t border-line pt-8">
-                  <div className="heading6">Specifications</div>
-
-                  {categoryAttributes.map((attr, index) => {
-                    // Skip if no available options
-                    const options = attr.options || attr.availableValues || [];
-                    if (options.length === 0) {
-                      return null;
-                    }
-
-                    // Format attribute name for display
-                    const displayName = attr.name
-                      .replace(/_/g, " ")
-                      .replace(/\b\w/g, (c) => c.toUpperCase());
-
-                    return (
-                      <div
-                        key={index}
-                        className="filter-attribute border-b border-line py-4"
-                      >
-                        <div className="caption1 mb-3 font-medium">
-                          {displayName}
-                        </div>
-
-                        {/* Updated to support multi-select */}
-                        <div className="flex flex-col gap-2">
-                          {options.map((option, idx) => {
-                            // Check if this option is selected
-                            const isSelected = Array.isArray(
-                              attributeFilters[attr.name],
-                            )
-                              ? (
-                                  attributeFilters[attr.name] as string[]
-                                )?.includes(option)
-                              : attributeFilters[attr.name] === option;
-
-                            return (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-between"
-                              >
-                                <div className="left flex cursor-pointer items-center">
-                                  <div className="block-input">
-                                    <input
-                                      type="checkbox"
-                                      id={`${attr.name}-${option}`}
-                                      checked={isSelected}
-                                      onChange={() => {
-                                        // Multi-select behavior
-                                        handleAttributeChange(
-                                          attr.name,
-                                          option,
-                                        );
-                                      }}
-                                    />
-                                    <CheckSquare
-                                      size={20}
-                                      weight="fill"
-                                      className="icon-checkbox"
-                                    />
-                                  </div>
-                                  <label
-                                    htmlFor={`${attr.name}-${option}`}
-                                    className="cursor-pointer pl-2 capitalize"
-                                  >
-                                    {option}
-                                  </label>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+            {/* Desktop Sidebar - hidden on mobile */}
+            <div className="sidebar hidden w-full md:block md:w-1/3 md:pr-12 lg:w-1/4">
+              {/* Filter sidebar content that's always visible on desktop */}
+              {renderFilterContent()}
             </div>
 
             {/* Main content area */}
@@ -687,13 +576,13 @@ export default function ProductsPage() {
                       type="checkbox"
                       name="filterSale"
                       id="filter-sale"
-                      className="border-line"
+                      className="border-line accent-orange-500"
                       checked={showOnlySale}
                       onChange={handleShowOnlySale}
                     />
                     <label
                       htmlFor="filter-sale"
-                      className="caption1 cursor-pointer"
+                      className="caption1 cursor-pointer transition-colors hover:text-orange-500"
                     >
                       Show only products on sale
                     </label>
@@ -704,7 +593,7 @@ export default function ProductsPage() {
                     <select
                       id="select-filter"
                       name="select-filter"
-                      className="caption1 rounded-lg border border-line py-2 pl-3 pr-10 md:pr-20"
+                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-orange-500 focus:ring focus:ring-orange-200 md:pr-20"
                       onChange={(e) => {
                         handleSortChange(e.target.value);
                       }}
@@ -718,7 +607,7 @@ export default function ProductsPage() {
                     </select>
                     <CaretDown
                       size={12}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 md:right-4"
                     />
                   </div>
                 </div>
@@ -727,7 +616,7 @@ export default function ProductsPage() {
               <div className="list-filtered mt-4 flex flex-wrap items-center gap-3">
                 <div className="total-product">
                   {totalProducts}
-                  <span className="pl-1 text-secondary">Products Found</span>
+                  <span className="pl-1 text-gray-500">Products Found</span>
                 </div>
                 {(category ??
                   brands.length > 0 ??
@@ -737,16 +626,16 @@ export default function ProductsPage() {
                     showOnlySale)) && (
                   <>
                     <div className="list flex flex-wrap items-center gap-3">
-                      <div className="h-4 w-px bg-line"></div>
+                      <div className="h-4 w-px bg-gray-200"></div>
                       {category && (
                         <div
-                          className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-orange-700 transition-colors hover:bg-orange-200"
                           onClick={() => {
                             setCategory(null);
                             updateUrlParams({ category: null });
                           }}
                         >
-                          <X className="cursor-pointer" />
+                          <X size={16} className="cursor-pointer" />
                           <span>{category.name}</span>
                         </div>
                       )}
@@ -754,23 +643,23 @@ export default function ProductsPage() {
                       {brands.map((brandName, index) => (
                         <div
                           key={`brand-${index}`}
-                          className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1 capitalize"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-orange-700 transition-colors hover:bg-orange-200"
                           onClick={() => handleBrand(brandName)}
                         >
-                          <X className="cursor-pointer" />
+                          <X size={16} className="cursor-pointer" />
                           <span>{brandName}</span>
                         </div>
                       ))}
                       {(priceRange.min !== initialPriceRange.min ||
                         priceRange.max !== initialPriceRange.max) && (
                         <div
-                          className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
                           onClick={() => {
                             setPriceRange(initialPriceRange);
                             updateUrlParams({ minPrice: null, maxPrice: null });
                           }}
                         >
-                          <X className="cursor-pointer" />
+                          <X size={16} className="cursor-pointer" />
                           <span>
                             ৳{priceRange.min} - ৳{priceRange.max}
                           </span>
@@ -778,13 +667,13 @@ export default function ProductsPage() {
                       )}
                       {showOnlySale && (
                         <div
-                          className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
                           onClick={() => {
                             setShowOnlySale(false);
                             updateUrlParams({ sale: null });
                           }}
                         >
-                          <X className="cursor-pointer" />
+                          <X size={16} className="cursor-pointer" />
                           <span>On Sale</span>
                         </div>
                       )}
@@ -805,13 +694,13 @@ export default function ProductsPage() {
                         return (
                           <div
                             key={key}
-                            className="item bg-linear flex items-center gap-1 rounded-full px-2 py-1"
+                            className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
                             onClick={() => {
                               // Use the handler directly without modifying state again
                               handleAttributeChange(key, null);
                             }}
                           >
-                            <X className="cursor-pointer" />
+                            <X size={16} className="cursor-pointer" />
                             <span>
                               {displayKey}: {displayValue}
                             </span>
@@ -820,10 +709,14 @@ export default function ProductsPage() {
                       })}
                     </div>
                     <div
-                      className="clear-btn flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1"
+                      className="clear-btn hover:bg-red-50 flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1 transition-colors"
                       onClick={handleClearAll}
                     >
-                      <X color="rgb(219, 68, 68)" className="cursor-pointer" />
+                      <X
+                        color="rgb(219, 68, 68)"
+                        size={16}
+                        className="cursor-pointer"
+                      />
                       <span className="text-button-uppercase text-red">
                         Clear All
                       </span>
@@ -835,7 +728,7 @@ export default function ProductsPage() {
               {/* Product list with loading state */}
               {isLoading ? (
                 <div className="flex h-60 items-center justify-center">
-                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent"></div>
                 </div>
               ) : (
                 <ProductList
@@ -849,6 +742,273 @@ export default function ProductsPage() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Filter Button - Fixed at bottom right */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden">
+        <button
+          onClick={toggleMobileFilter}
+          className="flex items-center justify-center rounded-full bg-orange-500 p-4 text-white shadow-xl transition-colors hover:bg-orange-600"
+          aria-label="Filter products"
+        >
+          <Funnel size={24} weight="bold" />
+        </button>
+      </div>
+
+      {/* Mobile Filter Sidebar */}
+      {showMobileFilter && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 z-[9999] bg-black/50 md:hidden"
+            onClick={toggleMobileFilter}
+          ></div>
+
+          {/* Sidebar */}
+          <div className="fixed right-0 top-0 z-[9999] h-full w-[300px] max-w-[80vw] overflow-y-auto bg-white shadow-xl transition-transform duration-300 ease-in-out md:hidden">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white p-4">
+              <h2 className="text-lg font-semibold">Filters</h2>
+              <button
+                onClick={toggleMobileFilter}
+                className="rounded-full p-1 hover:bg-gray-100"
+              >
+                <X size={24} className="text-gray-700" />
+              </button>
+            </div>
+
+            <div className="p-4">{renderFilterContent()}</div>
+
+            <div className="sticky bottom-0 border-t border-gray-200 bg-white p-4">
+              <button
+                onClick={() => {
+                  handleClearAll();
+                  toggleMobileFilter();
+                }}
+                className="mb-3 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                Clear All
+              </button>
+              <button
+                onClick={toggleMobileFilter}
+                className="w-full rounded-lg bg-orange-500 px-4 py-2 text-white transition-colors hover:bg-orange-600"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </>
   );
+
+  // Function to render filter content - used by both desktop and mobile views
+  function renderFilterContent() {
+    return (
+      <>
+        {/* Categories Section */}
+        <div className="filter-section mb-6 overflow-hidden rounded-lg bg-white">
+          <div className="group mb-3">
+            <h3 className="relative inline-block text-lg font-medium text-gray-800">
+              Categories
+              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
+            </h3>
+          </div>
+          <div className="list-type mt-4">
+            <FilterByCategory handleCategory={handleCategory} />
+          </div>
+        </div>
+
+        {/* Price Range Section */}
+        <div className="filter-section mb-6 pt-2">
+          <div className="group mb-3">
+            <h3 className="relative inline-block text-lg font-medium text-gray-800">
+              Price Range
+              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
+            </h3>
+          </div>
+          <Slider
+            range
+            value={[priceRange.min, priceRange.max]}
+            min={initialPriceRange.min}
+            max={initialPriceRange.max}
+            onChange={handlePriceChange}
+            className="mb-5 mt-8"
+            trackStyle={sliderStyle.trackStyle}
+            railStyle={sliderStyle.railStyle}
+            handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
+          />
+          <div className="price-block mt-4 flex items-center justify-between">
+            <div className="min flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
+              <div className="mr-1 text-sm text-gray-500">Min:</div>
+              <div className="price-min font-medium text-orange-600">
+                ৳<span>{priceRange.min}</span>
+              </div>
+            </div>
+            <div className="max flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
+              <div className="mr-1 text-sm text-gray-500">Max:</div>
+              <div className="price-max font-medium text-orange-600">
+                ৳<span>{priceRange.max}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Brands Section - Only show when a category is selected */}
+        {category && categoryId && (
+          <div className="filter-section mb-6 pt-2">
+            <div className="group mb-3">
+              <h3 className="relative inline-block text-lg font-medium text-gray-800">
+                Brands
+                <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
+              </h3>
+            </div>
+            <div className="list-brand mt-4">
+              {isLoading && !categoryBrands.length ? (
+                <div className="my-2 text-gray-500">Loading brands...</div>
+              ) : categoryBrands.length === 0 ? (
+                <div className="my-2 text-gray-500">No brands available</div>
+              ) : (
+                <div className="max-h-60 space-y-1 overflow-y-auto pr-1">
+                  {categoryBrands.map((item, index) => (
+                    <div key={index} className="brand-item">
+                      <div className="left flex w-full cursor-pointer items-center rounded p-2 transition-colors hover:bg-orange-50">
+                        <div className="block-input relative">
+                          <input
+                            type="checkbox"
+                            name={item}
+                            id={item}
+                            checked={brands.includes(item)}
+                            onChange={() => handleBrand(item)}
+                            className="h-5 w-5 rounded border-gray-300 accent-orange-500"
+                          />
+                          <CheckSquare
+                            size={20}
+                            weight="fill"
+                            className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                          />
+                        </div>
+                        <label
+                          htmlFor={item}
+                          className="brand-name cursor-pointer pl-3 capitalize"
+                        >
+                          {item}
+                        </label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Specifications Section - Only show when a category with attributes is selected */}
+        {category && categoryId && categoryAttributes.length > 0 && (
+          <div className="filter-section mb-6 pt-2">
+            <div className="group mb-3">
+              <h3 className="relative inline-block text-lg font-medium text-gray-800">
+                Specifications
+                <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
+              </h3>
+            </div>
+
+            <div className="mt-4 space-y-5">
+              {categoryAttributes.map((attr, index) => {
+                // Skip if no available options
+                const options = attr.options || attr.availableValues || [];
+                if (options.length === 0) {
+                  return null;
+                }
+
+                // Format attribute name for display
+                const displayName = attr.name
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (c) => c.toUpperCase());
+
+                return (
+                  <div key={index} className="attribute-group">
+                    <div className="mb-2 border-l-2 border-orange-300 pl-2 font-medium text-gray-600">
+                      {displayName}
+                    </div>
+
+                    {/* Updated to support multi-select */}
+                    <div className="flex max-h-40 flex-col gap-1 space-y-1 overflow-y-auto pl-2 pr-1">
+                      {options.map((option, idx) => {
+                        // Check if this option is selected
+                        const isSelected = Array.isArray(
+                          attributeFilters[attr.name],
+                        )
+                          ? (attributeFilters[attr.name] as string[])?.includes(
+                              option,
+                            )
+                          : attributeFilters[attr.name] === option;
+
+                        return (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between rounded p-2 transition-colors hover:bg-orange-50"
+                          >
+                            <div className="left flex w-full cursor-pointer items-center">
+                              <div className="block-input relative">
+                                <input
+                                  type="checkbox"
+                                  id={`${attr.name}-${option}`}
+                                  checked={isSelected}
+                                  onChange={() => {
+                                    handleAttributeChange(attr.name, option);
+                                  }}
+                                  className="h-5 w-5 accent-orange-500"
+                                />
+                                <CheckSquare
+                                  size={20}
+                                  weight="fill"
+                                  className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                                />
+                              </div>
+                              <label
+                                htmlFor={`${attr.name}-${option}`}
+                                className="cursor-pointer pl-3 capitalize"
+                              >
+                                {option}
+                              </label>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* For mobile view - on sale checkbox repeated so it's accessible from the filter panel */}
+        <div className="filter-section mb-6 pt-2 md:hidden">
+          <div className="group mb-3">
+            <h3 className="relative inline-block text-lg font-medium text-gray-800">
+              Sale
+              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
+            </h3>
+          </div>
+          <div className="mt-4 rounded p-2 transition-colors hover:bg-orange-50">
+            <div className="check-sale flex items-center gap-3">
+              <div className="block-input relative">
+                <input
+                  type="checkbox"
+                  name="filterSaleMobile"
+                  id="filter-sale-mobile"
+                  className="h-5 w-5 accent-orange-500"
+                  checked={showOnlySale}
+                  onChange={handleShowOnlySale}
+                />
+              </div>
+              <label htmlFor="filter-sale-mobile" className="cursor-pointer">
+                Show only products on sale
+              </label>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 }

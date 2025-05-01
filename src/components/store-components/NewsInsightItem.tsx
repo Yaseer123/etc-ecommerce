@@ -19,32 +19,32 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
     <>
       {type === "style-one" ? (
         <div
-          className="blog-item style-one h-full cursor-pointer"
+          className="blog-item style-one h-full cursor-pointer transition-transform hover:scale-[1.02]"
           onClick={() => handleBlogClick(data.id)}
         >
           <div className="blog-main block h-full">
-            <div className="blog-thumb overflow-hidden rounded-[20px]">
+            <div className="blog-thumb overflow-hidden rounded-[10px] sm:rounded-[15px] md:rounded-[20px]">
               <Image
                 src={data.coverImageUrl}
                 width={2000}
                 height={1500}
                 alt="blog-img"
-                className="w-full duration-500"
+                className="w-full object-cover transition-all duration-500 hover:scale-105"
               />
             </div>
-            <div className="blog-infor mt-7">
-              <div className="blog-tag bg-green_custom inline-block rounded-full px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+            <div className="blog-infor mt-4 sm:mt-5 md:mt-7">
+              <div className="blog-tag bg-green_custom inline-block rounded-full px-2 py-0.5 text-xs font-semibold uppercase leading-4 sm:px-2.5 sm:py-1 sm:text-sm sm:leading-5">
                 {data.tags.map((tag) => tag.name).join(", ")}
               </div>
-              <div className="heading6 blog-title mt-3 duration-300">
+              <div className="blog-title mt-2 text-base font-medium leading-tight duration-300 sm:mt-3 sm:text-lg md:text-xl">
                 {data.title}
               </div>
-              <div className="mt-2 flex items-center gap-2">
-                <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+              <div className="mt-1.5 flex items-center gap-1.5 sm:mt-2 sm:gap-2">
+                <div className="blog-author text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                   by {data.createdBy.name}
                 </div>
-                <span className="h-[1px] w-[20px] bg-black"></span>
-                <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                <span className="h-[1px] w-[15px] bg-black sm:w-[20px]"></span>
+                <div className="blog-date text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                   {new Date(data.updatedAt)
                     .toLocaleDateString("en-US", {
                       month: "short",
@@ -61,32 +61,32 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
         <>
           {type === "style-list" ? (
             <div
-              className="blog-item style-list h-full cursor-pointer"
+              className="blog-item style-list h-full cursor-pointer transition-all hover:opacity-95"
               onClick={() => handleBlogClick(data.id)}
             >
-              <div className="blog-main flex h-full gap-6 max-md:flex-col md:items-center md:gap-9">
-                <div className="blog-thumb w-full flex-shrink-0 overflow-hidden rounded-[20px] md:w-1/2">
+              <div className="blog-main flex h-full flex-col gap-4 sm:gap-6 md:flex-row md:items-center md:gap-9">
+                <div className="blog-thumb w-full overflow-hidden rounded-[10px] sm:rounded-[15px] md:w-1/2 md:rounded-[20px]">
                   <Image
                     src={data.coverImageUrl}
                     width={2000}
                     height={1500}
                     alt="blog-img"
-                    className="w-full flex-shrink-0 duration-500"
+                    className="w-full object-cover transition-all duration-500 hover:scale-105"
                   />
                 </div>
-                <div className="blog-infor">
-                  <div className="blog-tag bg-green_custom inline-block rounded-full px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                <div className="blog-infor flex-1">
+                  <div className="blog-tag bg-green_custom inline-block rounded-full px-2 py-0.5 text-xs font-semibold uppercase leading-4 sm:px-2.5 sm:py-1 sm:text-sm sm:leading-5">
                     {data.tags.map((tag) => tag.name).join(", ")}
                   </div>
-                  <div className="heading6 blog-title mt-3 duration-300">
+                  <div className="blog-title mt-2 text-base font-medium leading-tight duration-300 sm:mt-3 sm:text-lg md:text-xl">
                     {data.title}
                   </div>
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                  <div className="mt-1.5 flex items-center gap-1.5 sm:mt-2 sm:gap-2">
+                    <div className="blog-author text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                       by {data.createdBy.name}
                     </div>
-                    <span className="h-[1px] w-[20px] bg-black"></span>
-                    <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                    <span className="h-[1px] w-[15px] bg-black sm:w-[20px]"></span>
+                    <div className="blog-date text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                       {new Date(data.updatedAt)
                         .toLocaleDateString("en-US", {
                           month: "short",
@@ -96,10 +96,10 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
                         .toUpperCase()}
                     </div>
                   </div>
-                  <div className="body1 mt-4 text-secondary">
+                  <div className="mt-2 text-sm text-secondary sm:mt-3 md:mt-4 md:text-base">
                     {data.shortDescription}
                   </div>
-                  <div className="mt-4 text-base font-semibold capitalize leading-[26px] underline md:text-base md:leading-6">
+                  <div className="mt-3 text-sm font-semibold capitalize leading-tight underline sm:mt-4 sm:text-base md:leading-6">
                     Read More
                   </div>
                 </div>
@@ -109,32 +109,32 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
             <>
               {type === "style-default" && (
                 <div
-                  className="blog-item style-default h-full cursor-pointer"
+                  className="blog-item style-default h-full cursor-pointer transition-all hover:opacity-95"
                   onClick={() => handleBlogClick(data.id)}
                 >
-                  <div className="blog-main block h-full border-b border-line pb-8">
-                    <div className="blog-thumb overflow-hidden rounded-[20px]">
+                  <div className="blog-main block h-full border-b border-line pb-4 sm:pb-6 md:pb-8">
+                    <div className="blog-thumb overflow-hidden rounded-[10px] sm:rounded-[15px] md:rounded-[20px]">
                       <Image
                         src={data.coverImageUrl}
                         width={2000}
                         height={1500}
                         alt="blog-img"
-                        className="w-full duration-500"
+                        className="w-full object-cover transition-all duration-500 hover:scale-105"
                       />
                     </div>
-                    <div className="blog-infor mt-7">
-                      <div className="blog-tag bg-green_custom inline-block rounded-full px-2.5 py-1 text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                    <div className="blog-infor mt-4 sm:mt-5 md:mt-7">
+                      <div className="blog-tag bg-green_custom inline-block rounded-full px-2 py-0.5 text-xs font-semibold uppercase leading-4 sm:px-2.5 sm:py-1 sm:text-sm sm:leading-5">
                         {data.tags.map((tag) => tag.name).join(", ")}
                       </div>
-                      <div className="heading6 blog-title mt-3 duration-300">
+                      <div className="blog-title mt-2 text-base font-medium leading-tight duration-300 sm:mt-3 sm:text-lg md:text-xl">
                         {data.title}
                       </div>
-                      <div className="mt-2 flex items-center gap-2">
-                        <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                      <div className="mt-1.5 flex items-center gap-1.5 sm:mt-2 sm:gap-2">
+                        <div className="blog-author text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                           by {data.createdBy.name}
                         </div>
-                        <span className="h-[1px] w-[20px] bg-black"></span>
-                        <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                        <span className="h-[1px] w-[15px] bg-black sm:w-[20px]"></span>
+                        <div className="blog-date text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                           {new Date(data.updatedAt)
                             .toLocaleDateString("en-US", {
                               month: "short",
@@ -144,10 +144,10 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
                             .toUpperCase()}
                         </div>
                       </div>
-                      <div className="body1 mt-4 text-secondary">
+                      <div className="mt-2 text-sm text-secondary sm:mt-3 md:mt-4 md:text-base">
                         {data.shortDescription}
                       </div>
-                      <div className="text-button mt-4 underline">
+                      <div className="mt-3 text-sm font-semibold underline sm:mt-4 sm:text-base">
                         Read More
                       </div>
                     </div>

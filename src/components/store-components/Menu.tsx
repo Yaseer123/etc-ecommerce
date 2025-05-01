@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
@@ -22,7 +22,6 @@ import TopNav from "./TopNav";
 import { api } from "@/trpc/react";
 import Image from "next/image";
 import { useDebounce } from "@uidotdev/usehooks";
-import MobileSearchDialog from "./MobileSearchDialog";
 
 export default function Menu({
   isAuthenticated,
@@ -131,6 +130,28 @@ export default function Menu({
       (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(),
     );
   };
+
+  // Add useRef to track the search container
+  const mobileSearchRef = useRef<HTMLDivElement>(null);
+
+  // Add effect to close search when clicking outside
+  // useEffect(() => {
+  //   if (!isSearchOpen) return;
+
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       mobileSearchRef.current &&
+  //       !mobileSearchRef.current.contains(event.target as Node)
+  //     ) {
+  //       setIsSearchOpen(false);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [isSearchOpen]);
 
   return (
     <>
@@ -253,7 +274,10 @@ export default function Menu({
                   {/* Add mobile search icon for small screens */}
                   <div
                     className="search-icon flex cursor-pointer items-center lg:hidden"
-                    onClick={() => setIsSearchOpen(true)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent event bubbling
+                      setIsSearchOpen(!isSearchOpen); // Use direct variable instead of functional update
+                    }}
                   >
                     <MagnifyingGlass size={24} color="black" />
                   </div>
@@ -394,14 +418,118 @@ export default function Menu({
       {/* Add placeholder height when navbar is sticky to prevent content jump */}
       {isSticky && <div className="h-[46px] max-lg:hidden"></div>}
 
+      {/* Mobile Search Input - appears below header when search icon is clicked */}
+      {isSearchOpen && (
+        <div
+          ref={mobileSearchRef}
+          className="mobile-search-container w-full border-b border-gray-200 bg-white p-3 shadow-sm lg:hidden"
+        >
+          <div className="relative flex h-10 w-full items-center">
+            <input
+              type="text"
+              className="h-full w-full rounded-l-md border border-r-0 border-gray-300 px-3 text-sm focus:border-gray-400 focus:outline-none"
+              placeholder="Search products..."
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onKeyDown={(e) =>
+                e.key === "Enter" && handleSearch(searchKeyword)
+              }
+              autoFocus
+            />
+            <button
+              className="h-full rounded-r-md bg-black px-4 text-white"
+              onClick={() => handleSearch(searchKeyword)}
+            >
+              <MagnifyingGlass size={18} />
+            </button>
+            <button
+              className="absolute -right-8 top-1/2 -translate-y-1/2 p-1 text-gray-500"
+              onClick={() => setIsSearchOpen(false)}
+            >
+              ✕
+            </button>
+          </div>
+
+          {/* Mobile Search Results */}
+          {showSearchResults && searchKeyword.length > 1 && (
+            <div className="search-results absolute left-0 right-0 z-50 mt-1 max-h-[400px] overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg">
+              <div className="px-4 py-2 text-sm font-medium text-gray-900">
+                {isSearchLoading ? "Searching..." : "Search Results"}
+              </div>
+
+              {/* Loading spinner */}
+              {isSearchLoading ? (
+                <div className="flex h-24 w-full items-center justify-center">
+                  <SpinnerGap size={24} className="animate-spin text-black" />
+                </div>
+              ) : searchResults && searchResults.length > 0 ? (
+                <>
+                  <div className="max-h-[350px] overflow-y-auto">
+                    {searchResults.map((product) => (
+                      <div
+                        key={product.id}
+                        className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
+                        onClick={() => {
+                          router.push(
+                            `/products/${product.slug}?id=${product.id}`,
+                          );
+                          setShowSearchResults(false);
+                          setSearchKeyword("");
+                          setIsSearchOpen(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          {product.images[0] && (
+                            <div className="h-12 w-12 flex-shrink-0">
+                              <Image
+                                src={product.images[0]}
+                                alt={product.title}
+                                width={48}
+                                height={48}
+                                className="h-full w-full object-cover"
+                              />
+                            </div>
+                          )}
+                          <div className="flex-1">
+                            <div className="line-clamp-1 text-sm font-medium text-gray-900">
+                              {product.title}
+                            </div>
+                            <div className="line-clamp-1 text-xs text-gray-500">
+                              {product.shortDescription}
+                            </div>
+                            <div className="mt-0.5 text-sm font-medium text-black">
+                              ${product.price.toFixed(2)}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div
+                    className="cursor-pointer bg-gray-50 p-2 text-center text-sm font-medium text-black hover:bg-gray-100"
+                    onClick={() => {
+                      handleSearch(searchKeyword);
+                      setIsSearchOpen(false);
+                    }}
+                  >
+                    View all results
+                  </div>
+                </>
+              ) : (
+                <div className="p-4 text-center text-sm text-gray-500">
+                  No products found matching &quot;{searchKeyword}&quot;
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Mobile Menu Component */}
       <MobileMenu
         openMenuMobile={openMenuMobile}
         handleMenuMobile={handleMenuMobile}
       />
-
-      {/* Search Dialog */}
-      <MobileSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </>
   );
 }

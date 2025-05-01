@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { CaretRight, X } from "@phosphor-icons/react/dist/ssr";
 import MobileSearch from "./MobileSearch";
-import MobileSearchDialog from "./MobileSearchDialog";
 
 interface MobileMenuProps {
   openMenuMobile: boolean;
@@ -11,7 +10,6 @@ interface MobileMenuProps {
 
 const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
   const router = useRouter();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Function to handle navigation and close menu
   const handleNavigation = (path: string) => {
@@ -91,9 +89,6 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
           </div>
         </div>
       </div>
-
-      {/* Search Dialog */}
-      <MobileSearchDialog open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </div>
   );
 };

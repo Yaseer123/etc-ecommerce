@@ -16,10 +16,10 @@ interface Props {
 
 export default function TopNav({ props }: Props) {
   const pathname = usePathname();
-  
+
   return (
     <>
-      <div className={`top-nav h-[30px] md:h-[44px] ${props}`}>
+      <div className={`top-nav hidden h-[30px] md:block md:h-[44px] ${props}`}>
         <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
           <div className="top-nav-main flex h-full justify-between">
             <div className="flex h-full items-center">
