@@ -1,5 +1,5 @@
 import React from "react";
-import {Star} from "@phosphor-icons/react/dist/ssr";
+import { Star } from "@phosphor-icons/react/dist/ssr";
 
 interface RateProps {
   currentRate: number | undefined;
@@ -21,7 +21,7 @@ const Rate: React.FC<RateProps> = ({ currentRate, size }) => {
       }
     }
   }
-  return <div className="rate flex">{arrOfStar}</div>;
+  return <div className="flex">{arrOfStar}</div>;
 };
 
 export default Rate;

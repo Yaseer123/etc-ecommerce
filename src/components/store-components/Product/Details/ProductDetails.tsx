@@ -354,7 +354,7 @@ export default function ProductDetails({
                   currentRate={parseFloat(reviewStats.averageRating)}
                   size={14}
                 />
-                <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                <span className="text-base font-normal text-secondary md:text-[13px] md:leading-5">
                   ({reviewStats.totalCount}{" "}
                   {reviewStats.totalCount === 1 ? "review" : "reviews"})
                 </span>
@@ -375,7 +375,7 @@ export default function ProductDetails({
                   </>
                 )}
               </div>
-              <div className="desc mt-5 block border-b border-line pb-6 text-secondary">
+              <div className="desc mt-5 block border-b border-line pb-6 text-base text-secondary lg:text-lg">
                 {productMain.shortDescription}
               </div>
               <div className="list-action mt-6">
@@ -451,11 +451,11 @@ export default function ProductDetails({
                   </div>
                 </div>
                 <div className="list-payment mt-7">
-                  <div className="main-content relative rounded-xl border border-line px-3 pb-4 pt-6 max-md:w-2/3 max-sm:w-full sm:px-4 lg:pb-6 lg:pt-8">
-                    <div className="heading6 bg-linear absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap px-5">
+                  <div className="main-content relative w-full rounded-xl border border-line px-2 pb-4 pt-6 sm:px-3 md:px-4 lg:pb-6 lg:pt-8">
+                    <div className="heading6 bg-linear absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap px-3 text-sm sm:px-5 sm:text-base">
                       Guranteed safe checkout
                     </div>
-                    <div className="list grid grid-cols-6">
+                    <div className="list grid grid-cols-3 sm:grid-cols-6">
                       <div className="item flex items-center justify-center px-1 lg:px-3">
                         <Image
                           src={"/images/payment/Frame-0.png"}
@@ -516,29 +516,29 @@ export default function ProductDetails({
               </div>
               <div className="get-it mt-6">
                 <div className="heading5">Get it today</div>
-                <div className="item mt-4 flex items-center gap-3">
-                  <div className="icon-delivery-truck text-4xl"></div>
+                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
                   <div>
                     <div className="text-title">Free shipping</div>
-                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                    <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Free shipping on orders over $75.
                     </div>
                   </div>
                 </div>
-                <div className="item mt-4 flex items-center gap-3">
-                  <div className="icon-phone-call text-4xl"></div>
+                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="icon-phone-call text-3xl sm:text-4xl"></div>
                   <div>
                     <div className="text-title">Support everyday</div>
-                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                    <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Support from 8:30 AM to 10:00 PM everyday
                     </div>
                   </div>
                 </div>
-                <div className="item mt-4 flex items-center gap-3">
-                  <div className="icon-return text-4xl"></div>
+                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+                  <div className="icon-return text-3xl sm:text-4xl"></div>
                   <div>
                     <div className="text-title">100 Day Returns</div>
-                    <div className="mt-1 text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
+                    <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Not impressed? Get a refund. You have 100 days to break
                       our hearts.
                     </div>
@@ -601,72 +601,111 @@ export default function ProductDetails({
               <div
                 className={`desc-item review-block ${activeTab === "review" ? "open" : ""}`}
               >
-                <div className="top-overview flex items-center justify-between gap-12 gap-y-4 max-sm:flex-col">
-                  <div className="left flex w-full items-center justify-between gap-y-4 max-sm:flex-col sm:w-2/3 sm:pr-5 lg:w-1/2">
-                    <div className="rating black-start flex flex-col items-center">
-                      <div className="text-display">
-                        {reviewStats.averageRating}
+                <div className="top-overview border-b border-line pb-6">
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    {/* Rating Summary Card */}
+                    <div className="rating-summary rounded-xl bg-surface p-5 shadow-sm transition-all duration-300 hover:shadow-md">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-semibold">
+                          Overall Rating
+                        </h3>
+                        <div className="rounded-full bg-black/5 px-2 py-0.5 text-xs">
+                          {reviewStats.totalCount}{" "}
+                          {reviewStats.totalCount === 1 ? "Review" : "Reviews"}
+                        </div>
                       </div>
-                      <Rate
-                        currentRate={parseFloat(reviewStats.averageRating)}
-                        size={18}
-                      />
-                      <div className="mt-1 whitespace-nowrap text-center">
-                        ({reviewStats.totalCount}{" "}
-                        {reviewStats.totalCount === 1 ? "Rating" : "Ratings"})
-                      </div>
-                    </div>
-                    <div className="list-rating w-2/3">
-                      {[5, 4, 3, 2, 1].map((rating) => (
-                        <div
-                          key={rating}
-                          className="item flex items-center justify-end gap-1.5"
-                        >
-                          <div className="flex items-center gap-1">
-                            <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                              {rating}
-                            </div>
-                            <Star size={14} weight="fill" />
+
+                      <div className="mt-4 flex items-center justify-center">
+                        <div className="relative flex flex-col items-center">
+                          <div className="text-5xl font-bold">
+                            {reviewStats.averageRating}
                           </div>
-                          <div className="progress relative h-2 w-3/4 bg-line">
-                            <div
-                              className="progress-percent absolute left-0 top-0 h-full bg-black"
-                              style={{
-                                width: `${reviewStats.ratingPercentages[rating]}%`,
-                              }}
-                            ></div>
+                          <div className="mt-2">
+                            <Rate
+                              currentRate={parseFloat(
+                                reviewStats.averageRating,
+                              )}
+                              size={22}
+                            />
                           </div>
-                          <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                            {reviewStats.ratingPercentages[rating]}%
+                          <div className="mt-1 text-sm text-gray-500">
+                            out of 5
                           </div>
                         </div>
-                      ))}
+                      </div>
+                    </div>
+
+                    {/* Rating Distribution Card */}
+                    <div className="rating-distribution rounded-xl bg-surface p-5 shadow-sm transition-all duration-300 hover:shadow-md sm:col-span-1 lg:col-span-1">
+                      <h3 className="mb-3 text-lg font-semibold">
+                        Rating Distribution
+                      </h3>
+                      <div className="space-y-2.5">
+                        {[5, 4, 3, 2, 1].map((rating) => (
+                          <div key={rating} className="flex items-center gap-2">
+                            <div className="flex min-w-[32px] items-center gap-1">
+                              <span className="font-medium">{rating}</span>
+                              <Star
+                                size={14}
+                                weight="fill"
+                                className="text-yellow-500"
+                              />
+                            </div>
+                            <div className="flex-1">
+                              <div className="relative h-2 w-full overflow-hidden rounded-full bg-gray-200">
+                                <div
+                                  className="bg-yellow-500 absolute left-0 top-0 h-full rounded-full"
+                                  style={{
+                                    width: `${reviewStats.ratingPercentages[rating]}%`,
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
+                            <div className="min-w-[40px] text-right text-sm text-gray-500">
+                              {reviewStats.ratingPercentages[rating]}%
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Write Review Card */}
+                    <div className="write-review-card flex flex-col rounded-xl bg-surface p-5 shadow-sm transition-all duration-300 hover:shadow-md">
+                      <h3 className="mb-3 text-lg font-semibold">
+                        Share Your Experience
+                      </h3>
+                      <p className="mb-4 text-sm text-gray-500">
+                        Your honest feedback helps other shoppers make better
+                        choices.
+                      </p>
+                      <Link
+                        href={"#form-review"}
+                        className="mt-auto inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-black/80"
+                      >
+                        Write a Review
+                      </Link>
                     </div>
                   </div>
-                  <div className="right">
-                    <Link
-                      href={"#form-review"}
-                      className="duration-400 md:text-md inline-block cursor-pointer whitespace-nowrap rounded-[12px] border border-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
-                    >
-                      Write Reviews
-                    </Link>
-                  </div>
                 </div>
+
                 <div className="mt-8">
-                  <div className="heading flex flex-wrap items-center justify-between gap-4">
-                    <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                    <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                       {reviewStats.totalCount}{" "}
                       {reviewStats.totalCount === 1 ? "Comment" : "Comments"}
                     </div>
-                    <div className="right flex items-center gap-3">
-                      <label htmlFor="select-filter" className="uppercase">
+                    <div className="right flex w-full items-center gap-3 sm:w-auto">
+                      <label
+                        htmlFor="select-filter"
+                        className="text-sm uppercase sm:text-base"
+                      >
                         Sort by:
                       </label>
-                      <div className="select-block relative">
+                      <div className="select-block relative flex-grow sm:flex-grow-0">
                         <select
                           id="select-filter"
                           name="select-filter"
-                          className="rounded-lg border border-line bg-white py-2 pl-3 pr-10 text-base font-semibold capitalize leading-[26px] md:pr-14 md:text-base md:leading-6"
+                          className="w-full rounded-lg border border-line bg-white py-2 pl-3 pr-10 text-sm font-semibold capitalize leading-[26px] sm:w-auto sm:text-base md:pr-14 md:text-base md:leading-6"
                           value={reviewSortOrder}
                           onChange={handleReviewSortChange}
                         >
@@ -691,8 +730,11 @@ export default function ProductDetails({
                       </div>
                     ) : (
                       sortedReviews.map((review) => (
-                        <div className="item mb-8" key={review.id}>
-                          <div className="heading flex items-center justify-between">
+                        <div
+                          className="item mb-8 rounded-lg bg-surface/30 p-3 transition-all duration-300 hover:bg-surface sm:p-5"
+                          key={review.id}
+                        >
+                          <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center sm:gap-0">
                             <div className="user-infor flex gap-4">
                               <div className="avatar">
                                 <Image
@@ -703,7 +745,7 @@ export default function ProductDetails({
                                   width={200}
                                   height={200}
                                   alt={review.user?.name ?? "Anonymous"}
-                                  className="aspect-square w-[52px] rounded-full object-cover"
+                                  className="aspect-square w-[40px] rounded-full object-cover sm:w-[52px]"
                                 />
                               </div>
                               <div className="user">
@@ -715,7 +757,7 @@ export default function ProductDetails({
                                   <Rate currentRate={review.rating} size={12} />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <div className="text-secondary2">
+                                  <div className="text-sm text-secondary2">
                                     {formatDistanceToNow(
                                       new Date(review.createdAt),
                                       { addSuffix: true },
@@ -728,7 +770,7 @@ export default function ProductDetails({
                               <DotsThree size={24} weight="bold" />
                             </div>
                           </div>
-                          <div className="mt-3">
+                          <div className="mt-3 text-sm sm:text-base">
                             {review.comment ?? "No comment provided."}
                           </div>
                           <div className="action mt-3">
@@ -751,21 +793,24 @@ export default function ProductDetails({
                       ))
                     )}
                   </div>
-                  <div id="form-review" className="form-review pt-6">
-                    <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  <div
+                    id="form-review"
+                    className="form-review rounded-lg bg-surface/20 p-4 pt-6 sm:p-6"
+                  >
+                    <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                       Leave A comment
                     </div>
                     <form
                       className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6"
                       onSubmit={handleReviewSubmit}
                     >
-                      <div className="col-span-2 flex items-center gap-4">
+                      <div className="col-span-2 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
                         <div className="text-title">Your Rating:</div>
                         <div className="flex cursor-pointer">
                           {[1, 2, 3, 4, 5].map((star) => (
                             <Star
                               key={star}
-                              size={24}
+                              size={20}
                               weight={
                                 star <= reviewForm.rating ? "fill" : "regular"
                               }
@@ -784,6 +829,7 @@ export default function ProductDetails({
                           name="comment"
                           placeholder="Your review *"
                           required
+                          rows={4}
                           value={reviewForm.comment}
                           onChange={(e) =>
                             setReviewForm({
@@ -798,7 +844,7 @@ export default function ProductDetails({
                         <button
                           type="submit"
                           disabled={addReviewMutation.isPending}
-                          className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         >
                           {addReviewMutation.isPending
                             ? "Submitting..."

@@ -45,7 +45,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
             <div className="left flex items-center gap-1">
               <Link
                 href={"/"}
-                className="text-base font-normal leading-[22] text-secondary2 hover:underline md:text-[13px] md:leading-5"
+                className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
               >
                 Homepage
               </Link>
@@ -54,7 +54,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 <React.Fragment key={cat.id}>
                   <Link
                     href={`/products?category=${cat.id}`}
-                    className="text-base font-normal leading-[22] text-secondary2 hover:underline md:text-[13px] md:leading-5"
+                    className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
                   >
                     {cat.name}
                   </Link>
@@ -64,7 +64,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 </React.Fragment>
               ))}
               <CaretRight size={12} className="text-secondary2" />
-              <div className="text-base font-normal capitalize leading-[22] md:text-[13px] md:leading-5">
+              <div className="text-base font-normal capitalize leading-6 md:text-base">
                 {data.title}
               </div>
             </div>

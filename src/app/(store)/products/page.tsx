@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { api } from "@/trpc/react";
 import { type ProductWithCategory } from "@/types/ProductType";
 import ProductList from "@/components/store-components/Shop/ProductList";
@@ -11,10 +10,12 @@ import {
   CaretDown,
   X,
   Funnel,
+  CaretUp,
 } from "@phosphor-icons/react/dist/ssr";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import FilterByCategory from "@/components/store-components/Shop/FilterByCategory";
+import CategoryBreadcrumb from "@/components/store-components/Breadcrumb/CategoryBreadcrumb";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function ProductsPage() {
 
   // Extract filter parameters from URL
   const categoryId = searchParams?.get("category") ?? "";
-  const onSale = searchParams?.get("sale") === "true";
+  // Remove onSale parameter
   const brandParam = searchParams?.get("brand") ?? "";
   const minPrice = searchParams?.get("minPrice")
     ? Number(searchParams?.get("minPrice"))
@@ -39,7 +40,7 @@ export default function ProductsPage() {
     : 0;
 
   // State from URL parameters
-  const [showOnlySale, setShowOnlySale] = useState(onSale);
+  // Remove showOnlySale state
   const [currentSortOption, setCurrentSortOption] = useState(sortOption);
   const [currentPage, setCurrentPage] = useState(pageParam);
   // Change from string to string array for multiple brands
@@ -79,7 +80,7 @@ export default function ProductsPage() {
   // Fetch products with filters
   const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
     categoryId: categoryId || undefined,
-    onSale: onSale || undefined,
+    // Remove onSale parameter
     brands: brands.length > 0 ? brands : undefined, // Update parameter name to match server
     minPrice,
     maxPrice,
@@ -318,7 +319,7 @@ export default function ProductsPage() {
     // Reset all filter states
     setBrands([]);
     setPriceRange(initialPriceRange);
-    setShowOnlySale(false);
+    // Remove showOnlySale reset
     setCurrentSortOption("");
     setCurrentPage(0);
 
@@ -342,18 +343,14 @@ export default function ProductsPage() {
       brand: null,
       minPrice: null,
       maxPrice: null,
-      sale: null,
+      // Remove sale parameter
       sort: null,
       page: "0",
       ...attrParams,
     });
   };
 
-  const handleShowOnlySale = () => {
-    const newValue = !showOnlySale;
-    setShowOnlySale(newValue);
-    updateUrlParams({ sale: newValue ? "true" : null });
-  };
+  // Remove handleShowOnlySale function
 
   const handleSortChange = (option: string) => {
     setCurrentSortOption(option);
@@ -507,7 +504,7 @@ export default function ProductsPage() {
     setBrands([]); // Update to clear brands array
     setPriceRange(initialPriceRange);
     setCategory(null);
-    setShowOnlySale(false);
+    // Remove showOnlySale reset
     setCurrentSortOption("");
 
     // Clear attribute filters and get URL parameters to reset
@@ -519,7 +516,7 @@ export default function ProductsPage() {
       brand: null,
       minPrice: null,
       maxPrice: null,
-      sale: null,
+      // Remove sale parameter
       sort: null,
       page: "0",
       ...attrParams,
@@ -542,22 +539,44 @@ export default function ProductsPage() {
     return products?.slice(offset, offset + productsPerPage) ?? [];
   }, [products, offset, productsPerPage]);
 
-  // Count products per brand - now using the category-filtered brands
+  // Add state to track expanded attribute sections
+  const [expandedAttributes, setExpandedAttributes] = useState<
+    Record<string, boolean>
+  >({});
 
-  const breadcrumbItems = [
-    {
-      label: "Home",
-      href: "/",
-    },
-    {
-      label: "products",
-      href: "/products",
-    },
-  ];
+  // Toggle function for attribute sections
+  const toggleAttributeSection = (attrName: string) => {
+    setExpandedAttributes((prev) => ({
+      ...prev,
+      [attrName]: !prev[attrName],
+    }));
+  };
+
+  // Initialize all attribute sections as expanded
+  useEffect(() => {
+    if (categoryAttributes.length > 0) {
+      const initialExpanded: Record<string, boolean> = {};
+      categoryAttributes.forEach((attr) => {
+        initialExpanded[attr.name] = true; // Start with all expanded
+      });
+      setExpandedAttributes(initialExpanded);
+    }
+  }, [categoryAttributes]);
+
+  // Initialize state for additional collapsible sections
+  useEffect(() => {
+    // Initialize basic collapsible sections (in addition to attributes)
+    setExpandedAttributes((prev) => ({
+      ...prev,
+      categories: true,
+      priceRange: true,
+      brands: true,
+    }));
+  }, []);
 
   return (
     <>
-      <Breadcrumb items={breadcrumbItems} pageTitle="Shop" />
+      <CategoryBreadcrumb categoryId={category?.id} pageTitle="Shop" />
       <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
         <div className="container">
           <div className="flex gap-y-8 max-md:flex-col-reverse max-md:flex-wrap">
@@ -571,22 +590,7 @@ export default function ProductsPage() {
             <div className="list-product-block w-full md:w-2/3 md:pl-3 lg:w-3/4">
               <div className="filter-heading flex flex-wrap items-center justify-between gap-5">
                 <div className="left has-line flex flex-wrap items-center gap-5">
-                  <div className="check-sale flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      name="filterSale"
-                      id="filter-sale"
-                      className="border-line accent-orange-500"
-                      checked={showOnlySale}
-                      onChange={handleShowOnlySale}
-                    />
-                    <label
-                      htmlFor="filter-sale"
-                      className="caption1 cursor-pointer transition-colors hover:text-orange-500"
-                    >
-                      Show only products on sale
-                    </label>
-                  </div>
+                  {/* Remove "Show only products on sale" checkbox */}
                 </div>
                 <div className="right flex items-center gap-3">
                   <div className="select-block relative">
@@ -622,8 +626,7 @@ export default function ProductsPage() {
                   brands.length > 0 ??
                   (Object.keys(attributeFilters).length > 0 ||
                     priceRange.min !== initialPriceRange.min ||
-                    priceRange.max !== initialPriceRange.max ||
-                    showOnlySale)) && (
+                    priceRange.max !== initialPriceRange.max)) && (
                   <>
                     <div className="list flex flex-wrap items-center gap-3">
                       <div className="h-4 w-px bg-gray-200"></div>
@@ -663,18 +666,6 @@ export default function ProductsPage() {
                           <span>
                             ৳{priceRange.min} - ৳{priceRange.max}
                           </span>
-                        </div>
-                      )}
-                      {showOnlySale && (
-                        <div
-                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
-                          onClick={() => {
-                            setShowOnlySale(false);
-                            updateUrlParams({ sale: null });
-                          }}
-                        >
-                          <X size={16} className="cursor-pointer" />
-                          <span>On Sale</span>
                         </div>
                       )}
                       {/* Attribute filter pills */}
@@ -804,210 +795,230 @@ export default function ProductsPage() {
   function renderFilterContent() {
     return (
       <>
-        {/* Categories Section */}
-        <div className="filter-section mb-6 overflow-hidden rounded-lg bg-white">
-          <div className="group mb-3">
-            <h3 className="relative inline-block text-lg font-medium text-gray-800">
-              Categories
-              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
-            </h3>
+        {/* Price Range Section - Always visible, not collapsible */}
+        <div className="filter-section mb-3 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <div className="bg-gray-50 px-3 py-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-gray-800">
+                Price Range
+              </h3>
+            </div>
           </div>
-          <div className="list-type mt-4">
-            <FilterByCategory handleCategory={handleCategory} />
+
+          {/* Price range content - always shown */}
+          <div className="bg-white p-3">
+            <Slider
+              range
+              value={[priceRange.min, priceRange.max]}
+              min={initialPriceRange.min}
+              max={initialPriceRange.max}
+              onChange={handlePriceChange}
+              className="mb-4 mt-2"
+              trackStyle={sliderStyle.trackStyle}
+              railStyle={sliderStyle.railStyle}
+              handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
+            />
+            <div className="price-block mt-2 flex items-center justify-between">
+              <div className="min flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
+                <div className="mr-1 text-sm text-gray-500">Min:</div>
+                <div className="price-min font-medium text-orange-600">
+                  ৳<span>{priceRange.min}</span>
+                </div>
+              </div>
+              <div className="max flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
+                <div className="mr-1 text-sm text-gray-500">Max:</div>
+                <div className="price-max font-medium text-orange-600">
+                  ৳<span>{priceRange.max}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Price Range Section */}
-        <div className="filter-section mb-6 pt-2">
-          <div className="group mb-3">
-            <h3 className="relative inline-block text-lg font-medium text-gray-800">
-              Price Range
-              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
-            </h3>
-          </div>
-          <Slider
-            range
-            value={[priceRange.min, priceRange.max]}
-            min={initialPriceRange.min}
-            max={initialPriceRange.max}
-            onChange={handlePriceChange}
-            className="mb-5 mt-8"
-            trackStyle={sliderStyle.trackStyle}
-            railStyle={sliderStyle.railStyle}
-            handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
-          />
-          <div className="price-block mt-4 flex items-center justify-between">
-            <div className="min flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
-              <div className="mr-1 text-sm text-gray-500">Min:</div>
-              <div className="price-min font-medium text-orange-600">
-                ৳<span>{priceRange.min}</span>
-              </div>
-            </div>
-            <div className="max flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
-              <div className="mr-1 text-sm text-gray-500">Max:</div>
-              <div className="price-max font-medium text-orange-600">
-                ৳<span>{priceRange.max}</span>
-              </div>
+        {/* Categories Section - Collapsible with increased min-height and standardized padding */}
+        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <div
+            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+            onClick={() => toggleAttributeSection("categories")}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-gray-800">
+                Categories
+              </h3>
+              {expandedAttributes.categories !== false ? (
+                <CaretUp size={16} className="text-gray-600" />
+              ) : (
+                <CaretDown size={16} className="text-gray-600" />
+              )}
             </div>
           </div>
+
+          {/* Categories content - shown when expanded */}
+          {expandedAttributes.categories !== false && (
+            <div className="bg-white p-1">
+              <div className="max-h-[300px] min-h-[180px] overflow-y-auto pr-1">
+                <FilterByCategory handleCategory={handleCategory} />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Brands Section - Only show when a category is selected */}
         {category && categoryId && (
-          <div className="filter-section mb-6 pt-2">
-            <div className="group mb-3">
-              <h3 className="relative inline-block text-lg font-medium text-gray-800">
-                Brands
-                <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
-              </h3>
+          <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+            <div
+              className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+              onClick={() => toggleAttributeSection("brands")}
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-medium text-gray-800">Brands</h3>
+                {expandedAttributes.brands !== false ? (
+                  <CaretUp size={16} className="text-gray-600" />
+                ) : (
+                  <CaretDown size={16} className="text-gray-600" />
+                )}
+              </div>
             </div>
-            <div className="list-brand mt-4">
-              {isLoading && !categoryBrands.length ? (
-                <div className="my-2 text-gray-500">Loading brands...</div>
-              ) : categoryBrands.length === 0 ? (
-                <div className="my-2 text-gray-500">No brands available</div>
-              ) : (
-                <div className="max-h-60 space-y-1 overflow-y-auto pr-1">
-                  {categoryBrands.map((item, index) => (
-                    <div key={index} className="brand-item">
-                      <div className="left flex w-full cursor-pointer items-center rounded p-2 transition-colors hover:bg-orange-50">
-                        <div className="block-input relative">
-                          <input
-                            type="checkbox"
-                            name={item}
-                            id={item}
-                            checked={brands.includes(item)}
-                            onChange={() => handleBrand(item)}
-                            className="h-5 w-5 rounded border-gray-300 accent-orange-500"
-                          />
-                          <CheckSquare
-                            size={20}
-                            weight="fill"
-                            className="icon-checkbox absolute left-0 top-0 text-orange-500"
-                          />
-                        </div>
-                        <label
-                          htmlFor={item}
-                          className="brand-name cursor-pointer pl-3 capitalize"
-                        >
-                          {item}
-                        </label>
-                      </div>
+
+            {/* Brands content - shown when expanded */}
+            {expandedAttributes.brands !== false && (
+              <div className="bg-white p-1">
+                <div className="list-brand">
+                  {isLoading && !categoryBrands.length ? (
+                    <div className="my-1 text-gray-500">Loading brands...</div>
+                  ) : categoryBrands.length === 0 ? (
+                    <div className="my-1 text-gray-500">
+                      No brands available
                     </div>
-                  ))}
+                  ) : (
+                    <div className="max-h-[250px] min-h-[120px] space-y-0.5 overflow-y-auto pr-1">
+                      {categoryBrands.map((item, index) => (
+                        <div key={index} className="brand-item">
+                          <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:bg-orange-50">
+                            <div className="block-input relative">
+                              <input
+                                type="checkbox"
+                                name={item}
+                                id={item}
+                                checked={brands.includes(item)}
+                                onChange={() => handleBrand(item)}
+                                className="h-5 w-5 rounded border-gray-300 accent-orange-500"
+                              />
+                              <CheckSquare
+                                size={20}
+                                weight="fill"
+                                className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                              />
+                            </div>
+                            <label
+                              htmlFor={item}
+                              className="brand-name cursor-pointer pl-3 capitalize"
+                            >
+                              {item}
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
-        {/* Specifications Section - Only show when a category with attributes is selected */}
+        {/* Specifications Section - collapsible with improved styling */}
         {category && categoryId && categoryAttributes.length > 0 && (
-          <div className="filter-section mb-6 pt-2">
-            <div className="group mb-3">
-              <h3 className="relative inline-block text-lg font-medium text-gray-800">
-                Specifications
-                <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
-              </h3>
-            </div>
+          <>
+            {categoryAttributes.map((attr, index) => {
+              // Skip if no available options
+              const options = attr.options || attr.availableValues || [];
+              if (options.length === 0) {
+                return null;
+              }
 
-            <div className="mt-4 space-y-5">
-              {categoryAttributes.map((attr, index) => {
-                // Skip if no available options
-                const options = attr.options || attr.availableValues || [];
-                if (options.length === 0) {
-                  return null;
-                }
+              // Format attribute name for display
+              const displayName = attr.name
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase());
 
-                // Format attribute name for display
-                const displayName = attr.name
-                  .replace(/_/g, " ")
-                  .replace(/\b\w/g, (c) => c.toUpperCase());
+              const isExpanded = expandedAttributes[attr.name] !== false;
 
-                return (
-                  <div key={index} className="attribute-group">
-                    <div className="mb-2 border-l-2 border-orange-300 pl-2 font-medium text-gray-600">
-                      {displayName}
-                    </div>
-
-                    {/* Updated to support multi-select */}
-                    <div className="flex max-h-40 flex-col gap-1 space-y-1 overflow-y-auto pl-2 pr-1">
-                      {options.map((option, idx) => {
-                        // Check if this option is selected
-                        const isSelected = Array.isArray(
-                          attributeFilters[attr.name],
-                        )
-                          ? (attributeFilters[attr.name] as string[])?.includes(
-                              option,
-                            )
-                          : attributeFilters[attr.name] === option;
-
-                        return (
-                          <div
-                            key={idx}
-                            className="flex items-center justify-between rounded p-2 transition-colors hover:bg-orange-50"
-                          >
-                            <div className="left flex w-full cursor-pointer items-center">
-                              <div className="block-input relative">
-                                <input
-                                  type="checkbox"
-                                  id={`${attr.name}-${option}`}
-                                  checked={isSelected}
-                                  onChange={() => {
-                                    handleAttributeChange(attr.name, option);
-                                  }}
-                                  className="h-5 w-5 accent-orange-500"
-                                />
-                                <CheckSquare
-                                  size={20}
-                                  weight="fill"
-                                  className="icon-checkbox absolute left-0 top-0 text-orange-500"
-                                />
-                              </div>
-                              <label
-                                htmlFor={`${attr.name}-${option}`}
-                                className="cursor-pointer pl-3 capitalize"
-                              >
-                                {option}
-                              </label>
-                            </div>
-                          </div>
-                        );
-                      })}
+              return (
+                <div
+                  key={index}
+                  className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm"
+                >
+                  <div
+                    className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+                    onClick={() => toggleAttributeSection(attr.name)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-base font-medium text-gray-800">
+                        {displayName}
+                      </h3>
+                      {isExpanded ? (
+                        <CaretUp size={16} className="text-gray-600" />
+                      ) : (
+                        <CaretDown size={16} className="text-gray-600" />
+                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        )}
 
-        {/* For mobile view - on sale checkbox repeated so it's accessible from the filter panel */}
-        <div className="filter-section mb-6 pt-2 md:hidden">
-          <div className="group mb-3">
-            <h3 className="relative inline-block text-lg font-medium text-gray-800">
-              Sale
-              <span className="absolute -bottom-1 left-0 h-0.5 w-full origin-left transform bg-gradient-to-r from-orange-500 to-orange-300 transition-all duration-300"></span>
-            </h3>
-          </div>
-          <div className="mt-4 rounded p-2 transition-colors hover:bg-orange-50">
-            <div className="check-sale flex items-center gap-3">
-              <div className="block-input relative">
-                <input
-                  type="checkbox"
-                  name="filterSaleMobile"
-                  id="filter-sale-mobile"
-                  className="h-5 w-5 accent-orange-500"
-                  checked={showOnlySale}
-                  onChange={handleShowOnlySale}
-                />
-              </div>
-              <label htmlFor="filter-sale-mobile" className="cursor-pointer">
-                Show only products on sale
-              </label>
-            </div>
-          </div>
-        </div>
+                  {/* Content area - shown when expanded with increased min-height */}
+                  {isExpanded && (
+                    <div className="bg-white py-1">
+                      <div className="flex max-h-[250px] min-h-[120px] flex-col overflow-y-auto">
+                        {options.map((option, idx) => {
+                          // Check if this option is selected
+                          const isSelected = Array.isArray(
+                            attributeFilters[attr.name],
+                          )
+                            ? (
+                                attributeFilters[attr.name] as string[]
+                              )?.includes(option)
+                            : attributeFilters[attr.name] === option;
+
+                          return (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between rounded px-2 py-1 transition-colors hover:bg-gray-50"
+                            >
+                              <div className="left flex w-full cursor-pointer items-center">
+                                <div className="block-input relative">
+                                  <input
+                                    type="checkbox"
+                                    id={`${attr.name}-${option}`}
+                                    checked={isSelected}
+                                    onChange={() => {
+                                      handleAttributeChange(attr.name, option);
+                                    }}
+                                    className="h-5 w-5 accent-orange-500"
+                                  />
+                                  <CheckSquare
+                                    size={20}
+                                    weight="fill"
+                                    className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                                  />
+                                </div>
+                                <label
+                                  htmlFor={`${attr.name}-${option}`}
+                                  className="cursor-pointer pl-3 capitalize"
+                                >
+                                  {option}
+                                </label>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
       </>
     );
   }

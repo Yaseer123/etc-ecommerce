@@ -16,8 +16,8 @@ export default function HomeEleven() {
         <Slider />
       </div>
       <TrendingNow />
-      <MenFashion />
       <FeaturedProducts />
+      <MenFashion />
       <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" />
       <NewsInsight start={0} limit={3} />
       <Brand />
