@@ -408,7 +408,7 @@ export default function Menu({
             <div className="right flex items-center gap-2 border-l border-gray-100 pl-4">
               <div className="text-sm text-gray-500">Hotline:</div>
               <div className="text-sm font-semibold transition-colors hover:text-orange-600">
-                +01 1234 8888
+                +8801312223452
               </div>
             </div>
           </div>
