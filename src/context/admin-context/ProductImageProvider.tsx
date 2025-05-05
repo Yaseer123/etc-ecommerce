@@ -10,24 +10,47 @@ export type ProductImage = {
 
 interface ProductImageStore {
   images: ProductImage[];
-  loadImages: (filter: string) => Promise<void>;
+  loadImages: (filter: string, existingImages?: string[]) => Promise<void>;
   setImages: (images: ProductImage[]) => void;
   updateImages: (images: ProductImage[]) => void;
   removeOldImage: (src: string) => void;
 }
 
+// Helper function to extract public ID from image URL
+const extractPublicIdFromUrl = (url: string): string => {
+  try {
+    // The URL format is like: https://[bucketName].s3.[region].amazonaws.com/[key]
+    const parsedUrl = new URL(url);
+    // Get the pathname part (which starts with /) and remove the leading /
+    return parsedUrl.pathname.substring(1);
+  } catch (error) {
+    console.error("Failed to extract public ID from URL:", error);
+    return "";
+  }
+};
+
 export const useProductImageStore = create<ProductImageStore>((set) => ({
   images: [],
 
-  loadImages: async (filter: string) => {
+  loadImages: async (filter: string, existingImages: string[] = []) => {
     try {
-      const response = await readAllImages(filter);
-      set({
-        images: response.map((image) => ({
-          id: image.public_id,
-          src: image.secure_url,
-        })),
-      });
+      if (existingImages && existingImages.length > 0) {
+        // If we have existing image URLs, convert them to the required format
+        const formattedImages = existingImages.map((url) => ({
+          id: extractPublicIdFromUrl(url),
+          src: url,
+        }));
+        set({ images: formattedImages });
+      } else {
+        // Otherwise, fetch images as before using the filter
+        const response = await readAllImages(filter);
+        set({
+          images: response.map((image) => ({
+            id: image.public_id,
+            src: image.secure_url,
+          })),
+        });
+      }
     } catch (error) {
       console.error("Failed to load images:", error);
     }
@@ -35,11 +58,6 @@ export const useProductImageStore = create<ProductImageStore>((set) => ({
 
   setImages: (images: ProductImage[]) => {
     set({ images });
-    // Log for debugging image reordering
-    console.log(
-      "Images order updated:",
-      images.map((img) => img.src),
-    );
   },
 
   updateImages: (newImages: ProductImage[]) => {

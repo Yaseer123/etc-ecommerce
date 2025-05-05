@@ -275,6 +275,20 @@ export default function AddProductForm() {
       categoryAttributes: attributeValues, // Pass category attributes separately
       estimatedDeliveryTime: estimatedDeliveryTime,
     });
+
+    // Clear form
+    setTitle("");
+    setShortDescription("");
+    setPrice(0);
+    setOriginPrice(0);
+    setSlug("");
+    setStock(0);
+    setBrand("");
+    setEstimatedDeliveryTime(undefined);
+    setCategoryId("");
+    setAttributes([]);
+    setAttributeValues({});
+    setSpecifications([]);
   };
 
   return (
@@ -283,7 +297,7 @@ export default function AddProductForm() {
       handleSubmit={handleSubmit}
       imageId={descriptionImageId}
       pending={pending}
-      submitButtonText="Add New Product"
+      submitButtonText="Add Product"
     >
       <div className="grid grid-cols-2 gap-3">
         <div>

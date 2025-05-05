@@ -118,7 +118,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState<
     number | undefined
   >(product?.estimatedDeliveryTime ?? undefined);
-  const [published, setPublished] = useState(product?.published ?? false);
+  // Remove the published state
 
   // Add states for category attributes
   const [attributes, setAttributes] = useState<CategoryAttribute[]>([]);
@@ -254,14 +254,14 @@ export default function EditProductForm({ productId }: { productId: string }) {
   useEffect(() => {
     void (async () => {
       try {
-        if (imageId) {
-          await loadImages(imageId);
+        if (imageId && product?.images) {
+          await loadImages(imageId, product.images);
         }
       } catch (error) {
         console.error("Failed to load images:", error);
       }
     })();
-  }, [loadImages, imageId]);
+  }, [loadImages, imageId, product?.images]);
 
   const handleShowImageGallery = (state: string) => {
     if (state) {
@@ -271,7 +271,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       // Load images for the new gallery
       void (async () => {
         try {
-          await loadImages(state);
+          await loadImages(state, product?.images ?? []);
         } catch (error) {
           console.error("Failed to load images for gallery:", error);
         }
@@ -383,7 +383,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       categoryAttributes: attributeValues, // Pass category attributes separately
       stock,
       brand,
-      published,
+      // Remove the published field
       estimatedDeliveryTime: estimatedDeliveryTime,
     });
   };
@@ -482,19 +482,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
             }
           />
         </div>
-        <div className="flex items-center gap-2">
-          <Label htmlFor="published" className="cursor-pointer">
-            Published
-          </Label>
-          <Input
-            id="published"
-            type="checkbox"
-            className="h-4 w-4"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
-          />
-        </div>
-        <div className="col-span-2 mt-auto flex flex-col gap-y-1">
+
+        <div className="mt-auto flex flex-col gap-y-1">
           <Label>Images</Label>
           <div className="mb-4">
             <Button onClick={() => handleShowImageGallery(imageId)}>
