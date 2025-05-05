@@ -163,14 +163,17 @@ export default function Menu({
           className={`header-menu style-eight h-[56px] w-full bg-white md:h-[74px] ${props}`}
         >
           <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
-            <div className="header-main flex h-full items-center justify-between">
+            <div className="header-main relative flex h-full items-center justify-between">
               <div
                 className="menu-mobile-icon flex items-center lg:hidden"
                 onClick={handleMenuMobile}
               >
                 <i className="icon-category text-2xl"></i>
               </div>
-              <Link href={"/"} className="flex items-center">
+              <Link
+                href={"/"}
+                className="flex items-center max-lg:absolute max-lg:left-1/2 max-lg:z-10 max-lg:-translate-x-1/2 lg:relative lg:left-0 lg:transform-none"
+              >
                 <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                   Rinors
                 </div>
@@ -405,7 +408,7 @@ export default function Menu({
             </div>
 
             {/* Hotline - right side */}
-            <div className="right flex items-center gap-2 border-l border-gray-100 pl-4">
+            <div className="right mr-3 flex items-center gap-2 border-l border-gray-100 pl-4">
               <div className="text-sm text-gray-500">Hotline:</div>
               <div className="text-sm font-semibold transition-colors hover:text-orange-600">
                 +8801312223452

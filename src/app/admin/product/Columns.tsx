@@ -23,7 +23,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { DataTableColumnHeader } from "@/components/admin-components/DataTableColumnHeader";
-import type { Category, Product, StockStatus } from "@prisma/client";
+import type { Category, Product } from "@prisma/client";
 import Link from "next/link";
 import { StockStatusModal } from "./StockStatusModal";
 import { FeaturedProductModal } from "./FeaturedProductModal";
@@ -132,6 +132,113 @@ function ActionCell({ product }: { product: ProductColumns }) {
   );
 }
 
+// Create a separate component for the stock status cell
+function StockStatusCell({ product }: { product: ProductColumns }) {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const status = product.stockStatus;
+
+  // Define styles based on status
+  let badgeStyle = {};
+  let dotStyle = {};
+  let label = "Unknown";
+
+  if (status === "IN_STOCK") {
+    badgeStyle = {
+      backgroundColor: "rgba(220, 252, 231, 1)", // light green
+      color: "rgba(22, 101, 52, 1)", // dark green
+    };
+    dotStyle = { backgroundColor: "rgba(34, 197, 94, 1)" }; // green-500
+    label = "In Stock";
+  } else if (status === "OUT_OF_STOCK") {
+    badgeStyle = {
+      backgroundColor: "rgba(254, 226, 226, 1)", // light red
+      color: "rgba(153, 27, 27, 1)", // dark red
+    };
+    dotStyle = { backgroundColor: "rgba(239, 68, 68, 1)" }; // red-500
+    label = "Out of Stock";
+  } else if (status === "PRE_ORDER") {
+    badgeStyle = {
+      backgroundColor: "rgba(219, 234, 254, 1)", // light blue
+      color: "rgba(30, 64, 175, 1)", // dark blue
+    };
+    dotStyle = { backgroundColor: "rgba(59, 130, 246, 1)" }; // blue-500
+    label = "Pre Order";
+  }
+
+  const badgeContainerStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    borderRadius: "9999px",
+    padding: "0.125rem 0.625rem",
+    fontSize: "0.75rem",
+    fontWeight: 500,
+    cursor: "pointer",
+    ...badgeStyle,
+  };
+
+  const dotContainerStyle = {
+    width: "0.5rem",
+    height: "0.5rem",
+    borderRadius: "9999px",
+    marginRight: "0.25rem",
+    ...dotStyle,
+  };
+
+  return (
+    <>
+      <div
+        style={badgeContainerStyle}
+        onClick={() => setIsModalOpen(true)}
+        className="transition-opacity hover:opacity-80"
+      >
+        <span style={dotContainerStyle}></span>
+        {label}
+      </div>
+
+      <StockStatusModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productId={product.id}
+        currentStatus={product.stockStatus}
+      />
+    </>
+  );
+}
+
+// Create a separate component for the featured status cell
+function FeaturedStatusCell({ product }: { product: ProductColumns }) {
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const featured = product.featured;
+
+  return (
+    <>
+      <div
+        onClick={() => setIsModalOpen(true)}
+        className="cursor-pointer transition-opacity hover:opacity-80"
+      >
+        {featured ? (
+          <div className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
+            <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
+            Featured
+          </div>
+        ) : (
+          <div className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600">
+            <span className="mr-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
+            Not Featured
+          </div>
+        )}
+      </div>
+
+      <FeaturedProductModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        productId={product.id}
+        currentFeaturedStatus={product.featured}
+      />
+    </>
+  );
+}
+
 export interface ProductColumns extends Product {
   category: Category | null;
 }
@@ -158,97 +265,28 @@ export const columns: ColumnDef<ProductColumns>[] = [
     },
   },
   {
+    accessorKey: "category",
+    header: "Category",
+    accessorFn: (row) => row.category?.name ?? "No Category",
+  },
+  {
     accessorKey: "stockStatus",
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Stock Status" />;
     },
     cell: ({ row }) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-      const status = row.getValue("stockStatus") as StockStatus;
-
-      // Define styles based on status
-      let badgeStyle = {};
-      let dotStyle = {};
-      let label = "Unknown";
-
-      if (status === "IN_STOCK") {
-        badgeStyle = {
-          backgroundColor: "rgba(220, 252, 231, 1)", // light green
-          color: "rgba(22, 101, 52, 1)", // dark green
-        };
-        dotStyle = { backgroundColor: "rgba(34, 197, 94, 1)" }; // green-500
-        label = "In Stock";
-      } else if (status === "OUT_OF_STOCK") {
-        badgeStyle = {
-          backgroundColor: "rgba(254, 226, 226, 1)", // light red
-          color: "rgba(153, 27, 27, 1)", // dark red
-        };
-        dotStyle = { backgroundColor: "rgba(239, 68, 68, 1)" }; // red-500
-        label = "Out of Stock";
-      } else if (status === "PRE_ORDER") {
-        badgeStyle = {
-          backgroundColor: "rgba(219, 234, 254, 1)", // light blue
-          color: "rgba(30, 64, 175, 1)", // dark blue
-        };
-        dotStyle = { backgroundColor: "rgba(59, 130, 246, 1)" }; // blue-500
-        label = "Pre Order";
-      }
-
-      const badgeContainerStyle = {
-        display: "inline-flex",
-        alignItems: "center",
-        borderRadius: "9999px",
-        padding: "0.125rem 0.625rem",
-        fontSize: "0.75rem",
-        fontWeight: 500,
-        ...badgeStyle,
-      };
-
-      const dotContainerStyle = {
-        width: "0.5rem",
-        height: "0.5rem",
-        borderRadius: "9999px",
-        marginRight: "0.25rem",
-        ...dotStyle,
-      };
-
-      return (
-        <div style={badgeContainerStyle}>
-          <span style={dotContainerStyle}></span>
-          {label}
-        </div>
-      );
+      const product = row.original;
+      return <StockStatusCell product={product} />;
     },
   },
-  {
-    accessorKey: "category",
-    header: "Category",
-    accessorFn: (row) => row.category?.name ?? "No Category",
-  },
-
   {
     accessorKey: "featured",
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Featured" />;
     },
     cell: ({ row }) => {
-      const featured = row.getValue("featured");
-
-      return (
-        <div>
-          {featured ? (
-            <div className="inline-flex items-center rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700">
-              <span className="mr-1 h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-              Featured
-            </div>
-          ) : (
-            <div className="inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600">
-              <span className="mr-1 h-1.5 w-1.5 rounded-full bg-gray-400"></span>
-              Not Featured
-            </div>
-          )}
-        </div>
-      );
+      const product = row.original;
+      return <FeaturedStatusCell product={product} />;
     },
   },
   {

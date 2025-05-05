@@ -32,20 +32,78 @@ export default function Product({ data, type }: ProductProps) {
   });
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
-    onSuccess: async () => {
+    onMutate: async ({ productId }) => {
+      // Cancel outgoing refetch to avoid overwriting optimistic update
+      await utils.wishList.getWishList.cancel();
+
+      // Get current wishlist data
+      const previousWishlist = utils.wishList.getWishList.getData();
+
+      // Check if item already exists to prevent duplicates
+      if (!previousWishlist?.some((item) => item.id === productId)) {
+        // Optimistically update the wishlist by adding the new item with correct structure
+        utils.wishList.getWishList.setData(undefined, (old) => {
+          if (!old) return [];
+          // Create proper wishlist item structure with product property
+          return [
+            ...old,
+            {
+              id: productId,
+              product: data,
+              userId: session?.user.id ?? "temp-user",
+              createdAt: new Date(),
+              productId: productId,
+            },
+          ];
+        });
+      }
+
+      return { previousWishlist };
+    },
+    onError: (err, variables, context) => {
+      // If mutation fails, revert back to the previous state
+      if (context?.previousWishlist) {
+        utils.wishList.getWishList.setData(undefined, context.previousWishlist);
+      }
+    },
+    onSettled: async () => {
+      // Sync with the server once mutation is settled (success or error)
       await utils.wishList.getWishList.invalidate();
     },
   });
 
   const removeFromWishlistMutation =
     api.wishList.removeFromWishList.useMutation({
-      onSuccess: async () => {
+      onMutate: async ({ productId }) => {
+        await utils.wishList.getWishList.cancel();
+        const previousWishlist = utils.wishList.getWishList.getData();
+
+        // Optimistically update the wishlist by removing the item
+        utils.wishList.getWishList.setData(undefined, (old) => {
+          if (!old) return [];
+          return old.filter((item) => item.id !== productId);
+        });
+
+        return { previousWishlist };
+      },
+      onError: (err, variables, context) => {
+        if (context?.previousWishlist) {
+          utils.wishList.getWishList.setData(
+            undefined,
+            context.previousWishlist,
+          );
+        }
+      },
+      onSettled: async () => {
         await utils.wishList.getWishList.invalidate();
       },
     });
 
   const isInWishlist = (itemId: string): boolean => {
-    return wishlist.some((item) => item.id === itemId);
+    // Make sure we're checking against the correct property based on wishlist structure
+    return wishlist.some(
+      (item) => item.id === itemId || item.product?.id === itemId,
+    );
   };
 
   const handleAddToCart = () => {
@@ -62,7 +120,10 @@ export default function Product({ data, type }: ProductProps) {
     if (isInWishlist(data.id)) {
       removeFromWishlistMutation.mutate({ productId: data.id });
     } else {
-      addToWishlistMutation.mutate({ productId: data.id });
+      // Check for duplicates before adding
+      if (!wishlist.some((item) => item.id === data.id)) {
+        addToWishlistMutation.mutate({ productId: data.id });
+      }
     }
 
     openModalWishlist();
@@ -97,9 +158,13 @@ export default function Product({ data, type }: ProductProps) {
                 }}
               >
                 {isInWishlist(data.id) ? (
-                  <Heart size={18} weight="duotone" className="text-black" />
+                  <Heart
+                    size={18}
+                    weight="duotone"
+                    className="cursor-pointer text-black"
+                  />
                 ) : (
-                  <Heart size={18} />
+                  <Heart size={18} className="cursor-pointer" />
                 )}
                 <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
                   {isInWishlist(data.id)
