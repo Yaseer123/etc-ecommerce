@@ -254,7 +254,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
   useEffect(() => {
     void (async () => {
       try {
-        await loadImages(imageId);
+        if (imageId) {
+          await loadImages(imageId);
+        }
       } catch (error) {
         console.error("Failed to load images:", error);
       }
@@ -262,7 +264,21 @@ export default function EditProductForm({ productId }: { productId: string }) {
   }, [loadImages, imageId]);
 
   const handleShowImageGallery = (state: string) => {
-    setShowImageGallery(state);
+    if (state) {
+      // Clear previous images when opening gallery
+      setShowImageGallery(state);
+
+      // Load images for the new gallery
+      void (async () => {
+        try {
+          await loadImages(state);
+        } catch (error) {
+          console.error("Failed to load images for gallery:", error);
+        }
+      })();
+    } else {
+      setShowImageGallery("");
+    }
   };
 
   useEffect(() => {
@@ -478,17 +494,20 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={(e) => setPublished(e.target.checked)}
           />
         </div>
-        <div className="mt-auto flex flex-col gap-y-1">
+        <div className="col-span-2 mt-auto flex flex-col gap-y-1">
           <Label>Images</Label>
-          <Button onClick={() => handleShowImageGallery(imageId)}>
-            Show Image Gallery
-          </Button>
-          {showImageGallery && (
-            <DndImageGallery
-              imageId={imageId}
-              onClose={handleShowImageGallery}
-            />
-          )}
+          <div className="mb-4">
+            <Button onClick={() => handleShowImageGallery(imageId)}>
+              Show Image Gallery
+            </Button>
+            {showImageGallery && (
+              <DndImageGallery
+                imageId={imageId}
+                onClose={handleShowImageGallery}
+                // isLoading={isLoadingImages}
+              />
+            )}
+          </div>
         </div>
 
         {/* Category Attribute Fields */}
