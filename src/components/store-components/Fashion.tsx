@@ -127,7 +127,6 @@ const RecentlyAdded = () => {
                   <Product
                     key={index}
                     data={prd}
-                    type="marketplace"
                     style="style-1"
                   />
                 ))}

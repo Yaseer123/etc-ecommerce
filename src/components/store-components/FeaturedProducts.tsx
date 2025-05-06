@@ -33,7 +33,7 @@ export default function FeaturedProducts() {
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4">
           {featuredProducts.map((product) => (
-            <Product key={product.id} data={product} type="marketplace" />
+            <Product key={product.id} data={product} />
           ))}
         </div>
       )}

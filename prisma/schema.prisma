@@ -76,13 +76,12 @@ model Product {
     new                   Boolean     @default(true)
     sale                  Boolean     @default(false)
     featured              Boolean     @default(false) // New field for featured products
-    rate                  Float       @default(0)
     slug                  String
     shortDescription      String
     description           String?
     published             Boolean     @default(false)
     price                 Float
-    originPrice           Float?
+    discountedPrice       Float?
     stock                 Int
     stockStatus           StockStatus @default(IN_STOCK)
     brand                 String

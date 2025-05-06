@@ -96,7 +96,6 @@ export const productRouter = createTRPCRouter({
       z.object({
         categoryId: z.string().optional(),
         onSale: z.boolean().optional(),
-        // Change from single brand to array of brands
         brands: z.array(z.string()).optional(),
         minPrice: z.number().optional(),
         maxPrice: z.number().optional(),
@@ -110,7 +109,7 @@ export const productRouter = createTRPCRouter({
       const {
         categoryId,
         onSale,
-        brands, // Changed from brand to brands
+        brands,
         minPrice,
         maxPrice,
         sort,
@@ -322,7 +321,7 @@ export const productRouter = createTRPCRouter({
         images: input.images,
         descriptionImageId: input.descriptionImageId,
         stock: input.stock,
-        originPrice: input.originPrice,
+        discountedPrice: input.discountedPrice,
         brand: input.brand,
         estimatedDeliveryTime: input.estimatedDeliveryTime,
         attributes: input.attributes, // Store regular specifications

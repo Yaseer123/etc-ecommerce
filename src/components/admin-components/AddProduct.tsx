@@ -103,7 +103,7 @@ export default function AddProductForm() {
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [price, setPrice] = useState(0);
-  const [originPrice, setOriginPrice] = useState(0);
+  const [discountedPrice, setDiscountedPrice] = useState(0);
   const [slug, setSlug] = useState("");
   const [stock, setStock] = useState(0); // New state for stock
   const [brand, setBrand] = useState(""); // New state for brand
@@ -265,7 +265,7 @@ export default function AddProductForm() {
       title,
       shortDescription,
       price,
-      originPrice,
+      discountedPrice,
       stock,
       brand,
       slug,
@@ -280,7 +280,7 @@ export default function AddProductForm() {
     setTitle("");
     setShortDescription("");
     setPrice(0);
-    setOriginPrice(0);
+    setDiscountedPrice(0);
     setSlug("");
     setStock(0);
     setBrand("");
@@ -345,17 +345,21 @@ export default function AddProductForm() {
           <Input
             type="number"
             placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
+            value={price === 0 ? "" : price}
+            onChange={(e) =>
+              setPrice(e.target.value ? Number(e.target.value) : 0)
+            }
           />
         </div>
         <div>
-          <Label>Origin Price</Label>
+          <Label>Discounted Price</Label>
           <Input
             type="number"
-            placeholder="Origin Price"
-            value={originPrice}
-            onChange={(e) => setOriginPrice(Number(e.target.value))}
+            placeholder="Discounted Price"
+            value={discountedPrice === 0 ? "" : discountedPrice}
+            onChange={(e) =>
+              setDiscountedPrice(e.target.value ? Number(e.target.value) : 0)
+            }
           />
         </div>
         <div>
@@ -363,8 +367,10 @@ export default function AddProductForm() {
           <Input
             type="number"
             placeholder="Stock"
-            value={stock}
-            onChange={(e) => setStock(Number(e.target.value))}
+            value={stock === 0 ? "" : stock}
+            onChange={(e) =>
+              setStock(e.target.value ? Number(e.target.value) : 0)
+            }
           />
         </div>
         <div>

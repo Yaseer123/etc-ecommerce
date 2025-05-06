@@ -105,7 +105,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
     product?.shortDescription ?? "",
   );
   const [price, setPrice] = useState(product?.price ?? 0);
-  const [originPrice, setOriginPrice] = useState(product?.originPrice ?? 0);
+  const [discountedPrice, setDiscountedPrice] = useState<number>(
+    Number(product?.discountedPrice ?? 0),
+  );
   const [slug, setSlug] = useState(product?.slug ?? "");
   const [pending, setPending] = useState(false);
   const [imageId] = useState(product?.imageId ?? uuid());
@@ -375,7 +377,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       title,
       shortDescription,
       price,
-      originPrice,
+      discountedPrice,
       slug,
       categoryId: categoryId,
       description: content,
@@ -437,17 +439,21 @@ export default function EditProductForm({ productId }: { productId: string }) {
           <Input
             type="number"
             placeholder="Price"
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
+            value={price === 0 ? "" : price}
+            onChange={(e) =>
+              setPrice(e.target.value ? Number(e.target.value) : 0)
+            }
           />
         </div>
         <div>
-          <Label>Origin Price</Label>
+          <Label>Discounted Price</Label>
           <Input
             type="number"
-            placeholder="Origin Price"
-            value={originPrice}
-            onChange={(e) => setOriginPrice(Number(e.target.value))}
+            placeholder="Discounted Price"
+            value={discountedPrice === 0 ? "" : discountedPrice}
+            onChange={(e) =>
+              setDiscountedPrice(e.target.value ? Number(e.target.value) : 0)
+            }
           />
         </div>
         <div>
@@ -455,8 +461,10 @@ export default function EditProductForm({ productId }: { productId: string }) {
           <Input
             type="number"
             placeholder="Stock"
-            value={stock}
-            onChange={(e) => setStock(Number(e.target.value))}
+            value={stock === 0 ? "" : stock}
+            onChange={(e) =>
+              setStock(e.target.value ? Number(e.target.value) : 0)
+            }
           />
         </div>
         <div>
@@ -493,7 +501,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
               <DndImageGallery
                 imageId={imageId}
                 onClose={handleShowImageGallery}
-                // isLoading={isLoadingImages}
               />
             )}
           </div>

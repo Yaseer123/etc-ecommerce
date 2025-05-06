@@ -236,7 +236,6 @@ export default function WishlistPage() {
                   <Product
                     key={item.id}
                     data={item.product}
-                    type="grid"
                     style=""
                   />
                 ),

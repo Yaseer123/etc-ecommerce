@@ -115,7 +115,7 @@ export default function Page() {
                     className={`list-product hide-product-sold mt-5 grid grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px] lg:grid-cols-4`}
                   >
                     {currentProducts.map((item) => (
-                      <Product key={item.id} data={item} type="marketplace" />
+                      <Product key={item.id} data={item} />
                     ))}
                   </div>
                 )}

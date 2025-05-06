@@ -125,9 +125,13 @@ export default function ProductDetails({
     },
   });
 
+  // Calculate discount percentage if discounted price is available
   const percentSale =
-    productMain.originPrice &&
-    Math.floor(100 - (productMain.price / productMain.originPrice) * 100);
+    productMain.discountedPrice && productMain.price > 0
+      ? Math.floor(
+          100 - (productMain.discountedPrice / productMain.price) * 100,
+        )
+      : 0;
 
   const handleSwiper = (swiper: SwiperCore) => {
     setThumbsSwiper(swiper);
@@ -360,19 +364,25 @@ export default function ProductDetails({
                 </span>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                <div className="product-price heading5">
-                  ৳{productMain.price}.00
-                </div>
-                {productMain.originPrice && productMain.originPrice > 0 && (
+                {productMain.discountedPrice ? (
                   <>
+                    <div className="product-price heading5">
+                      ৳{productMain.discountedPrice.toFixed(2)}
+                    </div>
                     <div className="h-4 w-px bg-line"></div>
                     <div className="product-origin-price font-normal text-secondary2">
-                      <del>৳{productMain.originPrice}.00</del>
+                      <del>৳{productMain.price.toFixed(2)}</del>
                     </div>
-                    <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
-                      -{percentSale}%
-                    </div>
+                    {percentSale > 0 && (
+                      <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
+                        -{percentSale}%
+                      </div>
+                    )}
                   </>
+                ) : (
+                  <div className="product-price heading5">
+                    ৳{productMain.price.toFixed(2)}
+                  </div>
                 )}
               </div>
               <div className="desc mt-5 block border-b border-line pb-6 text-base text-secondary lg:text-lg">

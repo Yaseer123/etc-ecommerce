@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Heart, Eye, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
-import Rate from "../Rate";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
@@ -14,11 +13,10 @@ import { type Product } from "@prisma/client";
 
 interface ProductProps {
   data: Product;
-  type: string;
   style?: string;
 }
 
-export default function Product({ data, type }: ProductProps) {
+export default function Product({ data }: ProductProps) {
   const { openModalCart } = useModalCartStore();
   const { openModalWishlist } = useModalWishlistStore();
   const { openQuickView } = useModalQuickViewStore();
@@ -133,85 +131,116 @@ export default function Product({ data, type }: ProductProps) {
     openQuickView(data);
   };
 
-  return (
-    <>
-      {type === "marketplace" && (
-        <div className="product-item style-marketplace rounded-2xl border border-line p-4">
-          <div className="bg-img relative w-full">
-            <Link href={`/products/${data.slug}?id=${data.id}`}>
-              <Image
-                className="aspect-square w-full cursor-pointer"
-                width={5000}
-                height={5000}
-                src={data.images?.[0] ?? "/images/products/1000x1000.png"}
-                alt="img"
-              />
-            </Link>
-            <div className="list-action absolute right-0 top-0 flex flex-col gap-1">
-              <span
-                className={`add-wishlistState-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300 ${
-                  isInWishlist(data.id) ? "active" : ""
-                }`}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToWishlist();
-                }}
-              >
-                {isInWishlist(data.id) ? (
-                  <Heart
-                    size={18}
-                    weight="duotone"
-                    className="cursor-pointer text-black"
-                  />
-                ) : (
-                  <Heart size={18} className="cursor-pointer" />
-                )}
-                <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
-                  {isInWishlist(data.id)
-                    ? "Remove from Wishlist"
-                    : "Add to Wishlist"}
-                </div>
-              </span>
+  // Calculate discount percentage if discounted price is available
+  const discountPercentage = data.discountedPrice
+    ? Math.round(((data.price - data.discountedPrice) / data.price) * 100)
+    : 0;
 
-              <span
-                className="quick-view-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleQuickViewOpen();
-                }}
-              >
-                <Eye />
-                <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
-                  Quick View
-                </div>
-              </span>
-              <span
-                className="add-cart-btn box-shadow-sm flex h-8 w-8 items-center justify-center rounded-full bg-white duration-300"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart();
-                }}
-              >
-                <ShoppingBagOpen />
-                <div className="tag-action caption2 rounded-sm bg-black px-1.5 py-0.5 text-white">
-                  Add To Cart
-                </div>
-              </span>
-            </div>
+  return (
+    <div className="product-item style-marketplace h-full rounded-2xl border border-line p-4 transition-all duration-300 hover:shadow-md">
+      <div className="bg-img relative w-full">
+        {/* Sale badge */}
+        {data.discountedPrice && (
+          <div className="bg-red-500 absolute left-2 top-2 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
+            -{discountPercentage}%
           </div>
-          <div className="product-infor mt-4">
-            <Link href={`/products/${data.slug}?id=${data.id}`}>
-              <span className="text-title cursor-pointer">{data.title}</span>
-            </Link>
-            <div className="mt-1 flex gap-0.5">
-              <Rate currentRate={data.rate} size={16} />
-            </div>
-            <span className="text-title mt-1 inline-block">
-              ৳{data.price}.00
-            </span>
+        )}
+
+        <Link href={`/products/${data.slug}?id=${data.id}`}>
+          <div className="relative overflow-hidden rounded-lg">
+            <Image
+              className="aspect-square w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
+              width={5000}
+              height={5000}
+              src={data.images?.[0] ?? "/images/products/1000x1000.png"}
+              alt={data.title}
+            />
+            {data.new && (
+              <div className="bg-green-500 absolute left-2 top-2 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
+                New
+              </div>
+            )}
           </div>
+        </Link>
+        <div className="list-action absolute right-1 top-1 flex flex-col gap-2">
+          <button
+            className={`add-wishlistState-btn box-shadow-sm flex h-9 w-9 items-center justify-center rounded-full bg-white transition-all duration-300 hover:bg-gray-100 ${
+              isInWishlist(data.id) ? "active bg-pink-50" : ""
+            }`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToWishlist();
+            }}
+          >
+            {isInWishlist(data.id) ? (
+              <Heart
+                size={18}
+                weight="fill"
+                className="text-red-500 cursor-pointer"
+              />
+            ) : (
+              <Heart size={18} className="cursor-pointer" />
+            )}
+            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+              {isInWishlist(data.id)
+                ? "Remove from Wishlist"
+                : "Add to Wishlist"}
+            </div>
+          </button>
+
+          <button
+            className="quick-view-btn box-shadow-sm flex h-9 w-9 items-center justify-center rounded-full bg-white transition-all duration-300 hover:bg-gray-100"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleQuickViewOpen();
+            }}
+          >
+            <Eye size={18} />
+            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+              Quick View
+            </div>
+          </button>
+          <button
+            className="add-cart-btn box-shadow-sm flex h-9 w-9 items-center justify-center rounded-full bg-white transition-all duration-300 hover:bg-gray-100"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleAddToCart();
+            }}
+          >
+            <ShoppingBagOpen size={18} />
+            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+              Add To Cart
+            </div>
+          </button>
         </div>
-      )}
-    </>
+      </div>
+      <div className="product-info mt-4 flex flex-col">
+        <Link
+          href={`/products/${data.slug}?id=${data.id}`}
+          className="flex-grow"
+        >
+          <h3 className="text-title line-clamp-2 h-12 cursor-pointer text-sm font-medium hover:underline">
+            {data.title}
+          </h3>
+        </Link>
+
+        <div className="mt-auto flex items-center">
+          {data.discountedPrice ? (
+            <div className="flex items-center gap-2">
+              <span className="text-title font-bold">
+                ৳{data.discountedPrice.toFixed(2)}
+              </span>
+              <span className="text-sm text-gray-500 line-through">
+                ৳{data.price.toFixed(2)}
+              </span>
+            </div>
+          ) : (
+            <span className="text-title font-bold">
+              ৳{data.price.toFixed(2)}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }

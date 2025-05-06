@@ -27,7 +27,7 @@ const ProductList: React.FC<ProductListProps> = ({
               No products match the selected criteria.
             </div>
           ) : (
-            <Product key={item.id} data={item} type="marketplace" />
+            <Product key={item.id} data={item} />
           ),
         )}
       </div>
