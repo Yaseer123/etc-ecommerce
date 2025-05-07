@@ -12,7 +12,7 @@ import { CSS } from "@dnd-kit/utilities";
 import {
   type ProductImage,
   useProductImageStore,
-} from "@/context/admin-context/ProductImageProvider";
+} from "@/context/ProductImageProvider";
 import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { FileUploader } from "react-drag-drop-files";

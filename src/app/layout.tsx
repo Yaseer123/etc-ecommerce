@@ -2,9 +2,9 @@ import { GeistSans } from "geist/font/sans";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import { Toaster } from "@/components/ui/sonner";
-import AnalyticsScript from "@/components/ga-pixel-script/AnalyticsScript";
 import Head from "next/head";
 import { SessionProvider } from "next-auth/react";
+import "@/styles/globals.css";
 
 export default function RootLayout({
   children,
@@ -19,7 +19,6 @@ export default function RootLayout({
           content="Your one-stop shop for premium products. Discover our curated collection of quality items with secure shopping and fast delivery."
         />
         <link rel="icon" href="/favicon.ico" />
-        <AnalyticsScript />
       </Head>
       <body>
         <SessionProvider>
