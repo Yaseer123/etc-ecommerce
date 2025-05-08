@@ -6,6 +6,7 @@ import {
   apiAuthPrefix,
   authRoutes,
   DEFAULT_LOGIN_REDIRECT,
+  userDashboard,
 } from "./routes";
 
 export default auth(async (req) => {
@@ -16,6 +17,7 @@ export default auth(async (req) => {
   // const isPublicRoutes = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoutes = authRoutes.includes(nextUrl.pathname);
   const isAdminRoutes = nextUrl.pathname.startsWith(adminPrefix);
+  const isUserDashboard = nextUrl.pathname.startsWith(userDashboard);
 
   if (isApiAuthRoutes) {
     return NextResponse.next();
@@ -27,6 +29,13 @@ export default auth(async (req) => {
     }
 
     return NextResponse.next();
+  }
+
+  if (isUserDashboard) {
+    if (isLoggedIn) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
   }
 
   if (isAdminRoutes) {

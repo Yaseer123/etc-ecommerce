@@ -14,7 +14,7 @@ import { Button } from "../ui/button";
 import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./extensions/fontSize";
 import { Youtube } from "./extensions/youtube";
-import { useImageStore } from "@/context/ImageProvider";
+import { useImageStore } from "@/context/admin-context/ImageProvider";
 
 const extensions = [
   StarterKit,

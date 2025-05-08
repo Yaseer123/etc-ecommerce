@@ -13,7 +13,7 @@ import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
 import PreSelectedCategory from "./PreSelectedCategory";
-import { useProductImageStore } from "@/context/ProductImageProvider";
+import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 import {
   DndContext,
   closestCenter,

@@ -1,0 +1,89 @@
+"use client";
+
+import React from "react";
+import Link from "next/link";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { api } from "@/trpc/react";
+
+interface Props {
+  categoryId?: string | null;
+  pageTitle?: string;
+}
+
+const CategoryBreadcrumb: React.FC<Props> = ({ categoryId, pageTitle }) => {
+  const {
+    data: categoryHierarchy,
+    isLoading,
+    isError,
+  } = api.category.getHierarchy.useQuery(
+    {
+      id: categoryId ?? "",
+    },
+    {
+      enabled: !!categoryId,
+    },
+  );
+
+  return (
+    <>
+      <div>
+        <div className="bg-surface bg-[linear-gradient(87deg,#f9f1f0_4.3%,#faf7f1_95.7%)] bg-no-repeat pb-6 pt-8 md:pb-8 md:pt-12">
+          <div className="mx-auto w-full !max-w-[1322px] px-3 md:px-4">
+            <div className="left flex flex-wrap items-center gap-x-1 gap-y-2">
+              <Link
+                href={"/"}
+                className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
+              >
+                Homepage
+              </Link>
+              <CaretRight size={10} className="text-secondary2 md:size-3" />
+
+              {!categoryId ? (
+                <div className="text-base font-normal capitalize leading-6 md:text-base">
+                  {pageTitle ?? "Products"}
+                </div>
+              ) : isLoading ? (
+                <div className="text-base font-normal leading-6 text-secondary2 md:text-base">
+                  Loading...
+                </div>
+              ) : isError ? (
+                <div className="text-red-500 text-base font-normal leading-6 md:text-base">
+                  Error loading category
+                </div>
+              ) : (
+                categoryHierarchy?.map((cat, index) => (
+                  <React.Fragment key={cat.id}>
+                    {index < categoryHierarchy.length - 1 ? (
+                      <>
+                        <Link
+                          href={`/products?category=${cat.id}`}
+                          className="max-w-[150px] truncate text-base font-normal leading-6 text-secondary2 hover:underline md:max-w-none md:text-base"
+                          title={cat.name}
+                        >
+                          {cat.name}
+                        </Link>
+                        <CaretRight
+                          size={10}
+                          className="text-secondary2 md:size-3"
+                        />
+                      </>
+                    ) : (
+                      <div
+                        className="max-w-[180px] truncate text-base font-normal capitalize leading-6 md:max-w-none md:text-base"
+                        title={cat.name}
+                      >
+                        {cat.name}
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default CategoryBreadcrumb;
