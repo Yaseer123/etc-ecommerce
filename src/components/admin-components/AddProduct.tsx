@@ -25,7 +25,7 @@ import DndImageGallery from "../rich-editor/DndImageGallery";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { Textarea } from "../ui/textarea";
-import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import { useProductImageStore } from "@/context/ProductImageProvider";
 import {
   DndContext,
   closestCenter,

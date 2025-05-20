@@ -6,7 +6,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../admin-components/GalleryImage";
 import { removeImage, uploadFile } from "@/app/actions/file";
 import Image from "next/image";
-import { useImageStore } from "@/context/admin-context/ImageProvider";
+import { useImageStore } from "@/context/ImageProvider";
 
 interface ImageGalleryProps {
   visible: string;
