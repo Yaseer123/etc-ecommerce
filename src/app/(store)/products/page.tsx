@@ -1,0 +1,1025 @@
+"use client";
+
+import React, { useState, useEffect, useMemo } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
+import { type ProductWithCategory } from "@/types/ProductType";
+import ProductList from "@/components/store-components/Shop/ProductList";
+import {
+  CheckSquare,
+  CaretDown,
+  X,
+  Funnel,
+  CaretUp,
+} from "@phosphor-icons/react/dist/ssr";
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+import FilterByCategory from "@/components/store-components/Shop/FilterByCategory";
+import CategoryBreadcrumb from "@/components/store-components/Breadcrumb/CategoryBreadcrumb";
+
+export default function ProductsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // Mobile filter state
+  const [showMobileFilter, setShowMobileFilter] = useState(false);
+
+  // Extract filter parameters from URL
+  const categoryId = searchParams?.get("category") ?? "";
+  // Remove onSale parameter
+  const brandParam = searchParams?.get("brand") ?? "";
+  const minPrice = searchParams?.get("minPrice")
+    ? Number(searchParams?.get("minPrice"))
+    : undefined;
+  const maxPrice = searchParams?.get("maxPrice")
+    ? Number(searchParams?.get("maxPrice"))
+    : undefined;
+  const sortOption = searchParams?.get("sort") ?? "";
+  const pageParam = searchParams?.get("page")
+    ? Number(searchParams.get("page"))
+    : 0;
+
+  // State from URL parameters
+  // Remove showOnlySale state
+  const [currentSortOption, setCurrentSortOption] = useState(sortOption);
+  const [currentPage, setCurrentPage] = useState(pageParam);
+  // Change from string to string array for multiple brands
+  const [brands, setBrands] = useState<string[]>(
+    brandParam ? brandParam.split(",") : [],
+  );
+  const [category, setCategory] = useState<{
+    id: string;
+    name: string;
+  } | null>(categoryId ? { id: categoryId, name: "" } : null);
+
+  // Add a dedicated query to fetch category information
+  const { data: categoryData } = api.category.getById.useQuery(
+    { id: categoryId },
+    {
+      enabled: !!categoryId,
+      staleTime: Infinity,
+      gcTime: Infinity,
+    },
+  );
+
+  // Update category name when category data is fetched
+  useEffect(() => {
+    if (categoryId && categoryData) {
+      setCategory({ id: categoryId, name: categoryData.name });
+    }
+  }, [categoryId, categoryData]);
+
+  // Define the possible types for attribute filter values
+  type AttributeFilterValue = string | string[];
+
+  // Add state for category attributes
+  const [attributeFilters, setAttributeFilters] = useState<
+    Record<string, AttributeFilterValue>
+  >({});
+
+  // Fetch products with filters
+  const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
+    categoryId: categoryId || undefined,
+    // Remove onSale parameter
+    brands: brands.length > 0 ? brands : undefined, // Update parameter name to match server
+    minPrice,
+    maxPrice,
+    sort: sortOption || undefined,
+    attributes:
+      Object.keys(attributeFilters).length > 0 ? attributeFilters : undefined,
+  });
+
+  // Prevent category brands query from refreshing when brand selection changes
+  const { data: categoryBrands = [] } =
+    api.product.getBrandsByCategory.useQuery(
+      {
+        categoryId: categoryId || undefined,
+      },
+      {
+        // Only fetch when the category changes
+        enabled: true,
+        // Prevent automatic refetching when other parameters change
+        staleTime: Infinity,
+        // Force cache to remain valid unless manually invalidated
+        gcTime: Infinity,
+        // Equivalent behavior to keepPreviousData
+        placeholderData: (previousData) => previousData,
+        // Prevent refetches on window focus
+        refetchOnWindowFocus: false,
+        // Prevent refetches when reconnecting
+        refetchOnReconnect: false,
+      },
+    );
+
+  // Fetch category attributes when a category is selected
+  const { data: categoryAttributes = [] } =
+    api.product.getCategoryAttributes.useQuery(
+      { categoryId },
+      {
+        enabled: !!categoryId,
+        staleTime: Infinity,
+        gcTime: Infinity,
+      },
+    );
+
+  // Fetch global price range from all products in database
+  const { data: globalPriceRange } = api.product.getPriceRange.useQuery();
+
+  // Set default price range based on global min/max from database
+  const [initialPriceRange, setInitialPriceRange] = useState({
+    min: 0,
+    max: 1000,
+  });
+  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
+    min: minPrice ?? 0,
+    max: maxPrice ?? 1000,
+  });
+
+  // State for handling custom slider styling
+  const [sliderStyle] = useState({
+    trackStyle: { backgroundColor: "#f97316", height: 4 },
+    railStyle: { backgroundColor: "#e5e7eb", height: 4 },
+    handleStyle: {
+      borderColor: "#f97316",
+      backgroundColor: "#ffffff",
+      opacity: 1,
+      boxShadow: "0 0 0 2px rgba(249, 115, 22, 0.2)",
+    },
+  });
+
+  // Update URL when filters change - use a memoized function to prevent recreation
+  const updateUrlParams = useMemo(() => {
+    return (newParams: Record<string, string | null>) => {
+      const params = new URLSearchParams(searchParams?.toString());
+
+      // Update or remove each parameter
+      Object.entries(newParams).forEach(([key, value]) => {
+        if (value === null) {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+
+      // Reset to page 0 when filters change
+      if (!("page" in newParams)) {
+        params.set("page", "0");
+      }
+
+      // Build the new URL
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      // Use replace instead of push to prevent scroll to top, and add scroll: false option
+      router.replace(newUrl, { scroll: false });
+    };
+  }, [searchParams, router]);
+
+  // Setup initial price range based on global product prices from database
+  useEffect(() => {
+    if (globalPriceRange) {
+      const dbMinPrice = globalPriceRange.min;
+      const dbMaxPrice = globalPriceRange.max;
+
+      // Set the initial range from database values
+      setInitialPriceRange({ min: dbMinPrice, max: dbMaxPrice });
+
+      // Set current range based on URL params if present, otherwise use global range
+      setPriceRange({
+        min: minPrice ?? dbMinPrice,
+        max: maxPrice ?? dbMaxPrice,
+      });
+    }
+  }, [globalPriceRange, minPrice, maxPrice]);
+
+  // When category is loaded, update the name - keep as fallback
+  useEffect(() => {
+    if (
+      categoryId &&
+      products &&
+      products.length > 0 &&
+      category?.id === categoryId &&
+      !category.name &&
+      !categoryData // Only use this fallback if the dedicated query didn't work
+    ) {
+      const categoryItem = products.find(
+        (p) => p.categoryId === categoryId,
+      )?.category;
+      if (categoryItem?.name) {
+        setCategory({ id: categoryId, name: categoryItem.name });
+      }
+    }
+
+    // Check if current brands exist in the new category
+    if (categoryId && categoryBrands && brands.length > 0) {
+      const validBrands = brands.filter((brand) =>
+        categoryBrands.includes(brand.toLowerCase()),
+      );
+
+      // If any brands were removed, update state and URL
+      if (validBrands.length !== brands.length) {
+        setBrands(validBrands);
+        if (validBrands.length === 0) {
+          updateUrlParams({ brand: null });
+        } else {
+          updateUrlParams({ brand: validBrands.join(",") });
+        }
+      }
+    }
+
+    // If category is cleared, also clear brand selection
+    if (!categoryId && brands.length > 0) {
+      setBrands([]);
+      updateUrlParams({ brand: null });
+    }
+  }, [
+    products,
+    categoryId,
+    category?.id,
+    category?.name,
+    categoryBrands,
+    brands,
+    updateUrlParams,
+    categoryData,
+  ]);
+
+  // Initialize attribute filters from URL on category change
+  useEffect(() => {
+    if (categoryId && categoryAttributes.length > 0) {
+      const newFilters: Record<string, string | string[]> = {};
+      let hasFilters = false;
+
+      // Look for attributes in URL params
+      categoryAttributes.forEach((attr) => {
+        const paramValue = searchParams?.get(attr.name);
+        if (paramValue) {
+          hasFilters = true;
+
+          // All attributes are now "select" type only
+          if (paramValue.includes(",")) {
+            // Handle multiple values (array) and deduplicate
+            newFilters[attr.name] = [...new Set(paramValue.split(","))];
+          } else {
+            newFilters[attr.name] = paramValue;
+          }
+        }
+      });
+
+      // Only update state if there are new filters and they're different from current filters
+      if (
+        hasFilters &&
+        JSON.stringify(newFilters) !== JSON.stringify(attributeFilters)
+      ) {
+        setAttributeFilters(newFilters);
+      }
+    } else if (!categoryId && Object.keys(attributeFilters).length > 0) {
+      // Clear attribute filters when category is removed
+      setAttributeFilters({});
+    }
+  }, [categoryId, categoryAttributes, searchParams, attributeFilters]);
+
+  // Separate effect specifically for clearing filters when category changes
+  useEffect(() => {
+    // When category changes, clear attribute filters
+    if (!categoryId) {
+      // Only clear if there are filters to clear
+      if (Object.keys(attributeFilters).length > 0) {
+        setAttributeFilters({});
+      }
+    }
+  }, [attributeFilters, categoryId]);
+
+  // Toggle mobile filter sidebar
+  const toggleMobileFilter = () => {
+    setShowMobileFilter(!showMobileFilter);
+    // Prevent body scroll when filter is open
+    if (!showMobileFilter) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+  };
+
+  // Close mobile filter on resize if screen becomes larger
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768 && showMobileFilter) {
+        setShowMobileFilter(false);
+        document.body.style.overflow = "";
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      document.body.style.overflow = "";
+    };
+  }, [showMobileFilter]);
+
+  // Filter handlers
+  const handleCategory = (categoryId: string, categoryName: string) => {
+    // Reset all filter states
+    setBrands([]);
+    setPriceRange(initialPriceRange);
+    // Remove showOnlySale reset
+    setCurrentSortOption("");
+    setCurrentPage(0);
+
+    // Clear attribute filters
+    if (Object.keys(attributeFilters).length > 0) {
+      setAttributeFilters({});
+    }
+
+    // Set the new category
+    setCategory({ id: categoryId, name: categoryName });
+
+    // Get parameters to clear all attribute URL parameters
+    const attrParams: Record<string, null> = {};
+    Object.keys(attributeFilters).forEach((key) => {
+      attrParams[key] = null;
+    });
+
+    // Update URL with only the new category and reset page to 0
+    updateUrlParams({
+      category: categoryId,
+      brand: null,
+      minPrice: null,
+      maxPrice: null,
+      // Remove sale parameter
+      sort: null,
+      page: "0",
+      ...attrParams,
+    });
+  };
+
+  // Remove handleShowOnlySale function
+
+  const handleSortChange = (option: string) => {
+    setCurrentSortOption(option);
+    updateUrlParams({ sort: option === "Sorting" ? null : option });
+  };
+
+  const handlePriceChange = (values: number | number[]) => {
+    if (Array.isArray(values)) {
+      const newPriceRange = { min: values[0] ?? 0, max: values[1] ?? 0 };
+      setPriceRange(newPriceRange);
+
+      // Only update URL if price range has changed significantly (debounce)
+      const minPrice =
+        newPriceRange.min !== initialPriceRange.min
+          ? String(newPriceRange.min)
+          : null;
+      const maxPrice =
+        newPriceRange.max !== initialPriceRange.max
+          ? String(newPriceRange.max)
+          : null;
+
+      updateUrlParams({
+        minPrice,
+        maxPrice,
+      });
+    }
+  };
+
+  // Modified to handle multiple brands
+  const handleBrand = (brandName: string) => {
+    let updatedBrands: string[];
+
+    if (brands.includes(brandName)) {
+      // Remove if already selected
+      updatedBrands = brands.filter((b) => b !== brandName);
+    } else {
+      // Add if not already selected
+      updatedBrands = [...brands, brandName];
+    }
+
+    setBrands(updatedBrands);
+
+    // Update URL parameter without causing a page reload or revalidation
+    if (updatedBrands.length === 0) {
+      updateUrlParams({ brand: null });
+    } else {
+      updateUrlParams({ brand: updatedBrands.join(",") });
+    }
+  };
+
+  const handleAttributeChange = (
+    name: string,
+    value: string | string[] | null,
+  ) => {
+    // Clone the current filters
+    const updatedFilters = { ...attributeFilters };
+
+    if (value === null) {
+      // Remove the filter if it exists
+      if (name in updatedFilters) {
+        delete updatedFilters[name];
+
+        // Update state immediately for better responsiveness
+        setAttributeFilters(updatedFilters);
+
+        // Then update URL
+        updateUrlParams({ [name]: null });
+      }
+      return;
+    }
+
+    if (typeof value === "string") {
+      const currentValue = updatedFilters[name];
+
+      if (!currentValue) {
+        // If no current value, set as single string (not array)
+        updatedFilters[name] = [value];
+      } else if (Array.isArray(currentValue)) {
+        // If current value is array, toggle the value
+        if (currentValue.includes(value)) {
+          // Remove the value
+          const newValues = currentValue.filter((v) => v !== value);
+
+          if (newValues.length === 0) {
+            // If no values left, remove the attribute completely
+            delete updatedFilters[name];
+          } else {
+            // Otherwise keep the remaining values
+            updatedFilters[name] = newValues;
+          }
+        } else {
+          // Add the value (no duplicates)
+          updatedFilters[name] = [...currentValue, value];
+        }
+      } else {
+        // If current value is a string, toggle it
+        if (currentValue === value) {
+          // If trying to deselect the only value, remove the attribute entirely
+          delete updatedFilters[name];
+        } else {
+          // Otherwise add the new value to create an array
+          updatedFilters[name] = [currentValue, value];
+        }
+      }
+    } else if (Array.isArray(value)) {
+      // Direct array assignment (used when loading from URL)
+      if (value.length === 0) {
+        delete updatedFilters[name];
+      } else {
+        // Ensure no duplicates
+        updatedFilters[name] = [...new Set(value)];
+      }
+    }
+
+    // Update state immediately for better UI responsiveness
+    setAttributeFilters(updatedFilters);
+
+    // Then update URL with the final value
+    if (name in updatedFilters) {
+      const arrayValue = Array.isArray(updatedFilters[name])
+        ? updatedFilters[name]
+        : [updatedFilters[name]!];
+
+      // Convert to string for URL param
+      const paramValue = arrayValue.join(",");
+
+      // Update URL immediately rather than with a delay
+      updateUrlParams({ [name]: paramValue });
+    } else {
+      // The attribute was removed, so remove it from URL
+      updateUrlParams({ [name]: null });
+    }
+  };
+
+  const clearAttributeFilters = () => {
+    // Generate parameters to clear all attribute URL parameters
+    const attrParams: Record<string, null> = {};
+    Object.keys(attributeFilters).forEach((key) => {
+      attrParams[key] = null;
+    });
+
+    // Clear attribute filter state
+    if (Object.keys(attributeFilters).length > 0) {
+      setAttributeFilters({});
+    }
+
+    return attrParams;
+  };
+
+  const handleClearAll = () => {
+    setBrands([]); // Update to clear brands array
+    setPriceRange(initialPriceRange);
+    setCategory(null);
+    // Remove showOnlySale reset
+    setCurrentSortOption("");
+
+    // Clear attribute filters and get URL parameters to reset
+    const attrParams = clearAttributeFilters();
+
+    // Clear all filter params, including attribute filters
+    updateUrlParams({
+      category: null,
+      brand: null,
+      minPrice: null,
+      maxPrice: null,
+      // Remove sale parameter
+      sort: null,
+      page: "0",
+      ...attrParams,
+    });
+  };
+
+  const handlePageChange = (selected: number) => {
+    setCurrentPage(selected);
+    updateUrlParams({ page: selected.toString() });
+  };
+
+  // Pagination setup
+  const productsPerPage = 12;
+  const offset = currentPage * productsPerPage;
+  const totalProducts = products?.length ?? 0;
+  const pageCount = Math.ceil(totalProducts / productsPerPage);
+
+  // Get current page of products
+  const currentProducts = useMemo(() => {
+    return products?.slice(offset, offset + productsPerPage) ?? [];
+  }, [products, offset, productsPerPage]);
+
+  // Add state to track expanded attribute sections
+  const [expandedAttributes, setExpandedAttributes] = useState<
+    Record<string, boolean>
+  >({});
+
+  // Toggle function for attribute sections
+  const toggleAttributeSection = (attrName: string) => {
+    setExpandedAttributes((prev) => ({
+      ...prev,
+      [attrName]: !prev[attrName],
+    }));
+  };
+
+  // Initialize all attribute sections as expanded
+  useEffect(() => {
+    if (categoryAttributes.length > 0) {
+      const initialExpanded: Record<string, boolean> = {};
+      categoryAttributes.forEach((attr) => {
+        initialExpanded[attr.name] = true; // Start with all expanded
+      });
+      setExpandedAttributes(initialExpanded);
+    }
+  }, [categoryAttributes]);
+
+  // Initialize state for additional collapsible sections
+  useEffect(() => {
+    // Initialize basic collapsible sections (in addition to attributes)
+    setExpandedAttributes((prev) => ({
+      ...prev,
+      categories: true,
+      priceRange: true,
+      brands: true,
+    }));
+  }, []);
+
+  return (
+    <>
+      <CategoryBreadcrumb categoryId={category?.id} pageTitle="Shop" />
+      <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
+        <div className="container">
+          <div className="flex gap-y-8 max-md:flex-col-reverse max-md:flex-wrap">
+            {/* Desktop Sidebar - hidden on mobile */}
+            <div className="sidebar hidden w-full md:block md:w-1/3 md:pr-12 lg:w-1/4">
+              {/* Filter sidebar content that's always visible on desktop */}
+              {renderFilterContent()}
+            </div>
+
+            {/* Main content area */}
+            <div className="list-product-block w-full md:w-2/3 md:pl-3 lg:w-3/4">
+              <div className="filter-heading flex flex-wrap items-center justify-between gap-5">
+                <div className="left has-line flex flex-wrap items-center gap-5">
+                  {/* Remove "Show only products on sale" checkbox */}
+                </div>
+                <div className="right flex items-center gap-3">
+                  <div className="select-block relative">
+                    <select
+                      id="select-filter"
+                      name="select-filter"
+                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-orange-500 focus:ring focus:ring-orange-200 md:pr-20"
+                      onChange={(e) => {
+                        handleSortChange(e.target.value);
+                      }}
+                      value={currentSortOption || "Sorting"}
+                    >
+                      <option value="Sorting" disabled>
+                        Sorting
+                      </option>
+                      <option value="priceHighToLow">Price High To Low</option>
+                      <option value="priceLowToHigh">Price Low To High</option>
+                    </select>
+                    <CaretDown
+                      size={12}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 md:right-4"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="list-filtered mt-4 flex flex-wrap items-center gap-3">
+                <div className="total-product">
+                  {totalProducts}
+                  <span className="pl-1 text-gray-500">Products Found</span>
+                </div>
+                {(category ??
+                  brands.length > 0 ??
+                  (Object.keys(attributeFilters).length > 0 ||
+                    priceRange.min !== initialPriceRange.min ||
+                    priceRange.max !== initialPriceRange.max)) && (
+                  <>
+                    <div className="list flex flex-wrap items-center gap-3">
+                      <div className="h-4 w-px bg-gray-200"></div>
+                      {category && (
+                        <div
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-orange-700 transition-colors hover:bg-orange-200"
+                          onClick={() => {
+                            setCategory(null);
+                            updateUrlParams({ category: null });
+                          }}
+                        >
+                          <X size={16} className="cursor-pointer" />
+                          <span>{category.name}</span>
+                        </div>
+                      )}
+                      {/* Modified to show all selected brands */}
+                      {brands.map((brandName, index) => (
+                        <div
+                          key={`brand-${index}`}
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-orange-700 transition-colors hover:bg-orange-200"
+                          onClick={() => handleBrand(brandName)}
+                        >
+                          <X size={16} className="cursor-pointer" />
+                          <span>{brandName}</span>
+                        </div>
+                      ))}
+                      {(priceRange.min !== initialPriceRange.min ||
+                        priceRange.max !== initialPriceRange.max) && (
+                        <div
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
+                          onClick={() => {
+                            setPriceRange(initialPriceRange);
+                            updateUrlParams({ minPrice: null, maxPrice: null });
+                          }}
+                        >
+                          <X size={16} className="cursor-pointer" />
+                          <span>
+                            ৳{priceRange.min} - ৳{priceRange.max}
+                          </span>
+                        </div>
+                      )}
+                      {/* Attribute filter pills */}
+                      {Object.entries(attributeFilters).map(([key, value]) => {
+                        // Format key for display
+                        const displayKey = key
+                          .replace(/_/g, " ")
+                          .replace(/\b\w/g, (c) => c.toUpperCase());
+
+                        // Format value for display
+                        const displayValue = Array.isArray(value)
+                          ? value.join(", ")
+                          : typeof value === "boolean"
+                            ? "Yes"
+                            : String(value);
+
+                        return (
+                          <div
+                            key={key}
+                            className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
+                            onClick={() => {
+                              // Use the handler directly without modifying state again
+                              handleAttributeChange(key, null);
+                            }}
+                          >
+                            <X size={16} className="cursor-pointer" />
+                            <span>
+                              {displayKey}: {displayValue}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div
+                      className="clear-btn hover:bg-red-50 flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1 transition-colors"
+                      onClick={handleClearAll}
+                    >
+                      <X
+                        color="rgb(219, 68, 68)"
+                        size={16}
+                        className="cursor-pointer"
+                      />
+                      <span className="text-button-uppercase text-red">
+                        Clear All
+                      </span>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {/* Product list with loading state */}
+              {isLoading ? (
+                <div className="flex h-60 items-center justify-center">
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent"></div>
+                </div>
+              ) : (
+                <ProductList
+                  data={currentProducts as ProductWithCategory[]}
+                  layoutCol={4}
+                  pageCount={pageCount}
+                  handlePageChange={handlePageChange}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Filter Button - Fixed at bottom right */}
+      <div className="fixed bottom-6 right-6 z-50 md:hidden">
+        <button
+          onClick={toggleMobileFilter}
+          className="flex items-center justify-center rounded-full bg-orange-500 p-4 text-white shadow-xl transition-colors hover:bg-orange-600"
+          aria-label="Filter products"
+        >
+          <Funnel size={24} weight="bold" />
+        </button>
+      </div>
+
+      {/* Mobile Filter Sidebar */}
+      {showMobileFilter && (
+        <>
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 z-[9999] bg-black/50 md:hidden"
+            onClick={toggleMobileFilter}
+          ></div>
+
+          {/* Sidebar */}
+          <div className="fixed right-0 top-0 z-[9999] h-full w-[300px] max-w-[80vw] overflow-y-auto bg-white shadow-xl transition-transform duration-300 ease-in-out md:hidden">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white p-4">
+              <h2 className="text-lg font-semibold">Filters</h2>
+              <button
+                onClick={toggleMobileFilter}
+                className="rounded-full p-1 hover:bg-gray-100"
+              >
+                <X size={24} className="text-gray-700" />
+              </button>
+            </div>
+
+            <div className="p-4">{renderFilterContent()}</div>
+
+            <div className="sticky bottom-0 border-t border-gray-200 bg-white p-4">
+              <button
+                onClick={() => {
+                  handleClearAll();
+                  toggleMobileFilter();
+                }}
+                className="mb-3 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
+              >
+                Clear All
+              </button>
+              <button
+                onClick={toggleMobileFilter}
+                className="w-full rounded-lg bg-orange-500 px-4 py-2 text-white transition-colors hover:bg-orange-600"
+              >
+                Apply Filters
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+
+  // Function to render filter content - used by both desktop and mobile views
+  function renderFilterContent() {
+    return (
+      <>
+        {/* Price Range Section - Always visible, not collapsible */}
+        <div className="filter-section mb-3 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <div className="bg-gray-50 px-3 py-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-gray-800">
+                Price Range
+              </h3>
+            </div>
+          </div>
+
+          {/* Price range content - always shown */}
+          <div className="bg-white p-3">
+            <Slider
+              range
+              value={[priceRange.min, priceRange.max]}
+              min={initialPriceRange.min}
+              max={initialPriceRange.max}
+              onChange={handlePriceChange}
+              className="mb-4 mt-2"
+              trackStyle={sliderStyle.trackStyle}
+              railStyle={sliderStyle.railStyle}
+              handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
+            />
+            <div className="price-block mt-2 flex items-center justify-between">
+              <div className="min flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
+                <div className="mr-1 text-sm text-gray-500">Min:</div>
+                <div className="price-min font-medium text-orange-600">
+                  ৳<span>{priceRange.min}</span>
+                </div>
+              </div>
+              <div className="max flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
+                <div className="mr-1 text-sm text-gray-500">Max:</div>
+                <div className="price-max font-medium text-orange-600">
+                  ৳<span>{priceRange.max}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Categories Section - Collapsible with increased min-height and standardized padding */}
+        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <div
+            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+            onClick={() => toggleAttributeSection("categories")}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-gray-800">
+                Categories
+              </h3>
+              {expandedAttributes.categories !== false ? (
+                <CaretUp size={16} className="text-gray-600" />
+              ) : (
+                <CaretDown size={16} className="text-gray-600" />
+              )}
+            </div>
+          </div>
+
+          {/* Categories content - shown when expanded */}
+          {expandedAttributes.categories !== false && (
+            <div className="bg-white p-1">
+              <div className="max-h-[300px] min-h-[180px] overflow-y-auto pr-1">
+                <FilterByCategory handleCategory={handleCategory} />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Brands Section - Only show when a category is selected */}
+        {category && categoryId && (
+          <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+            <div
+              className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+              onClick={() => toggleAttributeSection("brands")}
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-medium text-gray-800">Brands</h3>
+                {expandedAttributes.brands !== false ? (
+                  <CaretUp size={16} className="text-gray-600" />
+                ) : (
+                  <CaretDown size={16} className="text-gray-600" />
+                )}
+              </div>
+            </div>
+
+            {/* Brands content - shown when expanded */}
+            {expandedAttributes.brands !== false && (
+              <div className="bg-white p-1">
+                <div className="list-brand">
+                  {isLoading && !categoryBrands.length ? (
+                    <div className="my-1 text-gray-500">Loading brands...</div>
+                  ) : categoryBrands.length === 0 ? (
+                    <div className="my-1 text-gray-500">
+                      No brands available
+                    </div>
+                  ) : (
+                    <div className="max-h-[250px] min-h-[120px] space-y-0.5 overflow-y-auto pr-1">
+                      {categoryBrands.map((item, index) => (
+                        <div key={index} className="brand-item">
+                          <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:bg-orange-50">
+                            <div className="block-input relative">
+                              <input
+                                type="checkbox"
+                                name={item}
+                                id={item}
+                                checked={brands.includes(item)}
+                                onChange={() => handleBrand(item)}
+                                className="h-5 w-5 rounded border-gray-300 accent-orange-500"
+                              />
+                              <CheckSquare
+                                size={20}
+                                weight="fill"
+                                className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                              />
+                            </div>
+                            <label
+                              htmlFor={item}
+                              className="brand-name cursor-pointer pl-3 capitalize"
+                            >
+                              {item}
+                            </label>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Specifications Section - collapsible with improved styling */}
+        {category && categoryId && categoryAttributes.length > 0 && (
+          <>
+            {categoryAttributes.map((attr, index) => {
+              // Skip if no available options
+              const options = attr.options || attr.availableValues || [];
+              if (options.length === 0) {
+                return null;
+              }
+
+              // Format attribute name for display
+              const displayName = attr.name
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase());
+
+              const isExpanded = expandedAttributes[attr.name] !== false;
+
+              return (
+                <div
+                  key={index}
+                  className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm"
+                >
+                  <div
+                    className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+                    onClick={() => toggleAttributeSection(attr.name)}
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-base font-medium text-gray-800">
+                        {displayName}
+                      </h3>
+                      {isExpanded ? (
+                        <CaretUp size={16} className="text-gray-600" />
+                      ) : (
+                        <CaretDown size={16} className="text-gray-600" />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Content area - shown when expanded with increased min-height */}
+                  {isExpanded && (
+                    <div className="bg-white py-1">
+                      <div className="flex max-h-[250px] min-h-[120px] flex-col overflow-y-auto">
+                        {options.map((option, idx) => {
+                          // Check if this option is selected
+                          const isSelected = Array.isArray(
+                            attributeFilters[attr.name],
+                          )
+                            ? (
+                                attributeFilters[attr.name] as string[]
+                              )?.includes(option)
+                            : attributeFilters[attr.name] === option;
+
+                          return (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between rounded px-2 py-1 transition-colors hover:bg-gray-50"
+                            >
+                              <div className="left flex w-full cursor-pointer items-center">
+                                <div className="block-input relative">
+                                  <input
+                                    type="checkbox"
+                                    id={`${attr.name}-${option}`}
+                                    checked={isSelected}
+                                    onChange={() => {
+                                      handleAttributeChange(attr.name, option);
+                                    }}
+                                    className="h-5 w-5 accent-orange-500"
+                                  />
+                                  <CheckSquare
+                                    size={20}
+                                    weight="fill"
+                                    className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                                  />
+                                </div>
+                                <label
+                                  htmlFor={`${attr.name}-${option}`}
+                                  className="cursor-pointer pl-3 capitalize"
+                                >
+                                  {option}
+                                </label>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
+      </>
+    );
+  }
+}
