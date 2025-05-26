@@ -12,7 +12,7 @@ const config = {
       {
         protocol: "https",
         hostname: "rinorsestore.s3.ap-southeast-1.amazonaws.com",
-        port: "",
+        port: "5000",
         pathname: "/**",
       },
       { protocol: "https", hostname: "res.cloudinary.com" },
