@@ -1,38 +1,38 @@
 "use client";
 
-import React, { useRef, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Thumbs } from "swiper/modules";
-import "swiper/css/bundle";
-import {
-  X,
-  Heart,
-  Minus,
-  Plus,
-  ShareNetwork,
-  ArrowClockwise,
-  Question,
-  Timer,
-  Eye,
-  Star,
-  CaretDown,
-  DotsThree,
-  HandsClapping,
-} from "@phosphor-icons/react/dist/ssr";
-import SwiperCore from "swiper/core";
-import Rate from "../../Rate";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
-import ParseContent from "../../Blog/ParseContent";
-import { v4 as uuid } from "uuid";
-import { useSession } from "next-auth/react";
 import type { ProductWithCategory } from "@/types/ProductType";
+import {
+  ArrowClockwise,
+  CaretDown,
+  DotsThree,
+  Eye,
+  HandsClapping,
+  Heart,
+  Minus,
+  Plus,
+  Question,
+  ShareNetwork,
+  Star,
+  Timer,
+  X,
+} from "@phosphor-icons/react/dist/ssr";
+import { addDays, format, formatDistanceToNow } from "date-fns";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useRef, useState } from "react";
 import { toast } from "sonner";
-import { formatDistanceToNow, format, addDays } from "date-fns";
+import SwiperCore from "swiper/core";
+import "swiper/css/bundle";
+import { Navigation, Thumbs } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { v4 as uuid } from "uuid";
+import ParseContent from "../../Blog/ParseContent";
+import Rate from "../../Rate";
 
 export default function ProductDetails({
   productMain,
@@ -266,7 +266,7 @@ export default function ProductDetails({
                       width={1000}
                       height={1000}
                       alt="prd-img"
-                      className="aspect-[3/4] w-full object-cover"
+                      className="w-full"
                     />
                   </SwiperSlide>
                 ))}
@@ -287,7 +287,7 @@ export default function ProductDetails({
                       width={1000}
                       height={1300}
                       alt="prd-img"
-                      className="aspect-[3/4] w-full rounded-xl object-cover"
+                      className="w-full rounded-xl object-contain"
                     />
                   </SwiperSlide>
                 ))}
@@ -325,7 +325,7 @@ export default function ProductDetails({
                         width={1000}
                         height={1000}
                         alt="prd-img"
-                        className="aspect-[3/4] w-full rounded-xl object-cover"
+                        className="w-full rounded-xl object-contain"
                         onClick={(e) => {
                           e.stopPropagation(); // prevent
                         }}

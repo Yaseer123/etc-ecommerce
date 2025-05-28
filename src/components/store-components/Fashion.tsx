@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import Product from "./Product/Product";
-import { motion } from "framer-motion";
 import { api } from "@/trpc/react";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import Product from "./Product/Product";
 
 const RecentlyAdded = () => {
   const {
@@ -28,7 +28,7 @@ const RecentlyAdded = () => {
   const handleTabClick = (categoryId: string) => {
     setActiveTab(categoryId);
   };
-
+  console.log(products);
   // Set the default active tab to the first category when categories are loaded
   useEffect(() => {
     if (categories?.length && !activeTab && categories[0]) {
@@ -124,11 +124,7 @@ const RecentlyAdded = () => {
               {products
                 ?.slice(0, 3)
                 .map((prd, index) => (
-                  <Product
-                    key={index}
-                    data={prd}
-                    style="style-1"
-                  />
+                  <Product key={index} data={prd} style="style-1" />
                 ))}
             </div>
           )}
