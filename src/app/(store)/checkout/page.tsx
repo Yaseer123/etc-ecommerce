@@ -3,6 +3,7 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { api } from "@/trpc/react";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import type { Order } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -26,7 +27,7 @@ const Checkout = () => {
   const { cartArray } = useCartStore();
   const [totalCart, setTotalCart] = useState<number>(0);
   const [activePayment, setActivePayment] = useState<string>("credit-card");
-  const [orderSuccess, setOrderSuccess] = useState(null);
+  const [orderSuccess, setOrderSuccess] = useState<Order | null>(null);
   const [orderError, setOrderError] = useState("");
 
   React.useEffect(() => {
@@ -251,8 +252,7 @@ const Checkout = () => {
     onSuccess: (data) => {
       setOrderSuccess(data);
       setOrderError("");
-      // Optionally clear cart here if you want:
-      // useCartStore.getState().clearCart();
+      useCartStore.getState().clearCart();
     },
     onError: (err) => {
       setOrderError(err.message || "Order failed. Please try again.");

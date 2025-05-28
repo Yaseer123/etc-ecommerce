@@ -1,7 +1,7 @@
 // cartStore.ts
+import { type Product } from "@prisma/client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import {type  Product } from "@prisma/client";
 
 interface CartItem {
   name: string;
@@ -16,6 +16,7 @@ interface CartState {
   addToCart: (item: Product) => void;
   removeFromCart: (itemId: string) => void;
   updateCart: (itemId: string, quantity: number) => void;
+  clearCart: () => void;
   note: string;
   setNote: (note: string) => void;
 }
@@ -27,7 +28,9 @@ export const useCartStore = create<CartState>()(
 
       addToCart: (item: Product) =>
         set((state) => {
-          const existingItem = state.cartArray.find((cartItem) => cartItem.id === item.id);
+          const existingItem = state.cartArray.find(
+            (cartItem) => cartItem.id === item.id,
+          );
           if (existingItem) {
             return state; // Return unchanged state if item exists
           }
@@ -61,7 +64,10 @@ export const useCartStore = create<CartState>()(
               : item,
           ),
         })),
-      note: '',
+
+      clearCart: () => set({ cartArray: [] }),
+
+      note: "",
       setNote: (note) => set({ note }),
     }),
     {
