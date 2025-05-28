@@ -3,9 +3,9 @@ import Link from "next/link";
 
 export default async function AdminPage() {
   return (
-    <div className="flex min-h-[90vh] items-center justify-center">
+    <div className="flex flex-col min-h-[90vh] items-center justify-center">
       <AdminDashboard />
-      <p className="text-center text-2xl font-semibold">Product Information</p>
+      {/* <p className="text-center text-2xl font-semibold">Product Information</p> */}
       <div className="mt-4 flex justify-center">
         <Link
           href="/admin/orders"
