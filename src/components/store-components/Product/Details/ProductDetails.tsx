@@ -40,6 +40,7 @@ export default function ProductDetails({
 }: {
   productMain: ProductWithCategory;
 }) {
+  console.log("Product stock:", productMain.stock);
   SwiperCore.use([Navigation, Thumbs]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef: any = useRef();

@@ -8,6 +8,7 @@ import {
 } from "@/server/api/trpc";
 import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
 import type { Prisma } from "@prisma/client";
+import { StockStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -205,9 +206,25 @@ export const productRouter = createTRPCRouter({
         });
       }
 
-      // Stock status filter
+      // Stock status filter (based on stock number)
       if (stockStatus && stockStatus.length > 0) {
-        filters.stockStatus = { in: stockStatus };
+        const orConditions = [];
+        if (stockStatus.includes("OUT_OF_STOCK")) {
+          orConditions.push({ stock: 0 });
+        }
+        if (stockStatus.includes("IN_STOCK")) {
+          orConditions.push({ stock: { gt: 0 } });
+        }
+        if (stockStatus.includes("PRE_ORDER")) {
+          orConditions.push({ stockStatus: { equals: StockStatus.PRE_ORDER } });
+        }
+        if (orConditions.length === 1) {
+          Object.assign(filters, orConditions[0]);
+        } else if (orConditions.length > 1) {
+          if (!filters.AND) filters.AND = [];
+          if (!Array.isArray(filters.AND)) filters.AND = [filters.AND];
+          filters.AND.push({ OR: orConditions });
+        }
       }
 
       // Build sort options
@@ -317,6 +334,17 @@ export const productRouter = createTRPCRouter({
       }
     }
 
+    // --- Stock status auto logic ---
+    let stockStatus: "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER" = "IN_STOCK";
+    if ("stockStatus" in input && input.stockStatus === "PRE_ORDER") {
+      stockStatus = "PRE_ORDER";
+    } else if (input.stock === 0) {
+      stockStatus = "OUT_OF_STOCK";
+    } else {
+      stockStatus = "IN_STOCK";
+    }
+    // --- End stock status auto logic ---
+
     // Create the product with validated attributes
     const product = await ctx.db.product.create({
       data: {
@@ -335,6 +363,7 @@ export const productRouter = createTRPCRouter({
         estimatedDeliveryTime: input.estimatedDeliveryTime,
         attributes: input.attributes, // Store regular specifications
         categoryAttributes: categoryAttributes || {}, // Store category-specific attributes
+        stockStatus, // <-- always set
       },
     });
 
@@ -385,12 +414,27 @@ export const productRouter = createTRPCRouter({
         }
       }
 
+      // --- Stock status auto logic ---
+      let stockStatus: "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER" | undefined =
+        undefined;
+      if ("stockStatus" in input && input.stockStatus === "PRE_ORDER") {
+        stockStatus = "PRE_ORDER";
+      } else if (typeof input.stock === "number") {
+        if (input.stock === 0) {
+          stockStatus = "OUT_OF_STOCK";
+        } else {
+          stockStatus = "IN_STOCK";
+        }
+      }
+      // --- End stock status auto logic ---
+
       const product = await ctx.db.product.update({
         where: { id },
         data: {
           ...updateData,
           categoryAttributes: categoryAttributes ?? {}, // Update category attributes separately
           category: categoryId ? { connect: { id: categoryId } } : undefined,
+          ...(stockStatus ? { stockStatus } : {}),
         },
       });
 
