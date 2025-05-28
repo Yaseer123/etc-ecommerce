@@ -26,6 +26,8 @@ const Checkout = () => {
   const { cartArray } = useCartStore();
   const [totalCart, setTotalCart] = useState<number>(0);
   const [activePayment, setActivePayment] = useState<string>("credit-card");
+  const [orderSuccess, setOrderSuccess] = useState(null);
+  const [orderError, setOrderError] = useState("");
 
   React.useEffect(() => {
     const sum = cartArray.reduce(
@@ -180,6 +182,7 @@ const Checkout = () => {
                       <option value="default" disabled>
                         Choose State
                       </option>
+                      <option value="Bangladesh">Bangladesh</option>
                       <option value="India">India</option>
                       <option value="France">France</option>
                       <option value="Singapore">Singapore</option>
@@ -244,6 +247,18 @@ const Checkout = () => {
     </div>
   );
 
+  const placeOrder = api.order.placeOrder.useMutation({
+    onSuccess: (data) => {
+      setOrderSuccess(data);
+      setOrderError("");
+      // Optionally clear cart here if you want:
+      // useCartStore.getState().clearCart();
+    },
+    onError: (err) => {
+      setOrderError(err.message || "Order failed. Please try again.");
+    },
+  });
+
   if (status === "unauthenticated") {
     router.push("/login?redirect=/checkout");
     return null;
@@ -251,6 +266,25 @@ const Checkout = () => {
 
   if (status === "loading" || addressLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (orderSuccess) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+        <h2 className="mb-4 text-2xl font-bold">Order Completed!</h2>
+        <p className="mb-2">Thank you for your order.</p>
+        <p className="mb-2">Your Invoice/Order Number:</p>
+        <div className="mb-4 rounded bg-gray-100 px-4 py-2 font-mono text-lg">
+          {orderSuccess.id}
+        </div>
+        <button
+          className="mt-4 rounded bg-black px-6 py-2 text-white"
+          onClick={() => router.push("/my-account")}
+        >
+          Go to My Orders
+        </button>
+      </div>
+    );
   }
 
   return (
@@ -272,11 +306,26 @@ const Checkout = () => {
                       router.push("/login?redirect=/checkout");
                       return;
                     }
-                    // ...handle payment...
+                    if (cartArray.length === 0) {
+                      setOrderError("Your cart is empty.");
+                      return;
+                    }
+                    // Use saved address or collect from form (expand as needed)
+                    const addressId = userAddress?.id;
+                    placeOrder.mutate({
+                      cartItems: cartArray.map((item) => ({
+                        productId: item.id,
+                        quantity: item.quantity,
+                      })),
+                      addressId,
+                    });
                   }}
                 >
                   {session ? "Payment" : "Login to Continue"}
                 </button>
+                {orderError && (
+                  <div className="text-red-500 mt-2">{orderError}</div>
+                )}
               </div>
             </div>
             <div className="right w-5/12">
