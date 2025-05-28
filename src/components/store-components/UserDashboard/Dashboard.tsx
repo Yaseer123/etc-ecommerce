@@ -10,6 +10,7 @@ import Link from "next/link";
 export default function Dashboard({ activeTab }: { activeTab?: string }) {
   const { data: order } = api.order.getLatestOrder.useQuery();
   const { data: orders } = api.order.getOrders.useQuery();
+  console.log(orders);
   return (
     <div
       className={`tab text-content w-full ${activeTab === "dashboard" ? "block" : "hidden"}`}
@@ -19,7 +20,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           <div className="counter">
             <span className="text-secondary">Awaiting Pickup</span>
             <h5 className="heading5 mt-1">
-              {orders?.map((order) => order.status === "SHIPPED").length}
+              {orders?.filter((order) => order.status === "SHIPPED").length}
             </h5>
           </div>
           <HourglassMedium className="text-4xl" />
@@ -28,7 +29,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           <div className="counter">
             <span className="text-secondary">Cancelled Orders</span>
             <h5 className="heading5 mt-1">
-              {orders?.map((order) => order.status === "CANCELLED").length}
+              {orders?.filter((order) => order.status === "CANCELLED").length}
             </h5>
           </div>
           <ReceiptX className="text-4xl" />
@@ -105,11 +106,11 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
                     </Link>
                   </td>
                   <td className="price py-3">{item.price}</td>
-                  {/* <td className="py-3 text-right">
-                    <span className="tag caption1 rounded-full bg-red bg-opacity-10 px-4 py-1.5 font-semibold text-red">
-                      {item.}
+                  <td className="py-3 text-right">
+                    <span className="tag caption1 rounded-full bg-purple bg-opacity-10 px-4 py-1.5 font-semibold text-purple">
+                      {order?.status}
                     </span>
-                  </td> */}
+                  </td>
                 </tr>
               ))}
             </tbody>
