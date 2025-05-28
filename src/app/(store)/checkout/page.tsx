@@ -1,13 +1,12 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import { useSearchParams } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { useCartStore } from "@/context/store-context/CartContext";
-import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { api } from "@/trpc/react";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useState } from "react";
 
 const Checkout = () => {
   const { data: session, status } = useSession();
@@ -146,6 +145,7 @@ const Checkout = () => {
                       <option value="default" disabled>
                         Choose Country/Region
                       </option>
+                      <option value="Bangladesh">Bangladesh</option>
                       <option value="India">India</option>
                       <option value="France">France</option>
                       <option value="Singapore">Singapore</option>
@@ -222,76 +222,10 @@ const Checkout = () => {
           <input
             className="cursor-pointer"
             type="radio"
-            id="credit"
-            name="payment"
-            checked={activePayment === "credit-card"}
-            onChange={() => handlePayment("credit-card")}
-          />
-          <label
-            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-            htmlFor="credit"
-          >
-            Credit Card
-          </label>
-          <div
-            className={
-              activePayment === "credit-card"
-                ? "visible max-h-[1000px] opacity-100"
-                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
-            }
-          >
-            <div className="pt-4">
-              Make your payment directly into our bank account. Your order will
-              not be shipped until the funds have cleared in our account.
-            </div>
-            <div className="row">
-              <div className="col-12 mt-3">
-                <label htmlFor="cardNumberCredit">Card Numbers</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="cardNumberCredit"
-                  placeholder="ex.1234567290"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="dateCredit">Date</label>
-                <input
-                  className="mt-2 w-full rounded border-line px-4 py-3"
-                  type="date"
-                  id="dateCredit"
-                  name="date"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="ccvCredit">CCV</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="ccvCredit"
-                  placeholder="****"
-                />
-              </div>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <input type="checkbox" id="saveCredit" name="save" />
-              <label
-                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-                htmlFor="saveCredit"
-              >
-                Save Card Details
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className={`mt-5 rounded-lg border border-line bg-surface p-5`}>
-          <input
-            className="cursor-pointer"
-            type="radio"
             id="delivery"
             name="payment"
-            checked={activePayment === "cash-delivery"}
-            onChange={() => handlePayment("cash-delivery")}
+            checked={true}
+            readOnly
           />
           <label
             className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
@@ -299,190 +233,10 @@ const Checkout = () => {
           >
             Cash on delivery
           </label>
-          <div
-            className={
-              activePayment === "cash-delivery"
-                ? "visible max-h-[1000px] opacity-100"
-                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
-            }
-          >
+          <div className="visible max-h-[1000px] opacity-100">
             <div className="pt-4">
-              Make your payment directly into our bank account. Your order will
-              not be shipped until the funds have cleared in our account.
-            </div>
-            <div className="row">
-              <div className="col-12 mt-3">
-                {/* <div className="bg-img"><Image src="assets/images/component/payment.png" alt="" /></div> */}
-                <label htmlFor="cardNumberDelivery">Card Numbers</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="cardNumberDelivery"
-                  placeholder="ex.1234567290"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="dateDelivery">Date</label>
-                <input
-                  className="mt-2 w-full rounded border-line px-4 py-3"
-                  type="date"
-                  id="dateDelivery"
-                  name="date"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="ccvDelivery">CCV</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="ccvDelivery"
-                  placeholder="****"
-                />
-              </div>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <input type="checkbox" id="saveDelivery" name="save" />
-              <label
-                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-                htmlFor="saveDelivery"
-              >
-                Save Card Details
-              </label>
-            </div>
-          </div>
-        </div>
-        <div className={`mt-5 rounded-lg border border-line bg-surface p-5`}>
-          <input
-            className="cursor-pointer"
-            type="radio"
-            id="apple"
-            name="payment"
-            checked={activePayment === "apple-pay"}
-            onChange={() => handlePayment("apple-pay")}
-          />
-          <label
-            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-            htmlFor="apple"
-          >
-            Apple Pay
-          </label>
-          <div
-            className={
-              activePayment === "apple-pay"
-                ? "visible max-h-[1000px] opacity-100"
-                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
-            }
-          >
-            <div className="text-on-surface-variant1 pt-4">
-              Make your payment directly into our bank account. Your order will
-              not be shipped until the funds have cleared in our account.
-            </div>
-            <div className="row">
-              <div className="col-12 mt-3">
-                {/* <div className="bg-img"><Image src="assets/images/component/payment.png" alt="" /></div> */}
-                <label htmlFor="cardNumberApple">Card Numbers</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="cardNumberApple"
-                  placeholder="ex.1234567290"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="dateApple">Date</label>
-                <input
-                  className="mt-2 w-full rounded border-line px-4 py-3"
-                  type="date"
-                  id="dateApple"
-                  name="date"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="ccvApple">CCV</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="ccvApple"
-                  placeholder="****"
-                />
-              </div>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <input type="checkbox" id="saveApple" name="save" />
-              <label
-                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-                htmlFor="saveApple"
-              >
-                Save Card Details
-              </label>
-            </div>
-          </div>
-        </div>
-        <div
-          className={`type mt-5 rounded-lg border border-line bg-surface p-5`}
-        >
-          <input
-            className="cursor-pointer"
-            type="radio"
-            id="paypal"
-            name="payment"
-            checked={activePayment === "paypal"}
-            onChange={() => handlePayment("paypal")}
-          />
-          <label
-            className="cursor-pointer pl-2 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-            htmlFor="paypal"
-          >
-            PayPal
-          </label>
-          <div
-            className={
-              activePayment === "paypal"
-                ? "visible max-h-[1000px] opacity-100"
-                : "duration-800 invisible max-h-0 overflow-hidden transition-all ease-in-out"
-            }
-          >
-            <div className="text-on-surface-variant1 pt-4">
-              Make your payment directly into our bank account. Your order will
-              not be shipped until the funds have cleared in our account.
-            </div>
-            <div className="row">
-              <div className="col-12 mt-3">
-                <label htmlFor="cardNumberPaypal">Card Numbers</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="cardNumberPaypal"
-                  placeholder="ex.1234567290"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="datePaypal">Date</label>
-                <input
-                  className="mt-2 w-full rounded border-line px-4 py-3"
-                  type="date"
-                  id="datePaypal"
-                  name="date"
-                />
-              </div>
-              <div className="mt-3">
-                <label htmlFor="ccvPaypal">CCV</label>
-                <input
-                  className="mt-2 w-full cursor-pointer rounded border-line px-4 py-3"
-                  type="text"
-                  id="ccvPaypal"
-                  placeholder="****"
-                />
-              </div>
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <input type="checkbox" id="savePaypal" name="save" />
-              <label
-                className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6"
-                htmlFor="savePaypal"
-              >
-                Save Card Details
-              </label>
+              You will pay in cash when your order is delivered to your address.
+              Please ensure your shipping information is correct.
             </div>
           </div>
         </div>
