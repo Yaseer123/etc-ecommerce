@@ -321,7 +321,7 @@ const Checkout = () => {
                     });
                   }}
                 >
-                  {session ? "Payment" : "Login to Continue"}
+                  {session ? "Order Now" : "Login to Continue"}
                 </button>
                 {orderError && (
                   <div className="text-red-500 mt-2">{orderError}</div>
