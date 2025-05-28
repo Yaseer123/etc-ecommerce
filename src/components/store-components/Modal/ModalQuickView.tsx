@@ -1,25 +1,26 @@
 "use client";
 
 // QuickView.tsx
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
-import Rate from "../Rate";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
-import { useWishlistStore } from "@/context/store-context/WishlistContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import { useWishlistStore } from "@/context/store-context/WishlistContext";
 import {
-  X,
+  ArrowClockwise,
+  Eye,
   Heart,
   Minus,
   Plus,
-  ShareNetwork,
-  ArrowClockwise,
   Question,
+  ShareNetwork,
   Timer,
-  Eye,
+  X,
 } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Rate from "../Rate";
 
 const ModalQuickView = () => {
   const { selectedProduct, closeQuickView } = useModalQuickViewStore();
@@ -29,6 +30,7 @@ const ModalQuickView = () => {
   const { addToWishlist, removeFromWishlist, wishlistArray } =
     useWishlistStore();
   const { openModalWishlist } = useModalWishlistStore();
+  const router = useRouter();
 
   // Reset quantity when selected product changes
   useEffect(() => {
@@ -84,6 +86,23 @@ const ModalQuickView = () => {
       }
     }
     openModalWishlist();
+  };
+
+  const handleBuyNow = () => {
+    if (selectedProduct) {
+      if (!cartArray.find((item) => item.id === selectedProduct.id)) {
+        addToCart({
+          ...selectedProduct,
+          id: selectedProduct.id,
+          title: selectedProduct.title,
+          images: selectedProduct.images,
+          price: selectedProduct.price,
+        });
+      }
+      updateCart(selectedProduct.id, quantity);
+      closeQuickView();
+      router.push("/checkout");
+    }
   };
 
   if (!selectedProduct) return null;
@@ -199,7 +218,10 @@ const ModalQuickView = () => {
                     </div>
                   </div>
                   <div className="button-block mt-5">
-                    <div className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
+                    <div
+                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      onClick={handleBuyNow}
+                    >
                       Buy It Now
                     </div>
                   </div>

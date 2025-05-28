@@ -24,6 +24,7 @@ import { addDays, format, formatDistanceToNow } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 import SwiperCore from "swiper/core";
@@ -239,6 +240,18 @@ export default function ProductDetails({
     return format(deliveryDate, "dd MMMM");
   };
 
+  const router = useRouter();
+
+  const handleBuyNow = () => {
+    if (!cartArray.find((item) => item.id === productMain.id)) {
+      addToCart({ ...productMain });
+      updateCart(productMain.id, productQuantity);
+    } else {
+      updateCart(productMain.id, productQuantity);
+    }
+    router.push("/checkout");
+  };
+
   return (
     <>
       <div className="product-detail sale">
@@ -412,7 +425,10 @@ export default function ProductDetails({
                   </div>
                 </div>
                 <div className="button-block mt-5">
-                  <div className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
+                  <div
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    onClick={handleBuyNow}
+                  >
                     Buy It Now
                   </div>
                 </div>
