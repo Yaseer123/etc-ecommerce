@@ -6,6 +6,7 @@ import { persist } from "zustand/middleware";
 interface CartItem {
   name: string;
   price: number;
+  discountedPrice?: number;
   quantity: number;
   id: string;
   coverImage: string;
@@ -41,7 +42,8 @@ export const useCartStore = create<CartState>()(
                 quantity: 1,
                 id: item.id,
                 name: item.title,
-                price: item.price,
+                price: item.discountedPrice ?? item.price,
+                discountedPrice: item.discountedPrice,
                 coverImage: item.images[0]!,
               },
             ],

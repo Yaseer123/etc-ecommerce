@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
-import CartProductItem from "./CartProductItem";
-import { useModalCartStore } from "@/context/store-context/ModalCartContext";
-import { X, NotePencil, Trash } from "@phosphor-icons/react/dist/ssr";
 import { useCartStore } from "@/context/store-context/CartContext";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import { NotePencil, Trash, X } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { useState } from "react";
+import CartProductItem from "./CartProductItem";
 
 const ModalCart = () => {
   const [activeTab, setActiveTab] = useState<string | undefined>("");
@@ -24,7 +24,10 @@ const ModalCart = () => {
 
   let [totalCart] = useState<number>(0);
 
-  cartState.map((item) => (totalCart += item.price * item.quantity));
+  cartState.map(
+    (item) =>
+      (totalCart += (item.discountedPrice ?? item.price) * item.quantity),
+  );
 
   return (
     <>
@@ -79,14 +82,17 @@ const ModalCart = () => {
                       <div className="mt-auto flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-sm font-medium text-gray-900">
-                            ৳{item.price.toFixed(2)}
+                            ৳{(item.discountedPrice ?? item.price).toFixed(2)}
                           </span>
                           <span className="text-xs text-gray-500">
                             × {item.quantity}
                           </span>
                         </div>
                         <span className="font-medium text-black">
-                          ৳{(item.price * item.quantity).toFixed(2)}
+                          ৳
+                          {(
+                            (item.discountedPrice ?? item.price) * item.quantity
+                          ).toFixed(2)}
                         </span>
                       </div>
                     </div>

@@ -1,10 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useCartStore } from "@/context/store-context/CartContext";
+import { Minus, Plus, XCircle } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCartStore } from "@/context/store-context/CartContext";
-import { Minus, Plus, XCircle } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useState } from "react";
 
 const Cart = () => {
   const router = useRouter();
@@ -27,7 +27,7 @@ const Cart = () => {
 
   useEffect(() => {
     const total = cartArray.reduce(
-      (sum, item) => sum + item.price * item.quantity,
+      (sum, item) => sum + (item.discountedPrice ?? item.price) * item.quantity,
       0,
     );
     setTotalCart(total);
@@ -116,7 +116,7 @@ const Cart = () => {
                           </div>
                           <div className="flex w-1/12 items-center justify-center">
                             <div className="text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                              ৳{product.price}.00
+                              ৳{product.discountedPrice ?? product.price}.00
                             </div>
                           </div>
                           <div className="flex w-1/6 items-center justify-center">
@@ -148,7 +148,10 @@ const Cart = () => {
                           </div>
                           <div className="total-price flex w-1/6 items-center justify-center">
                             <div className="text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                              ৳{product.quantity * product.price}.00
+                              ৳
+                              {product.quantity *
+                                (product.discountedPrice ?? product.price)}
+                              .00
                             </div>
                           </div>
                           <div className="flex w-1/12 items-center justify-center">

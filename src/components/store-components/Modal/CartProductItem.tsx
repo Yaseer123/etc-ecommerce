@@ -9,6 +9,7 @@ interface CartItemProp {
   id: string;
   name: string;
   coverImage: string;
+  discountedPrice?: number;
 }
 
 interface CartProductItemProps {
@@ -45,7 +46,7 @@ export default function CartProductItem({ item }: CartProductItemProps) {
             {item.selectedSize || item.sizes[0]}/
             {item.selectedColor || item.variation[0].color}
           </div>
-          <div className="item-price text-title">${item.price}.00</div>
+          <div className="item-price text-title">৳{item.discountedPrice ?? item.price}.00</div>
         </div> */}
       </div>
     </div>

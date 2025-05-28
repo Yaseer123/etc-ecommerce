@@ -32,7 +32,7 @@ const Checkout = () => {
 
   React.useEffect(() => {
     const sum = cartArray.reduce(
-      (acc, item) => acc + item.price * item.quantity,
+      (acc, item) => acc + (item.discountedPrice ?? item.price) * item.quantity,
       0,
     );
     setTotalCart(sum);
@@ -365,7 +365,9 @@ const Checkout = () => {
                           <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                             <span className="quantity">{product.quantity}</span>
                             <span className="px-1">x</span>
-                            <span>৳{product.price}.00</span>
+                            <span>
+                              ৳{product.discountedPrice ?? product.price}.00
+                            </span>
                           </div>
                         </div>
                       </div>
