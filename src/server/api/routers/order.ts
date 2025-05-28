@@ -1,9 +1,9 @@
-import { z } from "zod";
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
 } from "@/server/api/trpc";
+import { z } from "zod";
 
 export const orderRouter = createTRPCRouter({
   getOrders: protectedProcedure.query(async ({ ctx }) => {
@@ -16,7 +16,9 @@ export const orderRouter = createTRPCRouter({
 
   getOrderbyStatus: protectedProcedure
     .input(
-      z.enum(["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"]).optional(),
+      z
+        .enum(["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"])
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
       return await ctx.db.order.findMany({
@@ -169,4 +171,15 @@ export const orderRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       return await ctx.db.order.delete({ where: { id: input } });
     }),
+
+  getAllOrders: adminProcedure.query(async ({ ctx }) => {
+    return await ctx.db.order.findMany({
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+        items: { include: { product: true } },
+        address: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
 });
