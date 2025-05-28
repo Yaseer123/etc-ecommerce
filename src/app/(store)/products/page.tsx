@@ -1,21 +1,21 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import CategoryBreadcrumb from "@/components/store-components/Breadcrumb/CategoryBreadcrumb";
+import FilterByCategory from "@/components/store-components/Shop/FilterByCategory";
+import ProductList from "@/components/store-components/Shop/ProductList";
 import { api } from "@/trpc/react";
 import { type ProductWithCategory } from "@/types/ProductType";
-import ProductList from "@/components/store-components/Shop/ProductList";
 import {
-  CheckSquare,
   CaretDown,
-  X,
-  Funnel,
   CaretUp,
+  CheckSquare,
+  Funnel,
+  X,
 } from "@phosphor-icons/react/dist/ssr";
+import { useRouter, useSearchParams } from "next/navigation";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import FilterByCategory from "@/components/store-components/Shop/FilterByCategory";
-import CategoryBreadcrumb from "@/components/store-components/Breadcrumb/CategoryBreadcrumb";
+import { useEffect, useMemo, useState } from "react";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -77,16 +77,25 @@ export default function ProductsPage() {
     Record<string, AttributeFilterValue>
   >({});
 
+  // Add stock status filter
+  const stockStatusParam = searchParams?.get("stockStatus") ?? "";
+  const [stockStatus, setStockStatus] = useState<string[]>(
+    stockStatusParam ? stockStatusParam.split(",") : [],
+  );
+
   // Fetch products with filters
   const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
     categoryId: categoryId || undefined,
-    // Remove onSale parameter
-    brands: brands.length > 0 ? brands : undefined, // Update parameter name to match server
+    brands: brands.length > 0 ? brands : undefined,
     minPrice,
     maxPrice,
     sort: sortOption || undefined,
     attributes:
       Object.keys(attributeFilters).length > 0 ? attributeFilters : undefined,
+    stockStatus:
+      stockStatus.length > 0
+        ? (stockStatus as ("IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER")[])
+        : undefined,
   });
 
   // Prevent category brands query from refreshing when brand selection changes
@@ -500,26 +509,44 @@ export default function ProductsPage() {
     return attrParams;
   };
 
+  const handleStockStatus = (status: string) => {
+    let updatedStatus: string[];
+    if (stockStatus.includes(status)) {
+      updatedStatus = stockStatus.filter((s) => s !== status);
+    } else {
+      updatedStatus = [...stockStatus, status];
+    }
+    setStockStatus(updatedStatus);
+    if (updatedStatus.length === 0) {
+      updateUrlParams({ stockStatus: null });
+    } else {
+      updateUrlParams({ stockStatus: updatedStatus.join(",") });
+    }
+  };
+
+  const clearStockStatus = () => {
+    if (stockStatus.length > 0) {
+      setStockStatus([]);
+      updateUrlParams({ stockStatus: null });
+    }
+  };
+
   const handleClearAll = () => {
-    setBrands([]); // Update to clear brands array
+    setBrands([]);
     setPriceRange(initialPriceRange);
     setCategory(null);
-    // Remove showOnlySale reset
     setCurrentSortOption("");
-
-    // Clear attribute filters and get URL parameters to reset
+    clearStockStatus();
     const attrParams = clearAttributeFilters();
-
-    // Clear all filter params, including attribute filters
     updateUrlParams({
       category: null,
       brand: null,
       minPrice: null,
       maxPrice: null,
-      // Remove sale parameter
       sort: null,
       page: "0",
       ...attrParams,
+      stockStatus: null,
     });
   };
 
@@ -651,6 +678,25 @@ export default function ProductsPage() {
                         >
                           <X size={16} className="cursor-pointer" />
                           <span>{brandName}</span>
+                        </div>
+                      ))}
+                      {/* Add after brand pills: */}
+                      {stockStatus.map((status, index) => (
+                        <div
+                          key={`stockStatus-${index}`}
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
+                          onClick={() => handleStockStatus(status)}
+                        >
+                          <X size={16} className="cursor-pointer" />
+                          <span>
+                            {status === "IN_STOCK"
+                              ? "In Stock"
+                              : status === "OUT_OF_STOCK"
+                                ? "Out of Stock"
+                                : status === "PRE_ORDER"
+                                  ? "Pre Order"
+                                  : status}
+                          </span>
                         </div>
                       ))}
                       {(priceRange.min !== initialPriceRange.min ||
@@ -1019,6 +1065,53 @@ export default function ProductsPage() {
             })}
           </>
         )}
+
+        {/* Stock Status Section - collapsible with improved styling */}
+        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <div
+            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+            onClick={() => toggleAttributeSection("stockStatus")}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-gray-800">
+                Stock Status
+              </h3>
+              {expandedAttributes.stockStatus !== false ? (
+                <CaretUp size={16} className="text-gray-600" />
+              ) : (
+                <CaretDown size={16} className="text-gray-600" />
+              )}
+            </div>
+          </div>
+          {expandedAttributes.stockStatus !== false && (
+            <div className="bg-white p-1">
+              <div className="flex flex-col gap-2">
+                {["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].map((status) => (
+                  <label
+                    key={status}
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-orange-50"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={stockStatus.includes(status)}
+                      onChange={() => handleStockStatus(status)}
+                      className="h-5 w-5 accent-orange-500"
+                    />
+                    <span className="capitalize">
+                      {status === "IN_STOCK"
+                        ? "In Stock"
+                        : status === "OUT_OF_STOCK"
+                          ? "Out of Stock"
+                          : status === "PRE_ORDER"
+                            ? "Pre Order"
+                            : status}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </>
     );
   }

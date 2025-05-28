@@ -1,15 +1,15 @@
+import { type CategoryAttribute } from "@/schemas/categorySchema";
+import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 import {
   adminProcedure,
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-import { productSchema, updateProductSchema } from "@/schemas/productSchema";
-import { z } from "zod";
-import type { Prisma } from "@prisma/client";
-import { type CategoryAttribute } from "@/schemas/categorySchema";
 import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
+import type { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const productRouter = createTRPCRouter({
   getProductByIdAdmin: adminProcedure
@@ -103,6 +103,9 @@ export const productRouter = createTRPCRouter({
         attributes: z
           .record(z.union([z.string(), z.array(z.string())]))
           .optional(),
+        stockStatus: z
+          .array(z.enum(["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"]))
+          .optional(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -114,6 +117,7 @@ export const productRouter = createTRPCRouter({
         maxPrice,
         sort,
         attributes,
+        stockStatus,
       } = input;
 
       // Use Prisma's type system for filters
@@ -199,6 +203,11 @@ export const productRouter = createTRPCRouter({
             }
           }
         });
+      }
+
+      // Stock status filter
+      if (stockStatus && stockStatus.length > 0) {
+        filters.stockStatus = { in: stockStatus };
       }
 
       // Build sort options
