@@ -9,7 +9,7 @@ export default async function AdminPage() {
       <div className="mt-4 flex justify-center">
         <Link
           href="/admin/orders"
-          className="rounded bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
+          className="rounded bg-black px-4 py-2 text-white transition hover:bg-black/80"
         >
           Go to Orders Management
         </Link>
