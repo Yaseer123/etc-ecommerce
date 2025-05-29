@@ -1,4 +1,13 @@
 version: 1
+
+backend:
+  phases:
+    build:
+      commands:
+        - '# Reset environment cache to fix cloning/cache issues'
+        - envCache --set stackInfo ""
+        - amplifyPush --simple
+
 frontend:
   phases:
     preBuild:
