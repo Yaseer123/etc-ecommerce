@@ -1,11 +1,11 @@
 "use server";
 
 import {
-  S3Client,
-  PutObjectCommand,
   DeleteObjectCommand,
-  ListObjectsV2Command,
   DeleteObjectsCommand,
+  ListObjectsV2Command,
+  PutObjectCommand,
+  S3Client,
 } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 
@@ -19,14 +19,14 @@ type UploadApiResponse = {
 
 // Initialize S3 client
 const s3Client = new S3Client({
-  region: process.env.AWS_BUCKET_REGION!,
+  region: process.env.BUCKET_REGION!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY!,
-    secretAccessKey: process.env.AWS_SECRET_KEY!,
+    accessKeyId: process.env.ACCESS_KEY!,
+    secretAccessKey: process.env.SECRET_KEY!,
   },
 });
 
-const bucketName = process.env.AWS_BUCKET_NAME!;
+const bucketName = process.env.BUCKET_NAME!;
 
 export const uploadFile = async (
   data: FormData,
@@ -54,7 +54,7 @@ export const uploadFile = async (
       );
 
       // Generate secure URL
-      const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${key}`;
+      const url = `https://${bucketName}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${key}`;
 
       // Return format similar to Cloudinary response
       return {
@@ -77,7 +77,7 @@ export const readImagesBulk = async (imageIds: string[]) => {
     const results = await Promise.all(
       imageIds.map(async (id) => {
         try {
-          const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${id}`;
+          const url = `https://${bucketName}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${id}`;
           return { id, secure_url: url };
         } catch (error) {
           console.error(`Error fetching image ${id}:`, error);
@@ -109,7 +109,7 @@ export const readAllImages = async (filter: string) => {
       (a.Key ?? "").localeCompare(b.Key ?? ""),
     ).map((item) => ({
       public_id: item.Key ?? "",
-      secure_url: `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${item.Key}`,
+      secure_url: `https://${bucketName}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${item.Key}`,
     }));
   } catch (error) {
     console.log(error);
@@ -118,7 +118,7 @@ export const readAllImages = async (filter: string) => {
 };
 
 export const readImage = async (id: string) => {
-  const url = `https://${bucketName}.s3.${process.env.AWS_BUCKET_REGION}.amazonaws.com/${id}`;
+  const url = `https://${bucketName}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${id}`;
   return url;
 };
 
