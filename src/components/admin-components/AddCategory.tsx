@@ -1,17 +1,19 @@
 "use client";
 
+import { uploadFile } from "@/app/actions/file";
 import {
-  type NewCategory,
   newCategorySchema,
   type CategoryTree,
+  type NewCategory,
 } from "@/schemas/categorySchema";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useRef, useState } from "react";
 import { useForm, type UseFormSetValue } from "react-hook-form";
 import { toast } from "sonner";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
@@ -19,8 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import Image from "next/image";
-import { uploadFile } from "@/app/actions/file";
 
 export default function AddCategoryForm() {
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
@@ -63,7 +63,6 @@ export default function AddCategoryForm() {
   const onSubmit = async (data: NewCategory) => {
     setIsSubmitting(true);
     setImagePreview(null); // Reset image preview
-
 
     const formData = new FormData();
     if (data.image) {

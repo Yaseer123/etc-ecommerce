@@ -1,5 +1,4 @@
-"use client"
-
+export const dynamic = "force-dynamic";
 import AddCategoryForm from "@/components/admin-components/AddCategory";
 import CategoryAccordionManager from "@/components/admin-components/CategoryAccordionManager";
 

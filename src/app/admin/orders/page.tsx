@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import { OrderStatus } from "@prisma/client";
+import type { OrderStatus } from "@prisma/client";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -52,12 +52,12 @@ export default function AdminOrdersPage() {
                 <tr key={order.id} className="border-b">
                   <td className="border p-2 font-mono">{order.id}</td>
                   <td className="border p-2">
-                    {order.user?.name || order.user?.email || "-"}
+                    {order.user?.name ?? order.user?.email ?? "-"}
                   </td>
                   <td className="border p-2">
                     {updatingId === order.id ? (
                       <select
-                        value={newStatus || order.status}
+                        value={newStatus ?? order.status}
                         onChange={(e) =>
                           setNewStatus(e.target.value as OrderStatus)
                         }

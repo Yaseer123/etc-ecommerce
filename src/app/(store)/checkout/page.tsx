@@ -26,7 +26,6 @@ const Checkout = () => {
 
   const { cartArray } = useCartStore();
   const [totalCart, setTotalCart] = useState<number>(0);
-  const [activePayment, setActivePayment] = useState<string>("credit-card");
   const [orderSuccess, setOrderSuccess] = useState<Order | null>(null);
   const [orderError, setOrderError] = useState("");
 
@@ -37,10 +36,6 @@ const Checkout = () => {
     );
     setTotalCart(sum);
   }, [cartArray]);
-
-  const handlePayment = (item: string) => {
-    setActivePayment(item);
-  };
 
   const breadcrumbItems = [
     {

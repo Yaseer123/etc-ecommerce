@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { X } from "@phosphor-icons/react/dist/ssr";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
-import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
+import { X } from "@phosphor-icons/react/dist/ssr";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
+import Link from "next/link";
 
 const ModalWishlist = () => {
   const { isModalOpen, closeModalWishlist } = useModalWishlistStore();
@@ -159,11 +158,14 @@ const ModalWishlist = () => {
                     </div>
                     <div className="mt-2 flex items-center gap-2">
                       <div className="product-price text-title">
-                        ৳{w.product.price}.00
+                        ৳{w.product.discountedPrice ?? w.product.price}.00
                       </div>
-                      <div className="product-origin-price text-title text-secondary2">
-                        <del>৳{w.product.originPrice}.00</del>
-                      </div>
+                      {w.product.discountedPrice &&
+                        w.product.discountedPrice < w.product.price && (
+                          <div className="product-origin-price text-title text-secondary2">
+                            <del>৳{w.product.price}.00</del>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>

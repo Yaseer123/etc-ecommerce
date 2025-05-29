@@ -43,7 +43,7 @@ export const useCartStore = create<CartState>()(
                 id: item.id,
                 name: item.title,
                 price: item.discountedPrice ?? item.price,
-                discountedPrice: item.discountedPrice,
+                discountedPrice: item.discountedPrice ?? undefined,
                 coverImage: item.images[0]!,
               },
             ],

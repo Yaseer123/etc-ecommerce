@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
-import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
+import { useSession } from "next-auth/react";
+import Image from "next/image";
 
 export default function WishListProducts() {
   const { data: session } = useSession(); // Check if the user is logged in
@@ -71,11 +71,14 @@ export default function WishListProducts() {
               </div>
               <div className="mt-2 flex items-center gap-2">
                 <div className="product-price text-title">
-                  ৳{item.product.price}.00
+                  ৳{item.product.discountedPrice ?? item.product.price}.00
                 </div>
-                <div className="product-origin-price text-title text-secondary2">
-                  <del>৳{item.product.originPrice}.00</del>
-                </div>
+                {item.product.discountedPrice &&
+                  item.product.discountedPrice < item.product.price && (
+                    <div className="product-origin-price text-title text-secondary2">
+                      <del>৳{item.product.price}.00</del>
+                    </div>
+                  )}
               </div>
             </div>
           </div>

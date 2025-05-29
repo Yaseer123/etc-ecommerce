@@ -1,11 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
-import { X } from "@phosphor-icons/react/dist/ssr";
-import Image from "next/image";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { api } from "@/trpc/react";
+import { X } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ModalNewsletter = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -88,11 +88,13 @@ const ModalNewsletter = () => {
                         <div className="name text-button">{item.title}</div>
                         <div className="mt-2 flex items-center gap-2">
                           <div className="product-price text-title">
-                            ৳{item.price}.00
+                            ৳{item.discountedPrice ?? item.price}.00
                           </div>
-                          <div className="product-origin-price text-title text-secondary2">
-                            <del>৳{item.originPrice}.00</del>
-                          </div>
+                          {item.discountedPrice && (
+                            <div className="product-origin-price text-title text-secondary2">
+                              <del>৳{item.price}.00</del>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>

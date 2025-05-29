@@ -17,13 +17,17 @@ import {
   Timer,
   X,
 } from "@phosphor-icons/react/dist/ssr";
+import type { Product } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Rate from "../Rate";
 
 const ModalQuickView = () => {
-  const { selectedProduct, closeQuickView } = useModalQuickViewStore();
+  const { selectedProduct, closeQuickView } = useModalQuickViewStore() as {
+    selectedProduct: Product | null;
+    closeQuickView: () => void;
+  };
   const [quantity, setQuantity] = useState<number>(1);
   const { addToCart, updateCart, cartArray } = useCartStore();
   const { openModalCart } = useModalCartStore();
@@ -38,9 +42,10 @@ const ModalQuickView = () => {
   }, [selectedProduct]);
 
   const percentSale =
-    selectedProduct?.originPrice &&
+    selectedProduct?.discountedPrice &&
+    selectedProduct.discountedPrice < selectedProduct.price &&
     Math.floor(
-      100 - (selectedProduct.price / selectedProduct.originPrice) * 100,
+      100 - (selectedProduct.discountedPrice / selectedProduct.price) * 100,
     );
 
   const handleIncreaseQuantity = () => {
@@ -171,21 +176,22 @@ const ModalQuickView = () => {
                   </div>
                 </div>
                 <div className="mt-3 flex items-center">
-                  <Rate currentRate={selectedProduct?.rate} size={14} />
+                  <Rate currentRate={0} size={14} />
                   <span className="text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
                     (1.234 reviews)
                   </span>
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
                   <div className="product-price heading5">
-                    ৳{selectedProduct.price}.00
+                    ৳{selectedProduct.discountedPrice ?? selectedProduct.price}
+                    .00
                   </div>
-                  {selectedProduct?.originPrice &&
-                    selectedProduct.originPrice > 0 && (
+                  {selectedProduct.discountedPrice &&
+                    selectedProduct.discountedPrice < selectedProduct.price && (
                       <>
                         <div className="h-4 w-px bg-line"></div>
                         <div className="product-origin-price font-normal text-secondary2">
-                          <del>৳{selectedProduct.originPrice}.00</del>
+                          <del>৳{selectedProduct.price}.00</del>
                         </div>
                         <div className="product-sale caption2 inline-block rounded-full bg-green px-3 py-0.5 font-semibold">
                           -{percentSale}%
