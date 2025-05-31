@@ -6,6 +6,12 @@ frontend:
       commands:
         - npm install -g pnpm
         - export NODE_OPTIONS="--max-old-space-size=4096"
+        - echo "public-hoist-pattern[]=*" > .npmrc
+        - echo "shamefully-hoist=true" >> .npmrc
+        - echo "strict-peer-dependencies=false" >> .npmrc
+        - echo "auto-install-peers=true" >> .npmrc
+        - echo "enable-pre-post-scripts=true" >> .npmrc
+        - echo "unsafe-perm=true" >> .npmrc
         - pnpm install
         - pnpm approve-builds @parcel/watcher @prisma/client @prisma/engines @sentry/cli prisma sharp
         - npx prisma generate
@@ -26,6 +32,12 @@ backend:
     preBuild:
       commands:
         - npm install -g pnpm
+        - echo "public-hoist-pattern[]=*" > .npmrc
+        - echo "shamefully-hoist=true" >> .npmrc
+        - echo "strict-peer-dependencies=false" >> .npmrc
+        - echo "auto-install-peers=true" >> .npmrc
+        - echo "enable-pre-post-scripts=true" >> .npmrc
+        - echo "unsafe-perm=true" >> .npmrc
         - pnpm install
         - pnpm approve-builds @parcel/watcher @prisma/client @prisma/engines @sentry/cli prisma sharp
         - npx prisma generate
