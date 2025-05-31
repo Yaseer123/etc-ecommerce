@@ -1,6 +1,8 @@
-import ProductDetails from "@/components/store-components/Product/Details/ProductDetails";
 import BreadcrumbProduct from "@/components/store-components/Breadcrumb/BreadcrumbProduct";
+import ProductDetails from "@/components/store-components/Product/Details/ProductDetails";
+import { auth } from "@/server/auth";
 import { api } from "@/trpc/server";
+import { redirect } from "next/navigation";
 
 export async function generateMetadata({
   searchParams,
@@ -47,6 +49,15 @@ const ProductDiscount = async ({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) => {
+  const session = await auth();
+  if (!session || !session.user) {
+    // Redirect to login with redirect back to this product page
+    const params = await searchParams;
+    const productId = params.id as string;
+    const redirectUrl = productId ? `/products/${productId}` : "/products";
+    return redirect(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
+  }
+
   const productId = (await searchParams).id as string;
 
   const productData = await api.product.getProductById({ id: productId });
