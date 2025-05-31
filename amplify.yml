@@ -5,8 +5,11 @@ frontend:
   phases:
     preBuild:
       commands:
+        - nvm install 20.11.1
+        - nvm use 20.11.1
         - npm install -g pnpm
-        - pnpm ci
+        - npm install -g pnpm
+        - pnpm install --frozen-lockfile
         - echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production
         - echo "AUTH_GOOGLE_ID=$AUTH_GOOGLE_ID" >> .env.production
         - echo "AUTH_GOOGLE_SECRET=$AUTH_GOOGLE_SECRET" >> .env.production
