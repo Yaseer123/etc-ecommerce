@@ -10,11 +10,7 @@ frontend:
         - npm install -g pnpm
         - npm install -g pnpm
         - pnpm install --frozen-lockfile
-        - echo "AUTH_SECRET=$AUTH_SECRET" >> .env.production
-        - echo "AUTH_GOOGLE_ID=$AUTH_GOOGLE_ID" >> .env.production
-        - echo "AUTH_GOOGLE_SECRET=$AUTH_GOOGLE_SECRET" >> .env.production
-        - echo "DATABASE_URL=$DATABASE_URL" >> .env.production
-        - echo "NODE_ENV=$NODE_ENV" >> .env.production
+       
     build:
       commands:
         - export NODE_OPTIONS="--max-old-space-size=4096"
