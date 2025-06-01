@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useImageStore } from "@/context/admin-context/ImageProvider";
+import Image from "@tiptap/extension-image";
+import Link from "@tiptap/extension-link";
+import Placeholder from "@tiptap/extension-placeholder";
+import TextAlign from "@tiptap/extension-text-align";
+import TextStyle from "@tiptap/extension-text-style";
+import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
-import TextAlign from "@tiptap/extension-text-align";
-import Placeholder from "@tiptap/extension-placeholder";
-import Image from "@tiptap/extension-image";
-import Tools from "./Tools";
-import ImageGallery from "./ImageGallery";
-import Link from "@tiptap/extension-link";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import TextStyle from "@tiptap/extension-text-style";
 import { FontSize } from "./extensions/fontSize";
 import { Youtube } from "./extensions/youtube";
-import { useImageStore } from "@/context/admin-context/ImageProvider";
+import ImageGallery from "./ImageGallery";
+import Tools from "./Tools";
 
 const extensions = [
   StarterKit,
@@ -67,6 +67,8 @@ export default function RichEditor({
 }) {
   const [showImageGallery, setShowImageGallery] = useState("");
   const { loadImages } = useImageStore();
+  const [sourceMode, setSourceMode] = useState(false);
+  const [htmlSource, setHtmlSource] = useState(content);
 
   useEffect(() => {
     void (async () => {
@@ -92,8 +94,18 @@ export default function RichEditor({
     onUpdate: ({ editor }) => {
       // Log content for debugging
       console.log("Editor content updated:", editor.getHTML());
+      if (!sourceMode) setHtmlSource(editor.getHTML());
     },
   });
+
+  // Toggle between source and rich mode
+  const handleToggleSource = () => {
+    if (sourceMode && editor) {
+      // Switching from source to rich, update editor content
+      editor.commands.setContent(htmlSource, false);
+    }
+    setSourceMode((prev) => !prev);
+  };
 
   const onImageSelect = (image: string) => {
     editor
@@ -165,10 +177,25 @@ export default function RichEditor({
               editor={editor}
               onImageSelection={() => handleShowImageGallery(imageId)}
               onYoutubeInsert={onYoutubeVideoAdd}
+              onToggleSource={handleToggleSource}
             />
           </div>
-          <div className="mr-auto flex-1 text-sm">
-            <EditorContent editor={editor} className="h-full" />
+          <div className="mr-auto w-full flex-1 text-sm">
+            {sourceMode ? (
+              <div className="flex h-full w-full flex-col">
+                <textarea
+                  className="h-[60vh] w-full rounded border p-2 font-mono text-xs"
+                  value={htmlSource}
+                  onChange={(e) => setHtmlSource(e.target.value)}
+                  style={{ minHeight: 300 }}
+                />
+                <Button className="mt-2 self-end" onClick={handleToggleSource}>
+                  Apply & Return to Editor
+                </Button>
+              </div>
+            ) : (
+              <EditorContent editor={editor} className="h-full" />
+            )}
           </div>
         </div>
         <div className="p-4 text-right">

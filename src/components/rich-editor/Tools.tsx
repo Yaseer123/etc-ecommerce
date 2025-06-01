@@ -1,4 +1,5 @@
-import { type ChangeEventHandler, type FC, useState, useEffect } from "react";
+import { BubbleMenu, type ChainedCommands, type Editor } from "@tiptap/react";
+import { type ChangeEventHandler, type FC, useEffect, useState } from "react";
 import {
   BiAlignLeft,
   BiAlignMiddle,
@@ -14,16 +15,16 @@ import {
   BiUnderline,
   BiVideo,
 } from "react-icons/bi";
-import ToolButton from "./ToolButton";
-import { BubbleMenu, type ChainedCommands, type Editor } from "@tiptap/react";
-import LinkForm from "./LinkForm";
 import LinkEditForm from "./LinkEditForm";
+import LinkForm from "./LinkForm";
+import ToolButton from "./ToolButton";
 import YoutubeDialog from "./YoutubeDialog";
 
 interface Props {
   editor: Editor | null;
   onImageSelection: () => void;
   onYoutubeInsert: (url: string) => void;
+  onToggleSource: () => void;
 }
 
 const tools = [
@@ -113,7 +114,12 @@ const chainMethods = (
 type TaskType = (typeof tools)[number]["task"];
 type HeadingType = (typeof headingOptions)[number]["task"];
 type FontSizeType = (typeof fontSizeOptions)[number]["task"];
-const Tools: FC<Props> = ({ editor, onImageSelection, onYoutubeInsert }) => {
+const Tools: FC<Props> = ({
+  editor,
+  onImageSelection,
+  onYoutubeInsert,
+  onToggleSource,
+}) => {
   const [showYoutubeDialog, setShowYoutubeDialog] = useState(false);
 
   // Add keyboard shortcut to delete selected YouTube videos
@@ -305,6 +311,11 @@ const Tools: FC<Props> = ({ editor, onImageSelection, onYoutubeInsert }) => {
         onClose={() => setShowYoutubeDialog(false)}
         onSubmit={onYoutubeInsert}
       />
+      <ToolButton onClick={onToggleSource}>
+        <span className="flex items-center gap-2">
+          <BiCodeAlt size={20} /> Source
+        </span>
+      </ToolButton>
     </div>
   );
 };

@@ -69,6 +69,8 @@ export const Youtube = Node.create<YoutubeOptions>({
 
   atom: true,
 
+  selectable: true,
+
   addAttributes() {
     return {
       src: {
@@ -116,7 +118,9 @@ export const Youtube = Node.create<YoutubeOptions>({
 
   renderHTML({ HTMLAttributes }) {
     // Use the helper function directly instead of as a method
-    const embedUrl = getEmbedUrl(typeof HTMLAttributes.src === 'string' ? HTMLAttributes.src : '');
+    const embedUrl = getEmbedUrl(
+      typeof HTMLAttributes.src === "string" ? HTMLAttributes.src : "",
+    );
 
     HTMLAttributes.src = embedUrl;
 
@@ -186,7 +190,9 @@ export const Youtube = Node.create<YoutubeOptions>({
       dom.setAttribute("data-youtube-video", "");
 
       const iframe = document.createElement("iframe");
-      iframe.src = getEmbedUrl(typeof node.attrs.src === 'string' ? node.attrs.src : '');
+      iframe.src = getEmbedUrl(
+        typeof node.attrs.src === "string" ? node.attrs.src : "",
+      );
       iframe.width = String(this.options.width);
       iframe.height = String(this.options.height);
       iframe.classList.add("youtube-video-iframe");
@@ -195,7 +201,7 @@ export const Youtube = Node.create<YoutubeOptions>({
 
       dom.append(iframe);
 
-      // Add a deletion overlay on selection
+      // Add a deletion and edit overlay on selection
       const overlay = document.createElement("div");
       overlay.classList.add("youtube-video-overlay");
       overlay.style.position = "absolute";
@@ -209,6 +215,7 @@ export const Youtube = Node.create<YoutubeOptions>({
 
       const removeButton = document.createElement("button");
       removeButton.innerHTML = "✖";
+      removeButton.title = "Remove video";
       removeButton.style.position = "absolute";
       removeButton.style.top = "10px";
       removeButton.style.right = "10px";
@@ -223,18 +230,62 @@ export const Youtube = Node.create<YoutubeOptions>({
       removeButton.style.alignItems = "center";
       removeButton.style.justifyContent = "center";
 
-      removeButton.addEventListener("click", () => {
+      removeButton.addEventListener("click", (e) => {
+        e.stopPropagation();
         if (typeof getPos === "function") {
           editor.commands.deleteNode(this.name);
         }
       });
 
+      // Edit button
+      const editButton = document.createElement("button");
+      editButton.innerHTML = "✎";
+      editButton.title = "Edit video";
+      editButton.style.position = "absolute";
+      editButton.style.top = "10px";
+      editButton.style.right = "50px";
+      editButton.style.backgroundColor = "#2563eb";
+      editButton.style.color = "white";
+      editButton.style.border = "none";
+      editButton.style.borderRadius = "50%";
+      editButton.style.width = "30px";
+      editButton.style.height = "30px";
+      editButton.style.cursor = "pointer";
+      editButton.style.display = "flex";
+      editButton.style.alignItems = "center";
+      editButton.style.justifyContent = "center";
+      editButton.style.fontWeight = "bold";
+      editButton.addEventListener("click", (e) => {
+        e.stopPropagation();
+        // Dispatch a custom event to the document for React to listen
+        const event = new CustomEvent("edit-youtube-video", {
+          detail: {
+            pos: typeof getPos === "function" ? getPos() : null,
+            src: node.attrs.src,
+          },
+        });
+        document.dispatchEvent(event);
+      });
+
+      overlay.appendChild(editButton);
       overlay.appendChild(removeButton);
       dom.appendChild(overlay);
 
-      // Show overlay on click
-      dom.addEventListener("click", () => {
+      // Show overlay on click and select the node
+      dom.addEventListener("click", (event) => {
         overlay.style.display = "block";
+        // Select the node in the editor
+        if (typeof getPos === "function") {
+          const { state, view } = editor;
+          const tr = state.tr.setSelection(
+            // @ts-ignore
+            new (state.selection.constructor as any).constructor(
+              getPos(),
+              getPos() + 1,
+            ),
+          );
+          view.dispatch(tr);
+        }
       });
 
       // Hide overlay when clicking elsewhere
@@ -247,9 +298,11 @@ export const Youtube = Node.create<YoutubeOptions>({
       return {
         dom,
         update: (node) => {
-            iframe.src = getEmbedUrl(typeof node.attrs.src === 'string' ? node.attrs.src : '');
-            return true;
-          },
+          iframe.src = getEmbedUrl(
+            typeof node.attrs.src === "string" ? node.attrs.src : "",
+          );
+          return true;
+        },
       };
     };
   },

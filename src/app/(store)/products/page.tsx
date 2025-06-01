@@ -901,11 +901,11 @@ export default function ProductsPage() {
                 </div>
                 <input
                   type="number"
-                  value={priceRange.max ?? ''}
+                  value={priceRange.max ?? ""}
                   onChange={(e) => {
                     const val = e.target.value;
-                    if (val === '') {
-                      setPriceRange(pr => ({ ...pr, max: undefined }));
+                    if (val === "") {
+                      setPriceRange((pr) => ({ ...pr, max: undefined }));
                       updateUrlParams({ maxPrice: null });
                       return;
                     }
@@ -914,8 +914,10 @@ export default function ProductsPage() {
                     let newMin = priceRange.min ?? newMax;
                     if (newMax < newMin) newMin = newMax;
                     setPriceRange({ min: newMin, max: newMax });
-                    const minPrice = newMin !== initialPriceRange.min ? String(newMin) : null;
-                    const maxPrice = newMax !== initialPriceRange.max ? String(newMax) : null;
+                    const minPrice =
+                      newMin !== initialPriceRange.min ? String(newMin) : null;
+                    const maxPrice =
+                      newMax !== initialPriceRange.max ? String(newMax) : null;
                     updateUrlParams({ minPrice, maxPrice });
                   }}
                   className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-orange-600 outline-none transition-all focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
