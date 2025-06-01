@@ -706,7 +706,7 @@ export const productRouter = createTRPCRouter({
       return ctx.db.product.findMany({
         where: {
           featured: true,
-          published: true,
+          // published: true,
         },
         take: input.limit,
         include: {
