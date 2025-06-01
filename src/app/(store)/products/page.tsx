@@ -52,27 +52,8 @@ export default function ProductsPage() {
     name: string;
   } | null>(categoryId ? { id: categoryId, name: "" } : null);
 
-  // Add a dedicated query to fetch category information
-  const { data: categoryData } = api.category.getById.useQuery(
-    { id: categoryId },
-    {
-      enabled: !!categoryId,
-      staleTime: Infinity,
-      gcTime: Infinity,
-    },
-  );
-
-  // Update category name when category data is fetched
-  useEffect(() => {
-    if (categoryId && categoryData) {
-      setCategory({ id: categoryId, name: categoryData.name });
-    }
-  }, [categoryId, categoryData]);
-
-  // Define the possible types for attribute filter values
-  type AttributeFilterValue = string | string[];
-
   // Add state for category attributes
+  type AttributeFilterValue = string | string[];
   const [attributeFilters, setAttributeFilters] = useState<
     Record<string, AttributeFilterValue>
   >({});
@@ -83,12 +64,28 @@ export default function ProductsPage() {
     stockStatusParam ? stockStatusParam.split(",") : [],
   );
 
+  // Set default price range based on global min/max from database
+  const [initialPriceRange, setInitialPriceRange] = useState({
+    min: 0,
+    max: 1000,
+  });
+  const [priceRange, setPriceRange] = useState<{
+    min: number | undefined;
+    max: number | undefined;
+  }>({
+    min: minPrice,
+    max: maxPrice,
+  });
+
+  // Fetch global price range from all products in database
+  const { data: globalPriceRange } = api.product.getPriceRange.useQuery();
+
   // Fetch products with filters
   const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
     categoryId: categoryId || undefined,
     brands: brands.length > 0 ? brands : undefined,
-    minPrice,
-    maxPrice,
+    minPrice: priceRange.min,
+    maxPrice: priceRange.max,
     sort: sortOption || undefined,
     attributes:
       Object.keys(attributeFilters).length > 0 ? attributeFilters : undefined,
@@ -131,18 +128,15 @@ export default function ProductsPage() {
       },
     );
 
-  // Fetch global price range from all products in database
-  const { data: globalPriceRange } = api.product.getPriceRange.useQuery();
-
-  // Set default price range based on global min/max from database
-  const [initialPriceRange, setInitialPriceRange] = useState({
-    min: 0,
-    max: 1000,
-  });
-  const [priceRange, setPriceRange] = useState<{ min: number; max: number }>({
-    min: minPrice ?? 0,
-    max: maxPrice ?? 1000,
-  });
+  // Add a dedicated query to fetch category information
+  const { data: categoryData } = api.category.getById.useQuery(
+    { id: categoryId },
+    {
+      enabled: !!categoryId,
+      staleTime: Infinity,
+      gcTime: Infinity,
+    },
+  );
 
   // State for handling custom slider styling
   const [sliderStyle] = useState({
@@ -187,14 +181,15 @@ export default function ProductsPage() {
     if (globalPriceRange) {
       const dbMinPrice = globalPriceRange.min;
       const dbMaxPrice = globalPriceRange.max;
-
-      // Set the initial range from database values
-      setInitialPriceRange({ min: dbMinPrice, max: dbMaxPrice });
-
-      // Set current range based on URL params if present, otherwise use global range
-      setPriceRange({
-        min: minPrice ?? dbMinPrice,
-        max: maxPrice ?? dbMaxPrice,
+      setInitialPriceRange({ min: 0, max: dbMaxPrice });
+      // Only set priceRange if both min and max are undefined (i.e., not user-typed)
+      setPriceRange((prev) => {
+        const min = minPrice ?? prev.min;
+        const max = maxPrice ?? prev.max;
+        return {
+          min: min ?? 0,
+          max: max ?? dbMaxPrice,
+        };
       });
     }
   }, [globalPriceRange, minPrice, maxPrice]);
@@ -855,7 +850,10 @@ export default function ProductsPage() {
           <div className="bg-white p-3">
             <Slider
               range
-              value={[priceRange.min, priceRange.max]}
+              value={[
+                priceRange.min ?? 0,
+                priceRange.max ?? initialPriceRange.max,
+              ]}
               min={initialPriceRange.min}
               max={initialPriceRange.max}
               onChange={handlePriceChange}
@@ -864,18 +862,67 @@ export default function ProductsPage() {
               railStyle={sliderStyle.railStyle}
               handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
             />
-            <div className="price-block mt-2 flex items-center justify-between">
-              <div className="min flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
-                <div className="mr-1 text-sm text-gray-500">Min:</div>
-                <div className="price-min font-medium text-orange-600">
-                  ৳<span>{priceRange.min}</span>
+            {/* Responsive, flexible, and single price-block with editable Min/Max */}
+            <div className="price-block mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min mb-2 flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:mb-0 sm:w-auto">
+                <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
+                  Min:
                 </div>
+                <input
+                  type="number"
+                  value={priceRange.min ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      setPriceRange((pr) => ({ ...pr, min: undefined }));
+                      updateUrlParams({ minPrice: null });
+                      return;
+                    }
+                    const newMin = Number(val);
+                    if (isNaN(newMin)) return;
+                    let newMax = priceRange.max ?? newMin;
+                    if (newMin > newMax) newMax = newMin;
+                    setPriceRange({ min: newMin, max: newMax });
+                    const minPrice =
+                      newMin !== initialPriceRange.min ? String(newMin) : null;
+                    const maxPrice =
+                      newMax !== initialPriceRange.max ? String(newMax) : null;
+                    updateUrlParams({ minPrice, maxPrice });
+                  }}
+                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-orange-600 outline-none transition-all focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                  aria-label="Minimum price"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                />
               </div>
-              <div className="max flex items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2">
-                <div className="mr-1 text-sm text-gray-500">Max:</div>
-                <div className="price-max font-medium text-orange-600">
-                  ৳<span>{priceRange.max}</span>
+              <div className="max flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:w-auto">
+                <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
+                  Max:
                 </div>
+                <input
+                  type="number"
+                  value={priceRange.max ?? ''}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === '') {
+                      setPriceRange(pr => ({ ...pr, max: undefined }));
+                      updateUrlParams({ maxPrice: null });
+                      return;
+                    }
+                    const newMax = Number(val);
+                    if (isNaN(newMax)) return;
+                    let newMin = priceRange.min ?? newMax;
+                    if (newMax < newMin) newMin = newMax;
+                    setPriceRange({ min: newMin, max: newMax });
+                    const minPrice = newMin !== initialPriceRange.min ? String(newMin) : null;
+                    const maxPrice = newMax !== initialPriceRange.max ? String(newMax) : null;
+                    updateUrlParams({ minPrice, maxPrice });
+                  }}
+                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-orange-600 outline-none transition-all focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                  aria-label="Maximum price"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                />
               </div>
             </div>
           </div>
