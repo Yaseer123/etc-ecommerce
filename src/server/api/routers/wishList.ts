@@ -1,13 +1,15 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const wishListRouter = createTRPCRouter({
-  getWishList: protectedProcedure.query(async ({ ctx }) => {
+  getWishList: publicProcedure.query(async ({ ctx }) => {
+    if (!ctx.session || !ctx.session.user) {
+      return [];
+    }
     const wishLists = await ctx.db.wishList.findMany({
       where: { userId: ctx.session.user.id },
       include: { product: true },
     });
-
     return wishLists;
   }),
 
