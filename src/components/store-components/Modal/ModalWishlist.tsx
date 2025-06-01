@@ -1,9 +1,10 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
 import { X } from "@phosphor-icons/react/dist/ssr";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -50,6 +51,17 @@ const ModalWishlist = () => {
             <div className="list-product px-6">
               <div className="text-center text-base font-semibold text-gray-600">
                 Login to add products to your wishlist.
+              </div>
+              <div className="mt-4 flex justify-center">
+                <Button
+                  variant="default"
+                  className="w-full max-w-xs bg-black text-white"
+                  onClick={() =>
+                    signIn(undefined, { callbackUrl: window.location.href })
+                  }
+                >
+                  Login
+                </Button>
               </div>
             </div>
           </div>

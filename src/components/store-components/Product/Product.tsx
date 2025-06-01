@@ -1,15 +1,16 @@
 "use client";
 
+import { useCartStore } from "@/context/store-context/CartContext";
+import { useModalCartStore } from "@/context/store-context/ModalCartContext";
+import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import { api } from "@/trpc/react";
+import { Eye, Heart, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
+import { type Product } from "@prisma/client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Eye, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
-import { useModalCartStore } from "@/context/store-context/ModalCartContext";
-import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
-import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
-import { useCartStore } from "@/context/store-context/CartContext";
-import { useSession } from "next-auth/react";
-import { api } from "@/trpc/react";
-import { type Product } from "@prisma/client";
+import { useEffect } from "react";
 
 interface ProductProps {
   data: Product;
@@ -111,6 +112,10 @@ export default function Product({ data }: ProductProps) {
 
   const handleAddToWishlist = () => {
     if (!session?.user) {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("pendingWishlistProductId", data.id);
+        localStorage.setItem("openWishlistModalAfterLogin", "true");
+      }
       openModalWishlist();
       return;
     }
@@ -126,6 +131,27 @@ export default function Product({ data }: ProductProps) {
 
     openModalWishlist();
   };
+
+  // Add this effect to handle pending wishlist after login
+  useEffect(() => {
+    if (session?.user && typeof window !== "undefined") {
+      const pendingId = localStorage.getItem("pendingWishlistProductId");
+      const shouldOpenModal = localStorage.getItem(
+        "openWishlistModalAfterLogin",
+      );
+      if (pendingId) {
+        if (!isInWishlist(pendingId)) {
+          addToWishlistMutation.mutate({ productId: pendingId });
+        }
+        localStorage.removeItem("pendingWishlistProductId");
+      }
+      if (shouldOpenModal === "true") {
+        openModalWishlist();
+        localStorage.removeItem("openWishlistModalAfterLogin");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [session?.user]);
 
   const handleQuickViewOpen = () => {
     openQuickView(data);
