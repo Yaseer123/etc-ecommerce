@@ -1,9 +1,10 @@
 "use client";
-import React from "react";
-import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import Link from "next/link";
+import React, { useState } from "react";
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState("");
   const breadcrumbItems = [
     {
       label: "Home",
@@ -13,13 +14,34 @@ const ForgotPassword = () => {
       label: "Forgot your password?",
     },
   ];
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      const res = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data: unknown = await res.json();
+      if (
+        typeof data === "object" &&
+        data !== null &&
+        ("message" in data || "error" in data)
+      ) {
+        console.log("Forgot password response:", data);
+      } else {
+        console.log("Forgot password response: Unexpected format", data);
+      }
+    } catch (error) {
+      console.error("Forgot password error:", error);
+    }
+  };
+
   return (
     <>
       <div id="header" className="relative w-full">
-        <Breadcrumb
-          items={breadcrumbItems}
-          pageTitle="Forgot your password?"
-        />
+        <Breadcrumb items={breadcrumbItems} pageTitle="Forgot your password?" />
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
@@ -31,7 +53,7 @@ const ForgotPassword = () => {
               <div className="body1 mt-2">
                 We will send you an email to reset your password
               </div>
-              <form className="mt-4 md:mt-7">
+              <form className="mt-4 md:mt-7" onSubmit={handleSubmit}>
                 <div className="email">
                   <input
                     className="w-full rounded-lg border-line px-4 pb-3 pt-3"
@@ -39,6 +61,8 @@ const ForgotPassword = () => {
                     type="email"
                     placeholder="Username or email address *"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="mt-4 md:mt-7">
