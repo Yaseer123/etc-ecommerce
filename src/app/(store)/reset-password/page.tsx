@@ -51,7 +51,7 @@ export default function ResetPasswordPage() {
       } else {
         setError("Unexpected response from server.");
       }
-    } catch (err) {
+    } catch {
       setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);

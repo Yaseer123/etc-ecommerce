@@ -3,11 +3,13 @@ import { getUserById } from "@/utils/getUser";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type UserRole } from "@prisma/client";
 import bcrypt from "bcryptjs";
+
 import { type DefaultSession, type NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JWT } from "next-auth/jwt";
+export const config = { runtime: "nodejs" };
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -52,14 +54,21 @@ export const authConfig = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+      async authorize(
+        credentials: Partial<Record<"email" | "password", unknown>>,
+      ) {
+        if (
+          typeof credentials?.email !== "string" ||
+          typeof credentials?.password !== "string"
+        ) {
+          return null;
+        }
         const user = await db.user.findUnique({
           where: { email: credentials.email },
         });
         if (
-          user &&
-          user.password &&
+          typeof user?.password === "string" &&
+          typeof credentials.password === "string" &&
           bcrypt.compareSync(credentials.password, user.password)
         ) {
           return {

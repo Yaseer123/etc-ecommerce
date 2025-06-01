@@ -179,7 +179,6 @@ export default function ProductsPage() {
   // Setup initial price range based on global product prices from database
   useEffect(() => {
     if (globalPriceRange) {
-      const dbMinPrice = globalPriceRange.min;
       const dbMaxPrice = globalPriceRange.max;
       setInitialPriceRange({ min: 0, max: dbMaxPrice });
       // Only set priceRange if both min and max are undefined (i.e., not user-typed)

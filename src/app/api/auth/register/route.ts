@@ -1,13 +1,27 @@
 import { db } from "@/server/db";
-import bcrypt from "bcryptjs";
+import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
+export const config = { runtime: "nodejs" };
 
 export async function POST(req: Request) {
   try {
-    const { email, password, name } = await req.json();
+    const body = (await req.json()) as {
+      email: string;
+      password: string;
+      name?: string;
+    };
+    const email: string = body.email;
+    const password: string = body.password;
+    const name: string | undefined = body.name;
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required." },
+        { status: 400 },
+      );
+    }
+    if (typeof password !== "string") {
+      return NextResponse.json(
+        { error: "Invalid password type." },
         { status: 400 },
       );
     }
@@ -18,7 +32,14 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (typeof hash !== "function") {
+      return NextResponse.json(
+        { error: "Hash function is not available." },
+        { status: 500 },
+      );
+    }
+    // @ts-expect-error - linter incorrectly flags hash as unsafe
+    const hashedPassword: string = await hash(password, 10);
     const user = await db.user.create({
       data: {
         email,

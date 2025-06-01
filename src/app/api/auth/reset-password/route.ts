@@ -1,6 +1,7 @@
 import { db } from "@/server/db";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
+export const config = { runtime: 'nodejs' }
 
 export async function POST(req: Request) {
   try {
