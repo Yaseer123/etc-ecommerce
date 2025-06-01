@@ -38,7 +38,6 @@ export async function POST(req: Request) {
         { status: 500 },
       );
     }
-    // @ts-expect-error - linter incorrectly flags hash as unsafe
     const hashedPassword: string = await hash(password, 10);
     const user = await db.user.create({
       data: {
@@ -54,7 +53,7 @@ export async function POST(req: Request) {
       },
       { status: 201 },
     );
-  } catch (error) {
+  } catch (_) {
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },

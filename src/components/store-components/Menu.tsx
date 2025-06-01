@@ -305,7 +305,7 @@ export default function Menu({
                         </Link>
                       )}
                       <div className="mt-3 pb-4 text-center text-secondary">
-                        Don't have an account?
+                        Don&apos;t have an account?
                         <Link
                           href={"/register"}
                           className="pl-1 text-black hover:underline"

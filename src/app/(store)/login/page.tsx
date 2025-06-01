@@ -25,10 +25,9 @@ const Login = () => {
       password,
       redirect: false,
       callbackUrl: redirect,
-    });
-    if (res && res.error) {
+    });    if (res?.error) {
       setError("Invalid email or password");
-    } else if (res && res.ok) {
+    } else if (res?.ok) {
       window.location.href = redirect;
     }
     setLoading(false);

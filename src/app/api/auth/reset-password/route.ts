@@ -1,11 +1,12 @@
 import { db } from "@/server/db";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
-export const config = { runtime: 'nodejs' }
+export const config = { runtime: "nodejs" };
 
 export async function POST(req: Request) {
   try {
-    const { token, password } = await req.json();
+    const body = (await req.json()) as unknown;
+    const { token, password } = body as { token: string; password: string };
     if (!token || !password) {
       return NextResponse.json(
         { error: "Token and new password are required." },
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       message: "Password has been reset successfully.",
     });
-  } catch (error) {
+  } catch (_) {
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },

@@ -1,4 +1,5 @@
 import { Node, mergeAttributes } from "@tiptap/core";
+import { TextSelection } from "prosemirror-state";
 
 export interface YoutubeOptions {
   addPasteHandler: boolean;
@@ -261,7 +262,7 @@ export const Youtube = Node.create<YoutubeOptions>({
         const event = new CustomEvent("edit-youtube-video", {
           detail: {
             pos: typeof getPos === "function" ? getPos() : null,
-            src: node.attrs.src,
+            src: typeof node.attrs?.src === 'string' ? node.attrs.src : '',
           },
         });
         document.dispatchEvent(event);
@@ -272,25 +273,24 @@ export const Youtube = Node.create<YoutubeOptions>({
       dom.appendChild(overlay);
 
       // Show overlay on click and select the node
-      dom.addEventListener("click", (event) => {
+      dom.addEventListener("click", () => {
         overlay.style.display = "block";
         // Select the node in the editor
         if (typeof getPos === "function") {
           const { state, view } = editor;
-          const tr = state.tr.setSelection(
-            // @ts-ignore
-            new (state.selection.constructor as any).constructor(
-              getPos(),
-              getPos() + 1,
-            ),
+          const selection = TextSelection.create(
+            state.doc,
+            getPos(),
+            getPos() + 1,
           );
+          const tr = state.tr.setSelection(selection);
           view.dispatch(tr);
         }
       });
 
       // Hide overlay when clicking elsewhere
-      document.addEventListener("click", (event) => {
-        if (event.target && !dom.contains(event.target as globalThis.Node)) {
+      document.addEventListener("click", (_event: MouseEvent) => {
+        if (_event.target && !dom.contains(_event.target as globalThis.Node)) {
           overlay.style.display = "none";
         }
       });
