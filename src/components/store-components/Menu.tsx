@@ -1,27 +1,27 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCartStore } from "@/context/store-context/CartContext";
-import useLoginPopup from "@/hooks/useLoginPopup";
-import useMenuMobile from "@/hooks/useMenuMobile";
-import CategoryDropdown from "./Category/CategoryDropdown";
-import MobileMenu from "./MobileMenu";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import useLoginPopup from "@/hooks/useLoginPopup";
+import useMenuMobile from "@/hooks/useMenuMobile";
+import { api } from "@/trpc/react";
 import {
+  CaretDown,
   Handbag,
   Heart,
-  User,
   MagnifyingGlass,
   SpinnerGap,
-  CaretDown,
+  User,
 } from "@phosphor-icons/react/dist/ssr";
-import TopNav from "./TopNav";
-import { api } from "@/trpc/react";
-import Image from "next/image";
 import { useDebounce } from "@uidotdev/usehooks";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import CategoryDropdown from "./Category/CategoryDropdown";
+import MobileMenu from "./MobileMenu";
+import TopNav from "./TopNav";
 
 export default function Menu({
   isAuthenticated,
@@ -249,7 +249,7 @@ export default function Menu({
                                       {product.shortDescription}
                                     </div>
                                     <div className="mt-0.5 text-sm font-medium text-black">
-                                      ${product.price.toFixed(2)}
+                                      ৳{product.price.toFixed(2)}
                                     </div>
                                   </div>
                                 </div>
@@ -305,7 +305,7 @@ export default function Menu({
                         </Link>
                       )}
                       <div className="mt-3 pb-4 text-center text-secondary">
-                        Don’t have an account?
+                        Don't have an account?
                         <Link
                           href={"/register"}
                           className="pl-1 text-black hover:underline"
@@ -501,7 +501,7 @@ export default function Menu({
                               {product.shortDescription}
                             </div>
                             <div className="mt-0.5 text-sm font-medium text-black">
-                              ${product.price.toFixed(2)}
+                              ৳{product.price.toFixed(2)}
                             </div>
                           </div>
                         </div>

@@ -548,7 +548,7 @@ export default function ProductDetails({
                   <div>
                     <div className="text-title">Free shipping</div>
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
-                      Free shipping on orders over $75.
+                      Free shipping on orders over ৳7500.
                     </div>
                   </div>
                 </div>

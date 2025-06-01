@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
-import Image from "next/image";
-import { MagnifyingGlass, X, SpinnerGap } from "@phosphor-icons/react/dist/ssr";
+import { MagnifyingGlass, SpinnerGap, X } from "@phosphor-icons/react/dist/ssr";
 import { useDebounce } from "@uidotdev/usehooks";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function MobileSearch() {
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -113,7 +113,7 @@ export default function MobileSearch() {
                             {product.shortDescription}
                           </div>
                           <div className="mt-0.5 text-sm font-medium text-black">
-                            ${product.price.toFixed(2)}
+                            ৳{product.price.toFixed(2)}
                           </div>
                         </div>
                       </div>

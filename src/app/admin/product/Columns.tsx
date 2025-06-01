@@ -1,17 +1,6 @@
 "use client";
 
-import React from "react";
-import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { DataTableColumnHeader } from "@/components/admin-components/DataTableColumnHeader";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,13 +11,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { DataTableColumnHeader } from "@/components/admin-components/DataTableColumnHeader";
-import type { Category, Product } from "@prisma/client";
-import Link from "next/link";
-import { StockStatusModal } from "./StockStatusModal";
-import { FeaturedProductModal } from "./FeaturedProductModal";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { api } from "@/trpc/react";
+import type { Category, Product } from "@prisma/client";
+import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
+import Link from "next/link";
+import React from "react";
 import { toast } from "sonner";
+import { FeaturedProductModal } from "./FeaturedProductModal";
+import { StockStatusModal } from "./StockStatusModal";
 
 // Create a separate component for the actions cell
 function ActionCell({ product }: { product: ProductColumns }) {
@@ -255,13 +255,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
     },
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price")).toFixed(2);
-      // const formatted = new Intl.NumberFormat("en-US", {
-      //   style: "currency",
-      //   currency: "BDT",
-      //   currencySign: "accounting",
-      // }).format(price);
-
-      return <div className="text-right font-medium">{price}</div>;
+      return <div className="text-right font-medium">৳{price}</div>;
     },
   },
   {
