@@ -2,13 +2,38 @@
 
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 const Login = () => {
   const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Login" }];
   const searchParams = useSearchParams();
   const redirect = searchParams?.get("redirect") ?? "/";
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+      callbackUrl: redirect,
+    });
+    if (res && res.error) {
+      setError("Invalid email or password");
+    } else if (res && res.ok) {
+      window.location.href = redirect;
+    }
+    setLoading(false);
+  };
+
   return (
     <>
       <div id="header" className="relative w-full">
@@ -21,11 +46,14 @@ const Login = () => {
               <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                 Login
               </div>
-              <form className="mt-4 md:mt-7">
+              <form className="mt-4 md:mt-7" onSubmit={handleSubmit}>
                 <Link
                   href={`/api/auth/signin?callbackUrl=${encodeURIComponent(redirect)}`}
                 >
-                  <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white">
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white"
+                  >
                     <GoogleLogo weight="bold" />
                     <span>Login with Google</span>
                   </button>
@@ -40,8 +68,10 @@ const Login = () => {
                     className="w-full rounded-lg border-line px-4 pb-3 pt-3"
                     id="username"
                     type="email"
-                    placeholder="Username or email address *"
+                    placeholder="Email address *"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="pass mt-5">
@@ -51,6 +81,8 @@ const Login = () => {
                     type="password"
                     placeholder="Password *"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="mt-5 flex items-center justify-between">
@@ -74,9 +106,14 @@ const Login = () => {
                     Forgot Your Password?
                   </Link>
                 </div>
+                {error && <div className="text-red-500 mt-2">{error}</div>}
                 <div className="mt-4 md:mt-7">
-                  <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
-                    Login
+                  <button
+                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Logging in..." : "Login"}
                   </button>
                 </div>
               </form>

@@ -1,11 +1,63 @@
 "use client";
-import React from "react";
-import Link from "next/link";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import React, { useState } from "react";
 
-export default function register() {
+export default function Register() {
   const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Register" }];
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name }),
+      });
+      const data: unknown = await res.json();
+      if (!res.ok) {
+        function hasErrorProp(obj: unknown): obj is { error: string } {
+          return (
+            typeof obj === "object" &&
+            obj !== null &&
+            "error" in obj &&
+            typeof (obj as { error: unknown }).error === "string"
+          );
+        }
+        if (hasErrorProp(data)) {
+          setError(data.error);
+        } else {
+          setError("Registration failed");
+        }
+      } else {
+        setSuccess("Registration successful! You can now log in.");
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        setName("");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div id="header" className="relative w-full">
@@ -18,9 +70,12 @@ export default function register() {
               <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                 Register
               </div>
-              <form className="mt-4 md:mt-7">
+              <form className="mt-4 md:mt-7" onSubmit={handleSubmit}>
                 <Link href="/api/auth/signin">
-                  <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white">
+                  <button
+                    type="button"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white"
+                  >
                     <GoogleLogo weight="bold" />
                     <span>Login with Google</span>
                   </button>
@@ -35,8 +90,10 @@ export default function register() {
                     className="w-full rounded-lg border-line px-4 pb-3 pt-3"
                     id="username"
                     type="email"
-                    placeholder="Username or email address *"
+                    placeholder="Email address *"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="pass mt-5">
@@ -46,6 +103,8 @@ export default function register() {
                     type="password"
                     placeholder="Password *"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
                 <div className="mt-5">
@@ -55,6 +114,18 @@ export default function register() {
                     type="password"
                     placeholder="Confirm Password *"
                     required
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                </div>
+                <div className="mt-5">
+                  <input
+                    className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                    id="name"
+                    type="text"
+                    placeholder="Name (optional)"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                   />
                 </div>
                 <div className="mt-5 flex items-center">
@@ -79,9 +150,17 @@ export default function register() {
                     </Link>
                   </label>
                 </div>
+                {error && <div className="text-red-500 mt-2">{error}</div>}
+                {success && (
+                  <div className="text-green-600 mt-2">{success}</div>
+                )}
                 <div className="mt-4 md:mt-7">
-                  <button className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4">
-                    Register
+                  <button
+                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Registering..." : "Register"}
                   </button>
                 </div>
               </form>
@@ -93,8 +172,8 @@ export default function register() {
                 </div>
                 <div className="mt-2 text-secondary">
                   Welcome back. Sign in to access your personalized experience,
-                  saved preferences, and more. We{String.raw`'re`} thrilled to
-                  have you with us again!
+                  saved preferences, and more. We{"'"}re thrilled to have you
+                  with us again!
                 </div>
                 <div className="mt-4 md:mt-7">
                   <Link

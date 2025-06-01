@@ -1,10 +1,11 @@
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type DefaultSession, type NextAuthConfig } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-
 import { db } from "@/server/db";
 import { getUserById } from "@/utils/getUser";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 import { type UserRole } from "@prisma/client";
+import bcrypt from "bcryptjs";
+import { type DefaultSession, type NextAuthConfig } from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JWT } from "next-auth/jwt";
 
@@ -45,6 +46,32 @@ declare module "next-auth/jwt" {
 export const authConfig = {
   providers: [
     GoogleProvider,
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) return null;
+        const user = await db.user.findUnique({
+          where: { email: credentials.email },
+        });
+        if (
+          user &&
+          user.password &&
+          bcrypt.compareSync(credentials.password, user.password)
+        ) {
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        }
+        return null;
+      },
+    }),
     /**
      * ...add more providers here.
      *
