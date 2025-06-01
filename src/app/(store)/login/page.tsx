@@ -1,10 +1,14 @@
-import React from "react";
-import Link from "next/link";
+"use client";
+
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const Login = () => {
   const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Login" }];
+  const searchParams = useSearchParams();
+  const redirect = searchParams?.get("redirect") ?? "/";
   return (
     <>
       <div id="header" className="relative w-full">
@@ -18,7 +22,9 @@ const Login = () => {
                 Login
               </div>
               <form className="mt-4 md:mt-7">
-                <Link href="/api/auth/signin">
+                <Link
+                  href={`/api/auth/signin?callbackUrl=${encodeURIComponent(redirect)}`}
+                >
                   <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white">
                     <GoogleLogo weight="bold" />
                     <span>Login with Google</span>
