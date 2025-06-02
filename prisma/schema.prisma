@@ -134,6 +134,7 @@ model Review {
     rating    Int // Rating out of 5
     comment   String?
     createdAt DateTime @default(now())
+    visible   Boolean  @default(false) // Admin moderation
 
     // Relationships
     user    User    @relation(fields: [userId], references: [id])

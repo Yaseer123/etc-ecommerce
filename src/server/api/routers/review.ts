@@ -1,17 +1,18 @@
-import { z } from "zod";
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
-  adminProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export const reviewRouter = createTRPCRouter({
   getReviewsByProduct: publicProcedure
     .input(z.string()) // Product ID
     .query(async ({ ctx, input }) => {
       return await ctx.db.review.findMany({
-        where: { productId: input },
+        where: { productId: input, visible: true } as any,
         include: {
           user: {
             select: {
@@ -79,6 +80,19 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      // Only allow review if user has purchased the product
+      const hasPurchased = await ctx.db.orderItem.findFirst({
+        where: {
+          productId: input.productId,
+          order: { userId: ctx.session.user.id, status: { not: "CANCELLED" } },
+        },
+      });
+      if (!hasPurchased) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "You can only review products you have purchased.",
+        });
+      }
       // Check if user already reviewed this product
       const existingReview = await ctx.db.review.findFirst({
         where: {
@@ -86,26 +100,26 @@ export const reviewRouter = createTRPCRouter({
           productId: input.productId,
         },
       });
-
       if (existingReview) {
-        // Update existing review
+        // Update existing review (keep visible false for re-review)
         return await ctx.db.review.update({
           where: { id: existingReview.id },
           data: {
             rating: input.rating,
             comment: input.comment,
-          },
+            visible: false,
+          } as any,
         });
       }
-
-      // Create new review
+      // Create new review (not visible until admin approves)
       return await ctx.db.review.create({
         data: {
           userId: ctx.session.user.id,
           productId: input.productId,
           rating: input.rating,
           comment: input.comment,
-        },
+          visible: false,
+        } as any,
       });
     }),
 
@@ -116,4 +130,35 @@ export const reviewRouter = createTRPCRouter({
         where: { id: input },
       });
     }),
+
+  setReviewVisibility: adminProcedure
+    .input(z.object({ reviewId: z.string(), visible: z.boolean() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.review.update({
+        where: { id: input.reviewId },
+        data: { visible: input.visible } as any,
+      });
+    }),
+
+  canReviewProduct: protectedProcedure
+    .input(z.string()) // Product ID
+    .query(async ({ ctx, input }) => {
+      const hasPurchased = await ctx.db.orderItem.findFirst({
+        where: {
+          productId: input,
+          order: { userId: ctx.session.user.id, status: { not: "CANCELLED" } },
+        },
+      });
+      return !!hasPurchased;
+    }),
+
+  getAllReviews: adminProcedure.query(async ({ ctx }) => {
+    return await ctx.db.review.findMany({
+      include: {
+        user: { select: { name: true, image: true } },
+        product: { select: { title: true, id: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
 });

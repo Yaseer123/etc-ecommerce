@@ -87,6 +87,11 @@ export default function ProductDetails({
     },
   );
 
+  const { data: canReview, isLoading: canReviewLoading } =
+    api.review.canReviewProduct.useQuery(productMain.id, {
+      enabled: !!session,
+    });
+
   const sortedReviews = [...reviews].sort((a, b) => {
     if (reviewSortOrder === "newest") {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -820,66 +825,78 @@ export default function ProductDetails({
                       ))
                     )}
                   </div>
-                  <div
-                    id="form-review"
-                    className="form-review rounded-lg bg-surface/20 p-4 pt-6 sm:p-6"
-                  >
-                    <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                      Leave A comment
-                    </div>
-                    <form
-                      className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6"
-                      onSubmit={handleReviewSubmit}
-                    >
-                      <div className="col-span-2 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
-                        <div className="text-title">Your Rating:</div>
-                        <div className="flex cursor-pointer">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star
-                              key={star}
-                              size={20}
-                              weight={
-                                star <= reviewForm.rating ? "fill" : "regular"
-                              }
-                              className="text-yellow-500 transition-all hover:scale-110"
-                              onClick={() =>
-                                setReviewForm({ ...reviewForm, rating: star })
-                              }
-                            />
-                          ))}
+                  {/* Only show review form if user can review */}
+                  {session &&
+                    (canReviewLoading ? (
+                      <div>Checking purchase status...</div>
+                    ) : canReview ? (
+                      <div
+                        id="form-review"
+                        className="form-review rounded-lg bg-surface/20 p-4 pt-6 sm:p-6"
+                      >
+                        <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                          Leave A comment
                         </div>
-                      </div>
-                      <div className="message col-span-full">
-                        <textarea
-                          className="w-full rounded-lg border border-line px-4 py-3"
-                          id="message"
-                          name="comment"
-                          placeholder="Your review *"
-                          required
-                          rows={4}
-                          value={reviewForm.comment}
-                          onChange={(e) =>
-                            setReviewForm({
-                              ...reviewForm,
-                              comment: e.target.value,
-                            })
-                          }
-                        ></textarea>
-                      </div>
-
-                      <div className="col-span-full sm:pt-3">
-                        <button
-                          type="submit"
-                          disabled={addReviewMutation.isPending}
-                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                        <form
+                          className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6"
+                          onSubmit={handleReviewSubmit}
                         >
-                          {addReviewMutation.isPending
-                            ? "Submitting..."
-                            : "Submit Review"}
-                        </button>
+                          <div className="col-span-2 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
+                            <div className="text-title">Your Rating:</div>
+                            <div className="flex cursor-pointer">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <Star
+                                  key={star}
+                                  size={20}
+                                  weight={
+                                    star <= reviewForm.rating
+                                      ? "fill"
+                                      : "regular"
+                                  }
+                                  className="text-yellow-500 transition-all hover:scale-110"
+                                  onClick={() =>
+                                    setReviewForm({
+                                      ...reviewForm,
+                                      rating: star,
+                                    })
+                                  }
+                                />
+                              ))}
+                            </div>
+                          </div>
+                          <textarea
+                            className="w-full rounded-lg border border-line px-4 py-3"
+                            id="message"
+                            name="comment"
+                            placeholder="Your review *"
+                            required
+                            rows={4}
+                            value={reviewForm.comment}
+                            onChange={(e) =>
+                              setReviewForm({
+                                ...reviewForm,
+                                comment: e.target.value,
+                              })
+                            }
+                          ></textarea>
+                          <div className="col-span-full sm:pt-3">
+                            <button
+                              type="submit"
+                              disabled={addReviewMutation.isPending}
+                              className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                            >
+                              {addReviewMutation.isPending
+                                ? "Submitting..."
+                                : "Submit Review"}
+                            </button>
+                          </div>
+                        </form>
                       </div>
-                    </form>
-                  </div>
+                    ) : (
+                      <div className="form-review text-red-500 rounded-lg bg-surface/20 p-4 pt-6 sm:p-6">
+                        You can only review products you have purchased.
+                      </div>
+                    ))}
                 </div>
               </div>
             </div>
