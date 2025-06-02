@@ -127,60 +127,97 @@ export const orderRouter = createTRPCRouter({
       console.log("Order created:", order);
       console.log("AddressId used:", input.addressId);
 
-      // Send email notification to admin
-      try {
-        // Fetch address details if available
-        let address = null;
-        if (order.addressId) {
-          address = await ctx.db.address.findUnique({
-            where: { id: order.addressId },
-          });
-        }
-        // Fetch user details
-        const user = await ctx.db.user.findUnique({
-          where: { id: order.userId },
+      // Fetch full order with items and product details for email
+      const fullOrder = await ctx.db.order.findUnique({
+        where: { id: order.id },
+        include: { items: { include: { product: true } } },
+      });
+      // Fetch address details if available
+      let address = null;
+      if (order.addressId) {
+        address = await ctx.db.address.findUnique({
+          where: { id: order.addressId },
         });
-        const addressBlock = address
-          ? `<div style="margin-bottom: 16px;">
-                <strong>Shipping Address:</strong><br/>
-                ${address.street}<br/>
-                ${address.city}, ${address.state} ${address.zipCode}<br/>
-                <strong>Mobile:</strong> ${address.phone}<br/>
-                <strong>Email:</strong> ${address.email}
-             </div>`
-          : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
-        const customerBlock = user
-          ? `<div style="margin-bottom: 16px;">
-                <strong>Customer Name:</strong> ${user.name ?? "N/A"}<br/>
-                <strong>Customer Email:</strong> ${user.email ?? "N/A"}
-             </div>`
-          : "";
-        const html = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-            <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-              <h2 style="margin: 0;">New Order Placed</h2>
-            </div>
-            <div style="padding: 24px 32px;">
-              <p style="font-size: 16px;">A new order has been placed on Rinors Ecommerce Admin.</p>
-              <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
-              <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
-              ${customerBlock}
-              ${addressBlock}
-              <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
-            </div>
-          </div>
-        `;
-        const resend = new Resend(process.env.RESEND_API_KEY);
-        await resend.emails.send({
-          from: "no-reply@rinors.com",
-          to: "rinorscorporation@gmail.com",
-          subject: "New Order Placed",
-          html,
-        });
-      } catch (e) {
-        // Optionally log error, but do not block order placement
-        console.error("Failed to send order notification email", e);
       }
+      // Fetch user details
+      const user = await ctx.db.user.findUnique({
+        where: { id: order.userId },
+      });
+      const addressBlock = address
+        ? `<div style="margin-bottom: 16px;">
+              <strong>Shipping Address:</strong><br/>
+              ${address.street}<br/>
+              ${address.city}, ${address.state} ${address.zipCode}<br/>
+              <strong>Mobile:</strong> ${address.phone}<br/>
+              <strong>Email:</strong> ${address.email}
+           </div>`
+        : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
+      const customerBlock = user
+        ? `<div style="margin-bottom: 16px;">
+              <strong>Customer Name:</strong> ${user.name ?? "N/A"}<br/>
+              <strong>Customer Email:</strong> ${user.email ?? "N/A"}
+           </div>`
+        : "";
+      // Build product details table
+      let productRows = "";
+      if (fullOrder && fullOrder.items && fullOrder.items.length > 0) {
+        for (const item of fullOrder.items) {
+          let productTitle = item.product?.title;
+          if (!productTitle && item.productId) {
+            const prod = await ctx.db.product.findUnique({
+              where: { id: item.productId },
+            });
+            productTitle = prod?.title ?? "Unknown Product";
+          }
+          productRows += `
+            <tr>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${productTitle}</td>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
+            </tr>
+          `;
+        }
+      }
+      const productsTable = productRows
+        ? `<div style="margin-bottom: 24px;">
+              <strong>Products:</strong>
+              <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px;">
+                <thead>
+                  <tr style="background: #f7f7f7;">
+                    <th style="text-align: left; padding: 8px 12px; border-bottom: 2px solid #ddd;">Product</th>
+                    <th style="text-align: center; padding: 8px 12px; border-bottom: 2px solid #ddd;">Qty</th>
+                    <th style="text-align: right; padding: 8px 12px; border-bottom: 2px solid #ddd;">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${productRows}
+                </tbody>
+              </table>
+            </div>`
+        : "";
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+          <div style="background: #007b55; color: #fff; padding: 24px 32px;">
+            <h2 style="margin: 0;">New Order Placed</h2>
+          </div>
+          <div style="padding: 24px 32px;">
+            <p style="font-size: 16px;">A new order has been placed on Rinors Ecommerce Admin.</p>
+            <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
+            <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
+            ${productsTable}
+            ${customerBlock}
+            ${addressBlock}
+            <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
+          </div>
+        </div>
+      `;
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: "no-reply@rinors.com",
+        to: "rinorscorporation@gmail.com",
+        subject: "New Order Placed",
+        html,
+      });
 
       // Send confirmation email to customer
       try {
