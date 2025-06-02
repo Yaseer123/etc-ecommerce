@@ -86,7 +86,7 @@ export const orderRouter = createTRPCRouter({
 
       // Create a map of product prices
       const productPriceMap = new Map(
-        products.map((product) => [product.id, product.price]),
+        products.map((product) => [product.id, product.discountedPrice]),
       );
 
       // Calculate total price using product prices
@@ -134,7 +134,7 @@ export const orderRouter = createTRPCRouter({
           from: "no-reply@rinors.com",
           to: "rinorscorporation@gmail.com",
           subject: "New Order Placed",
-          html: `<p>A new order has been placed.</p><p><strong>Order ID:</strong> ${order.id}</p><p><strong>Total:</strong> $${order.total}</p>`,
+          html: `<p>A new order has been placed.</p><p><strong>Order ID:</strong> ${order.id}</p><p><strong>Total:</strong> ৳${order.total}</p>`,
         });
       } catch (e) {
         // Optionally log error, but do not block order placement
