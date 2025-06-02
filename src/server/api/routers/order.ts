@@ -3,6 +3,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
 } from "@/server/api/trpc";
+import { Resend } from "resend";
 import { z } from "zod";
 
 export const orderRouter = createTRPCRouter({
@@ -125,6 +126,20 @@ export const orderRouter = createTRPCRouter({
           },
         });
       });
+
+      // Send email notification to admin
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        await resend.emails.send({
+          from: "no-reply@rinors.com",
+          to: "rinorscorporation@gmail.com",
+          subject: "New Order Placed",
+          html: `<p>A new order has been placed.</p><p><strong>Order ID:</strong> ${order.id}</p><p><strong>Total:</strong> $${order.total}</p>`,
+        });
+      } catch (e) {
+        // Optionally log error, but do not block order placement
+        console.error("Failed to send order notification email", e);
+      }
 
       return order;
     }),
