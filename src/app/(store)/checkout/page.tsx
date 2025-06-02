@@ -6,6 +6,7 @@ import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import type { Order } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
@@ -31,6 +32,19 @@ const Checkout = () => {
     email: "",
   });
   const createAddressMutation = api.address.createAddress.useMutation();
+  const createGuestAddressMutation =
+    api.address.createGuestAddress.useMutation();
+
+  const placeGuestOrder = api.order.placeGuestOrder.useMutation({
+    onSuccess: (data) => {
+      setOrderSuccess(data);
+      setOrderError("");
+      useCartStore.getState().clearCart();
+    },
+    onError: (err) => {
+      setOrderError(err.message || "Order failed. Please try again.");
+    },
+  });
 
   React.useEffect(() => {
     const sum = cartArray.reduce(
@@ -50,114 +64,113 @@ const Checkout = () => {
     },
   ];
 
-  const renderAddressSection = () => {
-    if (!session) {
-      return (
-        <div className="flex justify-between rounded-lg bg-surface px-4 py-3">
+  const renderAddressSection = () => (
+    <div className="mt-5">
+      {!session && (
+        <div className="mb-4 flex justify-between rounded-lg bg-surface px-4 py-3">
           <div className="flex items-center">
             <span className="pr-4">Already have an account? </span>
-            <span className="cursor-pointer text-base font-semibold capitalize leading-[26px] hover:underline md:text-base md:leading-6">
+            <Link
+              href="/login"
+              className="cursor-pointer text-base font-semibold capitalize leading-[26px] hover:underline md:text-base md:leading-6"
+            >
               Login
-            </span>
+            </Link>
           </div>
           <div>
             <CaretDown className="cursor-pointer" />
           </div>
         </div>
-      );
-    }
-    return (
-      <div className="mt-5">
-        <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-          Shipping Information
-        </div>
-        <div className="mt-5">
-          <form>
-            <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
-              <div className="">
-                <input
-                  className="w-full rounded-lg border-line px-4 py-3"
-                  id="street"
-                  type="text"
-                  placeholder="Street Address *"
-                  value={newAddress.street}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, street: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="">
-                <input
-                  className="w-full rounded-lg border-line px-4 py-3"
-                  id="city"
-                  type="text"
-                  placeholder="Town/City *"
-                  value={newAddress.city}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, city: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="">
-                <input
-                  className="w-full rounded-lg border-line px-4 py-3"
-                  id="state"
-                  type="text"
-                  placeholder="State *"
-                  value={newAddress.state}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, state: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="">
-                <input
-                  className="w-full rounded-lg border-line px-4 py-3"
-                  id="zipCode"
-                  type="text"
-                  placeholder="ZIP Code *"
-                  value={newAddress.zipCode}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, zipCode: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="">
-                <input
-                  className="w-full rounded-lg border-line px-4 py-3"
-                  id="phone"
-                  type="text"
-                  placeholder="Phone *"
-                  value={newAddress.phone}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, phone: e.target.value })
-                  }
-                  required
-                />
-              </div>
-              <div className="">
-                <input
-                  className="w-full rounded-lg border-line px-4 py-3"
-                  id="email"
-                  type="email"
-                  placeholder="Email Address *"
-                  value={newAddress.email}
-                  onChange={(e) =>
-                    setNewAddress({ ...newAddress, email: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-          </form>
-        </div>
+      )}
+      <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+        Shipping Information
       </div>
-    );
-  };
+      <div className="mt-5">
+        <form>
+          <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="street"
+                type="text"
+                placeholder="Street Address *"
+                value={newAddress.street}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, street: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="city"
+                type="text"
+                placeholder="Town/City *"
+                value={newAddress.city}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, city: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="state"
+                type="text"
+                placeholder="State *"
+                value={newAddress.state}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, state: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="zipCode"
+                type="text"
+                placeholder="ZIP Code *"
+                value={newAddress.zipCode}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, zipCode: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="phone"
+                type="text"
+                placeholder="Phone *"
+                value={newAddress.phone}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, phone: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="email"
+                type="email"
+                placeholder="Email Address *"
+                value={newAddress.email}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, email: e.target.value })
+                }
+                required
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 
   const renderPaymentSection = () => (
     <div className="mt-6 md:mt-10">
@@ -202,11 +215,6 @@ const Checkout = () => {
     },
   });
 
-  if (status === "unauthenticated") {
-    router.push("/login?redirect=/checkout");
-    return null;
-  }
-
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -245,20 +253,26 @@ const Checkout = () => {
                 <button
                   className="duration-400 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   onClick={async () => {
-                    if (!session) {
-                      router.push("/login?redirect=/checkout");
-                      return;
-                    }
                     if (cartArray.length === 0) {
                       setOrderError("Your cart is empty.");
                       return;
                     }
                     let addressId = undefined;
                     try {
-                      const created = await createAddressMutation.mutateAsync({
-                        ...newAddress,
-                      });
-                      addressId = created.id;
+                      if (session) {
+                        const created = await createAddressMutation.mutateAsync(
+                          {
+                            ...newAddress,
+                          },
+                        );
+                        addressId = created.id;
+                      } else {
+                        const created =
+                          await createGuestAddressMutation.mutateAsync({
+                            ...newAddress,
+                          });
+                        addressId = created.id;
+                      }
                     } catch (err) {
                       setOrderError(
                         "Failed to save address. Please try again.",
@@ -271,16 +285,26 @@ const Checkout = () => {
                       );
                       return;
                     }
-                    placeOrder.mutate({
-                      cartItems: cartArray.map((item) => ({
-                        productId: item.id,
-                        quantity: item.quantity,
-                      })),
-                      addressId,
-                    });
+                    if (session) {
+                      placeOrder.mutate({
+                        cartItems: cartArray.map((item) => ({
+                          productId: item.id,
+                          quantity: item.quantity,
+                        })),
+                        addressId,
+                      });
+                    } else {
+                      placeGuestOrder.mutate({
+                        cartItems: cartArray.map((item) => ({
+                          productId: item.id,
+                          quantity: item.quantity,
+                        })),
+                        addressId,
+                      });
+                    }
                   }}
                 >
-                  {session ? "Order Now" : "Login to Continue"}
+                  Order Now
                 </button>
                 {orderError && (
                   <div className="text-red-500 mt-2">{orderError}</div>

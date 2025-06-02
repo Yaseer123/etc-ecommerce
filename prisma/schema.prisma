@@ -204,7 +204,7 @@ model VerificationToken {
 
 model Address {
     id        String  @id @default(cuid())
-    userId    String
+    userId    String?
     street    String
     city      String
     state     String
@@ -214,13 +214,13 @@ model Address {
     isDefault Boolean @default(false)
 
     // Relationships
-    user  User    @relation(fields: [userId], references: [id])
+    user  User?   @relation(fields: [userId], references: [id])
     Order Order[]
 }
 
 model Order {
     id         String      @id @default(cuid())
-    userId     String
+    userId     String?
     status     OrderStatus @default(PENDING)
     total      Float
     couponId   String?
@@ -229,7 +229,7 @@ model Order {
     updatedAt  DateTime    @updatedAt
 
     // Relationships
-    user      User        @relation(fields: [userId], references: [id])
+    user      User?       @relation(fields: [userId], references: [id])
     items     OrderItem[]
     address   Address?    @relation(fields: [addressId], references: [id])
     addressId String?

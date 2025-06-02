@@ -1,4 +1,8 @@
-import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "@/server/api/trpc";
 import { z } from "zod";
 
 export const addressRouter = createTRPCRouter({
@@ -51,6 +55,28 @@ export const addressRouter = createTRPCRouter({
         data: {
           ...input,
           userId: ctx.session.user.id,
+        },
+      });
+      return newAddress;
+    }),
+
+  createGuestAddress: publicProcedure
+    .input(
+      z.object({
+        street: z.string().min(1),
+        city: z.string().min(1),
+        state: z.string().min(1),
+        zipCode: z.string().min(1),
+        phone: z.string().min(1),
+        email: z.string().email(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const newAddress = await ctx.db.address.create({
+        data: {
+          ...input,
+          isDefault: false,
+          userId: null,
         },
       });
       return newAddress;
