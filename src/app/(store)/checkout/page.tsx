@@ -12,13 +12,6 @@ import React, { useState } from "react";
 const Checkout = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [useExistingAddress, setUseExistingAddress] = useState(true);
-
-  // Get user's address
-  const { data: userAddress, isLoading: addressLoading } =
-    api.user.getAddress.useQuery(undefined, {
-      enabled: status === "authenticated",
-    });
 
   const searchParams = useSearchParams();
   const discount = searchParams?.get("discount") ?? "0";
@@ -28,6 +21,16 @@ const Checkout = () => {
   const [totalCart, setTotalCart] = useState<number>(0);
   const [orderSuccess, setOrderSuccess] = useState<Order | null>(null);
   const [orderError, setOrderError] = useState("");
+
+  const [newAddress, setNewAddress] = useState({
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    phone: "",
+    email: "",
+  });
+  const createAddressMutation = api.address.createAddress.useMutation();
 
   React.useEffect(() => {
     const sum = cartArray.reduce(
@@ -63,150 +66,95 @@ const Checkout = () => {
         </div>
       );
     }
-
     return (
       <div className="mt-5">
         <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
           Shipping Information
         </div>
-        {userAddress && useExistingAddress ? (
-          <div className="mt-5 rounded-lg border border-line p-5">
-            <div className="flex items-center justify-between">
-              <div className="text-lg font-medium">Saved Address</div>
-              <button
-                onClick={() => setUseExistingAddress(false)}
-                className="text-sm text-blue-600 hover:underline"
-              >
-                Use Different Address
-              </button>
+        <div className="mt-5">
+          <form>
+            <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
+              <div className="">
+                <input
+                  className="w-full rounded-lg border-line px-4 py-3"
+                  id="street"
+                  type="text"
+                  placeholder="Street Address *"
+                  value={newAddress.street}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, street: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="">
+                <input
+                  className="w-full rounded-lg border-line px-4 py-3"
+                  id="city"
+                  type="text"
+                  placeholder="Town/City *"
+                  value={newAddress.city}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, city: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="">
+                <input
+                  className="w-full rounded-lg border-line px-4 py-3"
+                  id="state"
+                  type="text"
+                  placeholder="State *"
+                  value={newAddress.state}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, state: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="">
+                <input
+                  className="w-full rounded-lg border-line px-4 py-3"
+                  id="zipCode"
+                  type="text"
+                  placeholder="ZIP Code *"
+                  value={newAddress.zipCode}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, zipCode: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="">
+                <input
+                  className="w-full rounded-lg border-line px-4 py-3"
+                  id="phone"
+                  type="text"
+                  placeholder="Phone *"
+                  value={newAddress.phone}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, phone: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div className="">
+                <input
+                  className="w-full rounded-lg border-line px-4 py-3"
+                  id="email"
+                  type="email"
+                  placeholder="Email Address *"
+                  value={newAddress.email}
+                  onChange={(e) =>
+                    setNewAddress({ ...newAddress, email: e.target.value })
+                  }
+                  required
+                />
+              </div>
             </div>
-            <div className="mt-4 space-y-2">
-              <p>{userAddress.email}</p>
-              <p>{userAddress.phone}</p>
-              <p>{userAddress.street}</p>
-              <p>
-                {userAddress.city}, {userAddress.state} {userAddress.zipCode}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="mt-5">
-            <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-              Information
-            </div>
-            <div className="mt-5">
-              <form>
-                <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="firstName"
-                      type="text"
-                      placeholder="First Name *"
-                      required
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="lastName"
-                      type="text"
-                      placeholder="Last Name *"
-                      required
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="email"
-                      type="email"
-                      placeholder="Email Address *"
-                      required
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="phoneNumber"
-                      type="number"
-                      placeholder="Phone Numbers *"
-                      required
-                    />
-                  </div>
-                  <div className="relative col-span-full">
-                    <select
-                      className="w-full rounded-lg border border-line px-4 py-3"
-                      id="region"
-                      name="region"
-                      defaultValue={"default"}
-                    >
-                      <option value="default" disabled>
-                        Choose Country/Region
-                      </option>
-                      <option value="Bangladesh">Bangladesh</option>
-                      <option value="India">India</option>
-                      <option value="France">France</option>
-                      <option value="Singapore">Singapore</option>
-                    </select>
-                    <CaretDown className="absolute right-4 top-1/2 -translate-y-1/2" />
-                  </div>
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="city"
-                      type="text"
-                      placeholder="Town/City *"
-                      required
-                    />
-                  </div>
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="apartment"
-                      type="text"
-                      placeholder="Street,..."
-                      required
-                    />
-                  </div>
-                  <div className="relative">
-                    <select
-                      className="w-full rounded-lg border border-line px-4 py-3"
-                      id="country"
-                      name="country"
-                      defaultValue={"default"}
-                    >
-                      <option value="default" disabled>
-                        Choose State
-                      </option>
-                      <option value="Bangladesh">Bangladesh</option>
-                      <option value="India">India</option>
-                      <option value="France">France</option>
-                      <option value="Singapore">Singapore</option>
-                    </select>
-                    <CaretDown className="absolute right-4 top-1/2 -translate-y-1/2" />
-                  </div>
-                  <div className="">
-                    <input
-                      className="w-full rounded-lg border-line px-4 py-3"
-                      id="postal"
-                      type="text"
-                      placeholder="Postal Code *"
-                      required
-                    />
-                  </div>
-                  <div className="col-span-full">
-                    <textarea
-                      className="w-full rounded-lg border border-line px-4 py-3"
-                      id="note"
-                      name="note"
-                      placeholder="Write note..."
-                    ></textarea>
-                  </div>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+          </form>
+        </div>
       </div>
     );
   };
@@ -259,7 +207,7 @@ const Checkout = () => {
     return null;
   }
 
-  if (status === "loading" || addressLoading) {
+  if (status === "loading") {
     return <div>Loading...</div>;
   }
 
@@ -296,7 +244,7 @@ const Checkout = () => {
               <div className="mt-6 md:mt-10">
                 <button
                   className="duration-400 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
-                  onClick={() => {
+                  onClick={async () => {
                     if (!session) {
                       router.push("/login?redirect=/checkout");
                       return;
@@ -305,8 +253,24 @@ const Checkout = () => {
                       setOrderError("Your cart is empty.");
                       return;
                     }
-                    // Use saved address or collect from form (expand as needed)
-                    const addressId = userAddress?.id;
+                    let addressId = undefined;
+                    try {
+                      const created = await createAddressMutation.mutateAsync({
+                        ...newAddress,
+                      });
+                      addressId = created.id;
+                    } catch (err) {
+                      setOrderError(
+                        "Failed to save address. Please try again.",
+                      );
+                      return;
+                    }
+                    if (!addressId) {
+                      setOrderError(
+                        "No address found. Please enter your address.",
+                      );
+                      return;
+                    }
                     placeOrder.mutate({
                       cartItems: cartArray.map((item) => ({
                         productId: item.id,

@@ -41,6 +41,7 @@ export default function AdminOrdersPage() {
               <tr className="bg-gray-100">
                 <th className="border p-2">Order ID</th>
                 <th className="border p-2">User</th>
+                <th className="border p-2">Address</th>
                 <th className="border p-2">Status</th>
                 <th className="border p-2">Total</th>
                 <th className="border p-2">Created At</th>
@@ -53,6 +54,11 @@ export default function AdminOrdersPage() {
                   <td className="border p-2 font-mono">{order.id}</td>
                   <td className="border p-2">
                     {order.user?.name ?? order.user?.email ?? "-"}
+                  </td>
+                  <td className="whitespace-pre-line border p-2">
+                    {order.address
+                      ? `${order.address.street}, ${order.address.city}, ${order.address.state} ${order.address.zipCode}\n${order.address.phone}`
+                      : "-"}
                   </td>
                   <td className="border p-2">
                     {updatingId === order.id ? (

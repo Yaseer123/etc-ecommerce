@@ -186,7 +186,7 @@ model User {
 
     accounts  Account[]
     posts     Post[]
-    address   Address?
+    addresses Address[]
     orders    Order[]
     reviews   Review[]
     questions Question[]
@@ -204,7 +204,7 @@ model VerificationToken {
 
 model Address {
     id        String  @id @default(cuid())
-    userId    String  @unique
+    userId    String
     street    String
     city      String
     state     String

@@ -34,4 +34,25 @@ export const addressRouter = createTRPCRouter({
 
       return updatedAddress;
     }),
+
+  createAddress: protectedProcedure
+    .input(
+      z.object({
+        street: z.string().min(1),
+        city: z.string().min(1),
+        state: z.string().min(1),
+        zipCode: z.string().min(1),
+        phone: z.string().min(1),
+        email: z.string().email(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const newAddress = await ctx.db.address.create({
+        data: {
+          ...input,
+          userId: ctx.session.user.id,
+        },
+      });
+      return newAddress;
+    }),
 });
