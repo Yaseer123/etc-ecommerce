@@ -30,7 +30,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Star } from "@phosphor-icons/react";
 import { GripVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -404,6 +403,43 @@ export default function EditProductForm({ productId }: { productId: string }) {
     onSuccess: () => refetchReviews(),
   });
 
+  // Add state for the specification rich editor
+  const [specRichContent, setSpecRichContent] = useState("");
+
+  // Helper to parse and add specs from rich editor
+  const addSpecsFromRichEditor = (html: string) => {
+    // Split HTML by <br>, </p>, and </div> tags to get logical lines
+    const htmlLines = html
+      .replace(/<\/?(div|p)[^>]*>/gi, "\n")
+      .replace(/<br\s*\/?>(?![\s\S]*<br)/gi, "\n")
+      .split(/\n+/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+    setSpecifications((prev) => {
+      const existingKeys = new Set(prev.map((s) => s.key.trim().toLowerCase()));
+      const newSpecs = htmlLines
+        .map((line) => {
+          if (line.includes(":")) {
+            const [key, ...rest] = line.split(":");
+            if (typeof key === "string") {
+              return { key: key.trim(), value: rest.join(":").trim() };
+            }
+          } else {
+            return { key: line, value: "" };
+          }
+          return null;
+        })
+        .filter(
+          (spec): spec is { key: string; value: string } =>
+            !!spec &&
+            typeof spec.key === "string" &&
+            spec.key.trim().length > 0 &&
+            !existingKeys.has(spec.key.trim().toLowerCase()),
+        );
+      return [...prev, ...newSpecs];
+    });
+  };
+
   if (!product) return null;
 
   return (
@@ -531,7 +567,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
                     {attr.name}{" "}
                     {attr.required && <span className="text-red-500">*</span>}
                   </Label>
-
                   {attr.type === "select" && attr.options && (
                     <Select
                       value={attributeValues[attr.name]?.toString() ?? ""}
@@ -557,6 +592,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
           </div>
         )}
 
+        {/* Specifications Section */}
         <div className="col-span-2">
           <Label>Specifications</Label>
           <div className="space-y-2">
@@ -583,10 +619,27 @@ export default function EditProductForm({ productId }: { productId: string }) {
               </SortableContext>
             </DndContext>
             <Button onClick={handleAddSpecification}>Add Specification</Button>
+            <div className="mt-4">
+              <Label className="mb-1 block">
+                Or paste/write specifications below (format: Key: Value per
+                line)
+              </Label>
+              <RichEditor
+                content={specRichContent}
+                imageId={"spec-rich-editor"}
+                handleSubmit={(html) => {
+                  setSpecRichContent(html);
+                  addSpecsFromRichEditor(html);
+                }}
+                pending={false}
+                submitButtonText="Add from Editor"
+              >
+                <></>
+              </RichEditor>
+            </div>
           </div>
         </div>
       </div>
- 
     </RichEditor>
   );
 }

@@ -8,33 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { toast } from "sonner";
+import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
 import { api } from "@/trpc/react";
 import {
-  type Dispatch,
-  type SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
-import RichEditor from "../rich-editor";
-import { v4 as uuid } from "uuid";
-import { Label } from "../ui/label";
-import DndImageGallery from "../rich-editor/DndImageGallery";
-import { Button } from "../ui/button";
-import { useRouter } from "next/navigation";
-import { Textarea } from "../ui/textarea";
-import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
-import {
-  DndContext,
   closestCenter,
+  DndContext,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   type DragEndEvent,
 } from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -42,9 +28,23 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type Dispatch,
+  type SetStateAction,
+} from "react";
+import { toast } from "sonner";
+import { v4 as uuid } from "uuid";
+import RichEditor from "../rich-editor";
+import DndImageGallery from "../rich-editor/DndImageGallery";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
 // Sortable item component for specifications
 function SortableSpecificationItem({
@@ -126,6 +126,9 @@ export default function AddProductForm() {
   const [specifications, setSpecifications] = useState<
     Array<{ key: string; value: string }>
   >([]);
+
+  // Add state for the specification rich editor
+  const [specRichContent, setSpecRichContent] = useState("");
 
   // Configure sensors for drag-and-drop
   const sensors = useSensors(
@@ -235,6 +238,40 @@ export default function AddProductForm() {
         return arrayMove(items, oldIndex, newIndex);
       });
     }
+  };
+
+  // Helper to parse and add specs from rich editor
+  const addSpecsFromRichEditor = (html: string) => {
+    // Split HTML by <br>, </p>, and </div> tags to get logical lines
+    const htmlLines = html
+      .replace(/<\/?(div|p)[^>]*>/gi, "\n")
+      .replace(/<br\s*\/?>(?![\s\S]*<br)/gi, "\n")
+      .split(/\n+/)
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0);
+    setSpecifications((prev) => {
+      const existingKeys = new Set(prev.map((s) => s.key.trim().toLowerCase()));
+      const newSpecs = htmlLines
+        .map((line) => {
+          if (line.includes(":")) {
+            const [key, ...rest] = line.split(":");
+            if (typeof key === "string") {
+              return { key: key.trim(), value: rest.join(":").trim() };
+            }
+          } else {
+            return { key: line, value: "" };
+          }
+          return null;
+        })
+        .filter(
+          (spec): spec is { key: string; value: string } =>
+            !!spec &&
+            typeof spec.key === "string" &&
+            spec.key.trim().length > 0 &&
+            !existingKeys.has(spec.key.trim().toLowerCase()),
+        );
+      return [...prev, ...newSpecs];
+    });
   };
 
   const handleSubmit = async (content: string) => {
@@ -469,6 +506,24 @@ export default function AddProductForm() {
               </SortableContext>
             </DndContext>
             <Button onClick={handleAddSpecification}>Add Specification</Button>
+            <div className="mt-4">
+              <Label className="mb-1 block">
+                Or paste/write specifications below (format: Key: Value per
+                line)
+              </Label>
+              <RichEditor
+                content={specRichContent}
+                imageId={"spec-rich-editor"}
+                handleSubmit={(html) => {
+                  setSpecRichContent(html);
+                  addSpecsFromRichEditor(html);
+                }}
+                pending={false}
+                submitButtonText="Add from Editor"
+              >
+                <></>
+              </RichEditor>
+            </div>
           </div>
         </div>
       </div>
