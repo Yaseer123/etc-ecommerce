@@ -348,7 +348,7 @@ const Checkout = () => {
                           <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                             <span className="quantity">{product.quantity}</span>
                             <span className="px-1">x</span>
-                            <span>
+                            <span className="discounted-price">
                               ৳{product.discountedPrice ?? product.price}.00
                             </span>
                           </div>

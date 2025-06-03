@@ -81,7 +81,7 @@ const ModalCart = () => {
                       </div>
                       <div className="mt-auto flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="discounted-price text-sm font-medium">
                             ৳{(item.discountedPrice ?? item.price).toFixed(2)}
                           </span>
                           <span className="text-xs text-gray-500">

@@ -115,7 +115,7 @@ const Cart = () => {
                             </div>
                           </div>
                           <div className="flex w-1/12 items-center justify-center">
-                            <div className="text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                            <div className="discounted-price text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                               ৳{product.discountedPrice ?? product.price}.00
                             </div>
                           </div>

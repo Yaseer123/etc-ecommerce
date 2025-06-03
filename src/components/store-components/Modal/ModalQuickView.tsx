@@ -182,7 +182,7 @@ const ModalQuickView = () => {
                   </span>
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
-                  <div className="product-price heading5">
+                  <div className="product-price heading5 discounted-price">
                     ৳{selectedProduct.discountedPrice ?? selectedProduct.price}
                     .00
                   </div>

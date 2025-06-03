@@ -253,7 +253,7 @@ export default function Product({ data }: ProductProps) {
         <div className="mt-auto flex items-center">
           {data.discountedPrice ? (
             <div className="flex items-center gap-2">
-              <span className="text-title font-bold">
+              <span className="text-title discounted-price font-bold">
                 ৳{data.discountedPrice.toFixed(2)}
               </span>
               <span className="text-sm text-gray-500 line-through">

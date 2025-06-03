@@ -420,7 +420,7 @@ export default function ProductDetails({
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 {productMain.discountedPrice ? (
                   <>
-                    <div className="product-price heading5">
+                    <div className="product-price heading5 discounted-price">
                       ৳{productMain.discountedPrice.toFixed(2)}
                     </div>
                     <div className="h-4 w-px bg-line"></div>
