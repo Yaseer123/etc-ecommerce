@@ -542,7 +542,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
         </div>
 
         <div className="mt-auto flex flex-col gap-y-1">
-          <Label>Images</Label>
+          <Label>
+            Images
+            <span className="ml-2 text-xs text-gray-500">
+              (Recommended: 1000x1000px or larger, square)
+            </span>
+          </Label>
           <div className="mb-4">
             <Button onClick={() => handleShowImageGallery(imageId)}>
               Show Image Gallery

@@ -434,7 +434,12 @@ export default function AddProductForm() {
           />
         </div>
         <div className="mt-auto flex flex-col gap-y-1">
-          <Label>Images</Label>
+          <Label>
+            Images
+            <span className="ml-2 text-xs text-gray-500">
+              (Recommended: 1000x1000px or larger, square)
+            </span>
+          </Label>
           <Button onClick={() => setShowImageGallery(imageId)}>
             Show Image Gallery
           </Button>
