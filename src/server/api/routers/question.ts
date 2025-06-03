@@ -1,12 +1,13 @@
-import { z } from "zod";
 import {
+  adminProcedure,
   createTRPCRouter,
   protectedProcedure,
-  adminProcedure,
+  publicProcedure,
 } from "@/server/api/trpc";
+import { z } from "zod";
 
 export const questionRouter = createTRPCRouter({
-  getQuestionsByProduct: protectedProcedure
+  getQuestionsByProduct: publicProcedure
     .input(z.string()) // Product ID
     .query(async ({ ctx, input }) => {
       return await ctx.db.question.findMany({
@@ -44,6 +45,26 @@ export const questionRouter = createTRPCRouter({
       return await ctx.db.question.update({
         where: { id: input.questionId },
         data: { answer: input.answer },
+      });
+    }),
+
+  // ADMIN: Get all questions with product and user info
+  getAllQuestionsForAdmin: adminProcedure.query(async ({ ctx }) => {
+    return await ctx.db.question.findMany({
+      include: {
+        user: { select: { name: true } },
+        product: { select: { title: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
+
+  // ADMIN: Delete a question
+  deleteQuestion: adminProcedure
+    .input(z.object({ questionId: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      return await ctx.db.question.delete({
+        where: { id: input.questionId },
       });
     }),
 });

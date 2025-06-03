@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
@@ -256,6 +257,40 @@ export default function ProductDetails({
       updateCart(productMain.id, productQuantity);
     }
     router.push("/checkout");
+  };
+
+  // Q&A Section
+  const {
+    data: questions,
+    isLoading,
+    refetch,
+  } = api.question.getQuestionsByProduct.useQuery(productMain.id);
+  const askQuestionMutation = api.question.askQuestion.useMutation();
+  const [questionText, setQuestionText] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const handleAskQuestion = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!session?.user) {
+      toast.error("Please sign in to ask a question");
+      return;
+    }
+    if (questionText.trim().length < 5) {
+      setError("Question must be at least 5 characters long.");
+      return;
+    }
+    try {
+      await askQuestionMutation.mutateAsync({
+        productId: productMain.id,
+        question: questionText.trim(),
+      });
+      toast.success("Your question has been submitted!");
+      setQuestionText("");
+      refetch();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to submit question");
+    }
   };
 
   return (
@@ -903,6 +938,141 @@ export default function ProductDetails({
           </div>
         </div>
       </div>
+      {/* Q&A Section */}
+      <section
+        className="mx-auto mb-16 mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white px-0 pb-12 pt-8 shadow sm:px-8"
+        id="product-qa"
+      >
+        <div className="section-head mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="title-n-action">
+            <h2 className="mb-1 text-xl font-bold text-gray-900 sm:text-2xl">
+              Questions ({questions?.length ?? 0})
+            </h2>
+            <p className="section-blurb text-sm text-gray-500">
+              Have question about this product? Get specific details about this
+              product from expert.
+            </p>
+          </div>
+          <div className="q-action">
+            {session?.user ? (
+              <Button
+                asChild
+                variant="default"
+                className="bg-black text-white hover:bg-black/90"
+              >
+                <a href="#ask-question-form">Ask Question</a>
+              </Button>
+            ) : (
+              <Button
+                asChild
+                variant="default"
+                className="bg-black text-white hover:bg-black/90"
+              >
+                <a href="/login">Ask Question</a>
+              </Button>
+            )}
+          </div>
+        </div>
+        <div id="question">
+          {isLoading ? (
+            <div className="py-10 text-center text-lg font-medium text-secondary">
+              Loading questions...
+            </div>
+          ) : questions && questions.length > 0 ? (
+            <div className="mb-10 space-y-7">
+              {questions.map((q) => (
+                <div
+                  key={q.id}
+                  className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+                >
+                  <div className="mb-1 flex items-center gap-3">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-lg font-bold text-primary">
+                      {q.user?.name ? q.user.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-semibold leading-tight text-gray-800">
+                        {q.user?.name ?? "User"}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {new Date(q.createdAt).toLocaleDateString(undefined, {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mb-1 pl-12 text-base text-gray-900">
+                    {q.question}
+                  </div>
+                  {q.answer ? (
+                    <div className="mt-2 pl-12">
+                      <div className="mb-1 flex items-center gap-2">
+                        <span className="bg-green-500 inline-block h-2 w-2 rounded-full"></span>
+                        <span className="text-green-700 flex items-center gap-1 text-sm font-semibold">
+                          <Question size={16} className="text-green-500" />
+                          Answer from Admin
+                        </span>
+                      </div>
+                      <div className="bg-green-50 border-green-100 rounded-lg border px-4 py-2 text-sm text-gray-700">
+                        {q.answer}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="empty-content flex flex-col items-center justify-center py-12">
+              <span className="material-icons mb-3 text-5xl text-gray-300">
+                textsms
+              </span>
+              <div className="empty-text text-center text-lg text-gray-500">
+                There are no questions asked yet. Be the first one to ask a
+                question.
+              </div>
+            </div>
+          )}
+        </div>
+        {/* Ask Question Form (if logged in) */}
+        {session?.user && (
+          <div id="ask-question-form" className="mt-12">
+            <form
+              onSubmit={handleAskQuestion}
+              className="mx-auto flex max-w-lg flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-8 shadow"
+            >
+              <label
+                htmlFor="question"
+                className="text-lg font-semibold text-gray-800"
+              >
+                Ask a question about this product:
+              </label>
+              <textarea
+                id="question"
+                className="w-full rounded-lg border border-line px-4 py-3 text-base focus:border-primary focus:ring-2 focus:ring-primary"
+                placeholder="Type your question here..."
+                value={questionText}
+                minLength={5}
+                maxLength={500}
+                onChange={(e) => setQuestionText(e.target.value)}
+                required
+                rows={3}
+                disabled={askQuestionMutation.isPending}
+              />
+              {error && <div className="text-red-500 text-sm">{error}</div>}
+              <Button
+                type="submit"
+                disabled={askQuestionMutation.isPending}
+                className="w-full bg-black text-white hover:bg-black/90"
+              >
+                {askQuestionMutation.isPending
+                  ? "Submitting..."
+                  : "Submit Question"}
+              </Button>
+            </form>
+          </div>
+        )}
+      </section>
     </>
   );
 }

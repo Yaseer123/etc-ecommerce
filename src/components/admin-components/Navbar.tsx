@@ -46,6 +46,7 @@ export default function Navbar() {
     { href: "/admin/blog", label: "Blogs" },
     { href: "/admin/slider", label: "Slider" },
     { href: "/admin/faq", label: "FAQ" },
+    { href: "/admin/questions", label: "Questions" },
   ];
 
   return (
