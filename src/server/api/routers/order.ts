@@ -144,9 +144,9 @@ export const orderRouter = createTRPCRouter({
         });
       }
       // Fetch user details
-      const user = await ctx.db.user.findUnique({
-        where: { id: order.userId },
-      });
+      const user = order.userId
+        ? await ctx.db.user.findUnique({ where: { id: order.userId } })
+        : null;
       const addressBlock = address
         ? `<div style="margin-bottom: 16px;">
               <strong>Shipping Address:</strong><br/>
@@ -225,9 +225,6 @@ export const orderRouter = createTRPCRouter({
 
       // Send confirmation email to customer
       try {
-        const user = await ctx.db.user.findUnique({
-          where: { id: order.userId },
-        });
         if (user?.email) {
           const html = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
@@ -402,9 +399,7 @@ export const orderRouter = createTRPCRouter({
               },
             },
           });
-        }
-
-        // Build order data object
+        } // Build order data object
         const orderData = {
           userId: null,
           total,
@@ -416,7 +411,7 @@ export const orderRouter = createTRPCRouter({
               price: productPriceMap.get(item.productId) ?? 0,
             })),
           },
-        } as any;
+        };
 
         // Create order
         return await tx.order.create({
@@ -510,5 +505,62 @@ export const orderRouter = createTRPCRouter({
         html,
       });
       return order;
+    }),
+
+  // Cancel an order
+  cancelOrder: protectedProcedure
+    .input(z.string()) // Order ID
+    .mutation(async ({ ctx, input }) => {
+      const order = await ctx.db.order.findFirst({
+        where: {
+          id: input,
+          userId: ctx.session.user.id,
+          status: {
+            notIn: ["DELIVERED", "CANCELLED"],
+          },
+        },
+      });
+
+      if (!order) {
+        throw new Error("Order not found or cannot be cancelled");
+      }
+
+      const updatedOrder = await ctx.db.order.update({
+        where: { id: input },
+        data: { status: "CANCELLED" },
+        include: { user: true },
+      });
+
+      // Send cancellation email
+      try {
+        const user = updatedOrder.user;
+        if (user?.email) {
+          const html = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+              <div style="background: #007b55; color: #fff; padding: 24px 32px;">
+                <h2 style="margin: 0;">Order Cancelled</h2>
+              </div>
+              <div style="padding: 24px 32px;">
+                <p>Hi${user.name ? ` ${user.name}` : ""},</p>
+                <p>Your order <b>${updatedOrder.id}</b> has been <b>cancelled</b>.</p>
+                <p><strong>Order ID:</strong> ${updatedOrder.id}</p>
+                <p><strong>Total:</strong> ৳${updatedOrder.total}</p>
+                <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
+              </div>
+            </div>
+          `;
+          const resend = new Resend(process.env.RESEND_API_KEY);
+          await resend.emails.send({
+            from: "no-reply@rinors.com",
+            to: user.email,
+            subject: "Your order has been cancelled",
+            html,
+          });
+        }
+      } catch (e) {
+        console.error("Failed to send order cancellation email", e);
+      }
+
+      return updatedOrder;
     }),
 });

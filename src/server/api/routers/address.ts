@@ -7,8 +7,12 @@ import { z } from "zod";
 
 export const addressRouter = createTRPCRouter({
   getAddress: protectedProcedure.query(async ({ ctx }) => {
-    const address = await ctx.db.address.findUnique({
-      where: { userId: ctx.session.user.id },
+    const address = await ctx.db.address.findFirst({
+      where: {
+        userId: {
+          equals: ctx.session.user.id,
+        },
+      },
     });
 
     return address ?? null;
@@ -27,15 +31,18 @@ export const addressRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const updatedAddress = await ctx.db.address.upsert({
+      // Find the address for the user first
+      const existingAddress = await ctx.db.address.findFirst({
         where: { userId: ctx.session.user.id },
+      });
+      const updatedAddress = await ctx.db.address.upsert({
+        where: { id: existingAddress?.id ?? "" }, // '' will fail if not found, so handle below
         update: { ...input },
         create: {
           ...input,
           userId: ctx.session.user.id,
         },
       });
-
       return updatedAddress;
     }),
 

@@ -389,19 +389,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       estimatedDeliveryTime: estimatedDeliveryTime,
     });
   };
-
-  // --- Review Moderation Section ---
-  const {
-    data: reviews = [],
-    isLoading: reviewsLoading,
-    refetch: refetchReviews,
-  } = api.review.getReviewsByProduct.useQuery(productId, { initialData: [] });
-  const setReviewVisibility = api.review.setReviewVisibility.useMutation({
-    onSuccess: () => refetchReviews(),
-  });
-  const deleteReview = api.review.deleteReview.useMutation({
-    onSuccess: () => refetchReviews(),
-  });
+  // Review section removed - no longer needed
 
   // Add state for the specification rich editor
   const [specRichContent, setSpecRichContent] = useState("");

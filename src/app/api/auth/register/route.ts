@@ -53,7 +53,7 @@ export async function POST(req: Request) {
       },
       { status: 201 },
     );
-  } catch (_) {
+  } catch (/* intentionally ignored */ _) { // Intentionally ignore error details in production
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },

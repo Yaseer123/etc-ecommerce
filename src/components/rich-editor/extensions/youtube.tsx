@@ -262,7 +262,7 @@ export const Youtube = Node.create<YoutubeOptions>({
         const event = new CustomEvent("edit-youtube-video", {
           detail: {
             pos: typeof getPos === "function" ? getPos() : null,
-            src: typeof node.attrs?.src === 'string' ? node.attrs.src : '',
+            src: typeof node.attrs?.src === "string" ? node.attrs.src : "",
           },
         });
         document.dispatchEvent(event);

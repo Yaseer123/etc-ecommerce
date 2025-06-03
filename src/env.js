@@ -17,7 +17,7 @@ export const env = createEnv({
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
-    VERCEL_URL: z.string().optional(),
+    ROOT_DOMAIN: z.string().optional(),
     NEXTAUTH_SECRET: z.string().optional(),
     AUTH_TRUST_HOST: z.string().optional(),
     BUCKET_NAME: z.string().optional(),
@@ -46,7 +46,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    VERCEL_URL: process.env.VERCEL_URL,
+    ROOT_DOMAIN: process.env.ROOT_DOMAIN,
     AUTH_TRUST_HOST: process.env.AUTH_TRUST_HOST,
     BUCKET_NAME: process.env.BUCKET_NAME,
     SECRET_KEY: process.env.SECRET_KEY,

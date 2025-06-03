@@ -10,9 +10,11 @@ import { z } from "zod";
 export const reviewRouter = createTRPCRouter({
   getReviewsByProduct: publicProcedure
     .input(z.string()) // Product ID
-    .query(async ({ ctx, input }) => {
-      return await ctx.db.review.findMany({
-        where: { productId: input, visible: true } as any,
+    .query(async ({ ctx, input }) => {      return await ctx.db.review.findMany({
+        where: {
+          productId: input,
+          visible: true,
+        },
         include: {
           user: {
             select: {
@@ -103,12 +105,11 @@ export const reviewRouter = createTRPCRouter({
       if (existingReview) {
         // Update existing review (keep visible false for re-review)
         return await ctx.db.review.update({
-          where: { id: existingReview.id },
-          data: {
+          where: { id: existingReview.id },          data: {
             rating: input.rating,
-            comment: input.comment,
+            comment: input.comment ?? null,
             visible: false,
-          } as any,
+          },
         });
       }
       // Create new review (not visible until admin approves)
@@ -117,9 +118,9 @@ export const reviewRouter = createTRPCRouter({
           userId: ctx.session.user.id,
           productId: input.productId,
           rating: input.rating,
-          comment: input.comment,
+          comment: input.comment ?? null,
           visible: false,
-        } as any,
+        },
       });
     }),
 
@@ -133,10 +134,9 @@ export const reviewRouter = createTRPCRouter({
 
   setReviewVisibility: adminProcedure
     .input(z.object({ reviewId: z.string(), visible: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db.review.update({
+    .mutation(async ({ ctx, input }) => {      return await ctx.db.review.update({
         where: { id: input.reviewId },
-        data: { visible: input.visible } as any,
+        data: { visible: input.visible },
       });
     }),
 

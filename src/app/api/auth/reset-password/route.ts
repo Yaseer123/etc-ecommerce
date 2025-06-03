@@ -44,7 +44,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       message: "Password has been reset successfully.",
     });
-  } catch (_) {
+  } catch (/* intentionally ignored */ _) { // Intentionally ignore error details in production
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },

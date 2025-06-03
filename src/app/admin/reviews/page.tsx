@@ -15,10 +15,10 @@ export default function AdminReviewsPage() {
     refetch,
   } = api.review.getAllReviews.useQuery();
   const setReviewVisibility = api.review.setReviewVisibility.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => void refetch(),
   });
   const deleteReview = api.review.deleteReview.useMutation({
-    onSuccess: () => refetch(),
+    onSuccess: () => void refetch(),
   });
 
   // Filter and search logic
@@ -26,12 +26,11 @@ export default function AdminReviewsPage() {
     if (filter === "visible" && !review.visible) return false;
     if (filter === "hidden" && review.visible) return false;
     if (search) {
-      const s = search.toLowerCase();
-      return (
-        review.user?.name?.toLowerCase().includes(s) ||
-        review.product?.title?.toLowerCase().includes(s) ||
-        review.comment?.toLowerCase().includes(s)
-      );
+      const s = search.toLowerCase();      // Using ?? for null checks and || for boolean conditions since we want to keep the boolean OR logic here
+      const hasUserNameMatch = (review.user?.name ?? "").toLowerCase().includes(s);
+      const hasProductTitleMatch = (review.product?.title ?? "").toLowerCase().includes(s);
+      const hasCommentMatch = (review.comment ?? "").toLowerCase().includes(s);
+      return hasUserNameMatch || hasProductTitleMatch || hasCommentMatch;
     }
     return true;
   });
@@ -48,7 +47,12 @@ export default function AdminReviewsPage() {
         />
         <select
           value={filter}
-          onChange={(e) => setFilter(e.target.value as any)}
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value === "all" || value === "visible" || value === "hidden") {
+              setFilter(value);
+            }
+          }}
           className="rounded border px-3 py-2"
         >
           <option value="all">All</option>

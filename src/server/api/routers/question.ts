@@ -63,7 +63,7 @@ export const questionRouter = createTRPCRouter({
         await sendEmail(
           question.user.email,
           `Your question on ${productTitle} has been answered`,
-          `Hello ${question.user.name || "User"},\n\nYour question: ${question.question}\n\nAnswer: ${input.answer}\n\nView product: ${productUrl}`,
+          `Hello ${question.user.name ?? "User"},\n\nYour question: ${question.question}\n\nAnswer: ${input.answer}\n\nView product: ${productUrl}`,
         );
       }
       return updated;

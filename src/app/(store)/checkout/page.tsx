@@ -271,9 +271,8 @@ const Checkout = () => {
                           await createGuestAddressMutation.mutateAsync({
                             ...newAddress,
                           });
-                        addressId = created.id;
-                      }
-                    } catch (err) {
+                        addressId = created.id;                      }                    } catch (err) {
+                      console.error("Failed to save address:", err);
                       setOrderError(
                         "Failed to save address. Please try again.",
                       );

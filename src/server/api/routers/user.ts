@@ -1,4 +1,8 @@
-import { adminProcedure, createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import {
+  adminProcedure,
+  createTRPCRouter,
+  protectedProcedure,
+} from "@/server/api/trpc";
 import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
@@ -20,7 +24,7 @@ export const userRouter = createTRPCRouter({
     }),
 
   getAddress: protectedProcedure.query(async ({ ctx }) => {
-    const address = await ctx.db.address.findUnique({
+    const address = await ctx.db.address.findFirst({
       where: {
         userId: ctx.session.user.id,
       },

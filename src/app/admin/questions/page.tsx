@@ -13,8 +13,7 @@ export default function AdminQuestionsPage() {
     refetch,
   } = api.question.getAllQuestionsForAdmin.useQuery();
   const answerMutation = api.question.answerQuestion.useMutation();
-  const deleteMutation = api.question.deleteQuestion.useMutation();
-  const [answerText, setAnswerText] = useState<{ [id: string]: string }>({});
+  const deleteMutation = api.question.deleteQuestion.useMutation();  const [answerText, setAnswerText] = useState<Record<string, string>>({});
   const [answering, setAnswering] = useState<string | null>(null);
 
   const handleAnswer = async (id: string) => {
@@ -30,9 +29,10 @@ export default function AdminQuestionsPage() {
       toast.success("Answer submitted.");
       setAnswering(null);
       setAnswerText((prev) => ({ ...prev, [id]: "" }));
-      refetch();
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to submit answer");
+      await refetch();
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Failed to submit answer";
+      toast.error(message);
     }
   };
 
@@ -42,9 +42,10 @@ export default function AdminQuestionsPage() {
     try {
       await deleteMutation.mutateAsync({ questionId: id });
       toast.success("Question deleted.");
-      refetch();
-    } catch (e: any) {
-      toast.error(e?.message || "Failed to delete question");
+      await refetch();
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Failed to delete question";
+      toast.error(message);
     }
   };
 
@@ -74,11 +75,9 @@ export default function AdminQuestionsPage() {
             </thead>
             <tbody>
               {questions.map((q) => (
-                <tr key={q.id} className="border-t">
-                  <td className="px-4 py-2">
-                    {q.product?.title || q.productId}
-                  </td>
-                  <td className="px-4 py-2">{q.user?.name || "User"}</td>
+                <tr key={q.id} className="border-t">                  <td className="px-4 py-2">
+                    {q.product?.title ?? q.productId}
+                  </td><td className="px-4 py-2">{q.user?.name ?? "User"}</td>
                   <td className="max-w-xs break-words px-4 py-2">
                     {q.question}
                   </td>
@@ -88,7 +87,7 @@ export default function AdminQuestionsPage() {
                     ) : answering === q.id ? (
                       <div className="flex flex-col gap-2">
                         <Textarea
-                          value={answerText[q.id] || ""}
+                          value={answerText[q.id] ?? ""}
                           onChange={(e) =>
                             setAnswerText((prev) => ({
                               ...prev,

@@ -279,17 +279,17 @@ export default function ProductDetails({
     if (questionText.trim().length < 5) {
       setError("Question must be at least 5 characters long.");
       return;
-    }
-    try {
+    }    try {
       await askQuestionMutation.mutateAsync({
         productId: productMain.id,
         question: questionText.trim(),
       });
       toast.success("Your question has been submitted!");
       setQuestionText("");
-      refetch();
-    } catch (err: any) {
-      toast.error(err?.message || "Failed to submit question");
+      await refetch();
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Failed to submit question";
+      toast.error(message);
     }
   };
 
