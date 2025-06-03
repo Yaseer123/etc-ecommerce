@@ -33,7 +33,7 @@ const ModalCart = () => {
     <>
       <div className={`modal-cart-block`} onClick={closeModalCart}>
         <div
-          className={`modal-cart-main flex ${isModalOpen ? "open" : ""}`}
+          className={`modal-cart-main flex h-full flex-col ${isModalOpen ? "open" : ""}`}
           onClick={(e) => {
             e.stopPropagation();
           }}
@@ -49,7 +49,7 @@ const ModalCart = () => {
               </div>
             </div>
 
-            <div className="list-product max-h-[calc(100vh-280px)] overflow-y-auto px-6">
+            <div className="list-product flex-1 overflow-y-auto px-6">
               {cartState.length === 0 ? (
                 <div className="flex h-40 items-center justify-center text-gray-500">
                   Your cart is empty
@@ -100,7 +100,7 @@ const ModalCart = () => {
                 ))
               )}
             </div>
-            <div className="footer-modal absolute bottom-0 left-0 w-full bg-white shadow-lg">
+            <div className="footer-modal w-full bg-white shadow-lg">
               <div className="flex items-center justify-center gap-8 border-b border-line bg-gray-50 px-6 py-4 lg:gap-14">
                 <div
                   className="item flex cursor-pointer items-center gap-3"
@@ -148,46 +148,46 @@ const ModalCart = () => {
                   Or continue shopping
                 </div>
               </div>
-              <div
-                className={`tab-item note-block ${activeTab === "note" ? "active" : ""}`}
-              >
-                <div className="border-b border-line px-6 py-4">
-                  <div className="item flex cursor-pointer items-center gap-3">
-                    <NotePencil className="text-xl" />
-                    <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                      Note
+              {activeTab === "note" && (
+                <div className="tab-item note-block active">
+                  <div className="border-b border-line px-6 py-4">
+                    <div className="item flex cursor-pointer items-center gap-3">
+                      <NotePencil className="text-xl" />
+                      <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
+                        Note
+                      </div>
+                    </div>
+                  </div>
+                  <div className="form px-6 pt-4">
+                    <textarea
+                      name="form-note"
+                      id="form-note"
+                      rows={4}
+                      placeholder="Add special instructions for your order..."
+                      className="w-full rounded-md border-line bg-surface px-4 py-3 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                      value={tempNote}
+                      onChange={(e) => setTempNote(e.target.value)}
+                    ></textarea>
+                  </div>
+                  <div className="block-button px-6 pb-6 pt-4 text-center">
+                    <div
+                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      onClick={() => {
+                        setNote(tempNote);
+                        setActiveTab("");
+                      }}
+                    >
+                      Save
+                    </div>
+                    <div
+                      onClick={() => setActiveTab("")}
+                      className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
+                    >
+                      Cancel
                     </div>
                   </div>
                 </div>
-                <div className="form px-6 pt-4">
-                  <textarea
-                    name="form-note"
-                    id="form-note"
-                    rows={4}
-                    placeholder="Add special instructions for your order..."
-                    className="w-full rounded-md border-line bg-surface px-4 py-3 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
-                    value={tempNote}
-                    onChange={(e) => setTempNote(e.target.value)}
-                  ></textarea>
-                </div>
-                <div className="block-button px-6 pb-6 pt-4 text-center">
-                  <div
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
-                    onClick={() => {
-                      setNote(tempNote);
-                      setActiveTab("");
-                    }}
-                  >
-                    Save
-                  </div>
-                  <div
-                    onClick={() => setActiveTab("")}
-                    className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
-                  >
-                    Cancel
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
