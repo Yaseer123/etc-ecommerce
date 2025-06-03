@@ -6,6 +6,12 @@ import {
 } from "@/server/api/trpc";
 import { z } from "zod";
 
+// Add a placeholder email function (replace with your actual email logic)
+async function sendEmail(to: string, subject: string, body: string) {
+  // Implement your email sending logic here (e.g., nodemailer, Resend, etc.)
+  console.log(`Sending email to ${to}: ${subject}\n${body}`);
+}
+
 export const questionRouter = createTRPCRouter({
   getQuestionsByProduct: publicProcedure
     .input(z.string()) // Product ID
@@ -42,10 +48,25 @@ export const questionRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      return await ctx.db.question.update({
+      const updated = await ctx.db.question.update({
         where: { id: input.questionId },
         data: { answer: input.answer },
       });
+      // Fetch user email and product info
+      const question = await ctx.db.question.findUnique({
+        where: { id: input.questionId },
+        include: { user: true, product: true },
+      });
+      if (question?.user?.email) {
+        const productTitle = question.product?.title ?? "Product";
+        const productUrl = `${process.env.NEXT_PUBLIC_BASE_URL ?? "https://rinors.com"}/products/${question.productId}`;
+        await sendEmail(
+          question.user.email,
+          `Your question on ${productTitle} has been answered`,
+          `Hello ${question.user.name || "User"},\n\nYour question: ${question.question}\n\nAnswer: ${input.answer}\n\nView product: ${productUrl}`,
+        );
+      }
+      return updated;
     }),
 
   // ADMIN: Get all questions with product and user info
