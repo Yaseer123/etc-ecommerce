@@ -586,77 +586,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
           </div>
         </div>
       </div>
-      {/* --- Review Moderation Section --- */}
-      <div className="mt-12 border-t pt-8">
-        <h2 className="mb-4 text-2xl font-bold">Review Moderation</h2>
-        {reviewsLoading ? (
-          <div>Loading reviews...</div>
-        ) : reviews.length === 0 ? (
-          <div>No reviews for this product.</div>
-        ) : (
-          <div className="space-y-4">
-            {reviews.map((review) => (
-              <div
-                key={review.id}
-                className="flex flex-col gap-4 rounded border bg-gray-50 p-4 md:flex-row md:items-center md:justify-between"
-              >
-                <div className="flex-1">
-                  <div className="mb-1 flex items-center gap-2">
-                    <span className="font-semibold">
-                      {review.user?.name ?? "Anonymous"}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(review.createdAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="mb-1 flex items-center gap-1">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        size={16}
-                        weight={star <= review.rating ? "fill" : "regular"}
-                        className="text-yellow-500"
-                      />
-                    ))}
-                  </div>
-                  <div className="mb-1 text-gray-700">
-                    {review.comment ?? "No comment."}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Review ID: {review.id}
-                  </div>
-                </div>
-                <div className="flex min-w-[120px] flex-col gap-2">
-                  <button
-                    type="button"
-                    className={`rounded px-3 py-1 text-sm font-semibold ${review.visible ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-700"}`}
-                    disabled={setReviewVisibility.isPending}
-                    onClick={() =>
-                      setReviewVisibility.mutate({
-                        reviewId: review.id,
-                        visible: !review.visible,
-                      })
-                    }
-                  >
-                    {review.visible ? "Hide" : "Approve"}
-                  </button>
-                  <button
-                    type="button"
-                    className="bg-red-100 text-red-700 rounded px-3 py-1 text-sm font-semibold"
-                    disabled={deleteReview.isPending}
-                    onClick={() => deleteReview.mutate(review.id)}
-                  >
-                    Delete
-                  </button>
-                  <div className="text-xs text-gray-500">
-                    {review.visible ? "Visible" : "Hidden"}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+ 
     </RichEditor>
   );
 }
