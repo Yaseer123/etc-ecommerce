@@ -2,6 +2,7 @@ import { auth } from "@/server/auth";
 import { NextResponse } from "next/server";
 
 import {
+  ADMIN_LOGIN_REDIRECT,
   adminPrefix,
   apiAuthPrefix,
   authRoutes,
@@ -25,6 +26,9 @@ export default auth(async (req) => {
 
   if (isAuthRoutes) {
     if (isLoggedIn) {
+      if (req.auth?.user?.role === "ADMIN") {
+        return NextResponse.redirect(new URL(ADMIN_LOGIN_REDIRECT, nextUrl));
+      }
       return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
 
@@ -35,14 +39,18 @@ export default auth(async (req) => {
     if (isLoggedIn) {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    const loginUrl = new URL(DEFAULT_LOGIN_REDIRECT, nextUrl);
+    loginUrl.searchParams.set("redirect", nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   if (isAdminRoutes) {
     if (isLoggedIn && req.auth?.user?.role === "ADMIN") {
       return NextResponse.next();
     }
-    return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+    const loginUrl = new URL(DEFAULT_LOGIN_REDIRECT, nextUrl);
+    loginUrl.searchParams.set("redirect", nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
   // if (!isLoggedIn && !isPublicRoutes) {
