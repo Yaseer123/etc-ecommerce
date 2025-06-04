@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
 import { api } from "@/trpc/react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export default function AddressTab({ activeTab }: { activeTab?: string }) {
   const [address, setAddress] = useState({
+    name: "",
     street: "",
     city: "",
     state: "",
@@ -17,6 +18,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
   useEffect(() => {
     if (fetchedAddress) {
       setAddress({
+        name: fetchedAddress.name || "",
         street: fetchedAddress.street || "",
         city: fetchedAddress.city || "",
         state: fetchedAddress.state || "",
@@ -38,6 +40,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
     e.preventDefault();
     try {
       await updateAddressMutation.mutateAsync({
+        name: address.name,
         street: address.street,
         city: address.city,
         state: address.state,
@@ -61,6 +64,19 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             Shipping Address
           </h6>
           <div className="mt-5 grid gap-4 gap-y-5 sm:grid-cols-2">
+            <div className="name">
+              <label htmlFor="name" className="caption1 capitalize">
+                Full Name <span className="text-red">*</span>
+              </label>
+              <input
+                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                id="name"
+                type="text"
+                value={address.name}
+                onChange={handleChange}
+                required
+              />
+            </div>
             <div className="street">
               <label htmlFor="street" className="caption1 capitalize">
                 Street Address <span className="text-red">*</span>

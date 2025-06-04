@@ -213,6 +213,7 @@ model Address {
     phone     String
     email     String
     isDefault Boolean @default(false)
+    name      String
 
     // Relationships
     user  User?   @relation(fields: [userId], references: [id])
