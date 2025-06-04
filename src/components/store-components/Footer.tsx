@@ -153,20 +153,36 @@ const Footer = () => {
                     </form>
                   </div>
                   <div className="list-social mt-4 flex items-center gap-6">
-                    <Link href={"https://www.facebook.com/"} target="_blank">
+                    <Link
+                      href={
+                        "https://www.facebook.com/profile.php?id=61572946813700"
+                      }
+                      target="_blank"
+                    >
                       <div className="icon-facebook text-2xl text-black"></div>
                     </Link>
-                    <Link href={"https://www.instagram.com/"} target="_blank">
+                    <Link
+                      href={
+                        "https://www.instagram.com/rinors_electronic_store/"
+                      }
+                      target="_blank"
+                    >
                       <div className="icon-instagram text-2xl text-black"></div>
                     </Link>
-                    <Link href={"https://www.twitter.com/"} target="_blank">
+                    <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
                       <div className="icon-twitter text-2xl text-black"></div>
                     </Link>
-                    <Link href={"https://www.youtube.com/"} target="_blank">
-                      <div className="icon-youtube text-2xl text-black"></div>
+                    <Link
+                      href={"https://www.tiktok.com/@rinors_ecommerce"}
+                      target="_blank"
+                    >
+                      <div className="icon-tiktok text-2xl text-black"></div>
                     </Link>
-                    <Link href={"https://www.pinterest.com/"} target="_blank">
-                      <div className="icon-pinterest text-2xl text-black"></div>
+                    <Link
+                      href={"https://www.youtube.com/@rinorsgreenenergy"}
+                      target="_blank"
+                    >
+                      <div className="icon-youtube text-2xl text-black"></div>
                     </Link>
                   </div>
                 </div>

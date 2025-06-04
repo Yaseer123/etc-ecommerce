@@ -1,10 +1,9 @@
 "use client";
-import React, { useEffect } from "react";
-import Link from "next/link";
-import { useState } from "react";
 import { countdownTime } from "@/utils/countdownTime";
-import Image from "next/image";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 export default function ComingSoon() {
   const [timeLeft, setTimeLeft] = useState(countdownTime());
 
@@ -92,20 +91,34 @@ export default function ComingSoon() {
                 </form>
               </div>
               <div className="list-link mt-6 flex items-center justify-center gap-6">
-                <Link href={"https://www.facebook.com/"} target="_blank">
+                <Link
+                  href={
+                    "https://www.facebook.com/profile.php?id=61572946813700"
+                  }
+                  target="_blank"
+                >
                   <div className="icon-facebook text-xl"></div>
                 </Link>
-                <Link href={"https://www.instagram.com/"} target="_blank">
+                <Link
+                  href={"https://www.instagram.com/rinors_electronic_store/"}
+                  target="_blank"
+                >
                   <div className="icon-instagram text-xl"></div>
                 </Link>
-                <Link href={"https://www.youtube.com/"} target="_blank">
+                <Link
+                  href={"https://www.youtube.com/@rinorsgreenenergy"}
+                  target="_blank"
+                >
                   <div className="icon-youtube text-xl"></div>
                 </Link>
-                <Link href={"https://www.twitter.com/"} target="_blank">
+                <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
                   <div className="icon-twitter text-xl"></div>
                 </Link>
-                <Link href={"https://www.pinterest.com/"} target="_blank">
-                  <div className="icon-pinterest text-xl"></div>
+                <Link
+                  href={"https://www.tiktok.com/@rinors_ecommerce"}
+                  target="_blank"
+                >
+                  <div className="icon-tiktok text-xl"></div>
                 </Link>
               </div>
             </div>

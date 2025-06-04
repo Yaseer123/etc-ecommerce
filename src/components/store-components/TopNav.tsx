@@ -4,7 +4,6 @@ import { usePathname } from "next/navigation";
 import {
   FaFacebookF,
   FaInstagram,
-  FaPinterestP,
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
@@ -67,20 +66,32 @@ export default function TopNav({ props }: Props) {
               </ul>
             </div>
             <div className="right-content flex items-center gap-5 text-white max-md:hidden">
-              <Link href={"https://www.facebook.com/"} target="_blank">
+              <Link
+                href={"https://www.facebook.com/profile.php?id=61572946813700"}
+                target="_blank"
+              >
                 <FaFacebookF />
               </Link>
-              <Link href={"https://www.instagram.com/"} target="_blank">
+              <Link
+                href={"https://www.instagram.com/rinors_electronic_store/"}
+                target="_blank"
+              >
                 <FaInstagram />
               </Link>
-              <Link href={"https://www.youtube.com/"} target="_blank">
+              <Link
+                href={"https://www.youtube.com/@rinorsgreenenergy"}
+                target="_blank"
+              >
                 <FaYoutube />
               </Link>
-              <Link href={"https://twitter.com/"} target="_blank">
+              <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
                 <FaXTwitter />
               </Link>
-              <Link href={"https://pinterest.com/"} target="_blank">
-                <FaPinterestP />
+              <Link
+                href={"https://www.tiktok.com/@rinors_ecommerce"}
+                target="_blank"
+              >
+                <i className="icon-tiktok text-2xl" />
               </Link>
             </div>
           </div>
