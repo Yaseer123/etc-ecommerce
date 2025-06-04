@@ -1,0 +1,131 @@
+"use client";
+import Link from "next/link";
+import React, { useState } from "react";
+// import TopNav from '@/components/store-components/TopNav'
+import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+
+import Footer from "@/components/store-components/Footer";
+
+// Define the expected order result type
+interface OrderResult {
+  orderId: string;
+  status: string;
+  // Add more fields as needed
+}
+
+const OrderTracking = () => {
+  const [invoice, setInvoice] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<OrderResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setResult(null);
+
+    try {
+      const res = await fetch("/api/order-tracking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ invoice }),
+      });
+
+      if (!res.ok) {
+        throw new Error(
+          "Order not found. Please check your invoice number and try again.",
+        );
+      }
+
+      const data: OrderResult = await res.json();
+      setResult(data);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div id="header" className="relative w-full">
+        <Breadcrumb
+          items={[{ label: "Home", href: "/" }, { label: "Order Tracking" }]}
+          pageTitle="Order Tracking"
+        />
+      </div>
+      <div className="order-tracking py-10 md:py-20">
+        <div className="container">
+          <div className="content-main flex gap-y-8 max-md:flex-col">
+            <div className="left w-full border-line md:w-1/2 md:border-r md:pr-[40px] lg:pr-[60px]">
+              <div className="heading4">Order Tracking</div>
+              <div className="mt-2">
+                To track your order, please enter your Invoice or Order Number
+                below and press the {String.raw`"`}Track{String.raw`"`} button.
+                This was given to you on your receipt and in the confirmation
+                email you should have received.
+              </div>
+              <form className="mt-4 md:mt-7" onSubmit={handleSubmit}>
+                <div className="invoice">
+                  <input
+                    className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                    id="invoice"
+                    type="text"
+                    placeholder="Invoice or Order Number *"
+                    required
+                    value={invoice}
+                    onChange={(e) => setInvoice(e.target.value)}
+                  />
+                </div>
+                <div className="block-button mt-4 md:mt-7">
+                  <button
+                    className="button-main"
+                    type="submit"
+                    disabled={loading}
+                  >
+                    {loading ? "Tracking..." : "Tracking Orders"}
+                  </button>
+                </div>
+              </form>
+              {result && (
+                <div className="bg-green-100 mt-4 rounded p-4">
+                  <strong>Order ID:</strong> {result.orderId} <br />
+                  <strong>Status:</strong> {result.status}
+                  {/* Add more fields as needed */}
+                </div>
+              )}
+              {error && (
+                <div className="bg-red-100 text-red-700 mt-4 rounded p-4">
+                  {error}
+                </div>
+              )}
+            </div>
+            <div className="right flex w-full items-center md:w-1/2 md:pl-[40px] lg:pl-[60px]">
+              <div className="text-content">
+                <div className="heading4">Already have an account?</div>
+                <div className="mt-2 text-secondary">
+                  Welcome back. Sign in to access your personalized experience,
+                  saved preferences, and more. We{"'re"} thrilled to have you
+                  with us again!
+                </div>
+                <div className="block-button mt-4 md:mt-7">
+                  <Link href={"/login"} className="button-main">
+                    Login
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Footer />
+    </>
+  );
+};
+
+export default OrderTracking;
