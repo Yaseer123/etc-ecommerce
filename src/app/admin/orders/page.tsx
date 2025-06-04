@@ -79,8 +79,8 @@ export default function AdminOrdersPage() {
                       </select>
                     ) : (
                       <Badge
-                      variant={undefined}
-                      className={ORDER_STATUS_COLORS[order.status]?.color}
+                        variant={undefined}
+                        className={ORDER_STATUS_COLORS[order.status]?.color}
                       >
                         {ORDER_STATUS_COLORS[order.status]?.label ??
                           order.status}
