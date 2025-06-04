@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const APP_URL = process.env.ROOT_DOMAIN ?? "http://localhost:3000";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 type ForgotPasswordBody = { email: string };
 
@@ -47,8 +47,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({
       message: "If that email exists, a reset link has been sent.",
-    });
-  } catch (/* intentionally ignored */ _) {
+    });  } catch (/* intentionally ignored */ _) {
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },
