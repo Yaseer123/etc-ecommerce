@@ -1,8 +1,8 @@
 import {
-  adminProcedure,
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
+    adminProcedure,
+    createTRPCRouter,
+    protectedProcedure,
+    publicProcedure,
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -10,8 +10,7 @@ import { z } from "zod";
 export const reviewRouter = createTRPCRouter({
   getReviewsByProduct: publicProcedure
     .input(z.string()) // Product ID
-    .query(async ({ ctx, input }) => {
-      return await ctx.db.review.findMany({
+    .query(async ({ ctx, input }) => {      return await ctx.db.review.findMany({
         where: {
           productId: input,
           visible: true,
@@ -83,18 +82,17 @@ export const reviewRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      // Only allow review if user has purchased the product and order is delivered
+      // Only allow review if user has purchased the product
       const hasPurchased = await ctx.db.orderItem.findFirst({
         where: {
           productId: input.productId,
-          order: { userId: ctx.session.user.id, status: "DELIVERED" },
+          order: { userId: ctx.session.user.id, status: { not: "CANCELLED" } },
         },
       });
       if (!hasPurchased) {
         throw new TRPCError({
           code: "FORBIDDEN",
-          message:
-            "You can only review products you have received (delivered orders only).",
+          message: "You can only review products you have purchased.",
         });
       }
       // Check if user already reviewed this product
@@ -107,8 +105,7 @@ export const reviewRouter = createTRPCRouter({
       if (existingReview) {
         // Update existing review (keep visible false for re-review)
         return await ctx.db.review.update({
-          where: { id: existingReview.id },
-          data: {
+          where: { id: existingReview.id },          data: {
             rating: input.rating,
             comment: input.comment ?? null,
             visible: false,
@@ -137,8 +134,7 @@ export const reviewRouter = createTRPCRouter({
 
   setReviewVisibility: adminProcedure
     .input(z.object({ reviewId: z.string(), visible: z.boolean() }))
-    .mutation(async ({ ctx, input }) => {
-      return await ctx.db.review.update({
+    .mutation(async ({ ctx, input }) => {      return await ctx.db.review.update({
         where: { id: input.reviewId },
         data: { visible: input.visible },
       });
@@ -150,7 +146,7 @@ export const reviewRouter = createTRPCRouter({
       const hasPurchased = await ctx.db.orderItem.findFirst({
         where: {
           productId: input,
-          order: { userId: ctx.session.user.id, status: "DELIVERED" },
+          order: { userId: ctx.session.user.id, status: { not: "CANCELLED" } },
         },
       });
       return !!hasPurchased;

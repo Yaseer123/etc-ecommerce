@@ -242,7 +242,7 @@ export const productRouter = createTRPCRouter({
       const products = await ctx.db.product.findMany({
         where: filters,
         include: { category: true },
-        orderBy: orderBy ? orderBy : { position: "asc" },
+        orderBy: orderBy ?? { position: "asc" },
       });
 
       return products;

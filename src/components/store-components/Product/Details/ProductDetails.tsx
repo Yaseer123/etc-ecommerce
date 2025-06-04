@@ -7,19 +7,19 @@ import { useModalWishlistStore } from "@/context/store-context/ModalWishlistCont
 import { api } from "@/trpc/react";
 import type { ProductWithCategory } from "@/types/ProductType";
 import {
-  ArrowClockwise,
-  CaretDown,
-  DotsThree,
-  Eye,
-  HandsClapping,
-  Heart,
-  Minus,
-  Plus,
-  Question,
-  ShareNetwork,
-  Star,
-  Timer,
-  X,
+    ArrowClockwise,
+    CaretDown,
+    DotsThree,
+    Eye,
+    HandsClapping,
+    Heart,
+    Minus,
+    Plus,
+    Question,
+    ShareNetwork,
+    Star,
+    Timer,
+    X,
 } from "@phosphor-icons/react/dist/ssr";
 import { addDays, format, formatDistanceToNow } from "date-fns";
 import { useSession } from "next-auth/react";

@@ -47,7 +47,8 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({
       message: "If that email exists, a reset link has been sent.",
-    });  } catch (/* intentionally ignored */ _) {
+    });
+  } catch {
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },

@@ -21,14 +21,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { AppRouter } from "@/server/api/root";
 import { api } from "@/trpc/react";
 import {
   closestCenter,
   DndContext,
-  DragEndEvent,
   PointerSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -37,48 +38,176 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import type { inferRouterOutputs } from "@trpc/server";
 import { ArrowLeft, Loader2, MoreHorizontal, Plus, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "sonner";
+
+type RouterOutputs = inferRouterOutputs<AppRouter>;
+
+type FeaturedProduct = RouterOutputs["product"]["getFeaturedProducts"][number];
+
+const SortableRow = ({
+  product,
+  handleRemoveFromFeatured,
+}: {
+  product: FeaturedProduct;
+  handleRemoveFromFeatured: (id: string) => void;
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: product.id });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1 : 0,
+  };
+
+  function isFeaturedProduct(obj: unknown): obj is FeaturedProduct {
+    if (!obj || typeof obj !== "object") return false;
+    const o = obj as Record<string, unknown>;
+    return typeof o.id === "string" && typeof o.title === "string";
+  }
+
+  if (!isFeaturedProduct(product)) return null;
+
+  return (
+    <TableRow ref={setNodeRef} style={style} {...attributes}>
+      <TableCell
+        {...listeners}
+        style={{ cursor: "grab", width: 32, textAlign: "center" }}
+      >
+        <MoreHorizontal className="text-gray-400" />
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-3">
+          <div className="h-12 w-12 overflow-hidden rounded-md">
+            <Image
+              src={
+                Array.isArray(product.images) && product.images[0]
+                  ? product.images[0]
+                  : "/placeholder.png"
+              }
+              alt={typeof product.title === "string" ? product.title : ""}
+              width={48}
+              height={48}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div>
+            <p className="font-medium">
+              {typeof product.title === "string" ? product.title : ""}
+            </p>
+            <p className="text-xs text-muted-foreground">
+              {typeof product.brand === "string" ? product.brand : ""}
+            </p>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell>
+        ৳{typeof product.price === "number" ? product.price.toFixed(2) : ""}
+      </TableCell>
+      <TableCell>
+        <Badge
+          variant={
+            product.stockStatus === "IN_STOCK"
+              ? "success"
+              : product.stockStatus === "OUT_OF_STOCK"
+                ? "destructive"
+                : "outline"
+          }
+        >
+          {typeof product.stockStatus === "string"
+            ? product.stockStatus.replace("_", " ")
+            : ""}
+        </Badge>
+      </TableCell>
+      <TableCell>
+        {typeof product.category === "object" &&
+        product.category &&
+        "name" in product.category &&
+        typeof product.category.name === "string"
+          ? product.category.name
+          : "Uncategorized"}
+      </TableCell>
+      <TableCell>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link href={`/admin/product/edit/${product.id}`}>
+                Edit product
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => handleRemoveFromFeatured(product.id)}
+            >
+              Remove from featured
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href={
+                  typeof product.slug === "string" &&
+                  typeof product.id === "string"
+                    ? `/products/${product.slug}?id=${product.id}`
+                    : "#"
+                }
+                target="_blank"
+              >
+                View on site
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 export default function FeaturedProductsPage() {
   const router = useRouter();
-  const [search, setSearch] = React.useState("");
-
-  const { data: products = [], isLoading } =
-    api.product.getFeaturedProducts.useQuery({
-      limit: 100,
-    });
-
-  const [dragItems, setDragItems] = React.useState(null);
   const utils = api.useUtils();
-  const updatePositions = api.product.updateProductPositions.useMutation({
-    onSuccess: () => {
-      toast.success("Featured product order updated");
-      void utils.product.getFeaturedProducts.invalidate();
-    },
-    onError: (error) => {
-      toast.error("Failed to update order", { description: error.message });
-    },
-  });
+  const [search, setSearch] = React.useState("");
+  const [dragItems, setDragItems] = React.useState<FeaturedProduct[]>();
+
+  const { data: featuredProducts, isLoading } =
+    api.product.getFeaturedProducts.useQuery({ limit: 100 });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
 
-  const featuredProducts = React.useMemo(() => {
-    const filtered = !search.trim()
-      ? (dragItems ?? products)
-      : (dragItems ?? products).filter(
-          (product) =>
-            product.title.toLowerCase().includes(search.toLowerCase()) ||
-            product.brand.toLowerCase().includes(search.toLowerCase()),
-        );
-    return filtered;
-  }, [products, search, dragItems]);
+  const filteredProducts = React.useMemo(() => {
+    if (!featuredProducts) return [];
+    const base = dragItems ?? featuredProducts;
+    if (!search.trim()) return base;
+    return base.filter(
+      (product) =>
+        product.title.toLowerCase().includes(search.toLowerCase()) ||
+        product.brand.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [featuredProducts, search, dragItems]);
+
+  const updatePositions = api.product.updateProductPositions.useMutation({
+    onSuccess: () => {
+      void utils.product.getFeaturedProducts.invalidate();
+    },
+  });
 
   const updateFeatureMutation = api.product.updateFeaturedStatus.useMutation({
     onSuccess: () => {
@@ -95,15 +224,22 @@ export default function FeaturedProductsPage() {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (over && active.id !== over.id) {
+
+    if (!featuredProducts || !over) return;
+
+    if (active.id !== over.id) {
       const oldIndex = featuredProducts.findIndex(
         (item) => item.id === active.id,
       );
       const newIndex = featuredProducts.findIndex(
         (item) => item.id === over.id,
       );
+
+      if (oldIndex === -1 || newIndex === -1) return;
+
       const newItems = arrayMove(featuredProducts, oldIndex, newIndex);
       setDragItems(newItems);
+
       updatePositions.mutate({
         positions: newItems.map((item, idx) => ({
           id: item.id,
@@ -112,97 +248,6 @@ export default function FeaturedProductsPage() {
       });
     }
   };
-
-  function SortableRow({ product }) {
-    const {
-      attributes,
-      listeners,
-      setNodeRef,
-      transform,
-      transition,
-      isDragging,
-    } = useSortable({ id: product.id });
-    const style = {
-      transform: CSS.Transform.toString(transform),
-      transition,
-      opacity: isDragging ? 0.5 : 1,
-      zIndex: isDragging ? 1 : 0,
-    };
-    return (
-      <TableRow ref={setNodeRef} style={style} {...attributes}>
-        <TableCell
-          {...listeners}
-          style={{ cursor: "grab", width: 32, textAlign: "center" }}
-        >
-          <MoreHorizontal className="text-gray-400" />
-        </TableCell>
-        <TableCell>
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 overflow-hidden rounded-md">
-              <Image
-                src={product.images[0] ?? "/placeholder.png"}
-                alt={product.title}
-                width={48}
-                height={48}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <div>
-              <p className="font-medium">{product.title}</p>
-              <p className="text-xs text-muted-foreground">{product.brand}</p>
-            </div>
-          </div>
-        </TableCell>
-        <TableCell>৳{product.price.toFixed(2)}</TableCell>
-        <TableCell>
-          <Badge
-            variant={
-              product.stockStatus === "IN_STOCK"
-                ? "success"
-                : product.stockStatus === "OUT_OF_STOCK"
-                  ? "destructive"
-                  : "outline"
-            }
-          >
-            {product.stockStatus.replace("_", " ")}
-          </Badge>
-        </TableCell>
-        <TableCell>{product.category?.name ?? "Uncategorized"}</TableCell>
-        <TableCell>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Open menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <Link href={`/admin/product/edit/${product.id}`}>
-                  Edit product
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleRemoveFromFeatured(product.id)}
-              >
-                Remove from featured
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/products/${product.slug}?id=${product.id}`}
-                  target="_blank"
-                >
-                  View on site
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </TableCell>
-      </TableRow>
-    );
-  }
 
   return (
     <div className="flex-1 space-y-4 p-6 pt-6">
@@ -234,7 +279,7 @@ export default function FeaturedProductsPage() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg font-medium">
-            Featured Products ({featuredProducts.length})
+            Featured Products ({filteredProducts.length})
           </CardTitle>
           <div className="flex items-center gap-2">
             <Input
@@ -253,7 +298,7 @@ export default function FeaturedProductsPage() {
             <div className="flex h-96 w-full items-center justify-center">
               <Loader2 className="h-10 w-10 animate-spin text-muted-foreground" />
             </div>
-          ) : featuredProducts.length === 0 ? (
+          ) : filteredProducts.length === 0 ? (
             <div className="flex h-96 w-full flex-col items-center justify-center gap-2">
               <Star className="h-10 w-10 text-muted-foreground" />
               <p className="text-lg text-muted-foreground">
@@ -277,7 +322,7 @@ export default function FeaturedProductsPage() {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={featuredProducts.map((item) => item.id)}
+                  items={filteredProducts.map((item) => item.id)}
                   strategy={verticalListSortingStrategy}
                 >
                   <Table>
@@ -292,8 +337,12 @@ export default function FeaturedProductsPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {featuredProducts.map((product) => (
-                        <SortableRow key={product.id} product={product} />
+                      {filteredProducts.map((product) => (
+                        <SortableRow
+                          key={typeof product.id === "string" ? product.id : ""}
+                          product={product}
+                          handleRemoveFromFeatured={handleRemoveFromFeatured}
+                        />
                       ))}
                     </TableBody>
                   </Table>

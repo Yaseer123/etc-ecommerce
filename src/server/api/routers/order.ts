@@ -1,7 +1,7 @@
 import {
-  createTRPCRouter,
-  protectedProcedure,
-  publicProcedure,
+    createTRPCRouter,
+    protectedProcedure,
+    publicProcedure,
 } from "@/server/api/trpc";
 import { Resend } from "resend";
 import { z } from "zod";

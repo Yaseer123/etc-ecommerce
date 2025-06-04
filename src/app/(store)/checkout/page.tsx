@@ -26,6 +26,9 @@ const Checkout = () => {
   const [newAddress, setNewAddress] = useState({
     name: "",
     street: "",
+    city: "",
+    state: "",
+    zipCode: "",
     phone: "",
     email: "",
   });
@@ -65,188 +68,121 @@ const Checkout = () => {
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
-        <>
-          <div className="mb-4 flex justify-between rounded-lg bg-surface px-4 py-3">
-            <div className="flex items-center">
-              <span className="pr-4">Already have an account? </span>
-              <Link
-                href="/login"
-                className="cursor-pointer text-base font-semibold capitalize leading-[26px] hover:underline md:text-base md:leading-6"
-              >
-                Login
-              </Link>
-            </div>
-            <div>
-              <CaretDown className="cursor-pointer" />
-            </div>
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="name"
-              className="mb-1 block font-medium text-gray-700"
+        <div className="mb-4 flex justify-between rounded-lg bg-surface px-4 py-3">
+          <div className="flex items-center">
+            <span className="pr-4">Already have an account? </span>
+            <Link
+              href="/login"
+              className="cursor-pointer text-base font-semibold capitalize leading-[26px] hover:underline md:text-base md:leading-6"
             >
-              Full Name *
-            </label>
-            <input
-              className="w-full rounded-lg border-line px-4 py-3"
-              id="name"
-              type="text"
-              placeholder="Full Name"
-              value={newAddress.name}
-              onChange={(e) =>
-                setNewAddress({ ...newAddress, name: e.target.value })
-              }
-              required
-            />
+              Login
+            </Link>
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="mb-1 block font-medium text-gray-700"
-            >
-              Email Address *
-            </label>
-            <input
-              className="w-full rounded-lg border-line px-4 py-3"
-              id="email"
-              type="email"
-              placeholder="Email Address"
-              value={newAddress.email}
-              onChange={(e) =>
-                setNewAddress({ ...newAddress, email: e.target.value })
-              }
-              required
-            />
+          <div>
+            <CaretDown className="cursor-pointer" />
           </div>
-          <div className="mb-4">
-            <label
-              htmlFor="phone"
-              className="mb-1 block font-medium text-gray-700"
-            >
-              Mobile Number *
-            </label>
-            <input
-              className="w-full rounded-lg border-line px-4 py-3"
-              id="phone"
-              type="text"
-              placeholder="Mobile Number"
-              value={newAddress.phone}
-              onChange={(e) =>
-                setNewAddress({ ...newAddress, phone: e.target.value })
-              }
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="street"
-              className="mb-1 block font-medium text-gray-700"
-            >
-              Address *
-            </label>
-            <input
-              className="w-full rounded-lg border-line px-4 py-3"
-              id="street"
-              type="text"
-              placeholder="Address"
-              value={newAddress.street}
-              onChange={(e) =>
-                setNewAddress({ ...newAddress, street: e.target.value })
-              }
-              required
-            />
-          </div>
-        </>
+        </div>
       )}
-      {session && (
-        <>
-          <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-            Shipping Information
+      <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+        Shipping Information
+      </div>
+      <div className="mt-5">
+        <form>
+          <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="name"
+                type="text"
+                placeholder="Full Name *"
+                value={newAddress.name}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, name: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="street"
+                type="text"
+                placeholder="Street Address *"
+                value={newAddress.street}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, street: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="city"
+                type="text"
+                placeholder="Town/City *"
+                value={newAddress.city}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, city: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="state"
+                type="text"
+                placeholder="State *"
+                value={newAddress.state}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, state: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="zipCode"
+                type="text"
+                placeholder="ZIP Code *"
+                value={newAddress.zipCode}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, zipCode: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="phone"
+                type="text"
+                placeholder="Phone *"
+                value={newAddress.phone}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, phone: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="email"
+                type="email"
+                placeholder="Email Address *"
+                value={newAddress.email}
+                onChange={(e) =>
+                  setNewAddress({ ...newAddress, email: e.target.value })
+                }
+                required
+              />
+            </div>
           </div>
-          <div className="mt-5">
-            <form>
-              <div className="grid grid-cols-1 gap-4 gap-y-5 md:grid-cols-2">
-                <div className="">
-                  <label
-                    htmlFor="name"
-                    className="mb-1 block font-medium text-gray-700"
-                  >
-                    Full Name *
-                  </label>
-                  <input
-                    className="w-full rounded-lg border-line px-4 py-3"
-                    id="name"
-                    type="text"
-                    placeholder="Full Name"
-                    value={newAddress.name}
-                    onChange={(e) =>
-                      setNewAddress({ ...newAddress, name: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="">
-                  <label
-                    htmlFor="email"
-                    className="mb-1 block font-medium text-gray-700"
-                  >
-                    Email Address *
-                  </label>
-                  <input
-                    className="w-full rounded-lg border-line px-4 py-3"
-                    id="email"
-                    type="email"
-                    placeholder="Email Address"
-                    value={newAddress.email}
-                    onChange={(e) =>
-                      setNewAddress({ ...newAddress, email: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="">
-                  <label
-                    htmlFor="phone"
-                    className="mb-1 block font-medium text-gray-700"
-                  >
-                    Mobile Number *
-                  </label>
-                  <input
-                    className="w-full rounded-lg border-line px-4 py-3"
-                    id="phone"
-                    type="text"
-                    placeholder="Mobile Number"
-                    value={newAddress.phone}
-                    onChange={(e) =>
-                      setNewAddress({ ...newAddress, phone: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div className="">
-                  <label
-                    htmlFor="street"
-                    className="mb-1 block font-medium text-gray-700"
-                  >
-                    Address *
-                  </label>
-                  <input
-                    className="w-full rounded-lg border-line px-4 py-3"
-                    id="street"
-                    type="text"
-                    placeholder="Address"
-                    value={newAddress.street}
-                    onChange={(e) =>
-                      setNewAddress({ ...newAddress, street: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-              </div>
-            </form>
-          </div>
-        </>
-      )}
+        </form>
+      </div>
     </div>
   );
 
@@ -323,170 +259,145 @@ const Checkout = () => {
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
-          <div className="flex flex-col gap-8">
-            {/* 1. Products (Cart Items) */}
-            <section>
-              <h2 className="mb-4 text-xl font-bold">1. Products</h2>
-              <div>
-                {cartArray.length < 1 ? (
-                  <p className="pt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                    No product in cart
-                  </p>
-                ) : (
-                  cartArray.map((product) => (
-                    <div
-                      key={product.id}
-                      className="mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5"
-                    >
-                      <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
-                        <Image
-                          src={
-                            product.coverImage ??
-                            "/images/product/1000x1000.png"
-                          }
-                          width={500}
-                          height={500}
-                          alt="img"
-                          className="h-full w-full"
-                        />
-                      </div>
-                      <div className="flex w-full items-center justify-between">
-                        <div>
-                          <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                            {product.name}
-                          </div>
-                        </div>
-                        <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                          <span className="quantity">{product.quantity}</span>
-                          <span className="px-1">x</span>
-                          <span className="discounted-price">
-                            ৳{product.discountedPrice ?? product.price}.00
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  ))
+          <div className="flex justify-between md:overflow-x-auto">
+            <div className="w-1/2">
+              {renderAddressSection()}
+              {renderPaymentSection()}
+              <div className="mt-6 md:mt-10">
+                <button
+                  className="duration-400 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                  onClick={async () => {
+                    if (cartArray.length === 0) {
+                      setOrderError("Your cart is empty.");
+                      return;
+                    }
+                    let addressId = undefined;
+                    try {
+                      if (session) {
+                        const created = await createAddressMutation.mutateAsync(
+                          {
+                            ...newAddress,
+                          },
+                        );
+                        addressId = created.id;
+                      } else {
+                        const created =
+                          await createGuestAddressMutation.mutateAsync({
+                            ...newAddress,
+                          });
+                        addressId = created.id;
+                      }
+                    } catch (err) {
+                      console.error("Failed to save address:", err);
+                      setOrderError(
+                        "Failed to save address. Please try again.",
+                      );
+                      return;
+                    }
+                    if (!addressId) {
+                      setOrderError(
+                        "No address found. Please enter your address.",
+                      );
+                      return;
+                    }
+                    if (session) {
+                      placeOrder.mutate({
+                        cartItems: cartArray.map((item) => ({
+                          productId: item.id,
+                          quantity: item.quantity,
+                        })),
+                        addressId,
+                      });
+                    } else {
+                      placeGuestOrder.mutate({
+                        cartItems: cartArray.map((item) => ({
+                          productId: item.id,
+                          quantity: item.quantity,
+                        })),
+                        addressId,
+                      });
+                    }
+                  }}
+                >
+                  Order Now
+                </button>
+                {orderError && (
+                  <div className="text-red-500 mt-2">{orderError}</div>
                 )}
               </div>
-            </section>
-
-            {/* 2. Billing Details (Address) */}
-            <section>
-              <h2 className="mb-4 text-xl font-bold">2. Billing Details</h2>
-              {renderAddressSection()}
-            </section>
-
-            {/* 3. Promotion (Discount) */}
-            <section>
-              <h2 className="mb-4 text-xl font-bold">3. Promotion</h2>
-              <div className="flex justify-between border-b border-line py-5">
-                <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                  Discounts
+            </div>
+            <div className="right w-5/12">
+              <div>
+                <div className="pb-3 text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                  Your Order
                 </div>
-                <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                  -৳<span className="discount">{discount}</span>
-                  <span>.00</span>
+                <div>
+                  {cartArray.length < 1 ? (
+                    <p className="pt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                      No product in cart
+                    </p>
+                  ) : (
+                    cartArray.map((product) => (
+                      <div
+                        key={product.id}
+                        className="mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5"
+                      >
+                        <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
+                          <Image
+                            src={
+                              product.coverImage ??
+                              "/images/product/1000x1000.png"
+                            }
+                            width={500}
+                            height={500}
+                            alt="img"
+                            className="h-full w-full"
+                          />
+                        </div>
+                        <div className="flex w-full items-center justify-between">
+                          <div>
+                            <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                              {product.name}
+                            </div>
+                          </div>
+                          <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                            <span className="quantity">{product.quantity}</span>
+                            <span className="px-1">x</span>
+                            <span className="discounted-price">
+                              ৳{product.discountedPrice ?? product.price}.00
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="flex justify-between border-b border-line py-5">
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                    Discounts
+                  </div>
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                    -৳<span className="discount">{discount}</span>
+                    <span>.00</span>
+                  </div>
+                </div>
+                <div className="flex justify-between border-b border-line py-5">
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                    Shipping
+                  </div>
+                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                    {Number(ship) === 0 ? "Free" : `৳${ship}.00`}
+                  </div>
+                </div>
+                <div className="flex justify-between pt-5">
+                  <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                    Total
+                  </div>
+                  <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+                    ৳{totalCart - Number(discount) + Number(ship)}.00
+                  </div>
                 </div>
               </div>
-            </section>
-
-            {/* 4. Shipping */}
-            <section>
-              <h2 className="mb-4 text-xl font-bold">4. Shipping</h2>
-              <div className="flex justify-between border-b border-line py-5">
-                <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                  Shipping
-                </div>
-                <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                  {Number(ship) === 0 ? "Free" : `৳${ship}.00`}
-                </div>
-              </div>
-            </section>
-
-            {/* 5. Payment Details */}
-            <section>
-              <h2 className="mb-4 text-xl font-bold">5. Payment Details</h2>
-              {renderPaymentSection()}
-            </section>
-
-            {/* 6. Order Summary */}
-            <section>
-              <h2 className="mb-4 text-xl font-bold">6. Order Summary</h2>
-              <div className="flex justify-between pt-5">
-                <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                  Total
-                </div>
-                <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                  ৳{totalCart - Number(discount) + Number(ship)}.00
-                </div>
-              </div>
-            </section>
-
-            {/* 7. Order Now Button */}
-            <div className="mt-8 flex w-full flex-col items-center">
-              <button
-                type="button"
-                className="duration-400 inline-block w-full max-w-md cursor-pointer rounded-[12px] bg-black px-10 py-4 text-base font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
-                onClick={async () => {
-                  if (cartArray.length === 0) {
-                    setOrderError("Your cart is empty.");
-                    return;
-                  }
-                  let addressId = undefined;
-                  try {
-                    if (session) {
-                      const created = await createAddressMutation.mutateAsync({
-                        ...newAddress,
-                        city: "",
-                        state: "",
-                        zipCode: "",
-                      });
-                      addressId = created.id;
-                    } else {
-                      const created =
-                        await createGuestAddressMutation.mutateAsync({
-                          ...newAddress,
-                          city: "",
-                          state: "",
-                          zipCode: "",
-                        });
-                      addressId = created.id;
-                    }
-                  } catch (err) {
-                    console.error("Failed to save address:", err);
-                    setOrderError("Failed to save address. Please try again.");
-                    return;
-                  }
-                  if (!addressId) {
-                    setOrderError(
-                      "No address found. Please enter your address.",
-                    );
-                    return;
-                  }
-                  if (session) {
-                    placeOrder.mutate({
-                      cartItems: cartArray.map((item) => ({
-                        productId: item.id,
-                        quantity: item.quantity,
-                      })),
-                      addressId,
-                    });
-                  } else {
-                    placeGuestOrder.mutate({
-                      cartItems: cartArray.map((item) => ({
-                        productId: item.id,
-                        quantity: item.quantity,
-                      })),
-                      addressId,
-                    });
-                  }
-                }}
-              >
-                Order Now
-              </button>
-              {orderError && (
-                <div className="text-red-500 mt-2">{orderError}</div>
-              )}
             </div>
           </div>
         </div>

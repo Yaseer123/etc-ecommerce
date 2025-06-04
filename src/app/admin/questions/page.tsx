@@ -13,7 +13,8 @@ export default function AdminQuestionsPage() {
     refetch,
   } = api.question.getAllQuestionsForAdmin.useQuery();
   const answerMutation = api.question.answerQuestion.useMutation();
-  const deleteMutation = api.question.deleteQuestion.useMutation();  const [answerText, setAnswerText] = useState<Record<string, string>>({});
+  const deleteMutation = api.question.deleteQuestion.useMutation();
+  const [answerText, setAnswerText] = useState<Record<string, string>>({});
   const [answering, setAnswering] = useState<string | null>(null);
 
   const handleAnswer = async (id: string) => {
@@ -31,7 +32,8 @@ export default function AdminQuestionsPage() {
       setAnswerText((prev) => ({ ...prev, [id]: "" }));
       await refetch();
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Failed to submit answer";
+      const message =
+        error instanceof Error ? error.message : "Failed to submit answer";
       toast.error(message);
     }
   };
@@ -44,7 +46,8 @@ export default function AdminQuestionsPage() {
       toast.success("Question deleted.");
       await refetch();
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Failed to delete question";
+      const message =
+        error instanceof Error ? error.message : "Failed to delete question";
       toast.error(message);
     }
   };
@@ -75,9 +78,12 @@ export default function AdminQuestionsPage() {
             </thead>
             <tbody>
               {questions.map((q) => (
-                <tr key={q.id} className="border-t">                  <td className="px-4 py-2">
+                <tr key={q.id} className="border-t">
+                  {" "}
+                  <td className="px-4 py-2">
                     {q.product?.title ?? q.productId}
-                  </td><td className="px-4 py-2">{q.user?.name ?? "User"}</td>
+                  </td>
+                  <td className="px-4 py-2">{q.user?.name ?? "User"}</td>
                   <td className="max-w-xs break-words px-4 py-2">
                     {q.question}
                   </td>

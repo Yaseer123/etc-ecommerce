@@ -268,11 +268,23 @@ export const columns: ColumnDef<ProductColumns>[] = [
   },
   {
     accessorKey: "category",
-    header: <span className="min-w-[140px]">Category</span>,
-    accessorFn: (row) => row.category?.name ?? "No Category",
-    cell: ({ row }) => (
-      <div className="min-w-[140px]">{row.category?.name ?? "No Category"}</div>
-    ),
+    header: () => <span className="min-w-[140px]">Category</span>,
+    accessorFn: (row) =>
+      typeof row.category === "object" &&
+      row.category !== null &&
+      "name" in row.category
+        ? ((row.category as { name?: string }).name ?? "No Category")
+        : "No Category",
+    cell: ({ row }) => {
+      const cat = row.original.category;
+      return (
+        <div className="min-w-[140px]">
+          {cat && typeof cat === "object" && typeof cat.name === "string"
+            ? cat.name
+            : "No Category"}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "stockStatus",

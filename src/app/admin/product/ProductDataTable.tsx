@@ -23,10 +23,10 @@ import {
 } from "@/components/ui/table";
 import { api } from "@/trpc/react";
 import type { ProductWithCategory } from "@/types/ProductType";
+import type { DragEndEvent } from "@dnd-kit/core";
 import {
   closestCenter,
   DndContext,
-  DragEndEvent,
   PointerSensor,
   useSensor,
   useSensors,

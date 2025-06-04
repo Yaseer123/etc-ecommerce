@@ -37,17 +37,15 @@ export default function DndImageGallery({
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
-    if (!event.over) return;
     const { active, over } = event;
-    if (active.id !== over.id) {
+    if (over && active.id !== over.id) {
       const oldIndex = images.findIndex((img) => img.id === active.id);
       const newIndex = images.findIndex((img) => img.id === over.id);
 
-      // Update the order in state - this will be used when submitting the form
+      // Update the order in state
       const reorderedImages = arrayMove(images, oldIndex, newIndex);
       setImages(reorderedImages);
 
-      // Log for debugging
       console.log(
         "Images reordered:",
         reorderedImages.map((img) => img.src),

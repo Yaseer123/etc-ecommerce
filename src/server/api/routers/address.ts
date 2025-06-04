@@ -23,9 +23,9 @@ export const addressRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         street: z.string().min(1),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zipCode: z.string().optional(),
+        city: z.string().min(1),
+        state: z.string().min(1),
+        zipCode: z.string().min(1),
         isDefault: z.boolean().optional(),
         phone: z.string().min(1),
         email: z.string().email(),
@@ -38,18 +38,11 @@ export const addressRouter = createTRPCRouter({
       });
       const updatedAddress = await ctx.db.address.upsert({
         where: { id: existingAddress?.id ?? "" }, // '' will fail if not found, so handle below
-        update: {
-          ...input,
-          city: input.city ?? "",
-          state: input.state ?? "",
-          zipCode: input.zipCode ?? "",
-        },
+        update: { ...input },
         create: {
           ...input,
-          city: input.city ?? "",
-          state: input.state ?? "",
-          zipCode: input.zipCode ?? "",
           userId: ctx.session.user.id,
+          name: input.name,
         },
       });
       return updatedAddress;
@@ -60,9 +53,9 @@ export const addressRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         street: z.string().min(1),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zipCode: z.string().optional(),
+        city: z.string().min(1),
+        state: z.string().min(1),
+        zipCode: z.string().min(1),
         phone: z.string().min(1),
         email: z.string().email(),
       }),
@@ -71,10 +64,8 @@ export const addressRouter = createTRPCRouter({
       const newAddress = await ctx.db.address.create({
         data: {
           ...input,
-          city: input.city ?? "",
-          state: input.state ?? "",
-          zipCode: input.zipCode ?? "",
           userId: ctx.session.user.id,
+          name: input.name,
         },
       });
       return newAddress;
@@ -85,9 +76,9 @@ export const addressRouter = createTRPCRouter({
       z.object({
         name: z.string().min(1),
         street: z.string().min(1),
-        city: z.string().optional(),
-        state: z.string().optional(),
-        zipCode: z.string().optional(),
+        city: z.string().min(1),
+        state: z.string().min(1),
+        zipCode: z.string().min(1),
         phone: z.string().min(1),
         email: z.string().email(),
       }),
@@ -96,11 +87,9 @@ export const addressRouter = createTRPCRouter({
       const newAddress = await ctx.db.address.create({
         data: {
           ...input,
-          city: input.city ?? "",
-          state: input.state ?? "",
-          zipCode: input.zipCode ?? "",
           isDefault: false,
           userId: null,
+          name: input.name,
         },
       });
       return newAddress;

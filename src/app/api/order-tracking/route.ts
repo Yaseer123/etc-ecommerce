@@ -1,15 +1,21 @@
 import { db } from "@/server/db";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
   try {
-    const { invoice } = await req.json();
-    if (!invoice || typeof invoice !== "string") {
+    const body = (await req.json()) as unknown;
+    function isOrderTrackingBody(obj: unknown): obj is { invoice: string } {
+      if (!obj || typeof obj !== "object") return false;
+      const o = obj as Record<string, unknown>;
+      return typeof o.invoice === "string";
+    }
+    if (!isOrderTrackingBody(body)) {
       return NextResponse.json(
         { error: "Invoice/order number is required." },
         { status: 400 },
       );
     }
+    const invoice = body.invoice;
 
     const order = await db.order.findUnique({
       where: { id: invoice },
@@ -47,7 +53,7 @@ export async function POST(req: NextRequest) {
           }
         : null,
     });
-  } catch (err) {
+  } catch {
     return NextResponse.json(
       { error: "Internal server error." },
       { status: 500 },

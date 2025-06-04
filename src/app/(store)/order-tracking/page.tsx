@@ -10,8 +10,24 @@ import { ORDER_STATUS_COLORS } from "@/utils/constants";
 // Define the expected order result type
 interface OrderResult {
   orderId: string;
-  status: string;
-  // Add more fields as needed
+  status: "PENDING" | "PROCESSING" | "SHIPPED" | "DELIVERED" | "CANCELLED";
+  total: number;
+  createdAt: Date;
+  items: Array<{
+    productId: string;
+    productTitle: string | null;
+    quantity: number;
+    price: number;
+  }>;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phone: string;
+    email: string;
+    name: string | null;
+  } | null;
 }
 
 const OrderTracking = () => {
@@ -38,9 +54,29 @@ const OrderTracking = () => {
           "Order not found. Please check your invoice number and try again.",
         );
       }
-
-      const data: OrderResult = await res.json();
-      setResult(data);
+      const data = (await res.json()) as unknown;
+      function isOrderResult(obj: unknown): obj is OrderResult {
+        if (!obj || typeof obj !== "object") return false;
+        const o = obj as Record<string, unknown>;
+        return (
+          typeof o.orderId === "string" &&
+          typeof o.status === "string" &&
+          typeof o.total === "number" &&
+          (typeof o.createdAt === "string" || o.createdAt instanceof Date) &&
+          Array.isArray(o.items) &&
+          ("address" in o
+            ? typeof o.address === "object" || o.address === null
+            : true)
+        );
+      }
+      if (isOrderResult(data)) {
+        setResult({
+          ...data,
+          createdAt: new Date(data.createdAt),
+        });
+      } else {
+        setError("Invalid response from server.");
+      }
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
