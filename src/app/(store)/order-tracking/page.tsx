@@ -3,8 +3,9 @@ import Link from "next/link";
 import React, { useState } from "react";
 // import TopNav from '@/components/store-components/TopNav'
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-
 import Footer from "@/components/store-components/Footer";
+import { Badge } from "@/components/ui/badge";
+import { ORDER_STATUS_COLORS } from "@/utils/constants";
 
 // Define the expected order result type
 interface OrderResult {
@@ -95,7 +96,13 @@ const OrderTracking = () => {
               {result && (
                 <div className="bg-green-100 mt-4 rounded p-4">
                   <strong>Order ID:</strong> {result.orderId} <br />
-                  <strong>Status:</strong> {result.status}
+                  <strong>Status:</strong>{" "}
+                  <Badge
+                    variant={undefined}
+                    className={ORDER_STATUS_COLORS[result.status]?.color}
+                  >
+                    {ORDER_STATUS_COLORS[result.status]?.label ?? result.status}
+                  </Badge>
                   {/* Add more fields as needed */}
                 </div>
               )}

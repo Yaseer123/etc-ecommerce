@@ -1,4 +1,6 @@
+import { Badge } from "@/components/ui/badge";
 import { api } from "@/trpc/react";
+import { ORDER_STATUS_COLORS } from "@/utils/constants";
 import {
   HourglassMedium,
   Package,
@@ -107,9 +109,13 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
                   </td>
                   <td className="price py-3">{item.price}</td>
                   <td className="py-3 text-right">
-                    <span className="tag caption1 rounded-full bg-purple bg-opacity-10 px-4 py-1.5 font-semibold text-purple">
-                      {order?.status}
-                    </span>
+                    <Badge
+                      variant={undefined}
+                      className={ORDER_STATUS_COLORS[order?.status]?.color}
+                    >
+                      {ORDER_STATUS_COLORS[order?.status]?.label ??
+                        order?.status}
+                    </Badge>
                   </td>
                 </tr>
               ))}

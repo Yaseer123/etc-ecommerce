@@ -11,3 +11,30 @@ export const BLOG_TAG_OPTIONS: Option[] = [
   { label: "Solar Monitoring Systems", value: "solar-monitoring-systems" },
   { label: "Solar Protection Devices", value: "solar-protection-devices" },
 ];
+
+// Order status color and badge variant mapping
+export const ORDER_STATUS_COLORS: Record<
+  string,
+  { label: string; color: string }
+> = {
+  PENDING: {
+    label: "Pending",
+    color: "bg-yellow text-black",
+  },
+  PROCESSING: {
+    label: "Processing",
+    color: "bg-blue text-white",
+  },
+  SHIPPED: {
+    label: "Shipped",
+    color: "bg-purple text-white",
+  },
+  DELIVERED: {
+    label: "Delivered",
+    color: "bg-green text-black",
+  },
+  CANCELLED: {
+    label: "Cancelled",
+    color: "bg-red text-white",
+  },
+};

@@ -1,7 +1,9 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
+import { ORDER_STATUS_COLORS } from "@/utils/constants";
 import type { OrderStatus } from "@prisma/client";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -76,9 +78,13 @@ export default function AdminOrdersPage() {
                         ))}
                       </select>
                     ) : (
-                      <span className="rounded bg-gray-200 px-2 py-1">
-                        {order.status}
-                      </span>
+                      <Badge
+                      variant={undefined}
+                      className={ORDER_STATUS_COLORS[order.status]?.color}
+                      >
+                        {ORDER_STATUS_COLORS[order.status]?.label ??
+                          order.status}
+                      </Badge>
                     )}
                   </td>
                   <td className="border p-2">৳{order.total}</td>

@@ -1,19 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link";
-import { api } from "@/trpc/react";
-import type { OrderStatus } from "@prisma/client";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogFooter,
+  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { api } from "@/trpc/react";
+import { ORDER_STATUS_COLORS } from "@/utils/constants";
+import type { OrderStatus } from "@prisma/client";
+import { motion } from "framer-motion";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function OrderHistory({ activeTab }: { activeTab?: string }) {
@@ -109,9 +111,12 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
                 </div>
                 <div className="flex items-center gap-2">
                   <strong className="text-title">Order status:</strong>
-                  <span className="tag caption1 rounded-full bg-purple bg-opacity-10 px-4 py-1.5 font-semibold text-purple">
-                    {order.status}
-                  </span>
+                  <Badge
+                    variant={undefined}
+                    className={ORDER_STATUS_COLORS[order.status]?.color}
+                  >
+                    {ORDER_STATUS_COLORS[order.status]?.label ?? order.status}
+                  </Badge>
                 </div>
               </div>
               <div className="list_prd px-5">
