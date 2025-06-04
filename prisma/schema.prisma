@@ -96,6 +96,7 @@ model Product {
     descriptionImageId    String?
     attributes            Json        @default("{}") // Store dynamic attributes as JSON
     categoryAttributes    Json        @default("{}") // Store category-specific attributes
+    position              Int         @default(0) // <-- Added field for ordering
 
     reviews   Review[]
     orders    OrderItem[]

@@ -31,8 +31,8 @@ export const productRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const products = await ctx.db.product.findMany({
       include: { category: true },
+      orderBy: { position: "asc" },
     });
-
     return products;
   }),
 
@@ -72,6 +72,7 @@ export const productRouter = createTRPCRouter({
       const products = await ctx.db.product.findMany({
         where: { categoryId: { in: categoryIds } },
         include: { category: true },
+        orderBy: { position: "asc" },
       });
 
       return products;
@@ -241,7 +242,7 @@ export const productRouter = createTRPCRouter({
       const products = await ctx.db.product.findMany({
         where: filters,
         include: { category: true },
-        orderBy: orderBy,
+        orderBy: orderBy ? orderBy : { position: "asc" },
       });
 
       return products;
@@ -712,9 +713,7 @@ export const productRouter = createTRPCRouter({
         include: {
           category: true,
         },
-        orderBy: {
-          createdAt: "desc",
-        },
+        orderBy: { position: "asc" },
       });
     }),
 
@@ -734,5 +733,20 @@ export const productRouter = createTRPCRouter({
           featured: input.featured,
         },
       });
+    }),
+
+  updateProductPositions: adminProcedure
+    .input(
+      z.object({
+        positions: z.array(z.object({ id: z.string(), position: z.number() })),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Update each product's position
+      const updates = input.positions.map(({ id, position }) =>
+        ctx.db.product.update({ where: { id }, data: { position } }),
+      );
+      await Promise.all(updates);
+      return { success: true };
     }),
 });

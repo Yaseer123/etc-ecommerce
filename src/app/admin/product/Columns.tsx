@@ -251,17 +251,28 @@ export const columns: ColumnDef<ProductColumns>[] = [
   {
     accessorKey: "price",
     header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Price" />;
+      return (
+        <DataTableColumnHeader
+          column={column}
+          title="Price"
+          className="min-w-[100px] text-right"
+        />
+      );
     },
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price")).toFixed(2);
-      return <div className="text-right font-medium">৳{price}</div>;
+      return (
+        <div className="min-w-[100px] text-right font-medium">৳{price}</div>
+      );
     },
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: <span className="min-w-[140px]">Category</span>,
     accessorFn: (row) => row.category?.name ?? "No Category",
+    cell: ({ row }) => (
+      <div className="min-w-[140px]">{row.category?.name ?? "No Category"}</div>
+    ),
   },
   {
     accessorKey: "stockStatus",
