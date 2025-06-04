@@ -1,7 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import Image from "next/image";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -12,7 +11,14 @@ const Footer = () => {
             <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
               <div className="company-infor basis-1/4 pr-7 max-lg:basis-full">
                 <Link href={"/"} className="logo">
-                  <div className="heading4">Rinors</div>
+                  <Image
+                    src="/images/brand/RINORS.png"
+                    alt="Rinors Logo"
+                    width={120}
+                    height={40}
+                    priority
+                    className="h-auto w-[120px] object-contain"
+                  />
                 </Link>
                 <div className="mt-3 flex gap-3">
                   <div className="flex flex-col">

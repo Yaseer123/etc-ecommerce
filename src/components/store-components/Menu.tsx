@@ -174,9 +174,14 @@ export default function Menu({
                 href={"/"}
                 className="flex items-center max-lg:absolute max-lg:left-1/2 max-lg:z-10 max-lg:-translate-x-1/2 lg:relative lg:left-0 lg:transform-none"
               >
-                <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                  Rinors
-                </div>
+                <Image
+                  src="/images/brand/RINORS.png"
+                  alt="Rinors Logo"
+                  width={120}
+                  height={40}
+                  priority
+                  className="h-auto w-[120px] object-contain"
+                />
               </Link>
               <div className="form-search relative flex h-[44px] w-2/3 items-center pl-8 max-lg:hidden">
                 <CategoryDropdown />

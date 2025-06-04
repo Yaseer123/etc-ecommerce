@@ -1,6 +1,6 @@
-import React from "react";
-import { useRouter } from "next/navigation";
 import { CaretRight, X } from "@phosphor-icons/react/dist/ssr";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import MobileSearch from "./MobileSearch";
 
 interface MobileMenuProps {
@@ -31,9 +31,16 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
               </div>
               <div
                 onClick={() => handleNavigation("/")}
-                className="logo cursor-pointer text-center text-3xl font-semibold"
+                className="logo cursor-pointer text-center"
               >
-                Rinors
+                <Image
+                  src="/images/brand/RINORS.png"
+                  alt="Rinors Logo"
+                  width={120}
+                  height={40}
+                  priority
+                  className="mx-auto h-auto w-[120px] object-contain"
+                />
               </div>
             </div>
             <MobileSearch />
