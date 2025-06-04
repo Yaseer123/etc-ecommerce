@@ -93,6 +93,7 @@ export const blogPostRouter = createTRPCRouter({
         content: z.string(),
         createdBy: z.string(),
         imageId: z.string(),
+        published: z.boolean().default(true),
         tags: z.array(
           z.object({
             name: z.string(),
@@ -112,6 +113,7 @@ export const blogPostRouter = createTRPCRouter({
           slug: input.slug,
           content: input.content,
           createdById: input.createdBy,
+          published: input.published,
           tags: {
             connectOrCreate: input.tags.map((tag) => ({
               where: { slug: tag.slug },

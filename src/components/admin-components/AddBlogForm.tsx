@@ -1,18 +1,19 @@
 "use client";
 
+import { uploadFile } from "@/app/actions/file";
+import MultipleSelector, {
+  type Option,
+} from "@/components/ui/multiple-selector";
 import { api } from "@/trpc/react";
+import { BLOG_TAG_OPTIONS } from "@/utils/constants";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import RichEditor from "../rich-editor";
 import { Input } from "../ui/input";
-import MultipleSelector, {
-  type Option,
-} from "@/components/ui/multiple-selector";
-import { BLOG_TAG_OPTIONS } from "@/utils/constants";
 import { Label } from "../ui/label";
+import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
-import { uploadFile } from "@/app/actions/file";
 
 export default function AddBlogForm({ userId }: { userId: string }) {
   const [value, setValue] = useState<Option[]>([]);
@@ -22,6 +23,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
   const [pending, setPending] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [imageId] = useState(uuid());
+  const [published, setPublished] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -64,6 +66,7 @@ export default function AddBlogForm({ userId }: { userId: string }) {
       content: content,
       slug: slug,
       createdBy: userId,
+      published: published,
       tags: value.map((tag) => ({
         name: tag.label,
         slug: tag.value.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
@@ -130,6 +133,14 @@ export default function AddBlogForm({ userId }: { userId: string }) {
             placeholder="Short Description"
             value={shortDescription}
             onChange={(e) => setShortDescription(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label htmlFor="publish">Publish</Label>
+          <Switch
+            id="publish"
+            checked={published}
+            onCheckedChange={setPublished}
           />
         </div>
       </div>
