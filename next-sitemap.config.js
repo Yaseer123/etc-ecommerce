@@ -1,5 +1,5 @@
-module.exports = {
-  siteUrl: process.env.NEXTAUTH_URL || "https://rinors.com",
+export default {
+  siteUrl: process.env.NEXTAUTH_URL ?? "https://rinors.com",
   generateRobotsTxt: true,
   exclude: ["/admin", "/admin/*"],
   robotsTxtOptions: {
