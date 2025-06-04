@@ -202,12 +202,13 @@ const ModalWishlist = () => {
             >
               View All Wish List
             </Link>
-            <div
+            <Link
+              href={"/products"}
               onClick={closeModalWishlist}
               className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
             >
               Or continue shopping
-            </div>
+            </Link>
           </div>
         </div>
       </div>

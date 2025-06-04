@@ -38,7 +38,7 @@ const Cart = () => {
       setApplyCode(minValue);
       setDiscountCart(discount);
     } else {
-      alert(`Minimum order must be ${minValue}$`);
+      alert(`Minimum order must be ${minValue}৳`);
     }
   };
 
@@ -321,7 +321,7 @@ const Cart = () => {
                   </div>
                   <Link
                     className="text-base font-semibold capitalize leading-[26px] hover:underline md:text-base md:leading-6"
-                    href={"/shop/breadcrumb1"}
+                    href={"/products"}
                   >
                     Continue shopping
                   </Link>

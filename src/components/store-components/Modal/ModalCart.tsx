@@ -141,12 +141,13 @@ const ModalCart = () => {
                     Check Out
                   </Link>
                 </div>
-                <div
+                <Link
+                  href={"/products"}
                   onClick={closeModalCart}
                   className="has-line-before mt-4 inline-block cursor-pointer text-center text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4"
                 >
                   Or continue shopping
-                </div>
+                </Link>
               </div>
               {activeTab === "note" && (
                 <div className="tab-item note-block active">
