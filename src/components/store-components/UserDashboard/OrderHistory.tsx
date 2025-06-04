@@ -121,7 +121,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
                     className="prd_item flex flex-wrap items-center justify-between gap-3 border-b border-line py-5"
                   >
                     <Link
-                      href={`/product/${item.product.slug}?id=${item.product.id}`}
+                      href={`/products/${item.product.slug}?id=${item.product.id}`}
                       className="flex items-center gap-5"
                     >
                       <div className="bg-img aspect-square w-20 flex-shrink-0 overflow-hidden rounded-lg md:w-[100px]">

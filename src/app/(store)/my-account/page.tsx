@@ -73,7 +73,7 @@ const MyAccount = () => {
                     onClick={() => setActiveTab("orders")}
                   >
                     <Package size={20} />
-                    <strong className="heading6">History Orders</strong>
+                    <strong className="heading6">Orders History</strong>
                   </Link>
                   <Link
                     href={"#!"}
