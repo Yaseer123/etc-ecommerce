@@ -82,7 +82,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
                   </th>
                   <td className="py-3">
                     <Link
-                      href={`/product/${item.product.slug}?id=${item.product.id}`}
+                      href={`/products/${item.product.slug}?id=${item.product.id}`}
                       className="product flex items-center gap-3"
                     >
                       <Image
