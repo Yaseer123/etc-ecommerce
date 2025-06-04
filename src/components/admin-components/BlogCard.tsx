@@ -1,9 +1,9 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import React from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,36 +48,45 @@ const BlogBanner: React.FC<BlogBannerProps> = ({
   };
 
   return (
-    <div className="w-full max-w-[400px] space-y-3 rounded-md bg-gray-100 p-4 shadow">
-      <div className="flex items-center justify-between">
-        <Link href={`/admin/blog/${blogId}`} className="flex flex-col pr-10">
-          <p>{title}</p>
-          <p>{createdAt}</p>
-        </Link>
-        <div className="space-x-3">
-          <Button onClick={handleEdit}>Edit</Button>
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button>Delete</Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete the
-                  blog from the database.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDelete}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
+    <div className="flex w-full max-w-[400px] flex-col gap-4 rounded-xl bg-white p-6 shadow-md transition hover:shadow-lg">
+      <Link
+        href={`/admin/blog/${blogId}`}
+        className="group flex flex-col gap-1"
+      >
+        <p className="truncate text-lg font-semibold text-gray-900 group-hover:underline">
+          {title}
+        </p>
+        <p className="text-xs text-gray-500">{createdAt}</p>
+      </Link>
+      <div className="flex w-full flex-col gap-2 self-end sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+        <Button onClick={handleEdit} className="w-full sm:w-auto">
+          Edit
+        </Button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="destructive" className="w-full sm:w-auto">
+              Delete
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the
+                blog from the database.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-700 focus:ring-red-400"
+              >
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
