@@ -25,13 +25,17 @@ const Checkout = () => {
 
   const [newAddress, setNewAddress] = useState({
     name: "",
-    street: "",
-    city: "",
-    state: "",
-    zipCode: "",
-    phone: "",
     email: "",
+    mobile: "",
+    address: "",
   });
+  const [addressErrors, setAddressErrors] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    address: "",
+  });
+
   const createAddressMutation = api.address.createAddress.useMutation();
   const createGuestAddressMutation =
     api.address.createGuestAddress.useMutation();
@@ -65,6 +69,37 @@ const Checkout = () => {
     },
   ];
 
+  const validateField = (field: string, value: string) => {
+    switch (field) {
+      case "name":
+        return value.trim() === "" ? "Full Name is required" : "";
+      case "email":
+        return value.trim() === ""
+          ? "Email is required"
+          : !/^\S+@\S+\.\S+$/.test(value)
+            ? "Invalid email address"
+            : "";
+      case "mobile":
+        return value.trim() === ""
+          ? "Mobile number is required"
+          : !/^\+?\d{7,15}$/.test(value)
+            ? "Invalid mobile number"
+            : "";
+      case "address":
+        return value.trim() === "" ? "Address is required" : "";
+      default:
+        return "";
+    }
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setNewAddress((prev) => ({ ...prev, [field]: value }));
+    setAddressErrors((prev) => ({
+      ...prev,
+      [field]: validateField(field, value),
+    }));
+  };
+
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
@@ -89,96 +124,69 @@ const Checkout = () => {
       <div className="mt-5">
         <form>
           <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
-            <div className="">
+            <div className="sm:col-span-2">
               <input
                 className="w-full rounded-lg border-line px-4 py-3"
                 id="name"
                 type="text"
                 placeholder="Full Name *"
                 value={newAddress.name}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, name: e.target.value })
-                }
+                onChange={(e) => handleInputChange("name", e.target.value)}
                 required
               />
+              {addressErrors.name && (
+                <div className="text-red mt-1 text-xs">
+                  {addressErrors.name}
+                </div>
+              )}
             </div>
-            <div className="">
-              <input
-                className="w-full rounded-lg border-line px-4 py-3"
-                id="street"
-                type="text"
-                placeholder="Street Address *"
-                value={newAddress.street}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, street: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="">
-              <input
-                className="w-full rounded-lg border-line px-4 py-3"
-                id="city"
-                type="text"
-                placeholder="Town/City *"
-                value={newAddress.city}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, city: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="">
-              <input
-                className="w-full rounded-lg border-line px-4 py-3"
-                id="state"
-                type="text"
-                placeholder="State *"
-                value={newAddress.state}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, state: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="">
-              <input
-                className="w-full rounded-lg border-line px-4 py-3"
-                id="zipCode"
-                type="text"
-                placeholder="ZIP Code *"
-                value={newAddress.zipCode}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, zipCode: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="">
-              <input
-                className="w-full rounded-lg border-line px-4 py-3"
-                id="phone"
-                type="text"
-                placeholder="Phone *"
-                value={newAddress.phone}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, phone: e.target.value })
-                }
-                required
-              />
-            </div>
-            <div className="">
+            <div className="sm:col-span-2">
               <input
                 className="w-full rounded-lg border-line px-4 py-3"
                 id="email"
                 type="email"
                 placeholder="Email Address *"
                 value={newAddress.email}
-                onChange={(e) =>
-                  setNewAddress({ ...newAddress, email: e.target.value })
-                }
+                onChange={(e) => handleInputChange("email", e.target.value)}
                 required
               />
+              {addressErrors.email && (
+                <div className="text-red mt-1 text-xs">
+                  {addressErrors.email}
+                </div>
+              )}
+            </div>
+            <div className="sm:col-span-2">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="mobile"
+                type="text"
+                placeholder="Mobile Number *"
+                value={newAddress.mobile}
+                onChange={(e) => handleInputChange("mobile", e.target.value)}
+                required
+              />
+              {addressErrors.mobile && (
+                <div className="text-red mt-1 text-xs">
+                  {addressErrors.mobile}
+                </div>
+              )}
+            </div>
+            <div className="sm:col-span-2">
+              <input
+                className="w-full rounded-lg border-line px-4 py-3"
+                id="address"
+                type="text"
+                placeholder="Address *"
+                value={newAddress.address}
+                onChange={(e) => handleInputChange("address", e.target.value)}
+                required
+              />
+              {addressErrors.address && (
+                <div className="text-red mt-1 text-xs">
+                  {addressErrors.address}
+                </div>
+              )}
             </div>
           </div>
         </form>
@@ -276,14 +284,26 @@ const Checkout = () => {
                       if (session) {
                         const created = await createAddressMutation.mutateAsync(
                           {
-                            ...newAddress,
+                            name: newAddress.name,
+                            email: newAddress.email,
+                            phone: newAddress.mobile,
+                            street: newAddress.address,
+                            city: "",
+                            state: "",
+                            zipCode: "",
                           },
                         );
                         addressId = created.id;
                       } else {
                         const created =
                           await createGuestAddressMutation.mutateAsync({
-                            ...newAddress,
+                            name: newAddress.name,
+                            email: newAddress.email,
+                            phone: newAddress.mobile,
+                            street: newAddress.address,
+                            city: "",
+                            state: "",
+                            zipCode: "",
                           });
                         addressId = created.id;
                       }
@@ -322,7 +342,7 @@ const Checkout = () => {
                   Order Now
                 </button>
                 {orderError && (
-                  <div className="text-red-500 mt-2">{orderError}</div>
+                  <div className="text-red mt-2">{orderError}</div>
                 )}
               </div>
             </div>

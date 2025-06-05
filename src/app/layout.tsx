@@ -1,9 +1,9 @@
-import { GeistSans } from "geist/font/sans";
-import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { TRPCReactProvider } from "@/trpc/react";
+import { GeistSans } from "geist/font/sans";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
