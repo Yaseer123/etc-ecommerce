@@ -59,7 +59,9 @@ export default function ProductDataTable() {
   const [search, setSearch] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [pageSize, setPageSize] = React.useState(10);
-  const [sort, setSort] = React.useState("position");
+  const [sort, setSort] = React.useState<
+    "position" | "titleAsc" | "titleDesc" | "priceAsc" | "priceDesc"
+  >("position");
 
   // Reset to page 1 on search or pageSize change
   React.useEffect(() => {
@@ -118,7 +120,7 @@ export default function ProductDataTable() {
     const pages = [];
     const maxPagesToShow = 5;
     let start = Math.max(1, page - 2);
-    let end = Math.min(totalPages, start + maxPagesToShow - 1);
+    const end = Math.min(totalPages, start + maxPagesToShow - 1);
     if (end - start < maxPagesToShow - 1) {
       start = Math.max(1, end - maxPagesToShow + 1);
     }
@@ -148,6 +150,14 @@ export default function ProductDataTable() {
       });
     }
   };
+
+  function StockStatusBadge({ status }: { status: string }) {
+    let variant: "success" | "destructive" | "outline" = "outline";
+    if (status === "IN_STOCK") variant = "success";
+    if (status === "OUT_OF_STOCK") variant = "destructive";
+    const label = status.replace("_", " ");
+    return <Badge variant={variant}>{label}</Badge>;
+  }
 
   function SortableRow({
     product,
@@ -196,17 +206,7 @@ export default function ProductDataTable() {
         </TableCell>
         <TableCell>৳{product.price.toFixed(2)}</TableCell>
         <TableCell>
-          <Badge
-            variant={
-              product.stockStatus === "IN_STOCK"
-                ? "success"
-                : product.stockStatus === "OUT_OF_STOCK"
-                  ? "destructive"
-                  : "outline"
-            }
-          >
-            {product.stockStatus.replace("_", " ")}
-          </Badge>
+          <StockStatusBadge status={product.stockStatus} />
         </TableCell>
         <TableCell>{product.category?.name ?? "Uncategorized"}</TableCell>
         <TableCell>
@@ -301,7 +301,16 @@ export default function ProductDataTable() {
             <select
               className="rounded border px-2 py-1 text-sm"
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
+              onChange={(e) =>
+                setSort(
+                  e.target.value as
+                    | "position"
+                    | "titleAsc"
+                    | "titleDesc"
+                    | "priceAsc"
+                    | "priceDesc",
+                )
+              }
             >
               <option value="position">Sort: Position</option>
               <option value="titleAsc">Title A-Z</option>
