@@ -267,8 +267,8 @@ export const columns: ColumnDef<ProductColumns>[] = [
     id: "thumbnail",
     header: () => <span className="min-w-[56px]">Thumbnail</span>,
     cell: ({ row }) => {
-      const images = row.original.images as string[] | undefined;
-      const title = row.original.title as string;
+      const images = row.original.images;
+      const title = row.original.title;
       return (
         <div className="h-12 w-12 overflow-hidden rounded-md">
           <Image

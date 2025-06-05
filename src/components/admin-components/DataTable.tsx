@@ -17,6 +17,7 @@ import { CSS } from "@dnd-kit/utilities";
 import type {
   ColumnDef,
   ColumnFiltersState,
+  Row,
   SortingState,
   VisibilityState,
 } from "@tanstack/react-table";
@@ -58,15 +59,17 @@ interface DataTableProps<TData> {
   rowIdKey?: keyof TData;
 }
 
-function DraggableTableRow({
+type DraggableTableRowProps<TData> = {
+  row: Row<TData>;
+  rowId: string;
+  dragHandleCellIndex: number;
+};
+
+function DraggableTableRow<TData>({
   row,
   rowId,
   dragHandleCellIndex,
-}: {
-  row: any;
-  rowId: string;
-  dragHandleCellIndex: number;
-}) {
+}: DraggableTableRowProps<TData>) {
   const {
     attributes,
     listeners,
@@ -83,7 +86,7 @@ function DraggableTableRow({
   };
   return (
     <TableRow ref={setNodeRef} style={style}>
-      {row.getVisibleCells().map((cell: any, idx: number) => (
+      {row.getVisibleCells().map((cell, idx) => (
         <TableCell
           key={cell.id}
           className="border-r"
@@ -193,11 +196,11 @@ export function DataTable<TData>({
                   }}
                 >
                   <SortableContext
-                    items={data.map((item) => String((item as any)[rowIdKey]))}
+                    items={data.map((item) => String(item[rowIdKey]))}
                     strategy={verticalListSortingStrategy}
                   >
                     {table.getRowModel().rows.map((row) => (
-                      <DraggableTableRow
+                      <DraggableTableRow<TData>
                         key={row.id}
                         row={row}
                         rowId={String(row.original[rowIdKey])}
