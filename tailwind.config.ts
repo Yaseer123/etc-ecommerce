@@ -1,9 +1,10 @@
 import { type Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   darkMode: ["class"],
-  content: ["./src/**/*.tsx"],
+  content: ["./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
       fontFamily: {
@@ -25,6 +26,7 @@ export default {
         },
       },
       colors: {
+        ...colors,
         green: "#D2EF9A",
         black: "#1F1F1F",
         secondary: "#696C70",

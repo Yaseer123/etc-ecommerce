@@ -23,7 +23,7 @@ export const ORDER_STATUS_COLORS: Record<
   },
   PROCESSING: {
     label: "Processing",
-    color: "bg-blue text-white",
+    color: "bg-blue-500 text-white",
   },
   SHIPPED: {
     label: "Shipped",
