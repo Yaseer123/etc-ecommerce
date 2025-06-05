@@ -138,9 +138,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.name && errors.name && (
-                      <div className="text-red mt-1 text-xs">
-                        {errors.name}
-                      </div>
+                      <div className="mt-1 text-xs text-red">{errors.name}</div>
                     )}
                   </div>
                   <div className="email">
@@ -155,7 +153,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.email && errors.email && (
-                      <div className="text-red mt-1 text-xs">
+                      <div className="mt-1 text-xs text-red">
                         {errors.email}
                       </div>
                     )}
@@ -172,7 +170,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.message && errors.message && (
-                      <div className="text-red mt-1 text-xs">
+                      <div className="mt-1 text-xs text-red">
                         {errors.message}
                       </div>
                     )}
