@@ -17,7 +17,12 @@
 <url><loc>https://rinors.com/reset-password</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/search-result</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/wishlist</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
-<url><loc>https://rinors.com/products/product-1</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://rinors.com/products/product-2</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://rinors.com/products/product-3</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch-4-gang</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-2-gang-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-fan-light-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-1-gang-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-door-lock</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tigerneo-jinko-solar</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-3-gang-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

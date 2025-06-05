@@ -1,9 +1,5 @@
+import { getAllProductSlugs } from "./scripts/getAllProductSlugs.js";
 import staticRoutes from "./scripts/staticRoutes.json" assert { type: "json" };
-
-// Mock function for product slugs. Replace with DB/API call as needed.
-async function getAllProductSlugs() {
-  return ["product-1", "product-2", "product-3"];
-}
 
 export default {
   siteUrl: process.env.NEXTAUTH_URL ?? "https://rinors.com",
@@ -28,7 +24,7 @@ export default {
         priority: 0.7,
       }));
 
-    // Add dynamic product routes
+    // Add dynamic product routes from DB
     const slugs = await getAllProductSlugs();
     const productPaths = slugs.map((slug) => ({
       loc: `/products/${slug}`,
