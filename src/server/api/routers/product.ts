@@ -28,13 +28,74 @@ export const productRouter = createTRPCRouter({
       return product;
     }),
 
-  getAll: publicProcedure.query(async ({ ctx }) => {
-    const products = await ctx.db.product.findMany({
-      include: { category: true },
-      orderBy: { position: "asc" },
-    });
-    return products;
-  }),
+  getAll: publicProcedure
+    .input(
+      z
+        .object({
+          page: z.number().min(1).default(1),
+          limit: z.number().min(1).max(100).default(10),
+          search: z.string().optional(),
+          sort: z
+            .enum([
+              "position",
+              "titleAsc",
+              "titleDesc",
+              "priceAsc",
+              "priceDesc",
+            ])
+            .optional(),
+        })
+        .optional(),
+    )
+    .query(async ({ ctx, input }) => {
+      const page = input?.page ?? 1;
+      const limit = input?.limit ?? 10;
+      const skip = (page - 1) * limit;
+      const search = input?.search?.trim() ?? "";
+      const sort = input?.sort ?? "position";
+
+      // Build where filter for search
+      const where = search
+        ? {
+            OR: [
+              {
+                title: {
+                  contains: search,
+                  mode: "insensitive" as Prisma.QueryMode,
+                },
+              },
+              {
+                brand: {
+                  contains: search,
+                  mode: "insensitive" as Prisma.QueryMode,
+                },
+              },
+            ],
+          }
+        : undefined;
+
+      // Build orderBy
+      let orderBy: Prisma.ProductOrderByWithRelationInput = { position: "asc" };
+      if (sort === "titleAsc") orderBy = { title: "asc" };
+      if (sort === "titleDesc") orderBy = { title: "desc" };
+      if (sort === "priceAsc") orderBy = { price: "asc" };
+      if (sort === "priceDesc") orderBy = { price: "desc" };
+
+      const [products, total] = await Promise.all([
+        ctx.db.product.findMany({
+          where,
+          include: { category: true },
+          orderBy,
+          skip,
+          take: limit,
+        }),
+        ctx.db.product.count({ where }),
+      ]);
+
+      const totalPages = Math.ceil(total / limit);
+
+      return { products, total, page, limit, totalPages };
+    }),
 
   getAllByCategory: publicProcedure
     .input(

@@ -57,12 +57,25 @@ import { FeaturedProductModal } from "./FeaturedProductModal";
 export default function ProductDataTable() {
   const router = useRouter();
   const [search, setSearch] = React.useState("");
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(10);
+  const [sort, setSort] = React.useState("position");
 
-  const { data: products = [], isLoading } = api.product.getAll.useQuery();
+  // Reset to page 1 on search or pageSize change
+  React.useEffect(() => {
+    setPage(1);
+  }, [search, pageSize]);
 
-  const [dragItems, setDragItems] = React.useState<
-    (ProductWithCategory & { featured: boolean })[] | null
-  >(null);
+  const { data, isLoading } = api.product.getAll.useQuery({
+    page,
+    limit: pageSize,
+    search,
+    sort,
+  });
+  const products = data?.products ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = data?.totalPages ?? 1;
+
   const utils = api.useUtils();
   const updatePositions = api.product.updateProductPositions.useMutation({
     onSuccess: () => {
@@ -88,23 +101,30 @@ export default function ProductDataTable() {
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
 
-  const filteredProducts: (ProductWithCategory & { featured: boolean })[] =
-    React.useMemo(() => {
-      const base = (dragItems ?? products).map((product) => ({
-        ...(product as ProductWithCategory),
-        category: (product as ProductWithCategory).category ?? null,
-        featured:
-          typeof product.featured === "boolean" ? product.featured : false,
-      }));
-      const filtered = !search.trim()
-        ? base
-        : base.filter(
-            (product) =>
-              product.title.toLowerCase().includes(search.toLowerCase()) ||
-              product.brand.toLowerCase().includes(search.toLowerCase()),
-          );
-      return filtered;
-    }, [products, search, dragItems]);
+  const filteredProducts = React.useMemo(() => {
+    const base = products.map((product) => ({
+      ...(product as ProductWithCategory),
+      category: (product as ProductWithCategory).category ?? null,
+      featured:
+        typeof product.featured === "boolean" ? product.featured : false,
+    }));
+    return base;
+  }, [products]);
+
+  // Pagination helpers
+  const startIdx = (page - 1) * pageSize + 1;
+  const endIdx = Math.min(page * pageSize, total);
+  const pageNumbers = React.useMemo(() => {
+    const pages = [];
+    const maxPagesToShow = 5;
+    let start = Math.max(1, page - 2);
+    let end = Math.min(totalPages, start + maxPagesToShow - 1);
+    if (end - start < maxPagesToShow - 1) {
+      start = Math.max(1, end - maxPagesToShow + 1);
+    }
+    for (let i = start; i <= end; i++) pages.push(i);
+    return pages;
+  }, [page, totalPages]);
 
   const handleDelete = (productId: string) => {
     deleteProduct.mutate({ id: productId });
@@ -120,7 +140,6 @@ export default function ProductDataTable() {
         (item) => item.id === over.id,
       );
       const newItems = arrayMove(filteredProducts, oldIndex, newIndex);
-      setDragItems(newItems);
       updatePositions.mutate({
         positions: newItems.map((item, idx) => ({
           id: item.id,
@@ -270,7 +289,7 @@ export default function ProductDataTable() {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg font-medium">
-            Products ({filteredProducts.length})
+            Products ({total})
           </CardTitle>
           <div className="flex items-center gap-2">
             <Input
@@ -279,6 +298,27 @@ export default function ProductDataTable() {
               onChange={(e) => setSearch(e.target.value)}
               className="max-w-sm"
             />
+            <select
+              className="rounded border px-2 py-1 text-sm"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+            >
+              <option value="position">Sort: Position</option>
+              <option value="titleAsc">Title A-Z</option>
+              <option value="titleDesc">Title Z-A</option>
+              <option value="priceAsc">Price Low-High</option>
+              <option value="priceDesc">Price High-Low</option>
+            </select>
+            <select
+              className="rounded border px-2 py-1 text-sm"
+              value={pageSize}
+              onChange={(e) => setPageSize(Number(e.target.value))}
+            >
+              <option value={10}>10 / page</option>
+              <option value={20}>20 / page</option>
+              <option value={50}>50 / page</option>
+              <option value={100}>100 / page</option>
+            </select>
             <Button onClick={() => router.push("/admin/product/add")} size="sm">
               <Plus className="mr-2 h-4 w-4" /> Add Product
             </Button>
@@ -304,36 +344,89 @@ export default function ProductDataTable() {
               </Button>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-md border">
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={filteredProducts.map((item) => item.id)}
-                  strategy={verticalListSortingStrategy}
+            <>
+              <div className="overflow-x-auto rounded-md border">
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={handleDragEnd}
                 >
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead style={{ width: 32 }}></TableHead>
-                        <TableHead>Product</TableHead>
-                        <TableHead>Price</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Category</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredProducts.map((product) => (
-                        <SortableRow key={product.id} product={product} />
-                      ))}
-                    </TableBody>
-                  </Table>
-                </SortableContext>
-              </DndContext>
-            </div>
+                  <SortableContext
+                    items={filteredProducts.map((item) => item.id)}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead style={{ width: 32 }}></TableHead>
+                          <TableHead>Product</TableHead>
+                          <TableHead>Price</TableHead>
+                          <TableHead>Status</TableHead>
+                          <TableHead>Category</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredProducts.map((product) => (
+                          <SortableRow key={product.id} product={product} />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </SortableContext>
+                </DndContext>
+              </div>
+              {/* Pagination Info and Controls */}
+              <div className="mt-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Showing {startIdx}-{endIdx} of {total} results
+                </div>
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page === 1}
+                    onClick={() => setPage(1)}
+                  >
+                    First
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page === 1}
+                    onClick={() => setPage(page - 1)}
+                  >
+                    Prev
+                  </Button>
+                  {pageNumbers.map((num) => (
+                    <Button
+                      key={num}
+                      variant={num === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setPage(num)}
+                      className={num === page ? "font-bold" : ""}
+                    >
+                      {num}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page === totalPages}
+                    onClick={() => setPage(page + 1)}
+                  >
+                    Next
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={page === totalPages}
+                    onClick={() => setPage(totalPages)}
+                  >
+                    Last
+                  </Button>
+                </div>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
