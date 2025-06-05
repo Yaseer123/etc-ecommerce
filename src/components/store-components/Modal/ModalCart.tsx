@@ -38,7 +38,7 @@ const ModalCart = () => {
             e.stopPropagation();
           }}
         >
-          <div className="right cart-block relative w-full overflow-hidden py-6">
+          <div className="right cart-block relative flex h-full w-full flex-col overflow-hidden py-6">
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Shopping Cart ({cartState.length})</div>
               <div
@@ -100,7 +100,7 @@ const ModalCart = () => {
                 ))
               )}
             </div>
-            <div className="footer-modal w-full bg-white shadow-lg">
+            <div className="footer-modal mt-auto w-full bg-white shadow-lg">
               <div className="flex items-center justify-center gap-8 border-b border-line bg-gray-50 px-6 py-4 lg:gap-14">
                 <div
                   className="item flex cursor-pointer items-center gap-3"
