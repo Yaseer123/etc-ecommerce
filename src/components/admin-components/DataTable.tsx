@@ -1,6 +1,19 @@
 "use client";
 
-import * as React from "react";
+import {
+  closestCenter,
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import type {
   ColumnDef,
   ColumnFiltersState,
@@ -10,11 +23,12 @@ import type {
 import {
   flexRender,
   getCoreRowModel,
-  useReactTable,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  getFilteredRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
+import * as React from "react";
 
 import {
   Table,
@@ -24,11 +38,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
+import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { DataTablePagination } from "./DataTablePagination";
 import { DataTableViewOptions } from "./DataTableViewOptions";
-import { Button } from "../ui/button";
-import Link from "next/link";
 
 interface DataTableProps<TData> {
   columns: ColumnDef<TData>[];
@@ -39,6 +53,49 @@ interface DataTableProps<TData> {
   };
   filterBy?: string;
   searchPlaceHolder: string;
+  onDragEnd?: (event: DragEndEvent, items: TData[]) => void;
+  dragEnabled?: boolean;
+  rowIdKey?: keyof TData;
+}
+
+function DraggableTableRow({
+  row,
+  rowId,
+  dragHandleCellIndex,
+}: {
+  row: any;
+  rowId: string;
+  dragHandleCellIndex: number;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: rowId });
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 1 : 0,
+  };
+  return (
+    <TableRow ref={setNodeRef} style={style}>
+      {row.getVisibleCells().map((cell: any, idx: number) => (
+        <TableCell
+          key={cell.id}
+          className="border-r"
+          {...(idx === dragHandleCellIndex
+            ? { ...attributes, ...listeners }
+            : {})}
+        >
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
+      ))}
+    </TableRow>
+  );
 }
 
 export function DataTable<TData>({
@@ -47,6 +104,9 @@ export function DataTable<TData>({
   addButton,
   filterBy = "name",
   searchPlaceHolder,
+  onDragEnd,
+  dragEnabled = false,
+  rowIdKey,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -71,6 +131,16 @@ export function DataTable<TData>({
       columnVisibility,
     },
   });
+
+  // DnD sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  // Find drag handle cell index
+  const dragHandleCellIndex = columns.findIndex(
+    (col) => col.id === "drag-handle",
+  );
 
   return (
     <div className="space-y-3">
@@ -112,21 +182,47 @@ export function DataTable<TData>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+              dragEnabled && rowIdKey ? (
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  onDragEnd={(event) => {
+                    if (onDragEnd) {
+                      onDragEnd(event, data);
+                    }
+                  }}
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="border-r">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
+                  <SortableContext
+                    items={data.map((item) => String((item as any)[rowIdKey]))}
+                    strategy={verticalListSortingStrategy}
+                  >
+                    {table.getRowModel().rows.map((row) => (
+                      <DraggableTableRow
+                        key={row.id}
+                        row={row}
+                        rowId={String(row.original[rowIdKey])}
+                        dragHandleCellIndex={dragHandleCellIndex}
+                      />
+                    ))}
+                  </SortableContext>
+                </DndContext>
+              ) : (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="border-r">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              )
             ) : (
               <TableRow>
                 <TableCell

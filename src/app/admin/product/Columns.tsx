@@ -24,6 +24,7 @@ import { api } from "@/trpc/react";
 import type { Category, Product } from "@prisma/client";
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { toast } from "sonner";
@@ -243,7 +244,53 @@ export interface ProductColumns extends Product {
   category: Category | null;
 }
 
+export const DRAG_HANDLE_ID = "drag-handle";
+
 export const columns: ColumnDef<ProductColumns>[] = [
+  {
+    id: DRAG_HANDLE_ID,
+    header: () => null,
+    cell: () => (
+      <span
+        style={{ cursor: "grab", display: "flex", justifyContent: "center" }}
+      >
+        <MoreHorizontal className="text-gray-400" />
+      </span>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+    size: 32,
+    minSize: 32,
+    maxSize: 32,
+  },
+  {
+    id: "thumbnail",
+    header: () => <span className="min-w-[56px]">Thumbnail</span>,
+    cell: ({ row }) => {
+      const images = row.original.images as string[] | undefined;
+      const title = row.original.title as string;
+      return (
+        <div className="h-12 w-12 overflow-hidden rounded-md">
+          <Image
+            src={
+              Array.isArray(images) && images[0]
+                ? images[0]
+                : "/images/product/1000x1000.png"
+            }
+            alt={title}
+            width={48}
+            height={48}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      );
+    },
+    enableSorting: false,
+    enableHiding: false,
+    size: 56,
+    minSize: 56,
+    maxSize: 56,
+  },
   {
     accessorKey: "title",
     header: "Title",
