@@ -4,6 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "clean": "rimraf .next",
+    "prebuild": "pnpm clean",
     "build": "next build",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
@@ -128,6 +130,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "prisma": "^6.2.1",
+    "rimraf": "^6.0.1",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
