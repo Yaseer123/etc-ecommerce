@@ -4,7 +4,6 @@ import { GeistSans } from "geist/font/sans";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 import Script from "next/script";
-import ElevenLabsWidget from "../../components/ElevenLabsWidget";
 
 export default function RootLayout({
   children,
@@ -50,7 +49,6 @@ export default function RootLayout({
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </SessionProvider>
         <Toaster />
-        <ElevenLabsWidget />
       </body>
     </html>
   );
