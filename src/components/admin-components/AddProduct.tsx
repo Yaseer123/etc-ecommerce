@@ -720,7 +720,9 @@ export default function AddProductForm() {
                 line)
               </Label>
               <Textarea
-                placeholder="E.g. Color: Red\nSize: Large\nMaterial: Cotton"
+                placeholder={`Color: Red
+Size: Large
+Material: Cotton`}
                 value={specTextContent}
                 onChange={(e) => setSpecTextContent(e.target.value)}
                 className="min-h-[100px] w-full"
