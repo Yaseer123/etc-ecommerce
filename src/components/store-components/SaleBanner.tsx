@@ -1,9 +1,8 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { api } from "@/trpc/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export const SaleBanner = () => {
   const router = useRouter();
@@ -32,7 +31,7 @@ export const SaleBanner = () => {
             onClick={() => handleClick(banner.link)}
           >
             <div className="text-content relative z-[1] p-4 sm:p-6 md:py-6 md:pl-7 lg:py-8 lg:pl-8">
-              <div className="inline-block rounded-sm bg-red px-2 py-0.5 text-xs font-semibold uppercase leading-4 text-white sm:text-sm sm:leading-5 md:text-xs md:leading-4">
+              <div className="bg-red-500 inline-block rounded-sm px-2 py-0.5 text-xs font-semibold uppercase leading-4 text-white sm:text-sm sm:leading-5 md:text-xs md:leading-4">
                 {banner.title}
               </div>
               <div className="heading6 mt-1 text-sm sm:mt-2 sm:text-base">

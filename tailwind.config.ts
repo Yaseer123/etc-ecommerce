@@ -33,7 +33,7 @@ export default {
         secondary2: "#A0A0A0",
         white: "#ffffff",
         surface: "#F7F7F7",
-        red: "#DB4444",
+        // red: "#DB4444",
         purple: "#8684D4",
         success: "#3DAB25",
         yellow: "#ECB018",

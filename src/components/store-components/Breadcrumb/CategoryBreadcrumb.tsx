@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { api } from "@/trpc/react";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import React from "react";
 
 interface Props {
   categoryId?: string | null;

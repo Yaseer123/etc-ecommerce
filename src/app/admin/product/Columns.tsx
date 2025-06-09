@@ -122,7 +122,7 @@ function ActionCell({ product }: { product: ProductColumns }) {
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
-              className="bg-red/90 hover:bg-red/100"
+              className="bg-red-500/90 hover:bg-red-500/100"
             >
               Delete
             </AlertDialogAction>

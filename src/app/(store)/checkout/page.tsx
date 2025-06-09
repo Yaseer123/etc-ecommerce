@@ -135,7 +135,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.name && (
-                <div className="text-red mt-1 text-xs">
+                <div className="text-red-500 mt-1 text-xs">
                   {addressErrors.name}
                 </div>
               )}
@@ -151,7 +151,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.email && (
-                <div className="text-red mt-1 text-xs">
+                <div className="text-red-500 mt-1 text-xs">
                   {addressErrors.email}
                 </div>
               )}
@@ -167,7 +167,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.mobile && (
-                <div className="text-red mt-1 text-xs">
+                <div className="text-red-500 mt-1 text-xs">
                   {addressErrors.mobile}
                 </div>
               )}
@@ -183,7 +183,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.address && (
-                <div className="text-red mt-1 text-xs">
+                <div className="text-red-500 mt-1 text-xs">
                   {addressErrors.address}
                 </div>
               )}
@@ -342,7 +342,7 @@ const Checkout = () => {
                   Order Now
                 </button>
                 {orderError && (
-                  <div className="text-red mt-2">{orderError}</div>
+                  <div className="text-red-500 mt-2">{orderError}</div>
                 )}
               </div>
             </div>

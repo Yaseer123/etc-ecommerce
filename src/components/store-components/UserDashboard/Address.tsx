@@ -66,7 +66,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
           <div className="mt-5 grid gap-4 gap-y-5 sm:grid-cols-2">
             <div className="name">
               <label htmlFor="name" className="caption1 capitalize">
-                Full Name <span className="text-red">*</span>
+                Full Name <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"
@@ -79,7 +79,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             </div>
             <div className="street">
               <label htmlFor="street" className="caption1 capitalize">
-                Street Address <span className="text-red">*</span>
+                Street Address <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"
@@ -92,7 +92,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             </div>
             <div className="city">
               <label htmlFor="city" className="caption1 capitalize">
-                Town / City <span className="text-red">*</span>
+                Town / City <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"
@@ -105,7 +105,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             </div>
             <div className="state">
               <label htmlFor="state" className="caption1 capitalize">
-                State <span className="text-red">*</span>
+                State <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"
@@ -118,7 +118,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             </div>
             <div className="zip">
               <label htmlFor="zip" className="caption1 capitalize">
-                ZIP <span className="text-red">*</span>
+                ZIP <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"
@@ -131,7 +131,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             </div>
             <div className="phone">
               <label htmlFor="phone" className="caption1 capitalize">
-                Phone <span className="text-red">*</span>
+                Phone <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"
@@ -144,7 +144,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
             </div>
             <div className="email">
               <label htmlFor="email" className="caption1 capitalize">
-                Email <span className="text-red">*</span>
+                Email <span className="text-red-500">*</span>
               </label>
               <input
                 className="mt-2 w-full rounded-lg border-line px-4 py-3"

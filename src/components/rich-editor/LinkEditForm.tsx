@@ -37,7 +37,7 @@ const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
           onMouseDown={() => {
             onSubmit("");
           }}
-          className="flex aspect-square w-8 items-center justify-center bg-red-400 text-white"
+          className="bg-red-400 flex aspect-square w-8 items-center justify-center text-white"
         >
           <BiUnlink />
         </button>

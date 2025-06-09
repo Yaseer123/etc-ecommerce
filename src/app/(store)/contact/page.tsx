@@ -138,7 +138,9 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.name && errors.name && (
-                      <div className="mt-1 text-xs text-red">{errors.name}</div>
+                      <div className="text-red-500 mt-1 text-xs">
+                        {errors.name}
+                      </div>
                     )}
                   </div>
                   <div className="email">
@@ -153,7 +155,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.email && errors.email && (
-                      <div className="mt-1 text-xs text-red">
+                      <div className="text-red-500 mt-1 text-xs">
                         {errors.email}
                       </div>
                     )}
@@ -170,7 +172,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.message && errors.message && (
-                      <div className="mt-1 text-xs text-red">
+                      <div className="text-red-500 mt-1 text-xs">
                         {errors.message}
                       </div>
                     )}
@@ -192,15 +194,16 @@ const ContactUs = () => {
                 <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                   Our Store
                 </div>
+                <p className="mt-3">41/5 east badda Dhaka, Bangladesh</p>
                 <p className="mt-3">
-                  41/5 east badda Dhaka, Bangladesh
-                </p>
-                <p className="mt-3">
-                  Phone: <span className="whitespace-nowrap">+8801312223452</span>
+                  Phone:{" "}
+                  <span className="whitespace-nowrap">+8801312223452</span>
                 </p>
                 <p className="mt-1">
                   Email:{" "}
-                  <span className="whitespace-nowrap">rinorscorporation@gmail.com</span>
+                  <span className="whitespace-nowrap">
+                    rinorscorporation@gmail.com
+                  </span>
                 </p>
               </div>
               <div className="item mt-10">
@@ -210,20 +213,24 @@ const ContactUs = () => {
                 <p className="mt-3">
                   Sunday:{" "}
                   <span className="whitespace-nowrap">9:00am - 5:00pm</span>
-                </p><p className="mt-3">
+                </p>
+                <p className="mt-3">
                   monday:{" "}
                   <span className="whitespace-nowrap">9:00am - 5:00pm</span>
-                </p><p className="mt-3">
+                </p>
+                <p className="mt-3">
                   Tuesday:{" "}
                   <span className="whitespace-nowrap">9:00am - 5:00pm</span>
-                </p><p className="mt-3">
+                </p>
+                <p className="mt-3">
                   Wednesday:{" "}
                   <span className="whitespace-nowrap">9:00am - 5:00pm</span>
-                </p><p className="mt-3">
+                </p>
+                <p className="mt-3">
                   Thursday:{" "}
                   <span className="whitespace-nowrap">9:00am - 5:00pm</span>
-                </p><p className="mt-3">
                 </p>
+                <p className="mt-3"></p>
               </div>
             </div>
           </div>

@@ -45,10 +45,10 @@ const ModalNewsletter = () => {
                 Fridays
               </div>
               <div className="text-button-uppercase text-center">
-                New customers save <span className="text-red">30%</span>
+                New customers save <span className="text-red-500">30%</span>
                 with the code
               </div>
-              <div className="text-button-uppercase rounded-lg bg-white px-4 py-2 text-red">
+              <div className="text-button-uppercase text-red-500 rounded-lg bg-white px-4 py-2">
                 GET20off
               </div>
               <div className="button-main w-fit bg-black uppercase text-white hover:bg-white">

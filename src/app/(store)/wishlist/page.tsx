@@ -3,10 +3,10 @@
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
-import { CaretDown } from "@phosphor-icons/react/dist/ssr";
-import { useMemo, useState } from "react";
-import { useSession } from "next-auth/react";
 import { api } from "@/trpc/react";
+import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { useSession } from "next-auth/react";
+import { useMemo, useState } from "react";
 
 export default function WishlistPage() {
   const { data: session } = useSession(); // Check if the user is logged in
@@ -233,11 +233,7 @@ export default function WishlistPage() {
                     No products match the selected criteria.
                   </div>
                 ) : (
-                  <Product
-                    key={item.id}
-                    data={item.product}
-                    style=""
-                  />
+                  <Product key={item.id} data={item.product} style="" />
                 ),
               )}
             </div>

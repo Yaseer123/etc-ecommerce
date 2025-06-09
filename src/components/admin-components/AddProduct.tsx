@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/select";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
 import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
+import { productSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
 import {
   closestCenter,
@@ -137,6 +138,151 @@ export default function AddProductForm() {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Helper: validate a single field
+  function validateField(field: string, value: any) {
+    try {
+      productSchema.pick({ [field]: true }).parse({ [field]: value });
+      return "";
+    } catch (e: any) {
+      return e.errors?.[0]?.message || "Invalid value";
+    }
+  }
+
+  // Helper: validate all fields
+  function validateAllFields() {
+    // List all fields in productSchema
+    const allFields = [
+      "title",
+      "slug",
+      "shortDescription",
+      "price",
+      "discountedPrice",
+      "stock",
+      "brand",
+      "imageId",
+      "images",
+      "categoryId",
+      "descriptionImageId",
+      "attributes",
+      "estimatedDeliveryTime",
+      "categoryAttributes",
+      // description is handled separately
+    ];
+    const newErrors: Record<string, string> = {};
+    let parsedErrors: Record<string, string> = {};
+    try {
+      productSchema.parse({
+        title,
+        slug,
+        shortDescription,
+        price,
+        discountedPrice,
+        stock,
+        brand,
+        imageId,
+        images: images.map((image) => image.src),
+        categoryId,
+        descriptionImageId,
+        attributes: specifications.reduce(
+          (acc, { key, value }) => {
+            if (key) acc[key] = value;
+            return acc;
+          },
+          {} as Record<string, string>,
+        ),
+        estimatedDeliveryTime,
+        categoryAttributes: attributeValues,
+        description: "", // RichEditor content, validated separately if needed
+      });
+    } catch (e) {
+      // e is ZodError
+      if (
+        e &&
+        typeof e === "object" &&
+        "errors" in e &&
+        Array.isArray((e as any).errors)
+      ) {
+        for (const err of (e as any).errors) {
+          if (err.path && err.path[0]) {
+            parsedErrors[err.path[0]] = err.message;
+          }
+        }
+      }
+    }
+    // Set all fields, even if no error
+    for (const field of allFields) {
+      newErrors[field] = parsedErrors[field] || "";
+    }
+    // Custom error for categoryId if not selected
+    if (!categoryId) {
+      newErrors["categoryId"] = "Category is required.";
+    }
+    return newErrors;
+  }
+
+  // Real-time validation handlers
+  function handleTitleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setTitle(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      title: validateField("title", e.target.value),
+    }));
+  }
+  function handleSlugChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSlug(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      slug: validateField("slug", e.target.value),
+    }));
+  }
+  function handleShortDescriptionChange(
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) {
+    setShortDescription(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      shortDescription: validateField("shortDescription", e.target.value),
+    }));
+  }
+  function handlePriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value ? Number(e.target.value) : 0;
+    setPrice(val);
+    setErrors((prev) => ({ ...prev, price: validateField("price", val) }));
+  }
+  function handleDiscountedPriceChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value ? Number(e.target.value) : 0;
+    setDiscountedPrice(val);
+    setErrors((prev) => ({ ...prev, discountedPrice: "" })); // Not required
+  }
+  function handleStockChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value ? Number(e.target.value) : 0;
+    setStock(val);
+    setErrors((prev) => ({ ...prev, stock: validateField("stock", val) }));
+  }
+  function handleBrandChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setBrand(e.target.value);
+    setErrors((prev) => ({
+      ...prev,
+      brand: validateField("brand", e.target.value),
+    }));
+  }
+  function handleEstimatedDeliveryTimeChange(
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const val = e.target.value ? Number(e.target.value) : undefined;
+    setEstimatedDeliveryTime(val);
+    setErrors((prev) => ({ ...prev, estimatedDeliveryTime: "" })); // Optional
+  }
+  function handleCategoryIdChange(id: string) {
+    setCategoryId(id);
+    setErrors((prev) => ({
+      ...prev,
+      categoryId: validateField("categoryId", id),
+    }));
+  }
 
   useEffect(() => {
     void (async () => {
@@ -290,6 +436,14 @@ export default function AddProductForm() {
 
   const handleSubmit = async (content: string) => {
     setPending(true);
+    const newErrors = validateAllFields();
+    setErrors(newErrors);
+    const errorMessages = Object.values(newErrors).filter(Boolean);
+    if (errorMessages.length > 0) {
+      setPending(false);
+      toast.error(errorMessages.join(" | "));
+      return;
+    }
 
     // Convert specifications array back to object for submission
     const specsObject = specifications.reduce(
@@ -344,8 +498,12 @@ export default function AddProductForm() {
             type="text"
             placeholder="Title"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={handleTitleChange}
+            className={errors.title ? "border-red-500" : ""}
           />
+          {errors.title && (
+            <p className="text-red-500 mt-1 text-sm">{errors.title}</p>
+          )}
         </div>
         <div>
           <Label>Slug</Label>
@@ -353,22 +511,32 @@ export default function AddProductForm() {
             type="text"
             placeholder="Slug"
             value={slug}
-            onChange={(e) => setSlug(e.target.value)}
+            onChange={handleSlugChange}
+            className={errors.slug ? "border-red-500" : ""}
           />
+          {errors.slug && (
+            <p className="text-red-500 mt-1 text-sm">{errors.slug}</p>
+          )}
         </div>
         <div>
           <Label>Short Description</Label>
           <Textarea
             placeholder="Short Description"
             value={shortDescription}
-            onChange={(e) => setShortDescription(e.target.value)}
+            onChange={handleShortDescriptionChange}
+            className={errors.shortDescription ? "border-red-500" : ""}
           />
+          {errors.shortDescription && (
+            <p className="text-red-500 mt-1 text-sm">
+              {errors.shortDescription}
+            </p>
+          )}
         </div>
         <div>
           <Label className="text-sm font-medium">Category</Label>
           <CategorySelector
             setAttributes={setAttributes}
-            setCategoryId={setCategoryId}
+            setCategoryId={handleCategoryIdChange}
             categories={categories}
             placeholder="Select Category"
             selectedCategoriesRef={selectedCategoriesRef}
@@ -377,6 +545,9 @@ export default function AddProductForm() {
                 selectedCategoriesRef.current.slice(0, level + 1);
             }}
           />
+          {errors.categoryId && (
+            <p className="text-red-500 mt-1 text-sm">{errors.categoryId}</p>
+          )}
         </div>
         <div>
           <Label>Price</Label>
@@ -384,10 +555,12 @@ export default function AddProductForm() {
             type="number"
             placeholder="Price"
             value={price === 0 ? "" : price}
-            onChange={(e) =>
-              setPrice(e.target.value ? Number(e.target.value) : 0)
-            }
+            onChange={handlePriceChange}
+            className={errors.price ? "border-red-500" : ""}
           />
+          {errors.price && (
+            <p className="text-red-500 mt-1 text-sm">{errors.price}</p>
+          )}
         </div>
         <div>
           <Label>Discounted Price</Label>
@@ -395,9 +568,7 @@ export default function AddProductForm() {
             type="number"
             placeholder="Discounted Price"
             value={discountedPrice === 0 ? "" : discountedPrice}
-            onChange={(e) =>
-              setDiscountedPrice(e.target.value ? Number(e.target.value) : 0)
-            }
+            onChange={handleDiscountedPriceChange}
           />
         </div>
         <div>
@@ -406,10 +577,12 @@ export default function AddProductForm() {
             type="number"
             placeholder="Stock"
             value={stock === 0 ? "" : stock}
-            onChange={(e) =>
-              setStock(e.target.value ? Number(e.target.value) : 0)
-            }
+            onChange={handleStockChange}
+            className={errors.stock ? "border-red-500" : ""}
           />
+          {errors.stock && (
+            <p className="text-red-500 mt-1 text-sm">{errors.stock}</p>
+          )}
         </div>
         <div>
           <Label>Brand</Label>
@@ -417,8 +590,12 @@ export default function AddProductForm() {
             type="text"
             placeholder="Brand"
             value={brand}
-            onChange={(e) => setBrand(e.target.value)}
+            onChange={handleBrandChange}
+            className={errors.brand ? "border-red-500" : ""}
           />
+          {errors.brand && (
+            <p className="text-red-500 mt-1 text-sm">{errors.brand}</p>
+          )}
         </div>
         <div>
           <Label>Estimated Delivery Time (Days)</Label>
@@ -427,11 +604,7 @@ export default function AddProductForm() {
             placeholder="Delivery Time in Days"
             min="1"
             value={estimatedDeliveryTime ?? ""}
-            onChange={(e) =>
-              setEstimatedDeliveryTime(
-                e.target.value ? Number(e.target.value) : undefined,
-              )
-            }
+            onChange={handleEstimatedDeliveryTimeChange}
           />
         </div>
         <div className="mt-auto flex flex-col gap-y-1">

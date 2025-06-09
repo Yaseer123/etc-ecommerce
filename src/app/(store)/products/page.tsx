@@ -740,7 +740,7 @@ export default function ProductsPage() {
                       })}
                     </div>
                     <div
-                      className="clear-btn hover:bg-red-50 flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1 transition-colors"
+                      className="clear-btn hover:bg-red-500-50 flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1 transition-colors"
                       onClick={handleClearAll}
                     >
                       <X
@@ -748,7 +748,7 @@ export default function ProductsPage() {
                         size={16}
                         className="cursor-pointer"
                       />
-                      <span className="text-button-uppercase text-red">
+                      <span className="text-button-uppercase text-red-500">
                         Clear All
                       </span>
                     </div>

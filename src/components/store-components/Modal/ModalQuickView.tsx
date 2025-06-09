@@ -166,7 +166,11 @@ const ModalQuickView = () => {
                       (item) => item.id === selectedProduct?.id,
                     ) ? (
                       <>
-                        <Heart size={20} weight="fill" className="text-red" />
+                        <Heart
+                          size={20}
+                          weight="fill"
+                          className="text-red-500"
+                        />
                       </>
                     ) : (
                       <>

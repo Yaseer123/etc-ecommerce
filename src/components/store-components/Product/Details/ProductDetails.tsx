@@ -7,19 +7,19 @@ import { useModalWishlistStore } from "@/context/store-context/ModalWishlistCont
 import { api } from "@/trpc/react";
 import type { ProductWithCategory } from "@/types/ProductType";
 import {
-    ArrowClockwise,
-    CaretDown,
-    DotsThree,
-    Eye,
-    HandsClapping,
-    Heart,
-    Minus,
-    Plus,
-    Question,
-    ShareNetwork,
-    Star,
-    Timer,
-    X,
+  ArrowClockwise,
+  CaretDown,
+  DotsThree,
+  Eye,
+  HandsClapping,
+  Heart,
+  Minus,
+  Plus,
+  Question,
+  ShareNetwork,
+  Star,
+  Timer,
+  X,
 } from "@phosphor-icons/react/dist/ssr";
 import { addDays, format, formatDistanceToNow } from "date-fns";
 import { useSession } from "next-auth/react";
@@ -279,7 +279,8 @@ export default function ProductDetails({
     if (questionText.trim().length < 5) {
       setError("Question must be at least 5 characters long.");
       return;
-    }    try {
+    }
+    try {
       await askQuestionMutation.mutateAsync({
         productId: productMain.id,
         question: questionText.trim(),
@@ -288,7 +289,8 @@ export default function ProductDetails({
       setQuestionText("");
       await refetch();
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Failed to submit question";
+      const message =
+        error instanceof Error ? error.message : "Failed to submit question";
       toast.error(message);
     }
   };

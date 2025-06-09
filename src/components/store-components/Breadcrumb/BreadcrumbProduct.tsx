@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
-import { CaretRight } from "@phosphor-icons/react/dist/ssr";
-import type { ProductWithCategory } from "@/types/ProductType";
 import { api } from "@/trpc/react";
+import type { ProductWithCategory } from "@/types/ProductType";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import React from "react";
 
 interface Props {
   data: ProductWithCategory;

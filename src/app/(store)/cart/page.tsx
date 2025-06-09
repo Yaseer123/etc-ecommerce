@@ -156,7 +156,7 @@ const Cart = () => {
                           </div>
                           <div className="flex w-1/12 items-center justify-center">
                             <XCircle
-                              className="cursor-pointer text-xl text-red duration-500 hover:text-black max-md:text-base"
+                              className="text-red-500 cursor-pointer text-xl duration-500 hover:text-black max-md:text-base"
                               onClick={() => {
                                 removeFromCart(product.id);
                               }}

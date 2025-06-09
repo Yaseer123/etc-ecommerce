@@ -35,6 +35,6 @@ export const ORDER_STATUS_COLORS: Record<
   },
   CANCELLED: {
     label: "Cancelled",
-    color: "bg-red text-white",
+    color: "bg-red-500 text-white",
   },
 };

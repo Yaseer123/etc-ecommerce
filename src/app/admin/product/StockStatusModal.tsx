@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import type { StockStatus } from "@prisma/client";
-import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface StockStatusOption {
   value: StockStatus;
@@ -34,7 +34,7 @@ const stockStatusOptions: StockStatusOption[] = [
     value: "OUT_OF_STOCK",
     label: "Out of Stock",
     color: "text-red-700",
-    bgColor: "bg-red-50 border-red-200 hover:bg-red-100",
+    bgColor: "bg-red-500-50 border-red-200 hover:bg-red-100",
     description: "Product is currently unavailable",
   },
   {

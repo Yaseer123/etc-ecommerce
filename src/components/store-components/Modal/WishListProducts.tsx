@@ -83,7 +83,7 @@ export default function WishListProducts() {
             </div>
           </div>
           <div
-            className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red underline md:text-[13px] md:leading-5"
+            className="remove-wishlist-btn text-red-500 cursor-pointer text-base font-semibold leading-[22] underline md:text-[13px] md:leading-5"
             onClick={() =>
               removeFromWishlistMutation.mutate({ productId: item.product.id })
             }

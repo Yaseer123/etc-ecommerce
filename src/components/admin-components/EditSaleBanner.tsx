@@ -1,20 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
-import { api } from "@/trpc/react";
-import Image from "next/image";
-import { uploadFile, removeImage } from "@/app/actions/file";
-import { toast } from "sonner";
+import { removeImage, uploadFile } from "@/app/actions/file";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { api } from "@/trpc/react";
+import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import { useState } from "react";
+import { toast } from "sonner";
 
 export const EditSaleBanner = () => {
   const { data: banners, refetch } = api.saleBanner.getAll.useQuery();
