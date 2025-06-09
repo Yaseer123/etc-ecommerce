@@ -129,7 +129,7 @@ export default function AddProductForm() {
   >([]);
 
   // Add state for the specification rich editor
-  const [specRichContent, setSpecRichContent] = useState("");
+  const [specTextContent, setSpecTextContent] = useState("");
 
   // Configure sensors for drag-and-drop
   const sensors = useSensors(
@@ -690,18 +690,22 @@ export default function AddProductForm() {
                 Or paste/write specifications below (format: Key: Value per
                 line)
               </Label>
-              <RichEditor
-                content={specRichContent}
-                imageId={"spec-rich-editor"}
-                handleSubmit={(html) => {
-                  setSpecRichContent(html);
-                  addSpecsFromRichEditor(html);
+              <Textarea
+                placeholder="E.g. Color: Red\nSize: Large\nMaterial: Cotton"
+                value={specTextContent}
+                onChange={(e) => setSpecTextContent(e.target.value)}
+                className="min-h-[100px]"
+              />
+              <Button
+                className="mt-2"
+                type="button"
+                onClick={() => {
+                  addSpecsFromRichEditor(specTextContent);
+                  setSpecTextContent("");
                 }}
-                pending={false}
-                submitButtonText="Add from Editor"
               >
-                <></>
-              </RichEditor>
+                Add from Textarea
+              </Button>
             </div>
           </div>
         </div>
