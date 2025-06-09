@@ -185,6 +185,20 @@ export default function AddProductForm() {
     onSuccess: () => {
       toast.success("Product added successfully");
       selectedCategoriesRef.current = [];
+      // Clear form only on success
+      setTitle("");
+      setShortDescription("");
+      setPrice(0);
+      setDiscountedPrice(0);
+      setSlug("");
+      setStock(0);
+      setBrand("");
+      setEstimatedDeliveryTime(undefined);
+      setCategoryId("");
+      setAttributes([]);
+      setAttributeValues({});
+      setSpecifications([]);
+      // Navigate after clearing
       router.push("/admin/product");
     },
     onError: (error) => {
@@ -312,20 +326,7 @@ export default function AddProductForm() {
       categoryAttributes: attributeValues, // Pass category attributes separately
       estimatedDeliveryTime: estimatedDeliveryTime,
     });
-
-    // Clear form
-    setTitle("");
-    setShortDescription("");
-    setPrice(0);
-    setDiscountedPrice(0);
-    setSlug("");
-    setStock(0);
-    setBrand("");
-    setEstimatedDeliveryTime(undefined);
-    setCategoryId("");
-    setAttributes([]);
-    setAttributeValues({});
-    setSpecifications([]);
+    // Do not clear the form here! Only clear on success.
   };
 
   return (
