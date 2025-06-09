@@ -21,16 +21,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { AppRouter } from "@/server/api/root";
 import { api } from "@/trpc/react";
 import {
-  closestCenter,
   DndContext,
+  type DragEndEvent,
+  closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent,
 } from "@dnd-kit/core";
+import type { RouterOutputs } from "@/trpc/shared";
 import {
   arrayMove,
   SortableContext,
@@ -38,24 +38,16 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { inferRouterOutputs } from "@trpc/server";
 import { ArrowLeft, Loader2, MoreHorizontal, Plus, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-
-type RouterOutputs = inferRouterOutputs<AppRouter>;
+import { toast } from "sonner";
 
 type FeaturedProduct = RouterOutputs["product"]["getFeaturedProducts"][number];
 
-const SortableRow = ({
-  product,
-  handleRemoveFromFeatured,
-}: {
-  product: FeaturedProduct;
-  handleRemoveFromFeatured: (id: string) => void;
-}) => {
+const SortableRow = ({ product }: { product: FeaturedProduct }) => {
   const {
     attributes,
     listeners,
@@ -70,15 +62,6 @@ const SortableRow = ({
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 1 : 0,
   };
-
-  function isFeaturedProduct(obj: unknown): obj is FeaturedProduct {
-    if (!obj || typeof obj !== "object") return false;
-    const o = obj as Record<string, unknown>;
-    return typeof o.id === "string" && typeof o.title === "string";
-  }
-
-  if (!isFeaturedProduct(product)) return null;
-
   return (
     <TableRow ref={setNodeRef} style={style} {...attributes}>
       <TableCell
@@ -91,30 +74,20 @@ const SortableRow = ({
         <div className="flex items-center gap-3">
           <div className="h-12 w-12 overflow-hidden rounded-md">
             <Image
-              src={
-                Array.isArray(product.images) && product.images[0]
-                  ? product.images[0]
-                  : "/placeholder.png"
-              }
-              alt={typeof product.title === "string" ? product.title : ""}
+              src={product.images[0] ?? "/placeholder.png"}
+              alt={product.title}
               width={48}
               height={48}
               className="h-full w-full object-cover"
             />
           </div>
           <div>
-            <p className="font-medium">
-              {typeof product.title === "string" ? product.title : ""}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {typeof product.brand === "string" ? product.brand : ""}
-            </p>
+            <p className="font-medium">{product.title}</p>
+            <p className="text-xs text-muted-foreground">{product.brand}</p>
           </div>
         </div>
       </TableCell>
-      <TableCell>
-        ৳{typeof product.price === "number" ? product.price.toFixed(2) : ""}
-      </TableCell>
+      <TableCell>৳{product.price.toFixed(2)}</TableCell>
       <TableCell>
         <Badge
           variant={
@@ -125,19 +98,10 @@ const SortableRow = ({
                 : "outline"
           }
         >
-          {typeof product.stockStatus === "string"
-            ? product.stockStatus.replace("_", " ")
-            : ""}
+          {product.stockStatus.replace("_", " ")}
         </Badge>
       </TableCell>
-      <TableCell>
-        {typeof product.category === "object" &&
-        product.category &&
-        "name" in product.category &&
-        typeof product.category.name === "string"
-          ? product.category.name
-          : "Uncategorized"}
-      </TableCell>
+      <TableCell>{`${product.category?.name ?? "Uncategorized"}`}</TableCell>
       <TableCell>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -161,12 +125,7 @@ const SortableRow = ({
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href={
-                  typeof product.slug === "string" &&
-                  typeof product.id === "string"
-                    ? `/products/${product.slug}?id=${product.id}`
-                    : "#"
-                }
+                href={`/products/${product.slug}?id=${product.id}`}
                 target="_blank"
               >
                 View on site
@@ -185,8 +144,7 @@ export default function FeaturedProductsPage() {
   const [search, setSearch] = React.useState("");
   const [dragItems, setDragItems] = React.useState<FeaturedProduct[]>();
 
-  const { data: featuredProducts, isLoading } =
-    api.product.getFeaturedProducts.useQuery({ limit: 100 });
+  const { data: featuredProducts, isLoading } = api.product.getFeaturedProducts.useQuery();
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -194,16 +152,15 @@ export default function FeaturedProductsPage() {
 
   const filteredProducts = React.useMemo(() => {
     if (!featuredProducts) return [];
-    const base = dragItems ?? featuredProducts;
+    const base = (dragItems ?? featuredProducts);
     if (!search.trim()) return base;
-    return base.filter(
-      (product) =>
-        product.title.toLowerCase().includes(search.toLowerCase()) ||
-        product.brand.toLowerCase().includes(search.toLowerCase()),
+    return base.filter((product) =>
+      product.title.toLowerCase().includes(search.toLowerCase()) ||
+      product.brand.toLowerCase().includes(search.toLowerCase())
     );
   }, [featuredProducts, search, dragItems]);
 
-  const updatePositions = api.product.updateProductPositions.useMutation({
+  const updatePositions = api.product.updateFeaturedPositions.useMutation({
     onSuccess: () => {
       void utils.product.getFeaturedProducts.invalidate();
     },
@@ -229,10 +186,10 @@ export default function FeaturedProductsPage() {
 
     if (active.id !== over.id) {
       const oldIndex = featuredProducts.findIndex(
-        (item) => item.id === active.id,
+        (item) => item.id === active.id
       );
       const newIndex = featuredProducts.findIndex(
-        (item) => item.id === over.id,
+        (item) => item.id === over.id
       );
 
       if (oldIndex === -1 || newIndex === -1) return;
@@ -339,9 +296,8 @@ export default function FeaturedProductsPage() {
                     <TableBody>
                       {filteredProducts.map((product) => (
                         <SortableRow
-                          key={typeof product.id === "string" ? product.id : ""}
+                          key={product.id}
                           product={product}
-                          handleRemoveFromFeatured={handleRemoveFromFeatured}
                         />
                       ))}
                     </TableBody>

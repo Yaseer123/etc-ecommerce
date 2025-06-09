@@ -8,7 +8,13 @@ import React from "react";
 import { columns, type ProductColumns } from "./Columns";
 
 export default function ProductDataTable() {
-  const [productsWithCategory] = api.product.getAll.useSuspenseQuery();
+  const [page, setPage] = React.useState(1);
+  const [limit, setLimit] = React.useState(10);
+
+  const [productsWithCategory] = api.product.getAll.useSuspenseQuery({
+    page,
+    limit,
+  });
   const [items, setItems] = React.useState(productsWithCategory.products);
   React.useEffect(() => {
     setItems(productsWithCategory.products);
@@ -39,6 +45,12 @@ export default function ProductDataTable() {
     descriptionImageId: product.descriptionImageId ?? null,
   }));
 
+  const handlePageChange = (newPage: number) => setPage(newPage);
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setPage(1);
+  };
+
   return (
     <DataTable<ProductColumns>
       columns={columns}
@@ -49,6 +61,11 @@ export default function ProductDataTable() {
       dragEnabled
       rowIdKey="id"
       onDragEnd={handleDragEnd}
+      page={page}
+      limit={limit}
+      total={productsWithCategory.total}
+      onPageChange={handlePageChange}
+      onLimitChange={handleLimitChange}
     />
   );
 }

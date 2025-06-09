@@ -25,7 +25,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
@@ -42,7 +41,6 @@ import {
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { DataTablePagination } from "./DataTablePagination";
 import { DataTableViewOptions } from "./DataTableViewOptions";
 
 interface DataTableProps<TData> {
@@ -57,6 +55,11 @@ interface DataTableProps<TData> {
   onDragEnd?: (event: DragEndEvent, items: TData[]) => void;
   dragEnabled?: boolean;
   rowIdKey?: keyof TData;
+  page?: number;
+  limit?: number;
+  total?: number;
+  onPageChange?: (page: number) => void;
+  onLimitChange?: (limit: number) => void;
 }
 
 type DraggableTableRowProps<TData> = {
@@ -110,6 +113,11 @@ export function DataTable<TData>({
   onDragEnd,
   dragEnabled = false,
   rowIdKey,
+  page = 1,
+  limit = 10,
+  total = 0,
+  onPageChange,
+  onLimitChange,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -122,7 +130,6 @@ export function DataTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
@@ -239,7 +246,85 @@ export function DataTable<TData>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <BackendPagination
+        page={page}
+        limit={limit}
+        total={total}
+        onPageChange={onPageChange}
+        onLimitChange={onLimitChange}
+      />
+    </div>
+  );
+}
+
+function BackendPagination({
+  page,
+  limit,
+  total,
+  onPageChange,
+  onLimitChange,
+}: {
+  page: number;
+  limit: number;
+  total: number;
+  onPageChange?: (page: number) => void;
+  onLimitChange?: (limit: number) => void;
+}) {
+  const totalPages = Math.max(1, Math.ceil(total / limit));
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-y-4 px-2">
+      <div className="flex-1 text-sm text-muted-foreground">
+        Showing page {page} of {totalPages} ({total} total products)
+      </div>
+      <div className="flex items-center space-x-6 lg:space-x-8">
+        <div className="flex items-center space-x-2">
+          <p className="text-sm font-medium">Rows per page</p>
+          <select
+            className="h-8 w-[70px] rounded border px-2"
+            value={limit}
+            onChange={(e) => onLimitChange?.(Number(e.target.value))}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                {pageSize}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
+          Page {page} of {totalPages}
+        </div>
+        <div className="flex items-center space-x-2">
+          <button
+            className="h-8 w-8 rounded border p-0 disabled:opacity-50"
+            onClick={() => onPageChange?.(1)}
+            disabled={page === 1}
+          >
+            «
+          </button>
+          <button
+            className="h-8 w-8 rounded border p-0 disabled:opacity-50"
+            onClick={() => onPageChange?.(page - 1)}
+            disabled={page === 1}
+          >
+            ‹
+          </button>
+          <button
+            className="h-8 w-8 rounded border p-0 disabled:opacity-50"
+            onClick={() => onPageChange?.(page + 1)}
+            disabled={page === totalPages}
+          >
+            ›
+          </button>
+          <button
+            className="h-8 w-8 rounded border p-0 disabled:opacity-50"
+            onClick={() => onPageChange?.(totalPages)}
+            disabled={page === totalPages}
+          >
+            »
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

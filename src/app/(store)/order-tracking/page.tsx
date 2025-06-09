@@ -19,15 +19,17 @@ interface OrderResult {
     quantity: number;
     price: number;
   }>;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phone: string;
-    email: string;
-    name: string | null;
-  } | null;
+  address:
+    | {
+        street: string;
+        city: string;
+        state: string;
+        zipCode: string;
+        phone: string;
+        email: string;
+        name: string | null;
+      }
+    | null;
 }
 
 const OrderTracking = () => {
@@ -53,30 +55,8 @@ const OrderTracking = () => {
         throw new Error(
           "Order not found. Please check your invoice number and try again.",
         );
-      }
-      const data = (await res.json()) as unknown;
-      function isOrderResult(obj: unknown): obj is OrderResult {
-        if (!obj || typeof obj !== "object") return false;
-        const o = obj as Record<string, unknown>;
-        return (
-          typeof o.orderId === "string" &&
-          typeof o.status === "string" &&
-          typeof o.total === "number" &&
-          (typeof o.createdAt === "string" || o.createdAt instanceof Date) &&
-          Array.isArray(o.items) &&
-          ("address" in o
-            ? typeof o.address === "object" || o.address === null
-            : true)
-        );
-      }
-      if (isOrderResult(data)) {
-        setResult({
-          ...data,
-          createdAt: new Date(data.createdAt),
-        });
-      } else {
-        setError("Invalid response from server.");
-      }
+      }      const data = await res.json();
+      setResult(data as OrderResult);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
