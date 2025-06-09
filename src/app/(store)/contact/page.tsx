@@ -193,15 +193,14 @@ const ContactUs = () => {
                   Our Store
                 </div>
                 <p className="mt-3">
-                  2163 Phillips Gap Rd, West Jefferson, North Carolina, United
-                  States
+                  41/5 east badda Dhaka, Bangladesh
                 </p>
                 <p className="mt-3">
-                  Phone: <span className="whitespace-nowrap">+1 666 8888</span>
+                  Phone: <span className="whitespace-nowrap">+8801312223452</span>
                 </p>
                 <p className="mt-1">
                   Email:{" "}
-                  <span className="whitespace-nowrap">hi.avitex@gmail.com</span>
+                  <span className="whitespace-nowrap">rinorscorporation@gmail.com</span>
                 </p>
               </div>
               <div className="item mt-10">
@@ -209,16 +208,21 @@ const ContactUs = () => {
                   Open Hours
                 </div>
                 <p className="mt-3">
-                  Mon - Fri:{" "}
-                  <span className="whitespace-nowrap">7:30am - 8:00pm PST</span>
-                </p>
-                <p className="mt-3">
-                  Saturday:{" "}
-                  <span className="whitespace-nowrap">8:00am - 6:00pm PST</span>
-                </p>
-                <p className="mt-3">
                   Sunday:{" "}
-                  <span className="whitespace-nowrap">9:00am - 5:00pm PST</span>
+                  <span className="whitespace-nowrap">9:00am - 5:00pm</span>
+                </p><p className="mt-3">
+                  monday:{" "}
+                  <span className="whitespace-nowrap">9:00am - 5:00pm</span>
+                </p><p className="mt-3">
+                  Tuesday:{" "}
+                  <span className="whitespace-nowrap">9:00am - 5:00pm</span>
+                </p><p className="mt-3">
+                  Wednesday:{" "}
+                  <span className="whitespace-nowrap">9:00am - 5:00pm</span>
+                </p><p className="mt-3">
+                  Thursday:{" "}
+                  <span className="whitespace-nowrap">9:00am - 5:00pm</span>
+                </p><p className="mt-3">
                 </p>
               </div>
             </div>
