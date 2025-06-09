@@ -276,13 +276,6 @@ export default function AddProductForm() {
     setEstimatedDeliveryTime(val);
     setErrors((prev) => ({ ...prev, estimatedDeliveryTime: "" })); // Optional
   }
-  function handleCategoryIdChange(id: string) {
-    setCategoryId(id);
-    setErrors((prev) => ({
-      ...prev,
-      categoryId: validateField("categoryId", id),
-    }));
-  }
 
   useEffect(() => {
     void (async () => {
@@ -483,6 +476,13 @@ export default function AddProductForm() {
     // Do not clear the form here! Only clear on success.
   };
 
+  useEffect(() => {
+    setErrors((prev) => ({
+      ...prev,
+      categoryId: validateField("categoryId", categoryId),
+    }));
+  }, [categoryId]);
+
   return (
     <RichEditor
       content=""
@@ -491,40 +491,46 @@ export default function AddProductForm() {
       pending={pending}
       submitButtonText="Add Product"
     >
-      <div className="grid grid-cols-2 gap-3">
-        <div>
-          <Label>Product Title</Label>
+      <div className="grid grid-cols-1 gap-x-3 gap-y-4 p-2 md:p-0">
+        {/* Product Title */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Product Title</Label>
           <Input
             type="text"
             placeholder="Title"
             value={title}
             onChange={handleTitleChange}
             className={errors.title ? "border-red-500" : ""}
+            style={{ width: "100%" }}
           />
           {errors.title && (
             <p className="text-red-500 mt-1 text-sm">{errors.title}</p>
           )}
         </div>
-        <div>
-          <Label>Slug</Label>
+        {/* Slug */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Slug</Label>
           <Input
             type="text"
             placeholder="Slug"
             value={slug}
             onChange={handleSlugChange}
             className={errors.slug ? "border-red-500" : ""}
+            style={{ width: "100%" }}
           />
           {errors.slug && (
             <p className="text-red-500 mt-1 text-sm">{errors.slug}</p>
           )}
         </div>
-        <div>
-          <Label>Short Description</Label>
+        {/* Short Description */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Short Description</Label>
           <Textarea
             placeholder="Short Description"
             value={shortDescription}
             onChange={handleShortDescriptionChange}
             className={errors.shortDescription ? "border-red-500" : ""}
+            style={{ width: "100%" }}
           />
           {errors.shortDescription && (
             <p className="text-red-500 mt-1 text-sm">
@@ -532,11 +538,12 @@ export default function AddProductForm() {
             </p>
           )}
         </div>
-        <div>
-          <Label className="text-sm font-medium">Category</Label>
+        {/* Category */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base font-medium">Category</Label>
           <CategorySelector
             setAttributes={setAttributes}
-            setCategoryId={handleCategoryIdChange}
+            setCategoryId={setCategoryId}
             categories={categories}
             placeholder="Select Category"
             selectedCategoriesRef={selectedCategoriesRef}
@@ -549,91 +556,105 @@ export default function AddProductForm() {
             <p className="text-red-500 mt-1 text-sm">{errors.categoryId}</p>
           )}
         </div>
-        <div>
-          <Label>Price</Label>
+        {/* Price */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Price</Label>
           <Input
             type="number"
             placeholder="Price"
             value={price === 0 ? "" : price}
             onChange={handlePriceChange}
             className={errors.price ? "border-red-500" : ""}
+            style={{ width: "100%" }}
           />
           {errors.price && (
             <p className="text-red-500 mt-1 text-sm">{errors.price}</p>
           )}
         </div>
-        <div>
-          <Label>Discounted Price</Label>
+        {/* Discounted Price */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Discounted Price</Label>
           <Input
             type="number"
             placeholder="Discounted Price"
             value={discountedPrice === 0 ? "" : discountedPrice}
             onChange={handleDiscountedPriceChange}
+            style={{ width: "100%" }}
           />
         </div>
-        <div>
-          <Label>Stock</Label>
+        {/* Stock */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Stock</Label>
           <Input
             type="number"
             placeholder="Stock"
             value={stock === 0 ? "" : stock}
             onChange={handleStockChange}
             className={errors.stock ? "border-red-500" : ""}
+            style={{ width: "100%" }}
           />
           {errors.stock && (
             <p className="text-red-500 mt-1 text-sm">{errors.stock}</p>
           )}
         </div>
-        <div>
-          <Label>Brand</Label>
+        {/* Brand */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Brand</Label>
           <Input
             type="text"
             placeholder="Brand"
             value={brand}
             onChange={handleBrandChange}
             className={errors.brand ? "border-red-500" : ""}
+            style={{ width: "100%" }}
           />
           {errors.brand && (
             <p className="text-red-500 mt-1 text-sm">{errors.brand}</p>
           )}
         </div>
-        <div>
-          <Label>Estimated Delivery Time (Days)</Label>
+        {/* Estimated Delivery Time */}
+        <div className="flex w-full flex-col space-y-2">
+          <Label className="text-base">Estimated Delivery Time (Days)</Label>
           <Input
             type="number"
             placeholder="Delivery Time in Days"
             min="1"
             value={estimatedDeliveryTime ?? ""}
             onChange={handleEstimatedDeliveryTimeChange}
+            style={{ width: "100%" }}
           />
         </div>
-        <div className="mt-auto flex flex-col gap-y-1">
-          <Label>
+        {/* Images */}
+        <div className="mt-auto flex w-full flex-col gap-y-1">
+          <Label className="text-base">
             Images
             <span className="ml-2 text-xs text-gray-500">
               (Recommended: 1000x1000px or larger, square)
             </span>
           </Label>
-          <Button onClick={() => setShowImageGallery(imageId)}>
+          <Button
+            onClick={() => setShowImageGallery(imageId)}
+            className="w-full"
+          >
             Show Image Gallery
           </Button>
           {showImageGallery && (
             <DndImageGallery imageId={imageId} onClose={setShowImageGallery} />
           )}
         </div>
-
+        {/* Divider */}
+        <div className="col-span-1 my-2 border-b border-gray-200 md:col-span-2" />
         {/* Category Attribute Fields */}
         {attributes.length > 0 && (
-          <div className="col-span-2 mt-4">
+          <div className="col-span-1 mt-4 md:col-span-2">
             <h3 className="mb-3 text-lg font-medium">Category Attributes</h3>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {attributes.map((attr) => (
-                <div key={attr.name} className="flex flex-col gap-2">
-                  <Label htmlFor={attr.name}>
+                <div key={attr.name} className="flex w-full flex-col gap-2">
+                  <Label htmlFor={attr.name} className="text-base">
                     {attr.name}{" "}
                     {attr.required && <span className="text-red-500">*</span>}
                   </Label>
-
                   {attr.type === "select" && attr.options && (
                     <Select
                       value={attributeValues[attr.name]?.toString() ?? ""}
@@ -641,12 +662,16 @@ export default function AddProductForm() {
                         handleAttributeChange(attr.name, value)
                       }
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="w-full">
                         <SelectValue placeholder={`Select ${attr.name}`} />
                       </SelectTrigger>
                       <SelectContent>
                         {attr.options.map((option) => (
-                          <SelectItem key={option} value={option}>
+                          <SelectItem
+                            key={option}
+                            value={option}
+                            className="w-full"
+                          >
                             {option}
                           </SelectItem>
                         ))}
@@ -658,9 +683,11 @@ export default function AddProductForm() {
             </div>
           </div>
         )}
-
-        <div className="col-span-2">
-          <Label>Specifications</Label>
+        {/* Divider */}
+        <div className="col-span-1 my-2 border-b border-gray-200 md:col-span-2" />
+        {/* Specifications */}
+        <div className="col-span-1 w-full md:col-span-2">
+          <Label className="text-base">Specifications</Label>
           <div className="space-y-2">
             <DndContext
               sensors={sensors}
@@ -684,9 +711,11 @@ export default function AddProductForm() {
                 ))}
               </SortableContext>
             </DndContext>
-            <Button onClick={handleAddSpecification}>Add Specification</Button>
+            <Button onClick={handleAddSpecification} className="w-full">
+              Add Specification
+            </Button>
             <div className="mt-4">
-              <Label className="mb-1 block">
+              <Label className="mb-1 block text-base">
                 Or paste/write specifications below (format: Key: Value per
                 line)
               </Label>
@@ -694,10 +723,10 @@ export default function AddProductForm() {
                 placeholder="E.g. Color: Red\nSize: Large\nMaterial: Cotton"
                 value={specTextContent}
                 onChange={(e) => setSpecTextContent(e.target.value)}
-                className="min-h-[100px]"
+                className="min-h-[100px] w-full"
               />
               <Button
-                className="mt-2"
+                className="mt-2 w-full"
                 type="button"
                 onClick={() => {
                   addSpecsFromRichEditor(specTextContent);
@@ -714,6 +743,9 @@ export default function AddProductForm() {
   );
 }
 
+type SetCategoryIdType =
+  | Dispatch<SetStateAction<string>>
+  | ((id: string) => void);
 function CategorySelector({
   setCategoryId,
   setAttributes,
@@ -723,7 +755,7 @@ function CategorySelector({
   selectedCategoriesRef, // Ref to store the category selection path
   onCategoryChange, // Function to reset child selection
 }: {
-  setCategoryId: Dispatch<SetStateAction<string>>;
+  setCategoryId: SetCategoryIdType;
   setAttributes: Dispatch<SetStateAction<CategoryAttribute[]>>;
   categories: CategoryTree[];
   placeholder: string;
