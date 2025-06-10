@@ -40,7 +40,7 @@ const AboutUs = () => {
                 </div>
               </div>
             </div>
-            <div className="grid gap-[30px] pt-10 sm:grid-cols-3 md:pt-20">
+            {/* <div className="grid gap-[30px] pt-10 sm:grid-cols-3 md:pt-20">
               <div className="bg-img">
                 <Image
                   src={"/images/other/about-team.jpg"}
@@ -68,7 +68,7 @@ const AboutUs = () => {
                   className="w-full rounded-[30px]"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -99,8 +99,8 @@ const AboutUs = () => {
           </div>
         </div>
       </div>
-      <Instagram />
-      <Brand />
+      {/* <Instagram /> */}
+      {/* <Brand /> */}
     </>
   );
 };
