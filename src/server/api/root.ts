@@ -1,17 +1,18 @@
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
-import { userRouter } from "./routers/user";
-import { categoryRouter } from "./routers/category";
-import { productRouter } from "./routers/product";
-import { blogPostRouter } from "./routers/blogPost";
-import { orderRouter } from "./routers/order";
-import { questionRouter } from "./routers/question";
-import { wishListRouter } from "./routers/wishList";
-import { faqRouter } from "./routers/faq";
 import { addressRouter } from "./routers/address";
-import { sliderRouter } from "./routers/slider";
-import { saleBannerRouter } from "./routers/saleBanner";
+import { blogPostRouter } from "./routers/blogPost";
+import { categoryRouter } from "./routers/category";
 import { contactRouter } from "./routers/contact";
+import { faqRouter } from "./routers/faq";
+import { newsletterRouter } from "./routers/newsletter";
+import { orderRouter } from "./routers/order";
+import { productRouter } from "./routers/product";
+import { questionRouter } from "./routers/question";
 import { reviewRouter } from "./routers/review";
+import { saleBannerRouter } from "./routers/saleBanner";
+import { sliderRouter } from "./routers/slider";
+import { userRouter } from "./routers/user";
+import { wishListRouter } from "./routers/wishList";
 
 /**
  * This is the primary router for your server.
@@ -32,6 +33,7 @@ export const appRouter = createTRPCRouter({
   saleBanner: saleBannerRouter,
   contact: contactRouter,
   review: reviewRouter,
+  newsletter: newsletterRouter,
 });
 
 // export type definition of API

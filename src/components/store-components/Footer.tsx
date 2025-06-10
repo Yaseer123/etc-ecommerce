@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiTiktok } from "react-icons/si";
+import Newsletter from "./Newsletter";
 
 const Footer = () => {
   return (
@@ -134,26 +135,8 @@ const Footer = () => {
                       Return & Refund
                     </Link>
                   </div>
-                </div>
-                <div className="newsletter basis-1/3 pl-7 max-md:basis-full max-md:pl-0">
-                  <div className="text-button-uppercase">Newletter</div>
-                  <div className="caption1 mt-3">
-                    Sign up for our newsletter and get 10% off your first
-                    purchase
-                  </div>
-                  <div className="input-block mt-4 h-[52px] w-full">
-                    <form className="relative h-full w-full" action="post">
-                      <input
-                        type="email"
-                        placeholder="Enter your e-mail"
-                        className="caption1 h-full w-full rounded-xl border border-line pl-4 pr-14"
-                        required
-                      />
-                      <button className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black">
-                        <ArrowRight size={24} color="#fff" />
-                      </button>
-                    </form>
-                  </div>
+                </div>                <div className="newsletter basis-1/3 pl-7 max-md:basis-full max-md:pl-0">
+                  <Newsletter variant="footer" />
                   <div className="list-social mt-4 flex items-center gap-6">
                     <Link
                       href={

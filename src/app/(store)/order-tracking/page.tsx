@@ -19,15 +19,17 @@ interface OrderResult {
     quantity: number;
     price: number;
   }>;
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-    phone: string;
-    email: string;
-    name: string | null;
-  } | null;
+  address:
+    | {
+        street: string;
+        city: string;
+        state: string;
+        zipCode: string;
+        phone: string;
+        email: string;
+        name: string | null;
+      }
+    | null;
 }
 
 const OrderTracking = () => {
@@ -53,8 +55,7 @@ const OrderTracking = () => {
         throw new Error(
           "Order not found. Please check your invoice number and try again.",
         );
-      }
-      const data = await res.json();
+      }      const data = await res.json();
       setResult(data as OrderResult);
     } catch (err: unknown) {
       if (err instanceof Error) {
