@@ -91,7 +91,7 @@ export default function TopNav({ props }: Props) {
                 href={"https://www.tiktok.com/@rinors_ecommerce"}
                 target="_blank"
               >
-                <i className="icon-tiktok text-2xl" />
+                <span className="icon-tiktok text-2xl" />
               </Link>
             </div>
           </div>

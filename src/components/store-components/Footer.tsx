@@ -2,6 +2,7 @@ import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { FaXTwitter } from "react-icons/fa6";
+import { SiTiktok } from "react-icons/si";
 
 const Footer = () => {
   return (
@@ -171,13 +172,13 @@ const Footer = () => {
                       <div className="icon-instagram text-2xl text-black"></div>
                     </Link>
                     <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
-                      <FaXTwitter className="text-2xl text-black" />
+                      <FaXTwitter className="text-xl text-black" />
                     </Link>
                     <Link
                       href={"https://www.tiktok.com/@rinors_ecommerce"}
                       target="_blank"
                     >
-                      <div className="icon-tiktok text-2xl text-black"></div>
+                      <SiTiktok className="text-xl text-black" />
                     </Link>
                     <Link
                       href={"https://www.youtube.com/@rinorsgreenenergy"}
