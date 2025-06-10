@@ -1,13 +1,14 @@
 "use client";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { api } from "@/trpc/react";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface NewsletterProps {
-  variant?: 'default' | 'footer';
+  variant?: "default" | "footer";
 }
 
-export default function Newsletter({ variant = 'default' }: NewsletterProps) {
+export default function Newsletter({ variant = "default" }: NewsletterProps) {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -19,18 +20,27 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
     setError("");
     try {
       await newsletterMutation.mutateAsync({ email });
-      setSuccess(
+      toast.success(
         "Thank you for subscribing! Check your email for a discount code.",
       );
       setEmail("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      let message = "Something went wrong. Please try again.";
+      if (
+        err &&
+        typeof err === "object" &&
+        "message" in err &&
+        typeof (err as any).message === "string"
+      ) {
+        message = (err as any).message;
+      }
+      toast.error(message);
     }
   };
 
   return (
     <>
-      {variant === 'default' ? (
+      {variant === "default" ? (
         <div className="newsletter-block bg-green py-7">
           <div className="mx-auto flex w-full !max-w-[1322px] items-center justify-center gap-8 gap-y-4 px-4 max-lg:flex-col lg:justify-between">
             <div className="text-content">
@@ -50,18 +60,16 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={newsletterMutation.isLoading}
+                  disabled={newsletterMutation.isPending}
                 />
                 <button
                   className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
                   type="submit"
-                  disabled={newsletterMutation.isLoading}
+                  disabled={newsletterMutation.isPending}
                 >
-                  {newsletterMutation.isLoading ? "..." : "Subscribe"}
+                  {newsletterMutation.isPending ? "..." : "Subscribe"}
                 </button>
               </form>
-              {success && <div className="text-green-800 mt-2 text-sm">{success}</div>}
-              {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
             </div>
           </div>
         </div>
@@ -80,18 +88,16 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={newsletterMutation.isLoading}
+                disabled={newsletterMutation.isPending}
               />
               <button
                 className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
                 type="submit"
-                disabled={newsletterMutation.isLoading}
+                disabled={newsletterMutation.isPending}
               >
                 <ArrowRight size={24} color="#fff" />
               </button>
             </form>
-            {success && <div className="text-green-800 mt-2 text-sm">{success}</div>}
-            {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
           </div>
         </>
       )}
