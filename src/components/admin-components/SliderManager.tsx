@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import { removeImage, uploadFile } from "@/app/actions/file";
 import { api } from "@/trpc/react";
 import Image from "next/image";
-import { uploadFile, removeImage } from "@/app/actions/file";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const SliderManager = () => {
@@ -26,6 +26,13 @@ export const SliderManager = () => {
     link: string;
   } | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [selectedImageName, setSelectedImageName] = useState<string>("");
+
+  useEffect(() => {
+    if (editingSlider) {
+      setSelectedImageName("");
+    }
+  }, [editingSlider?.id]);
 
   const handleImageUpload = async (file: File) => {
     try {
@@ -203,11 +210,25 @@ export const SliderManager = () => {
                 accept="image/*"
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
-                  if (file) await handleImageUpload(file);
+                  if (file) {
+                    setSelectedImageName(file.name);
+                    await handleImageUpload(file);
+                  }
                 }}
                 className="w-full cursor-pointer rounded-lg border border-gray-200 p-3"
                 disabled={uploading}
               />
+              {selectedImageName ? (
+                <div className="mt-1 text-sm text-gray-500">
+                  Selected: {selectedImageName}
+                </div>
+              ) : (
+                editingSlider?.imageUrl && (
+                  <div className="mt-1 text-sm text-gray-500">
+                    Current image: {editingSlider.imageUrl.split("/").pop()}
+                  </div>
+                )
+              )}
               {uploading && (
                 <div className="mt-2 flex items-center gap-2">
                   <div className="h-4 w-4 animate-spin rounded-full border-2 border-black border-t-transparent"></div>
@@ -250,7 +271,10 @@ export const SliderManager = () => {
                 Save
               </button>
               <button
-                onClick={() => setEditingSlider(null)}
+                onClick={() => {
+                  setEditingSlider(null);
+                  setSelectedImageName("");
+                }}
                 className="rounded-lg bg-gray-100 px-6 py-2.5 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
               >
                 Cancel

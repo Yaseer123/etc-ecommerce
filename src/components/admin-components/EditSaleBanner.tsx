@@ -13,7 +13,7 @@ import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const EditSaleBanner = () => {
@@ -41,6 +41,13 @@ export const EditSaleBanner = () => {
     isActive: boolean;
   } | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [selectedImageName, setSelectedImageName] = useState<string>("");
+
+  useEffect(() => {
+    if (editingBanner) {
+      setSelectedImageName("");
+    }
+  }, [editingBanner?.id]);
 
   const handleImageUpload = async (file: File) => {
     try {
@@ -302,12 +309,26 @@ export const EditSaleBanner = () => {
                 accept="image/*"
                 onChange={async (e) => {
                   const file = e.target.files?.[0];
-                  if (file) await handleImageUpload(file);
+                  if (file) {
+                    setSelectedImageName(file.name);
+                    await handleImageUpload(file);
+                  }
                 }}
                 className="w-full cursor-pointer rounded-lg border border-gray-200 p-3"
                 disabled={uploading}
               />
             </div>
+            {selectedImageName ? (
+              <div className="mt-1 text-sm text-gray-500">
+                Selected: {selectedImageName}
+              </div>
+            ) : (
+              editingBanner?.imageUrl && (
+                <div className="mt-1 text-sm text-gray-500">
+                  Current image: {editingBanner.imageUrl.split("/").pop()}
+                </div>
+              )
+            )}
             {editingBanner.imageUrl && (
               <div className="relative aspect-[21/9] w-full overflow-hidden rounded-lg">
                 <Image
@@ -357,7 +378,10 @@ export const EditSaleBanner = () => {
                 Save
               </button>
               <button
-                onClick={() => setEditingBanner(null)}
+                onClick={() => {
+                  setEditingBanner(null);
+                  setSelectedImageName("");
+                }}
                 className="rounded-lg bg-gray-100 px-6 py-2.5 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
               >
                 Cancel
