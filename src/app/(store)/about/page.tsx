@@ -1,10 +1,9 @@
 "use client";
-import React from "react";
-import Image from "next/image";
 import Benefit from "@/components/store-components/Benefit";
 import Brand from "@/components/store-components/Brand";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Instagram from "@/components/store-components/Instagram";
+import Image from "next/image";
 const breadcrumbItems = [
   { label: "Home", href: "/" },
   { label: "About us", href: "/about" },
@@ -21,46 +20,51 @@ const AboutUs = () => {
             <div className="flex items-center justify-center">
               <div className="w-full md:w-5/6">
                 <div className="text-center text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
-                  I{String.raw`'m`} obsessed with the dress Pippa Middleton wore
-                  to her brother{String.raw`'s`} wedding.
+                  Elevating Everyday Style
                 </div>
                 <div className="mt-5 text-center text-lg font-normal leading-7 md:mt-7">
-                  Kim Kardashian West needs no introduction. In the 14 years
-                  since she first graced our screens in Keeping Up With The
-                  Kardashians, she has built her KKW beauty empire, filmed her
-                  show, wrapped her show, become a billionaire, studied law,
-                  campaigned for the rights of death row inmates, travelled the
-                  world to attend events such as Paris Fashion Week, raised four
-                  children and launched her wildly successful shapewear brand
-                  SKIMS.
+                  Welcome to Rinors, your destination for modern, sustainable
+                  fashion. Founded in 2022, our mission is to empower
+                  individuals to express themselves through thoughtfully
+                  designed clothing that blends comfort, quality, and style. We
+                  believe fashion should be accessible, ethical, and
+                  inspiring—every piece in our collection is carefully curated
+                  to reflect these values.
+                  <br />
+                  <br />
+                  Our passionate team is dedicated to providing an exceptional
+                  shopping experience, from handpicking the latest trends to
+                  ensuring your order arrives with care. Whether you&apos;re
+                  looking for timeless essentials or statement pieces, Rinors is
+                  here to help you look and feel your best every day.
                 </div>
               </div>
             </div>
             <div className="grid gap-[30px] pt-10 sm:grid-cols-3 md:pt-20">
               <div className="bg-img">
                 <Image
-                  src={"/images/other/about-us1.png"}
+                  src={"/images/other/about-team.jpg"}
                   width={2000}
                   height={3000}
-                  alt="bg-img"
+                  alt="Our Team"
                   className="w-full rounded-[30px]"
                 />
               </div>
               <div className="bg-img">
                 <Image
-                  src={"/images/other/about-us2.png"}
+                  src={"/images/other/about-store.jpg"}
                   width={2000}
                   height={3000}
-                  alt="bg-img"
+                  alt="Our Store"
                   className="w-full rounded-[30px]"
                 />
               </div>
               <div className="bg-img">
                 <Image
-                  src={"/images/other/about-us3.png"}
+                  src={"/images/other/about-values.jpg"}
                   width={2000}
                   height={3000}
-                  alt="bg-img"
+                  alt="Our Values"
                   className="w-full rounded-[30px]"
                 />
               </div>
@@ -75,10 +79,10 @@ const AboutUs = () => {
           className={`mt-10 flex flex-col items-center rounded-3xl bg-green px-6 py-10 sm:rounded-[32px] sm:px-8 sm:py-14 md:mt-20 md:py-20`}
         >
           <div className="text-center text-4xl font-semibold capitalize leading-[40px] text-white">
-            Sign up and get 10% off
+            Join our community
           </div>
           <div className="mt-3 text-center text-white">
-            Sign up for early sale access, new in, promotions and more
+            Subscribe for exclusive updates, style tips, and special offers
           </div>
           <div className="mt-7 h-[52px] w-full sm:mt-10 sm:w-3/5 lg:w-1/2">
             <form className="relative h-full w-full" action="post">
