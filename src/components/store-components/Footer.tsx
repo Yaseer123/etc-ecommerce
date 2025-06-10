@@ -121,7 +121,7 @@ const Footer = () => {
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/pages/faqs"}
+                      href={"/privacy-policy"}
                     >
                       Privacy Policy
                     </Link>
