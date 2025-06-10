@@ -378,6 +378,15 @@ const Checkout = () => {
                         })),
                         addressId,
                       });
+                      // Auto-register guest user after order
+                      await fetch("/api/auth/auto-register", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          email: newAddress.email,
+                          name: newAddress.name,
+                        }),
+                      });
                     }
                   }}
                 >
