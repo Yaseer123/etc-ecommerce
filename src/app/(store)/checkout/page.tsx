@@ -51,6 +51,15 @@ const Checkout = () => {
     },
   });
 
+  // Coupon code state
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [couponError, setCouponError] = useState("");
+  const [discountValue, setDiscountValue] = useState<number>(Number(discount));
+
+  const validateCouponMutation =
+    api.coupon.validateNewsletterCoupon.useMutation();
+
   React.useEffect(() => {
     const sum = cartArray.reduce(
       (acc, item) => acc + (item.discountedPrice ?? item.price) * item.quantity,
@@ -100,6 +109,39 @@ const Checkout = () => {
     }));
   };
 
+  // Coupon apply handler
+  const handleApplyCoupon = async () => {
+    if (!newAddress.email || !/^\S+@\S+\.\S+$/.test(newAddress.email)) {
+      setCouponError(
+        "Please enter a valid email address above before applying the coupon.",
+      );
+      return;
+    }
+    setCouponError("");
+    setAppliedCoupon(null);
+    setDiscountValue(0);
+    try {
+      const res = await validateCouponMutation.mutateAsync({
+        email: newAddress.email,
+        couponCode: couponCode,
+      });
+      if (res.valid) {
+        const discount = Math.round(totalCart * (res.discount || 0));
+        setDiscountValue(discount);
+        setAppliedCoupon(couponCode);
+        setCouponError("");
+      } else {
+        setCouponError(res.message || "Invalid or expired coupon code.");
+        setAppliedCoupon(null);
+        setDiscountValue(0);
+      }
+    } catch (err: any) {
+      setCouponError(err.message || "Something went wrong. Please try again.");
+      setAppliedCoupon(null);
+      setDiscountValue(0);
+    }
+  };
+
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
@@ -135,7 +177,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.name && (
-                <div className="text-red-500 mt-1 text-xs">
+                <div className="mt-1 text-xs text-red-500">
                   {addressErrors.name}
                 </div>
               )}
@@ -151,7 +193,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.email && (
-                <div className="text-red-500 mt-1 text-xs">
+                <div className="mt-1 text-xs text-red-500">
                   {addressErrors.email}
                 </div>
               )}
@@ -167,7 +209,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.mobile && (
-                <div className="text-red-500 mt-1 text-xs">
+                <div className="mt-1 text-xs text-red-500">
                   {addressErrors.mobile}
                 </div>
               )}
@@ -183,7 +225,7 @@ const Checkout = () => {
                 required
               />
               {addressErrors.address && (
-                <div className="text-red-500 mt-1 text-xs">
+                <div className="mt-1 text-xs text-red-500">
                   {addressErrors.address}
                 </div>
               )}
@@ -342,7 +384,7 @@ const Checkout = () => {
                   Order Now
                 </button>
                 {orderError && (
-                  <div className="text-red-500 mt-2">{orderError}</div>
+                  <div className="mt-2 text-red-500">{orderError}</div>
                 )}
               </div>
             </div>
@@ -350,6 +392,41 @@ const Checkout = () => {
               <div>
                 <div className="pb-3 text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                   Your Order
+                </div>
+                {/* Coupon code input */}
+                <div className="mb-4">
+                  <label htmlFor="coupon" className="mb-1 block font-medium">
+                    Coupon Code
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      id="coupon"
+                      type="text"
+                      className="w-full rounded-lg border-line px-4 py-2"
+                      placeholder="Enter coupon code"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      disabled={!!appliedCoupon}
+                    />
+                    <button
+                      type="button"
+                      className="rounded bg-black px-4 py-2 font-semibold text-white hover:bg-green hover:text-black disabled:opacity-50"
+                      onClick={handleApplyCoupon}
+                      disabled={!!appliedCoupon || !couponCode.trim()}
+                    >
+                      {appliedCoupon ? "Applied" : "Apply"}
+                    </button>
+                  </div>
+                  {couponError && (
+                    <div className="mt-1 text-xs text-red-500">
+                      {couponError}
+                    </div>
+                  )}
+                  {appliedCoupon && (
+                    <div className="text-green-600 mt-1 text-xs">
+                      Coupon '{appliedCoupon}' applied!
+                    </div>
+                  )}
                 </div>
                 <div>
                   {cartArray.length < 1 ? (
@@ -397,7 +474,7 @@ const Checkout = () => {
                     Discounts
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    -৳<span className="discount">{discount}</span>
+                    -৳<span className="discount">{discountValue}</span>
                     <span>.00</span>
                   </div>
                 </div>
@@ -414,7 +491,7 @@ const Checkout = () => {
                     Total
                   </div>
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                    ৳{totalCart - Number(discount) + Number(ship)}.00
+                    ৳{totalCart - discountValue + Number(ship)}.00
                   </div>
                 </div>
               </div>

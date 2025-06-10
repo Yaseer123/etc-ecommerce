@@ -3,6 +3,7 @@ import { addressRouter } from "./routers/address";
 import { blogPostRouter } from "./routers/blogPost";
 import { categoryRouter } from "./routers/category";
 import { contactRouter } from "./routers/contact";
+import { couponRouter } from "./routers/coupon";
 import { faqRouter } from "./routers/faq";
 import { newsletterRouter } from "./routers/newsletter";
 import { orderRouter } from "./routers/order";
@@ -34,6 +35,7 @@ export const appRouter = createTRPCRouter({
   contact: contactRouter,
   review: reviewRouter,
   newsletter: newsletterRouter,
+  coupon: couponRouter,
 });
 
 // export type definition of API
