@@ -27,10 +27,10 @@ const Footer = () => {
                     <span className="text-button mt-3">Address:</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="">hi.avitex@gmail.com</span>
-                    <span className="mt-3">1-333-345-6868</span>
+                    <span className="">rinorscorporation@gmail.com</span>
+                    <span className="mt-3">01312223452</span>
                     <span className="mt-3 pt-px">
-                      549 Oak St.Crystal Lake, IL 60014
+                      41/5 east badda Dhaka, Bangladesh
                     </span>
                   </div>
                 </div>
@@ -41,13 +41,13 @@ const Footer = () => {
                     <div className="text-button-uppercase pb-3">Infomation</div>
                     <Link
                       className="caption1 has-line-before w-fit duration-300"
-                      href={"/pages/contact"}
+                      href={"/contact"}
                     >
                       Contact us
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"#!"}
+                      href={"/contact"}
                     >
                       Career
                     </Link>
@@ -65,7 +65,7 @@ const Footer = () => {
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/pages/faqs"}
+                      href={"/faqs"}
                     >
                       FAQs
                     </Link>
@@ -74,33 +74,33 @@ const Footer = () => {
                     <div className="text-button-uppercase pb-3">Quick Shop</div>
                     <Link
                       className="caption1 has-line-before w-fit duration-300"
-                      href={"/shop/breadcrumb1"}
+                      href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l"}
                     >
-                      Women
+                     Home Electricals
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/shop/breadcrumb1"}
+                      href={"/products?category=cmbb6dq3y000epfkkjn0sie9j"}
                     >
-                      Men
+                      Energy Solutions
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/shop/breadcrumb1"}
+                      href={"/products?category=cmbb78cte000mpfkkt0cyt53d"}
                     >
-                      Clothes
+                      Smart Gadget
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/shop/breadcrumb1"}
+                      href={"/products?category=cmbb7dno0000opfkk9ttqrmxj"}
                     >
-                      Accessories
+                      Health and Fitness
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/blog"}
+                      href={"/products?category=cmbb6x8b3000ipfkkcas967g6"}
                     >
-                      Blog
+                      Smart Appliances
                     </Link>
                   </div>
                   <div className="item flex basis-1/3 flex-col">
@@ -109,7 +109,7 @@ const Footer = () => {
                     </div>
                     <Link
                       className="caption1 has-line-before w-fit duration-300"
-                      href={"/pages/faqs"}
+                      href={"/faqs"}
                     >
                       Orders FAQs
                     </Link>
@@ -176,7 +176,8 @@ const Footer = () => {
                       href={"https://www.tiktok.com/@rinors_ecommerce"}
                       target="_blank"
                     >
-                      <div className="icon-tiktok text-2xl text-black"></div>
+                      <div className="icon-tiktok text-2xl text-black">
+                      </div>
                     </Link>
                     <Link
                       href={"https://www.youtube.com/@rinorsgreenenergy"}
