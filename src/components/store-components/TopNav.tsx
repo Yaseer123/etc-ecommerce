@@ -7,6 +7,7 @@ import {
   FaXTwitter,
   FaYoutube,
 } from "react-icons/fa6";
+import { SiTiktok } from "react-icons/si";
 
 interface Props {
   props: string;
@@ -91,7 +92,7 @@ export default function TopNav({ props }: Props) {
                 href={"https://www.tiktok.com/@rinors_ecommerce"}
                 target="_blank"
               >
-                <span className="icon-tiktok text-2xl" />
+                <SiTiktok className="text-md" />
               </Link>
             </div>
           </div>
