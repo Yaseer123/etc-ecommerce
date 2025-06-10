@@ -46,7 +46,7 @@ const PrivacyPolicy = () => {
             <h2>Contact Us</h2>
             <p>
               If you have questions or comments about this Privacy Policy,
-              please contact us at hi.avitex@gmail.com.
+              please contact us at rinorscorporation@gmail.com.
             </p>
           </div>
         </div>
