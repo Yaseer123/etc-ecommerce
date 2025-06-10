@@ -184,7 +184,7 @@ const Footer = () => {
                       href={"https://www.youtube.com/@rinorsgreenenergy"}
                       target="_blank"
                     >
-                      <div className="icon-youtube text-2xl text-black"></div>
+                      <div className="icon-youtube text-3xl text-black"></div>
                     </Link>
                   </div>
                 </div>
