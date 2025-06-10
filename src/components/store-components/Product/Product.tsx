@@ -167,7 +167,7 @@ export default function Product({ data }: ProductProps) {
       <div className="bg-img relative w-full">
         {/* Sale badge */}
         {data.discountedPrice && (
-          <div className="bg-red-500 absolute left-2 top-2 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
+          <div className="bg-red-500 absolute left-2 -top-3 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
             -{discountPercentage}%
           </div>
         )}
@@ -181,11 +181,7 @@ export default function Product({ data }: ProductProps) {
               src={data.images?.[0] ?? "/images/products/1000x1000.png"}
               alt={data.title}
             />
-            {data.new && (
-              <div className="bg-green-500 absolute left-2 top-2 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
-                New
-              </div>
-            )}
+        
           </div>
         </Link>
         <div className="list-action absolute right-1 top-1 flex flex-col gap-2">
