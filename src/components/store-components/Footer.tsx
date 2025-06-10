@@ -1,6 +1,7 @@
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
+import { FaXTwitter } from "react-icons/fa6";
 
 const Footer = () => {
   return (
@@ -76,7 +77,7 @@ const Footer = () => {
                       className="caption1 has-line-before w-fit duration-300"
                       href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l"}
                     >
-                     Home Electricals
+                      Home Electricals
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
@@ -170,14 +171,13 @@ const Footer = () => {
                       <div className="icon-instagram text-2xl text-black"></div>
                     </Link>
                     <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
-                      <div className="icon-twitter text-2xl text-black"></div>
+                      <FaXTwitter className="text-2xl text-black" />
                     </Link>
                     <Link
                       href={"https://www.tiktok.com/@rinors_ecommerce"}
                       target="_blank"
                     >
-                      <div className="icon-tiktok text-2xl text-black">
-                      </div>
+                      <div className="icon-tiktok text-2xl text-black"></div>
                     </Link>
                     <Link
                       href={"https://www.youtube.com/@rinorsgreenenergy"}
