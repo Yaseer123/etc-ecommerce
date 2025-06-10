@@ -543,40 +543,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
   // Add state for the specification rich editor
   const [specRichContent, setSpecRichContent] = useState("");
 
-  // Helper to parse and add specs from rich editor
-  const addSpecsFromRichEditor = (html: string) => {
-    // Split HTML by <br>, </p>, and </div> tags to get logical lines
-    const htmlLines = html
-      .replace(/<\/?(div|p)[^>]*>/gi, "\n")
-      .replace(/<br\s*\/?>(?![\s\S]*<br)/gi, "\n")
-      .split(/\n+/)
-      .map((line) => line.trim())
-      .filter((line) => line.length > 0);
-    setSpecifications((prev) => {
-      const existingKeys = new Set(prev.map((s) => s.key.trim().toLowerCase()));
-      const newSpecs = htmlLines
-        .map((line) => {
-          if (line.includes(":")) {
-            const [key, ...rest] = line.split(":");
-            if (typeof key === "string") {
-              return { key: key.trim(), value: rest.join(":").trim() };
-            }
-          } else {
-            return { key: line, value: "" };
-          }
-          return null;
-        })
-        .filter(
-          (spec): spec is { key: string; value: string } =>
-            !!spec &&
-            typeof spec.key === "string" &&
-            spec.key.trim().length > 0 &&
-            !existingKeys.has(spec.key.trim().toLowerCase()),
-        );
-      return [...prev, ...newSpecs];
-    });
-  };
-
   if (!product) return null;
 
   return (
@@ -597,7 +563,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={handleTitleChange}
           />
           {errors.title && (
-            <p className="text-red-500 mt-1 text-sm">{errors.title}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.title}</p>
           )}
         </div>
         <div>
@@ -609,7 +575,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={handleSlugChange}
           />
           {errors.slug && (
-            <p className="text-red-500 mt-1 text-sm">{errors.slug}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.slug}</p>
           )}
         </div>
         <div>
@@ -620,7 +586,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={handleShortDescriptionChange}
           />
           {errors.shortDescription && (
-            <p className="text-red-500 mt-1 text-sm">
+            <p className="mt-1 text-sm text-red-500">
               {errors.shortDescription}
             </p>
           )}
@@ -632,7 +598,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             setCategoryId={setCategoryId}
           />
           {errors.categoryId && (
-            <p className="text-red-500 mt-1 text-sm">{errors.categoryId}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.categoryId}</p>
           )}
         </div>
         <div>
@@ -644,7 +610,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={handlePriceChange}
           />
           {errors.price && (
-            <p className="text-red-500 mt-1 text-sm">{errors.price}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.price}</p>
           )}
         </div>
         <div>
@@ -665,7 +631,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={handleStockChange}
           />
           {errors.stock && (
-            <p className="text-red-500 mt-1 text-sm">{errors.stock}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.stock}</p>
           )}
         </div>
         <div>
@@ -677,7 +643,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
             onChange={handleBrandChange}
           />
           {errors.brand && (
-            <p className="text-red-500 mt-1 text-sm">{errors.brand}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.brand}</p>
           )}
         </div>
         <div>
@@ -779,18 +745,54 @@ export default function EditProductForm({ productId }: { productId: string }) {
                 Or paste/write specifications below (format: Key: Value per
                 line)
               </Label>
-              <RichEditor
-                content={specRichContent}
-                imageId={"spec-rich-editor"}
-                handleSubmit={(html) => {
-                  setSpecRichContent(html);
-                  addSpecsFromRichEditor(html);
+              <Textarea
+                placeholder={`Color: Red\nSize: Large\nMaterial: Cotton`}
+                value={specRichContent}
+                onChange={(e) => setSpecRichContent(e.target.value)}
+                className="min-h-[100px] w-full"
+              />
+              <Button
+                className="mt-2 w-full"
+                type="button"
+                onClick={() => {
+                  // Parse textarea content and add to specifications
+                  const htmlLines = specRichContent
+                    .split(/\n+/)
+                    .map((line) => line.trim())
+                    .filter((line) => line.length > 0);
+                  setSpecifications((prev) => {
+                    const existingKeys = new Set(
+                      prev.map((s) => s.key.trim().toLowerCase()),
+                    );
+                    const newSpecs = htmlLines
+                      .map((line) => {
+                        if (line.includes(":")) {
+                          const [key, ...rest] = line.split(":");
+                          if (typeof key === "string") {
+                            return {
+                              key: key.trim(),
+                              value: rest.join(":").trim(),
+                            };
+                          }
+                        } else {
+                          return { key: line, value: "" };
+                        }
+                        return null;
+                      })
+                      .filter(
+                        (spec): spec is { key: string; value: string } =>
+                          !!spec &&
+                          typeof spec.key === "string" &&
+                          spec.key.trim().length > 0 &&
+                          !existingKeys.has(spec.key.trim().toLowerCase()),
+                      );
+                    return [...prev, ...newSpecs];
+                  });
+                  setSpecRichContent("");
                 }}
-                pending={false}
-                submitButtonText="Add from Editor"
               >
-                <></>
-              </RichEditor>
+                Add from Textarea
+              </Button>
             </div>
           </div>
         </div>
