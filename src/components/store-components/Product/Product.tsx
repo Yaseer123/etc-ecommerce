@@ -168,7 +168,7 @@ export default function Product({ data }: ProductProps) {
         {/* Sale badge */}
         {data.discountedPrice && (
           <div className="bg-red-500 absolute left-2 -top-3 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
-            -{Math.abs(discountPercentage)}%
+            -{discountPercentage}%
           </div>
         )}
 
