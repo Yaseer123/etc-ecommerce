@@ -504,7 +504,7 @@ export default function AddProductForm() {
             style={{ width: "100%" }}
           />
           {errors.title && (
-            <p className="text-red-500 mt-1 text-sm">{errors.title}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.title}</p>
           )}
         </div>
         {/* Slug */}
@@ -519,7 +519,7 @@ export default function AddProductForm() {
             style={{ width: "100%" }}
           />
           {errors.slug && (
-            <p className="text-red-500 mt-1 text-sm">{errors.slug}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.slug}</p>
           )}
         </div>
         {/* Short Description */}
@@ -533,7 +533,7 @@ export default function AddProductForm() {
             style={{ width: "100%" }}
           />
           {errors.shortDescription && (
-            <p className="text-red-500 mt-1 text-sm">
+            <p className="mt-1 text-sm text-red-500">
               {errors.shortDescription}
             </p>
           )}
@@ -553,7 +553,7 @@ export default function AddProductForm() {
             }}
           />
           {errors.categoryId && (
-            <p className="text-red-500 mt-1 text-sm">{errors.categoryId}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.categoryId}</p>
           )}
         </div>
         {/* Price */}
@@ -568,7 +568,7 @@ export default function AddProductForm() {
             style={{ width: "100%" }}
           />
           {errors.price && (
-            <p className="text-red-500 mt-1 text-sm">{errors.price}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.price}</p>
           )}
         </div>
         {/* Discounted Price */}
@@ -594,7 +594,7 @@ export default function AddProductForm() {
             style={{ width: "100%" }}
           />
           {errors.stock && (
-            <p className="text-red-500 mt-1 text-sm">{errors.stock}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.stock}</p>
           )}
         </div>
         {/* Brand */}
@@ -609,7 +609,7 @@ export default function AddProductForm() {
             style={{ width: "100%" }}
           />
           {errors.brand && (
-            <p className="text-red-500 mt-1 text-sm">{errors.brand}</p>
+            <p className="mt-1 text-sm text-red-500">{errors.brand}</p>
           )}
         </div>
         {/* Estimated Delivery Time */}

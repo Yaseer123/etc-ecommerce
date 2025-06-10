@@ -55,24 +55,26 @@ export const productRouter = createTRPCRouter({
       const sort = input?.sort ?? "position";
 
       // Build where filter for search
-      const where = search
-        ? {
-            OR: [
-              {
-                title: {
-                  contains: search,
-                  mode: "insensitive" as Prisma.QueryMode,
+      const where: Prisma.ProductWhereInput = {
+        ...(search
+          ? {
+              OR: [
+                {
+                  title: {
+                    contains: search,
+                    mode: "insensitive" as Prisma.QueryMode,
+                  },
                 },
-              },
-              {
-                brand: {
-                  contains: search,
-                  mode: "insensitive" as Prisma.QueryMode,
+                {
+                  brand: {
+                    contains: search,
+                    mode: "insensitive" as Prisma.QueryMode,
+                  },
                 },
-              },
-            ],
-          }
-        : undefined;
+              ],
+            }
+          : {}),
+      };
 
       // Build orderBy
       let orderBy: Prisma.ProductOrderByWithRelationInput = { position: "asc" };
@@ -92,9 +94,20 @@ export const productRouter = createTRPCRouter({
         ctx.db.product.count({ where }),
       ]);
 
-      const totalPages = Math.ceil(total / limit);
+      // Filter out soft-deleted products
+      const filteredProducts = products.filter(
+        (p: any) => p.deletedAt === null,
+      );
+      const filteredTotal = filteredProducts.length;
+      const totalPages = Math.ceil(filteredTotal / limit);
 
-      return { products, total, page, limit, totalPages };
+      return {
+        products: filteredProducts,
+        total: filteredTotal,
+        page,
+        limit,
+        totalPages,
+      };
     }),
 
   getAllByCategory: publicProcedure
@@ -105,9 +118,11 @@ export const productRouter = createTRPCRouter({
     )
     .query(async ({ ctx, input }) => {
       if (!input.categoryId) {
-        return ctx.db.product.findMany({
+        // Remove deletedAt from where clause, filter after query
+        const products = await ctx.db.product.findMany({
           include: { category: true },
         });
+        return products.filter((p: any) => p.deletedAt === null);
       }
 
       // Fetch all child category IDs recursively
@@ -129,14 +144,13 @@ export const productRouter = createTRPCRouter({
 
       const categoryIds = await getChildCategoryIds(input.categoryId);
 
-      // Fetch products for all category IDs
+      // Fetch products for all category IDs, filter after query
       const products = await ctx.db.product.findMany({
         where: { categoryId: { in: categoryIds } },
         include: { category: true },
         orderBy: { position: "asc" },
       });
-
-      return products;
+      return products.filter((p: any) => p.deletedAt === null);
     }),
 
   getProductById: publicProcedure
@@ -150,7 +164,8 @@ export const productRouter = createTRPCRouter({
         where: { id: input.id },
         include: { category: true },
       });
-
+      // Exclude soft-deleted products
+      if (product?.deletedAt) return null;
       return product;
     }),
 
@@ -306,7 +321,8 @@ export const productRouter = createTRPCRouter({
         orderBy: orderBy ?? { position: "asc" },
       });
 
-      return products;
+      // Filter out soft-deleted products
+      return products.filter((p: any) => p.deletedAt === null);
     }),
 
   search: publicProcedure
@@ -750,9 +766,10 @@ export const productRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id } = input;
 
-      // Delete the product
-      return ctx.db.product.delete({
+      // Soft delete: set deletedAt instead of deleting
+      return ctx.db.product.update({
         where: { id },
+        data: { deletedAt: new Date() },
       });
     }),
 
