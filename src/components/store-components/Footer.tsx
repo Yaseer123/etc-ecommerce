@@ -76,31 +76,31 @@ const Footer = () => {
                     <div className="text-button-uppercase pb-3">Quick Shop</div>
                     <Link
                       className="caption1 has-line-before w-fit duration-300"
-                      href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l"}
+                      href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"}
                     >
                       Home Electricals
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/products?category=cmbb6dq3y000epfkkjn0sie9j"}
+                      href={"/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"}
                     >
                       Energy Solutions
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/products?category=cmbb78cte000mpfkkt0cyt53d"}
+                      href={"/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"}
                     >
                       Smart Gadget
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/products?category=cmbb7dno0000opfkk9ttqrmxj"}
+                      href={"/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"}
                     >
                       Health and Fitness
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/products?category=cmbb6x8b3000ipfkkcas967g6"}
+                      href={"/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"}
                     >
                       Smart Appliances
                     </Link>
