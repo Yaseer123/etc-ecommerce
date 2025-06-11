@@ -519,7 +519,7 @@ export default function ProductDetails({
                     </div>
                   </div>
                 </div>
-                <div className="list-payment mt-7">
+                {/* <div className="list-payment mt-7">
                   <div className="main-content relative w-full rounded-xl border border-line px-2 pb-4 pt-6 sm:px-3 md:px-4 lg:pb-6 lg:pt-8">
                     <div className="heading6 bg-linear absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap px-3 text-sm sm:px-5 sm:text-base">
                       Guranteed safe checkout
@@ -581,34 +581,39 @@ export default function ProductDetails({
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
-              <div className="get-it mt-6">
-                <div className="heading5">Get it today</div>
+              {/* <div className="heading5">Get it today</div> */}
+
+              <div className="get-it mt-6 flex flex-col sm:flex-row gap-4">
                 <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
                   <div>
+                    <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
                     <div className="text-title">Free shipping</div>
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Free shipping on orders over ৳7500.
                     </div>
                   </div>
                 </div>
+
                 <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <div className="icon-phone-call text-3xl sm:text-4xl"></div>
                   <div>
+                    <div className="icon-phone-call text-3xl sm:text-4xl"></div>
                     <div className="text-title">Support everyday</div>
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Support from 8:30 AM to 10:00 PM everyday
                     </div>
                   </div>
                 </div>
+
                 <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
-                  <div className="icon-return text-3xl sm:text-4xl"></div>
                   <div>
+                    <div className="icon-return text-3xl sm:text-4xl"></div>
                     <div className="text-title">100 Day Returns</div>
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
-                      Not impressed? Get a refund. You have 100 days to break
+                      Not impressed? Get a refund.
+                      <br />
+                      You have 100 days to break
                       our hearts.
                     </div>
                   </div>
@@ -930,7 +935,7 @@ export default function ProductDetails({
                         </form>
                       </div>
                     ) : (
-                      <div className="form-review text-red-500 rounded-lg bg-surface/20 p-4 pt-6 sm:p-6">
+                      <div className="form-review rounded-lg bg-surface/20 p-4 pt-6 text-red-500 sm:p-6">
                         You can only review products you have purchased.
                       </div>
                     ))}
@@ -1026,9 +1031,6 @@ export default function ProductDetails({
             </div>
           ) : (
             <div className="empty-content flex flex-col items-center justify-center py-12">
-              <span className="material-icons mb-3 text-5xl text-gray-300">
-                textsms
-              </span>
               <div className="empty-text text-center text-lg text-gray-500">
                 There are no questions asked yet. Be the first one to ask a
                 question.
@@ -1061,7 +1063,7 @@ export default function ProductDetails({
                 rows={3}
                 disabled={askQuestionMutation.isPending}
               />
-              {error && <div className="text-red-500 text-sm">{error}</div>}
+              {error && <div className="text-sm text-red-500">{error}</div>}
               <Button
                 type="submit"
                 disabled={askQuestionMutation.isPending}
