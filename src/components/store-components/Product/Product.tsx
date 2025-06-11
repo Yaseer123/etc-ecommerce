@@ -163,11 +163,11 @@ export default function Product({ data }: ProductProps) {
     : 0;
 
   return (
-    <div className="product-item style-marketplace h-full rounded-2xl border border-[#ddd] bg-white p-4 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
+    <div className="product-item style-marketplace h-full rounded-[.25rem] border border-[#ddd] bg-white p-4 pt-5 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
       <div className="bg-img relative w-full">
         {/* Sale badge */}
         {data.discountedPrice && (
-          <div className="absolute -top-3 left-2 z-10 rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
+          <div className="absolute -top-4 left-2 z-10 rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
             -{discountPercentage}%
           </div>
         )}
