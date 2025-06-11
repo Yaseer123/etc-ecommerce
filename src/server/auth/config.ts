@@ -9,7 +9,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { JWT } from "next-auth/jwt";
-export const config = { runtime: "nodejs" };
+export const runtime = "nodejs";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`

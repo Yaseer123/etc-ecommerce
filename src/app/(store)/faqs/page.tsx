@@ -1,8 +1,8 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { api } from "@/trpc/react";
+import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { useEffect, useState } from "react";
 
 const breadcrumbItems = [
   { label: "Home", href: "/" },
@@ -90,7 +90,7 @@ const Faqs = () => {
                     faqCategories.map((category) => (
                       <div
                         key={category.id}
-                        className={`tab-item heading6 has-line-before inline-block w-fit cursor-pointer text-secondary2 duration-300 hover:text-black ${
+                        className={`tab-item heading6 has-line-before inline-block w-fit cursor-pointer text-secondary2 duration-300 ${
                           activeTab === category.id ? "active" : ""
                         }`}
                         onClick={() => handleActiveTab(category.id)}

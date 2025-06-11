@@ -1,11 +1,10 @@
 "use client";
-import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
 import { api } from "@/trpc/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function Page() {
   const [searchKeyword, setSearchKeyword] = useState<string>("");
@@ -89,7 +88,7 @@ export default function Page() {
                   }
                 />
                 <button
-                  className="duration-400 md:text-md absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                  className="duration-400 md:text-md absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   onClick={() => handleSearch(searchKeyword)}
                 >
                   search

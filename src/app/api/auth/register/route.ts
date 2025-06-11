@@ -6,17 +6,6 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-// Utility to generate a random password
-export function generateRandomPassword(length = 10) {
-  const chars =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*";
-  let password = "";
-  for (let i = 0; i < length; i++) {
-    password += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return password;
-}
-
 async function sendVerificationEmail(email: string, token: string) {
   const html = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
@@ -41,7 +30,7 @@ async function sendVerificationEmail(email: string, token: string) {
   });
 }
 
-export const config = { runtime: "nodejs" };
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   try {

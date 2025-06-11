@@ -469,7 +469,7 @@ export default function ProductDetails({
                 </div>
                 <div className="button-block mt-5">
                   <div
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={handleBuyNow}
                   >
                     Buy It Now
@@ -585,7 +585,7 @@ export default function ProductDetails({
               </div>
               {/* <div className="heading5">Get it today</div> */}
 
-              <div className="get-it mt-6 flex flex-col sm:flex-row gap-4">
+              <div className="get-it mt-6 flex flex-col gap-4 sm:flex-row">
                 <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
                   <div>
                     <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
@@ -613,8 +613,7 @@ export default function ProductDetails({
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Not impressed? Get a refund.
                       <br />
-                      You have 100 days to break
-                      our hearts.
+                      You have 100 days to break our hearts.
                     </div>
                   </div>
                 </div>
@@ -627,19 +626,19 @@ export default function ProductDetails({
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
                 <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 hover:text-black ${activeTab === "description" ? "active" : ""}`}
+                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "description" ? "active" : ""}`}
                   onClick={() => handleActiveTab("description")}
                 >
                   Description
                 </div>
                 <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 hover:text-black ${activeTab === "specifications" ? "active" : ""}`}
+                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "specifications" ? "active" : ""}`}
                   onClick={() => handleActiveTab("specifications")}
                 >
                   Specifications
                 </div>
                 <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 hover:text-black ${activeTab === "review" ? "active" : ""}`}
+                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "review" ? "active" : ""}`}
                   onClick={() => handleActiveTab("review")}
                 >
                   Review
@@ -857,7 +856,7 @@ export default function ProductDetails({
                               </div>
                               <Link
                                 href={"#form-review"}
-                                className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary hover:text-black md:text-base md:leading-6"
+                                className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary md:text-base md:leading-6"
                               >
                                 Reply
                               </Link>

@@ -503,7 +503,7 @@ export default function AdminFAQsPage() {
                       <Button
                         variant="outline"
                         size="sm"
-                        className="w-full border border-gray-300 bg-white hover:bg-gray-100 hover:text-black"
+                        className="w-full border border-gray-300 bg-white hover:bg-gray-100"
                         onClick={() => openCreateFaqItemDialog(category.id)}
                       >
                         <Plus className="mr-2 h-4 w-4" /> Add FAQ
@@ -575,7 +575,7 @@ export default function AdminFAQsPage() {
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="hover:bg-red-500 h-7 w-7 rounded-full hover:text-white sm:h-8 sm:w-8"
+                                      className="h-7 w-7 rounded-full hover:bg-red-500 hover:text-white sm:h-8 sm:w-8"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         handleDeleteFaqItem(
@@ -610,7 +610,7 @@ export default function AdminFAQsPage() {
                         <CardFooter className="flex justify-center border-t bg-gray-50 p-4">
                           <Button
                             variant="outline"
-                            className="gap-2 border border-gray-300 bg-white hover:bg-gray-100 hover:text-black"
+                            className="gap-2 border border-gray-300 bg-white hover:bg-gray-100"
                             onClick={() => openCreateFaqItemDialog(category.id)}
                           >
                             <Plus className="h-4 w-4" /> Add FAQ to this

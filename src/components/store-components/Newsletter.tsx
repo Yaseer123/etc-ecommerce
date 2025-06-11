@@ -3,6 +3,7 @@ import { api } from "@/trpc/react";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "../ui/button";
 
 interface NewsletterProps {
   variant?: "default" | "footer";
@@ -41,7 +42,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
   return (
     <>
       {variant === "default" ? (
-        <div className="newsletter-block bg-green py-7">
+        <div className="newsletter-block bg-green-300 py-7">
           <div className="mx-auto flex w-full !max-w-[1322px] items-center justify-center gap-8 gap-y-4 px-4 max-lg:flex-col lg:justify-between">
             <div className="text-content">
               <div className="text-[36px] font-semibold capitalize leading-[40px] max-lg:text-center md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
@@ -62,13 +63,14 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={newsletterMutation.isPending}
                 />
-                <button
-                  className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
+                <Button
+                  variant="default"
+                  className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black text-white"
                   type="submit"
                   disabled={newsletterMutation.isPending}
                 >
                   {newsletterMutation.isPending ? "..." : "Subscribe"}
-                </button>
+                </Button>
               </form>
             </div>
           </div>

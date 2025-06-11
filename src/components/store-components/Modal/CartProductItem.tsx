@@ -35,7 +35,7 @@ export default function CartProductItem({ item }: CartProductItemProps) {
             {item.name}
           </div>
           <div
-            className="text-red-500 cursor-pointer text-base font-semibold leading-[22] underline hover:text-black md:text-[13px] md:leading-5"
+            className="cursor-pointer text-base font-semibold leading-[22] text-red-500 underline md:text-[13px] md:leading-5"
             onClick={() => removeFromCart(item.id)}
           >
             Remove

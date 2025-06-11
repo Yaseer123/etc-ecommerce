@@ -73,7 +73,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
           {Object.entries(orderStatusMapping).map(([key, value]) => (
             <button
               key={key}
-              className={`item relative px-3 py-2.5 text-center text-secondary duration-300 hover:text-black`}
+              className={`item relative px-3 py-2.5 text-center text-secondary duration-300`}
               onClick={() => handleActiveOrders(value as OrderStatus)}
             >
               {activeOrders === value && (
@@ -91,7 +91,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
         {isLoading ? (
           <div className="mt-5 text-center">Loading orders...</div>
         ) : isError ? (
-          <div className="text-red-500 mt-5 text-center">
+          <div className="mt-5 text-center text-red-500">
             Failed to load orders. Please try again later.
           </div>
         ) : orders?.length === 0 ? (

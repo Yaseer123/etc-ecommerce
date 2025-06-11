@@ -1,13 +1,13 @@
 "use client";
 
-import React, { Suspense, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { api } from "@/trpc/react";
-import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
 import BlogList from "@/components/store-components/Blog/BlogList";
 import BlogSkeleton from "@/components/store-components/Blog/BlogSkeleton";
 import RecentPosts from "@/components/store-components/Blog/RecentPosts";
+import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import { api } from "@/trpc/react";
+import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
 const BlogsPage = () => {
   const searchParams = useSearchParams();
@@ -48,7 +48,7 @@ const BlogsPage = () => {
                   placeholder="Search"
                 />
                 <button type="submit">
-                  <MagnifyingGlass className="heading6 absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-secondary duration-300 hover:text-black" />
+                  <MagnifyingGlass className="heading6 absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-secondary duration-300" />
                 </button>
               </form>
               <Suspense

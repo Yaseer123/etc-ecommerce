@@ -69,7 +69,7 @@ const ModalCart = () => {
                           {item.name}
                         </h4>
                         <button
-                          className="hover:text-red-500 text-gray-400 transition-colors"
+                          className="text-gray-400 transition-colors hover:text-red-500"
                           onClick={() => removeFromCart(item.id)}
                           aria-label="Remove item"
                         >
@@ -135,7 +135,7 @@ const ModalCart = () => {
                   </Link>
                   <Link
                     href={"/checkout"}
-                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     Check Out
@@ -172,7 +172,7 @@ const ModalCart = () => {
                   </div>
                   <div className="block-button px-6 pb-6 pt-4 text-center">
                     <div
-                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       onClick={() => {
                         setNote(tempNote);
                         setActiveTab("");

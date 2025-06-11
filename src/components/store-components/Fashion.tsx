@@ -65,7 +65,7 @@ const RecentlyAdded = () => {
 
   if (isCategoriesError) {
     return (
-      <div className="text-red-500 py-10 text-center">
+      <div className="py-10 text-center text-red-500">
         Failed to load categories. Please try again later.
       </div>
     );
@@ -83,7 +83,7 @@ const RecentlyAdded = () => {
                   <div
                     id={`tab-${category.id}`}
                     key={category.id}
-                    className={`tab-item relative flex-shrink-0 cursor-pointer px-5 py-2 text-secondary duration-500 hover:text-black ${
+                    className={`tab-item relative flex-shrink-0 cursor-pointer px-5 py-2 text-secondary duration-500 ${
                       activeTab === category.id ? "active" : ""
                     }`}
                     onClick={() => handleTabClick(category.id)}
@@ -112,7 +112,7 @@ const RecentlyAdded = () => {
               ))}
             </div>
           ) : isProductsError ? (
-            <div className="text-red-500 mt-6 text-center">
+            <div className="mt-6 text-center text-red-500">
               Failed to load products. Please try again later.
             </div>
           ) : products?.length === 0 ? (

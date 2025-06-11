@@ -138,7 +138,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.name && errors.name && (
-                      <div className="text-red-500 mt-1 text-xs">
+                      <div className="mt-1 text-xs text-red-500">
                         {errors.name}
                       </div>
                     )}
@@ -155,7 +155,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.email && errors.email && (
-                      <div className="text-red-500 mt-1 text-xs">
+                      <div className="mt-1 text-xs text-red-500">
                         {errors.email}
                       </div>
                     )}
@@ -172,7 +172,7 @@ const ContactUs = () => {
                       onBlur={handleBlur}
                     />
                     {touched.message && errors.message && (
-                      <div className="text-red-500 mt-1 text-xs">
+                      <div className="mt-1 text-xs text-red-500">
                         {errors.message}
                       </div>
                     )}
@@ -182,7 +182,7 @@ const ContactUs = () => {
                   <button
                     type="submit"
                     disabled={contactMutation.isPending || !isFormValid}
-                    className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:text-sm md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                    className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:text-sm md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   >
                     {contactMutation.isPending ? "Sending..." : "Send message"}
                   </button>

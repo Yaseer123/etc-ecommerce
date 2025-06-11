@@ -150,13 +150,13 @@ export default function Register() {
                     </Link>
                   </label>
                 </div>
-                {error && <div className="text-red-500 mt-2">{error}</div>}
+                {error && <div className="mt-2 text-red-500">{error}</div>}
                 {success && (
                   <div className="text-green-600 mt-2">{success}</div>
                 )}
                 <div className="mt-4 md:mt-7">
                   <button
-                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     type="submit"
                     disabled={loading}
                   >
@@ -178,7 +178,7 @@ export default function Register() {
                 <div className="mt-4 md:mt-7">
                   <Link
                     href={"/login"}
-                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green hover:text-black md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Login
                   </Link>
