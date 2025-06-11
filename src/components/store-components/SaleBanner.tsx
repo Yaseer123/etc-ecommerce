@@ -43,11 +43,11 @@ export const SaleBanner = () => {
             </div>
             <Image
               src={banner.imageUrl}
-              width={200}
+              width={400}
               height={100}
               alt={banner.title}
               priority={true}
-              className="absolute right-0 top-0 h-full w-auto max-w-[50%] object-cover object-right-top sm:max-w-none"
+              className="absolute right-0 top-0 h-full w-full object-cover object-right-top sm:max-w-none "
             />
           </div>
         ))}
