@@ -155,7 +155,7 @@ export default function Menu({
 
   return (
     <>
-      <TopNav props="style-one bg-black hover:bg-black/75" />
+      <TopNav props="style-one bg-black " />
 
       {/* Main header - not sticky */}
       <div className="header-menu relative w-full bg-white lg:pt-5">
