@@ -1,10 +1,12 @@
-import { CaretRight, X } from "@phosphor-icons/react/dist/ssr";
+import { api } from "@/trpc/react";
+import { CaretDown, CaretRight, X } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import MobileSearch from "./MobileSearch";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { FaXTwitter } from "react-icons/fa6";
 import { SiTiktok } from "react-icons/si";
+import MobileSearch from "./MobileSearch";
 
 interface MobileMenuProps {
   openMenuMobile: boolean;
@@ -13,12 +15,17 @@ interface MobileMenuProps {
 
 const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
   const router = useRouter();
+  const [categories] = api.category.getAll.useSuspenseQuery();
+  const [productsExpanded, setProductsExpanded] = useState(true);
 
   // Function to handle navigation and close menu
   const handleNavigation = (path: string) => {
     handleMenuMobile(); // First close the menu
     router.push(path); // Then navigate to the path
   };
+
+  // Only top-level categories (no subcategories)
+  const topCategories = categories.filter((cat) => !cat.parentId);
 
   return (
     <div id="menu-mobile" className={`${openMenuMobile ? "open" : ""}`}>
@@ -27,13 +34,16 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
           <div className="menu-main h-full overflow-hidden">
             <div className="heading relative flex items-center justify-center py-2">
               <div
-                className="close-menu-mobile-btn absolute left-0 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full bg-surface"
+                className="close-menu-mobile-btn bg-surface absolute left-0 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full"
                 onClick={handleMenuMobile}
               >
                 <X size={14} />
               </div>
               <div
-                onClick={() => handleNavigation("/")}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleNavigation("/")
+                }}
                 className="logo cursor-pointer text-center"
               >
                 <Image
@@ -52,18 +62,47 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
               <ul>
                 <li>
                   <div
-                    onClick={() => handleNavigation("/products")}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log("clicked");
+                      setProductsExpanded((prev) => !prev);
+                    }}
                   >
                     Products
                     <span className="text-right">
-                      <CaretRight size={20} />
+                      {productsExpanded ? (
+                        <CaretDown size={20} />
+                      ) : (
+                        <CaretRight size={20} />
+                      )}
                     </span>
                   </div>
+                  {productsExpanded && (
+                    <ul className="mt-2 pl-4">
+                      {topCategories.map((cat) => (
+                        <li key={cat.id} className="mb-1">
+                          <Link
+                            href={`/products?category=${cat.id}`}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMenuMobile();
+                            }}
+                            className="block py-1 text-base text-gray-700 hover:text-orange-600"
+                          >
+                            {cat.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </li>
                 <li>
                   <div
-                    onClick={() => handleNavigation("/blog")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigation("/blog")
+                    }}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Blog
@@ -74,7 +113,10 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                 </li>
                 <li>
                   <div
-                    onClick={() => handleNavigation("/about")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigation("/about")
+                    } }
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     About Us
@@ -85,7 +127,10 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                 </li>
                 <li>
                   <div
-                    onClick={() => handleNavigation("/faqs")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigation("/faqs")
+                    } }
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     FAQ
@@ -96,7 +141,10 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                 </li>
                 <li>
                   <div
-                    onClick={() => handleNavigation("/contact")}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigation("/contact")
+                    } }
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Contact Us

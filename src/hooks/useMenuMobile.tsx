@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const useMenuMobile = () => {
   const [openMenuMobile, setOpenMenuMobile] = useState(false);
@@ -9,12 +9,15 @@ const useMenuMobile = () => {
   };
 
   const handleClickOutsideMenuMobile = useCallback((event: Event) => {
-    const targetElement = event.target as Element;
-
-    if (
-      !targetElement.closest("#menu-mobile") &&
-      !targetElement.closest(".menu-mobile-icon")
-    ) {
+    // Use composedPath for better event path detection
+    const path = (event.composedPath && event.composedPath()) || [];
+    const isInsideMenu = path.some(
+      (el) =>
+        el instanceof Element &&
+        (el.id?.toString() === "menu-mobile" ||
+          el.classList?.contains("menu-mobile-icon")),
+    );
+    if (!isInsideMenu) {
       setOpenMenuMobile(false);
     }
   }, []);
