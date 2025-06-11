@@ -1,8 +1,9 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import { HomeIcon } from "lucide-react";
 
 const breadcrumbItems = [
-  { label: "Home", href: "/" },
+  { label: <HomeIcon size={16} />, href: "/" },
   { label: "Privacy Policy", href: "/privacy-policy" },
 ];
 

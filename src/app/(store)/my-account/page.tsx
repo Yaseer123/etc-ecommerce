@@ -14,6 +14,7 @@ import OrderHistory from "@/components/store-components/UserDashboard/OrderHisto
 import AddressTab from "@/components/store-components/UserDashboard/Address";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { HomeIcon } from "lucide-react";
 
 const MyAccount = () => {
   const { data: session } = useSession();
@@ -21,7 +22,7 @@ const MyAccount = () => {
   const [activeTab, setActiveTab] = useState<string | undefined>("dashboard");
 
   const breadcrumbItems = [
-    { label: "home", href: "/" },
+    { label: <HomeIcon size={16} />, href: "/" },
     { label: "my-account" },
   ];
 

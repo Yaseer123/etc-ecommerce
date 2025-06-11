@@ -18,7 +18,7 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
     <>
       {type === "style-one" ? (
         <div
-          className="blog-item style-one h-full cursor-pointer transition-transform hover:scale-[1.02]"
+          className="blog-item style-one h-full cursor-pointer p-5 bg-white transition-transform hover:scale-[1.02]"
           onClick={() => handleBlogClick(data.id)}
         >
           <div className="blog-main block h-full">
@@ -60,7 +60,7 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
         <>
           {type === "style-list" ? (
             <div
-              className="blog-item style-list h-full cursor-pointer transition-all hover:opacity-95"
+              className="blog-item style-list h-full cursor-pointer bg-white transition-all hover:opacity-95"
               onClick={() => handleBlogClick(data.id)}
             >
               <div className="blog-main flex h-full flex-col gap-4 sm:gap-6 md:flex-row md:items-center md:gap-9">
@@ -108,10 +108,10 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
             <>
               {type === "style-default" && (
                 <div
-                  className="blog-item style-default h-full cursor-pointer transition-all hover:opacity-95"
+                  className="blog-item style-default h-full cursor-pointer bg-white transition-all hover:opacity-95"
                   onClick={() => handleBlogClick(data.id)}
                 >
-                  <div className="blog-main block h-full border-b border-line pb-4 sm:pb-6 md:pb-8">
+                  <div className="blog-main border-line block h-full border-b pb-4 sm:pb-6 md:pb-8">
                     <div className="blog-thumb overflow-hidden rounded-[10px] sm:rounded-[15px] md:rounded-[20px]">
                       <Image
                         src={data.coverImageUrl}

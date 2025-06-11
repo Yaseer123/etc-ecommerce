@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Footer from "@/components/store-components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { ORDER_STATUS_COLORS } from "@/utils/constants";
+import { HomeIcon } from "lucide-react";
 
 // Define the expected order result type
 interface OrderResult {
@@ -72,7 +73,7 @@ const OrderTracking = () => {
     <>
       <div id="header" className="relative w-full">
         <Breadcrumb
-          items={[{ label: "Home", href: "/" }, { label: "Order Tracking" }]}
+          items={[{ label: <HomeIcon size={16} />, href: "/" }, { label: "Order Tracking" }]}
           pageTitle="Order Tracking"
         />
       </div>

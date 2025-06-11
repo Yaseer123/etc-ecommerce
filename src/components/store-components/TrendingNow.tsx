@@ -1,12 +1,11 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
-import "swiper/css/bundle";
-import { useRouter } from "next/navigation";
 import { api } from "@/trpc/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import "swiper/css/bundle";
+import { Autoplay, Navigation } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const TrendingNow = () => {
   const [categories] = api.category.getAll.useSuspenseQuery();
@@ -60,11 +59,11 @@ const TrendingNow = () => {
                 className="flex justify-center py-2"
               >
                 <div
-                  className="trending-item group relative mx-auto block max-w-[150px] md:max-w-[220px] cursor-pointer transition-all duration-300 hover:-translate-y-1"
+                  className="trending-item group relative mx-auto block max-w-[150px] cursor-pointer transition-all duration-300 hover:-translate-y-1 md:max-w-[220px]"
                   onClick={() => handleCategoryClick(category.id)}
                 >
                   <div className="bg-img aspect-square overflow-hidden rounded-full border-4 border-white shadow-lg transition-all duration-300 group-hover:border-orange-100 group-hover:shadow-xl">
-                  <Image
+                    <Image
                       src={category.image ?? "/images/avatar/1.png"}
                       width={220}
                       height={220}

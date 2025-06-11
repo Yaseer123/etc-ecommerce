@@ -2,10 +2,11 @@
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { api } from "@/trpc/react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const breadcrumbItems = [
-  { label: "Home", href: "/" },
+  { label: <HomeIcon size={16} />, href: "/" },
   { label: "FAQs", href: "/faqs" },
 ];
 

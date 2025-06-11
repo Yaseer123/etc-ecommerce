@@ -298,7 +298,7 @@ export default function ProductDetails({
   return (
     <>
       <div className="product-detail sale">
-        <div className="featured-product underwear py-10 md:py-20">
+        <div className="featured-product underwear py-10 md:py-20 bg-white">
           <div className="container flex flex-wrap justify-between gap-y-6">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
               <Swiper
@@ -586,7 +586,7 @@ export default function ProductDetails({
               {/* <div className="heading5">Get it today</div> */}
 
               <div className="get-it mt-6 flex flex-col gap-4 sm:flex-row">
-                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 bg-white px-3 py-1">
                   <div>
                     <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
                     <div className="text-title">Free shipping</div>
@@ -596,7 +596,7 @@ export default function ProductDetails({
                   </div>
                 </div>
 
-                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 bg-white px-3 py-1">
                   <div>
                     <div className="icon-phone-call text-3xl sm:text-4xl"></div>
                     <div className="text-title">Support everyday</div>
@@ -606,7 +606,7 @@ export default function ProductDetails({
                   </div>
                 </div>
 
-                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3">
+                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 bg-white px-3 py-1">
                   <div>
                     <div className="icon-return text-3xl sm:text-4xl"></div>
                     <div className="text-title">100 Day Returns</div>
@@ -621,7 +621,8 @@ export default function ProductDetails({
             </div>
           </div>
         </div>
-        <div className="desc-tab py-10 md:py-20">
+        
+        <div className="desc-tab py-10 md:py-20 bg-white mt-10">
           <div className="mx-auto w-full !max-w-[1322px] px-4">
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
@@ -683,7 +684,7 @@ export default function ProductDetails({
                         <h3 className="text-lg font-semibold">
                           Overall Rating
                         </h3>
-                        <div className="hover:bg-black/75/5 rounded-full bg-black px-2 py-0.5 text-xs">
+                        <div className="hover:bg-black/75 rounded-full bg-black px-2 py-0.5 text-xs text-white">
                           {reviewStats.totalCount}{" "}
                           {reviewStats.totalCount === 1 ? "Review" : "Reviews"}
                         </div>
@@ -907,7 +908,7 @@ export default function ProductDetails({
                             </div>
                           </div>
                           <textarea
-                            className="w-full rounded-lg border border-line px-4 py-3"
+                            className="w-full rounded-lg border border-[#ddd] focus:border-[#ddd] px-4 py-3"
                             id="message"
                             name="comment"
                             placeholder="Your review *"
@@ -922,15 +923,16 @@ export default function ProductDetails({
                             }
                           ></textarea>
                           <div className="col-span-full sm:pt-3">
-                            <button
+                            <Button
+                              variant="black"
                               type="submit"
                               disabled={addReviewMutation.isPending}
-                              className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                              className=""
                             >
                               {addReviewMutation.isPending
                                 ? "Submitting..."
                                 : "Submit Review"}
-                            </button>
+                            </Button>
                           </div>
                         </form>
                       </div>
@@ -1053,7 +1055,7 @@ export default function ProductDetails({
               </label>
               <textarea
                 id="question"
-                className="w-full rounded-lg border border-line px-4 py-3 text-base focus:border-primary focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-[#ddd] focus:border-[#ddd] px-4 py-3 text-base focus:border-primary focus:ring-2 focus:ring-primary"
                 placeholder="Type your question here..."
                 value={questionText}
                 minLength={5}

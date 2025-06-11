@@ -1,5 +1,6 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 
@@ -7,7 +8,7 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const breadcrumbItems = [
     {
-      label: "Home",
+      label: <HomeIcon size={16} />,
       href: "/",
     },
     {

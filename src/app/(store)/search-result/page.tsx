@@ -3,6 +3,7 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
 import { api } from "@/trpc/react";
+import { HomeIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
@@ -46,7 +47,7 @@ export default function Page() {
 
   const breadcrumbItems = [
     {
-      label: "Home",
+      label: <HomeIcon size={16} />,
       href: "/",
     },
     {

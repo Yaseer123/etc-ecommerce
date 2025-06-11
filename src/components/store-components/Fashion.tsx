@@ -78,7 +78,7 @@ const RecentlyAdded = () => {
           <div className="heading flex flex-col justify-between gap-4 md:flex-row md:items-center md:gap-5">
             <div className="heading3 mb-2 md:mb-0">Recently Added</div>
             <div className="relative w-full overflow-hidden md:w-auto">
-              <div className="menu-tab scrollbar-hide flex items-center gap-2 overflow-x-auto whitespace-nowrap rounded-2xl bg-surface p-1">
+              <div className="menu-tab scrollbar-hide bg-surface flex items-center gap-2 overflow-x-auto whitespace-nowrap rounded-2xl p-1">
                 {categories?.map((category) => (
                   <div
                     id={`tab-${category.id}`}
@@ -100,8 +100,8 @@ const RecentlyAdded = () => {
                   </div>
                 ))}
               </div>
-              <div className="pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l from-surface to-transparent md:hidden"></div>
-              <div className="pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r from-surface to-transparent md:hidden"></div>
+              <div className="from-surface pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l to-transparent md:hidden"></div>
+              <div className="from-surface pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r to-transparent md:hidden"></div>
             </div>
           </div>
 

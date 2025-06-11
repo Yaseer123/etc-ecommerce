@@ -34,7 +34,7 @@ export default function RootLayout({
         }}
       />
       {/* End Google Tag Manager */}
-      <body>
+      <body className="bg-[#F2F4F7]">
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

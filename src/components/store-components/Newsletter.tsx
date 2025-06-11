@@ -42,7 +42,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
   return (
     <>
       {variant === "default" ? (
-        <div className="newsletter-block bg-green-300 py-7">
+        <div className="newsletter-block bg-green-300 mb-5 py-7">
           <div className="mx-auto flex w-full !max-w-[1322px] items-center justify-center gap-8 gap-y-4 px-4 max-lg:flex-col lg:justify-between">
             <div className="text-content">
               <div className="text-[36px] font-semibold capitalize leading-[40px] max-lg:text-center md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
@@ -57,7 +57,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                 <input
                   type="email"
                   placeholder="Enter your e-mail"
-                  className="h-full w-full rounded-xl border border-line pl-4 pr-14"
+                  className="border-line h-full w-full rounded-xl border pl-4 pr-14"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -86,7 +86,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
               <input
                 type="email"
                 placeholder="Enter your e-mail"
-                className="caption1 h-full w-full rounded-xl border border-line pl-4 pr-14"
+                className="caption1 border-[#ddd] focus:border-[#ddd] h-full w-full rounded-xl border pl-4 pr-14"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}

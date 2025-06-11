@@ -4,6 +4,7 @@ import { useCartStore } from "@/context/store-context/CartContext";
 import { api } from "@/trpc/react";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import type { Order } from "@prisma/client";
+import { HomeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -70,7 +71,7 @@ const Checkout = () => {
 
   const breadcrumbItems = [
     {
-      label: "Home",
+      label: <HomeIcon size={16} />,
       href: "/",
     },
     {

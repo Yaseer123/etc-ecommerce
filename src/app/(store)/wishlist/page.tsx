@@ -5,6 +5,7 @@ import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
 import { api } from "@/trpc/react";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useMemo, useState } from "react";
 
@@ -61,7 +62,7 @@ export default function WishlistPage() {
 
   const breadcrumbItems = [
     {
-      label: "Home",
+      label: <HomeIcon size={16} />,
       href: "/",
     },
     {

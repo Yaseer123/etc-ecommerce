@@ -1,6 +1,7 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { api } from "@/trpc/react";
+import { HomeIcon } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 
@@ -101,7 +102,7 @@ const ContactUs = () => {
 
   const breadcrumbItems = [
     {
-      label: "Home",
+      label: <HomeIcon size={16} />,
       href: "/",
     },
     {

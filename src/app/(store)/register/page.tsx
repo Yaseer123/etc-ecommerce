@@ -1,11 +1,15 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 
 export default function Register() {
-  const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Register" }];
+  const breadcrumbItems = [
+    { label: <HomeIcon size={16} />, href: "/" },
+    { label: "Register", href: "/register" },
+  ];
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

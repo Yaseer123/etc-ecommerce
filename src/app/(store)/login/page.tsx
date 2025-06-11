@@ -2,13 +2,17 @@
 
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { CheckSquare, GoogleLogo } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const Login = () => {
-  const breadcrumbItems = [{ label: "Home", href: "/" }, { label: "Login" }];
+  const breadcrumbItems = [
+    { label: <HomeIcon size={16} />, href: "/" },
+    { label: "Login", href: "/login" },
+  ];
   const searchParams = useSearchParams();
   const redirect = searchParams?.get("redirect") ?? "/";
   const [email, setEmail] = useState("");

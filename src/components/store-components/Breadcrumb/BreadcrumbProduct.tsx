@@ -41,7 +41,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
   return (
     <>
       <div>
-        <div className="bg-surface bg-[linear-gradient(87deg,#f9f1f0_4.3%,#faf7f1_95.7%)] bg-no-repeat pb-8 pt-12">
+        <div className="bg-surface bg-white bg-no-repeat pb-8 pt-12">
           <div className="mx-auto flex w-full !max-w-[1322px] flex-wrap items-center justify-between gap-3 px-4">
             <div className="left flex items-center gap-1">
               <Link

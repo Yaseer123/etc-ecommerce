@@ -6,6 +6,7 @@ import RecentPosts from "@/components/store-components/Blog/RecentPosts";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { api } from "@/trpc/react";
 import { MagnifyingGlass } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
@@ -24,7 +25,7 @@ const BlogsPage = () => {
   };
 
   const breadcrumbItems = [
-    { label: "Home", href: "/" },
+    { label: <HomeIcon size={16} />, href: "/" },
     { label: "Categories", href: "/categories" },
   ];
   return (

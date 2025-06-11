@@ -1,6 +1,6 @@
 import { type TestimonialType } from "@/types/TestimonialType";
-import Rate from "./Rate";
 import Image from "next/image";
+import Rate from "./Rate";
 interface TestimonialProps {
   data: TestimonialType;
   type: string;
@@ -9,7 +9,7 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
   return (
     <>
       {type === "style-one" ? (
-        <div className="testimonial-item style-one h-full">
+        <div className="testimonial-item style-one h-full bg-white">
           <div className="testimonial-main h-full rounded-2xl bg-white p-8">
             <Rate currentRate={data.star} size={14} />
             <div className="heading6 title mt-4">{data.title}</div>
@@ -17,7 +17,7 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
             <div className="name mt-4 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
               {data.name}
             </div>
-            <div className="caption2 date mt-1 text-secondary2">
+            <div className="caption2 date text-secondary2 mt-1">
               {data.date}
             </div>
           </div>
@@ -25,7 +25,7 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
       ) : (
         <>
           {type === "style-four" ? (
-            <div className="testimonial-item style-four h-full">
+            <div className="testimonial-item style-four h-full bg-white">
               <div className="testimonial-main h-full">
                 <Rate currentRate={data.star} size={14} />
                 <div className="mt-4 text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
@@ -43,7 +43,7 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
           ) : (
             <>
               {type === "style-six" ? (
-                <div className="testimonial-item style-six h-full">
+                <div className="testimonial-item style-six h-full bg-white">
                   <div className="testimonial-main h-full">
                     <Rate currentRate={data.star} size={14} />
                     <div className="mt-4 text-sm font-semibold uppercase leading-5 text-secondary md:text-xs md:leading-4">
@@ -56,7 +56,7 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
                       <div className="name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                         {data.name}
                       </div>
-                      <div className="date text-base font-normal leading-[22] text-secondary2 md:text-[13px] md:leading-5">
+                      <div className="date text-secondary2 text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         From {data.address}
                       </div>
                     </div>
@@ -66,7 +66,7 @@ export default function TestimonialItem({ data, type }: TestimonialProps) {
                 <>
                   {type === "style-seven" ? (
                     <>
-                      <div className="testimonial-item style-seven h-full">
+                      <div className="testimonial-item style-seven h-full bg-white">
                         <div className="testimonial-main h-full rounded-[20px] bg-white px-7 py-8">
                           <div className="heading flex items-center gap-4">
                             <div className="avatar h-10 w-10 overflow-hidden rounded-full">

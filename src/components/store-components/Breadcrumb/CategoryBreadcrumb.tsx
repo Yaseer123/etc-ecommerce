@@ -2,6 +2,7 @@
 
 import { api } from "@/trpc/react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -27,14 +28,14 @@ const CategoryBreadcrumb: React.FC<Props> = ({ categoryId, pageTitle }) => {
   return (
     <>
       <div>
-        <div className="bg-surface bg-[linear-gradient(87deg,#f9f1f0_4.3%,#faf7f1_95.7%)] bg-no-repeat pb-6 pt-8 md:pb-8 md:pt-12">
+        <div className="bg-surface bg-white bg-no-repeat pb-6 pt-8 md:pb-8 md:pt-12">
           <div className="mx-auto w-full !max-w-[1322px] px-3 md:px-4">
             <div className="left flex flex-wrap items-center gap-x-1 gap-y-2">
               <Link
                 href={"/"}
                 className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
               >
-                Homepage
+                <HomeIcon size={16} />
               </Link>
               <CaretRight size={10} className="text-secondary2 md:size-3" />
 

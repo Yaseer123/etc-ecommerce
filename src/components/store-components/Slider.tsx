@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
+import { api } from "@/trpc/react";
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
 import "swiper/css/bundle";
 import "swiper/css/effect-fade";
-import { api } from "@/trpc/react";
+import { Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import { SaleBanner } from "./SaleBanner";
 
 const Slider = () => {
@@ -33,7 +32,7 @@ const Slider = () => {
     <div className="slider-block style-two w-full">
       <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
         {/* Slider */}
-        <div className="slider-main min-h-[60vh] w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3">
+        <div className="slider-main min-h-[60vh] w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3 shadow-lg">
           <Swiper
             spaceBetween={0}
             slidesPerView={1}
