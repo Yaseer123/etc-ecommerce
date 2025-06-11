@@ -3,6 +3,7 @@
 import { api } from "@/trpc/react";
 import type { ProductWithCategory } from "@/types/ProductType";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
+import { HomeIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 
@@ -47,7 +48,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 href={"/"}
                 className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
               >
-                Homepage
+                <HomeIcon size={16} />
               </Link>
               <CaretRight size={12} className="text-secondary2" />
               {categoryHierarchy?.map((cat, index) => (
