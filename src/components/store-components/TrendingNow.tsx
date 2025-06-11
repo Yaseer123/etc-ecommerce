@@ -60,14 +60,15 @@ const TrendingNow = () => {
                 className="flex justify-center py-2"
               >
                 <div
-                  className="trending-item group relative mx-auto block max-w-[220px] cursor-pointer transition-all duration-300 hover:-translate-y-1"
+                  className="trending-item group relative mx-auto block max-w-[150px] md:max-w-[220px] cursor-pointer transition-all duration-300 hover:-translate-y-1"
                   onClick={() => handleCategoryClick(category.id)}
                 >
                   <div className="bg-img aspect-square overflow-hidden rounded-full border-4 border-white shadow-lg transition-all duration-300 group-hover:border-orange-100 group-hover:shadow-xl">
-                    <Image
+                  <Image
                       src={category.image ?? "/images/avatar/1.png"}
-                      width={1000}
-                      height={1000}
+                      width={220}
+                      height={220}
+                      sizes="(max-width: 576px) 150px, (max-width: 768px) 180px, (max-width: 992px) 200px, 220px"
                       alt={category.name}
                       priority={true}
                       className="h-full w-full rounded-full object-cover transition-transform duration-500 group-hover:scale-110"
