@@ -17,11 +17,11 @@ const Slider = () => {
       <div className="slider-block style-two w-full animate-pulse">
         <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
           <div className="slider-main w-full max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3">
-            <div className="relative h-full w-full overflow-hidden rounded-3xl bg-gray-200" />
+            <div className="relative h-full w-full overflow-hidden  bg-gray-200" />
           </div>
           <div className="banner-ads-block flex w-full flex-col gap-5 max-lg:mt-5 lg:w-1/3">
-            <div className="banner-ads-item relative h-[200px] overflow-hidden rounded-2xl bg-gray-200" />
-            <div className="banner-ads-item relative h-[200px] overflow-hidden rounded-2xl bg-gray-200" />
+            <div className="banner-ads-item relative h-[200px] overflow-hidden  bg-gray-200" />
+            <div className="banner-ads-item relative h-[200px] overflow-hidden bg-gray-200" />
           </div>
         </div>
       </div>
@@ -39,7 +39,7 @@ const Slider = () => {
             loop={true}
             pagination={{ clickable: true }}
             modules={[Pagination]}
-            className="relative h-full w-full overflow-hidden rounded-3xl"
+            className="relative h-full w-full overflow-hidden "
             autoplay={{
               delay: 4000,
             }}

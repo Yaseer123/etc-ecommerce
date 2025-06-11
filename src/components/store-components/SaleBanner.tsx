@@ -22,12 +22,12 @@ export const SaleBanner = () => {
   if (!activeBanners?.length) return null;
 
   return (
-    <div className="banner-ads-block w-full max-lg:mt-4 lg:w-1/3 shadow-lg">
+    <div className="banner-ads-block w-full max-lg:mt-4 lg:w-1/3 shadow-lg bg-transparent">
       <div className="grid h-full w-full grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-1 lg:gap-5">
         {activeBanners.slice(0, 2).map((banner) => (
           <div
             key={banner.id}
-            className="banner-ads-item bg-linear relative h-full min-h-[160px] cursor-pointer overflow-hidden rounded-lg sm:rounded-xl md:rounded-2xl"
+            className="banner-ads-item bg-linear relative h-full min-h-[160px] cursor-pointer overflow-hidden"
             onClick={() => handleClick(banner.link)}
           >
             <div className="text-content relative z-[1] p-4 sm:p-6 md:py-6 md:pl-7 lg:py-8 lg:pl-8">
