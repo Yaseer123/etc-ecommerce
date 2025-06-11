@@ -50,7 +50,7 @@ export default function ProductDetails({
 
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
-  const [activeTab, setActiveTab] = useState<string | undefined>("description");
+  const [activeTab, setActiveTab] = useState<string | undefined>("specifications");
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const [reviewForm, setReviewForm] = useState({
     rating: 5,
@@ -476,12 +476,12 @@ export default function ProductDetails({
                   </div>
                 </div>
                 <div className="mt-5 flex items-center gap-8 border-b border-line pb-6 lg:gap-20">
-                  <div className="share flex cursor-pointer items-center gap-3">
+                  {/* <div className="share flex cursor-pointer items-center gap-3">
                     <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:bg-black/75 hover:text-white md:h-12 md:w-12">
                       <ShareNetwork weight="fill" className="heading6" />
                     </div>
                     <span>Share Products</span>
-                  </div>
+                  </div> */}
                 </div>
                 <div className="more-infor mt-6">
                   <div className="flex flex-wrap items-center gap-4">
@@ -625,18 +625,19 @@ export default function ProductDetails({
           <div className="mx-auto w-full !max-w-[1322px] px-4">
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
+              <div
+                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "specifications" ? "active" : ""}`}
+                  onClick={() => handleActiveTab("specifications")}
+                >
+                  Specifications
+                </div>
                 <div
                   className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "description" ? "active" : ""}`}
                   onClick={() => handleActiveTab("description")}
                 >
                   Description
                 </div>
-                <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "specifications" ? "active" : ""}`}
-                  onClick={() => handleActiveTab("specifications")}
-                >
-                  Specifications
-                </div>
+            
                 <div
                   className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "review" ? "active" : ""}`}
                   onClick={() => handleActiveTab("review")}
