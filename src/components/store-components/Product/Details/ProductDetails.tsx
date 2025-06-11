@@ -462,14 +462,14 @@ export default function ProductDetails({
                   </div>
                   <div
                     onClick={handleAddToCart}
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Add To Cart
                   </div>
                 </div>
                 <div className="button-block mt-5">
                   <div
-                    className="duration-400 md:text-md hover:bg-black/75/75 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-black/75/75 inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={handleBuyNow}
                   >
                     Buy It Now
@@ -924,7 +924,7 @@ export default function ProductDetails({
                             <button
                               type="submit"
                               disabled={addReviewMutation.isPending}
-                              className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                              className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                             >
                               {addReviewMutation.isPending
                                 ? "Submitting..."
