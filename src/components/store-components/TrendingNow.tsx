@@ -23,31 +23,36 @@ const TrendingNow = () => {
         </div>
         <div className="list-trending section-swiper-navigation style-small-border style-outline">
           <Swiper
-            spaceBetween={12}
+            spaceBetween={6}
             slidesPerView={2}
             navigation
             loop={true}
             centeredSlides={true}
             modules={[Navigation, Autoplay]}
             breakpoints={{
+              400: {
+                slidesPerView: 2,
+                spaceBetween: 8,
+                centeredSlides: true,
+              },
               576: {
                 slidesPerView: 3,
-                spaceBetween: 12,
+                spaceBetween: 10,
                 centeredSlides: false,
               },
               768: {
                 slidesPerView: 4,
-                spaceBetween: 20,
+                spaceBetween: 12,
                 centeredSlides: false,
               },
               992: {
                 slidesPerView: 5,
-                spaceBetween: 20,
+                spaceBetween: 14,
                 centeredSlides: false,
               },
               1290: {
                 slidesPerView: 5,
-                spaceBetween: 30,
+                spaceBetween: 16,
                 centeredSlides: false,
               },
             }}
