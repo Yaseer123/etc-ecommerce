@@ -2,6 +2,9 @@ import { CaretRight, X } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import MobileSearch from "./MobileSearch";
+import Link from "next/link";
+import { FaXTwitter } from "react-icons/fa6";
+import { SiTiktok } from "react-icons/si";
 
 interface MobileMenuProps {
   openMenuMobile: boolean;
@@ -82,6 +85,17 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                 </li>
                 <li>
                   <div
+                    onClick={() => handleNavigation("/faqs")}
+                    className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
+                  >
+                    FAQ
+                    <span className="text-right">
+                      <CaretRight size={20} />
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <div
                     onClick={() => handleNavigation("/contact")}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
@@ -89,6 +103,39 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                     <span className="text-right">
                       <CaretRight size={20} />
                     </span>
+                  </div>
+                  <div className="list-social mt-4 flex items-center gap-6">
+                    <Link
+                      href={
+                        "https://www.facebook.com/profile.php?id=61572946813700"
+                      }
+                      target="_blank"
+                    >
+                      <div className="icon-facebook text-2xl text-black"></div>
+                    </Link>
+                    <Link
+                      href={
+                        "https://www.instagram.com/rinors_electronic_store/"
+                      }
+                      target="_blank"
+                    >
+                      <div className="icon-instagram text-2xl text-black"></div>
+                    </Link>
+                    <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
+                      <FaXTwitter className="text-xl text-black" />
+                    </Link>
+                    <Link
+                      href={"https://www.tiktok.com/@rinors_ecommerce"}
+                      target="_blank"
+                    >
+                      <SiTiktok className="text-xl text-black" />
+                    </Link>
+                    <Link
+                      href={"https://www.youtube.com/@rinorsgreenenergy"}
+                      target="_blank"
+                    >
+                      <div className="icon-youtube text-3xl text-black"></div>
+                    </Link>
                   </div>
                 </li>
               </ul>
