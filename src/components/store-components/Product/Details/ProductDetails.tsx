@@ -947,10 +947,10 @@ export default function ProductDetails({
       </div>
       {/* Q&A Section */}
       <section
-        className="mx-auto mb-16 mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white px-0 pb-12 pt-8 shadow sm:px-8"
+        className="mx-8 sm:mx-auto mb-16 mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white  px-8 pb-12 pt-8 shadow sm:px-8"
         id="product-qa"
       >
-        <div className="section-head mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="section-head mb-8 flex px-3 gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="title-n-action">
             <h2 className="mb-1 text-xl font-bold text-gray-900 sm:text-2xl">
               Questions ({questions?.length ?? 0})
