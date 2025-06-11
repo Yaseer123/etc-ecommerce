@@ -293,7 +293,7 @@ const Checkout = () => {
           {orderSuccess.id}
         </div>
         <button
-          className="mt-4 rounded bg-black px-6 py-2 text-white"
+          className="mt-4 rounded bg-black px-6 py-2 text-white hover:bg-black/75"
           onClick={() => router.push("/my-account")}
         >
           Go to My Orders
@@ -315,7 +315,7 @@ const Checkout = () => {
               {renderPaymentSection()}
               <div className="mt-6 md:mt-10">
                 <button
-                  className="duration-400 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                  className="duration-400 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   onClick={async () => {
                     if (cartArray.length === 0) {
                       setOrderError("Your cart is empty.");
@@ -419,7 +419,7 @@ const Checkout = () => {
                     />
                     <button
                       type="button"
-                      className="rounded bg-black px-4 py-2 font-semibold text-white hover:bg-green disabled:opacity-50"
+                      className="rounded bg-black px-4 py-2 font-semibold text-white hover:bg-black/75 hover:bg-green disabled:opacity-50"
                       onClick={handleApplyCoupon}
                       disabled={!!appliedCoupon || !couponCode.trim()}
                     >

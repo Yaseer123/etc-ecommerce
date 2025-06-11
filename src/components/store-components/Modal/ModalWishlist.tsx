@@ -42,7 +42,7 @@ const ModalWishlist = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Wishlist</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalWishlist}
               >
                 <X size={14} />
@@ -55,7 +55,7 @@ const ModalWishlist = () => {
               <div className="mt-4 flex justify-center">
                 <Button
                   variant="default"
-                  className="w-full max-w-xs bg-black text-white"
+                  className="w-full max-w-xs bg-black text-white hover:bg-black/75"
                   onClick={() =>
                     signIn(undefined, { callbackUrl: window.location.href })
                   }
@@ -83,7 +83,7 @@ const ModalWishlist = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Wishlist</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalWishlist}
               >
                 <X size={14} />
@@ -113,14 +113,14 @@ const ModalWishlist = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Wishlist</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalWishlist}
               >
                 <X size={14} />
               </div>
             </div>
             <div className="list-product px-6">
-              <div className="text-red-600 text-center text-base font-semibold">
+              <div className="text-center text-base font-semibold text-red-600">
                 Failed to load your wishlist. Please try again later.
               </div>
             </div>
@@ -142,7 +142,7 @@ const ModalWishlist = () => {
           <div className="heading relative flex items-center justify-between px-6 pb-3">
             <div className="heading5">Wishlist</div>
             <div
-              className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+              className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
               onClick={closeModalWishlist}
             >
               <X size={14} />
@@ -182,7 +182,7 @@ const ModalWishlist = () => {
                   </div>
                 </div>
                 <div
-                  className="remove-wishlist-btn text-red-500 cursor-pointer text-base font-semibold leading-[22] underline md:text-[13px] md:leading-5"
+                  className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red-500 underline md:text-[13px] md:leading-5"
                   onClick={() =>
                     removeFromWishlistMutation.mutate({
                       productId: w.product.id,

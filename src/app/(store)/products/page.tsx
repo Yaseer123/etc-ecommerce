@@ -740,7 +740,7 @@ export default function ProductsPage() {
                       })}
                     </div>
                     <div
-                      className="clear-btn hover:bg-red-500-50 flex cursor-pointer items-center gap-1 rounded-full border border-red px-2 py-1 transition-colors"
+                      className="clear-btn hover:bg-red-500-50 border-red flex cursor-pointer items-center gap-1 rounded-full border px-2 py-1 transition-colors"
                       onClick={handleClearAll}
                     >
                       <X
@@ -790,7 +790,7 @@ export default function ProductsPage() {
         <>
           {/* Overlay */}
           <div
-            className="fixed inset-0 z-[9999] bg-black/50 md:hidden"
+            className="hover:bg-black/75/50 fixed inset-0 z-[9999] bg-black md:hidden"
             onClick={toggleMobileFilter}
           ></div>
 

@@ -52,7 +52,7 @@ const Login = () => {
                 >
                   <button
                     type="button"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white hover:bg-black/75"
                   >
                     <GoogleLogo weight="bold" />
                     <span>Login with Google</span>
@@ -109,7 +109,7 @@ const Login = () => {
                 {error && <div className="mt-2 text-red-500">{error}</div>}
                 <div className="mt-4 md:mt-7">
                   <button
-                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     type="submit"
                     disabled={loading}
                   >
@@ -131,7 +131,7 @@ const Login = () => {
                 <div className="mt-4 md:mt-7">
                   <Link
                     href={"/register"}
-                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Register
                   </Link>

@@ -1,9 +1,8 @@
-import React from "react";
+import ParseContent from "@/components/store-components/Blog/ParseContent";
+import { api } from "@/trpc/server";
 import Image from "next/image";
 import Link from "next/link";
-import { api } from "@/trpc/server";
 import { redirect } from "next/navigation";
-import ParseContent from "@/components/store-components/Blog/ParseContent";
 
 export async function generateMetadata({
   searchParams,
@@ -99,35 +98,35 @@ export default async function BlogDetailsPage({
                   <Link
                     href={"https://www.facebook.com/"}
                     target="_blank"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                   >
                     <div className="icon-facebook duration-100"></div>
                   </Link>
                   <Link
                     href={"https://www.instagram.com/"}
                     target="_blank"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                   >
                     <div className="icon-instagram duration-100"></div>
                   </Link>
                   <Link
                     href={"https://www.twitter.com/"}
                     target="_blank"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                   >
                     <div className="icon-twitter duration-100"></div>
                   </Link>
                   <Link
                     href={"https://www.youtube.com/"}
                     target="_blank"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                   >
                     <div className="icon-youtube duration-100"></div>
                   </Link>
                   <Link
                     href={"https://www.pinterest.com/"}
                     target="_blank"
-                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                    className="flex h-10 w-10 items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                   >
                     <div className="icon-pinterest duration-100"></div>
                   </Link>

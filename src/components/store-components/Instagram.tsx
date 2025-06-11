@@ -1,11 +1,10 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
 import "swiper/css/bundle";
+import { Autoplay } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 export default function Instagram() {
   return (
     <>
@@ -52,7 +51,7 @@ export default function Instagram() {
                   alt="1"
                   className="relative h-full w-full duration-500"
                 />
-                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black">
+                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black hover:bg-black/75">
                   <div className="icon-instagram text-2xl text-black"></div>
                 </div>
               </Link>
@@ -70,7 +69,7 @@ export default function Instagram() {
                   alt="1"
                   className="relative h-full w-full duration-500"
                 />
-                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black">
+                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black hover:bg-black/75">
                   <div className="icon-instagram text-2xl text-black"></div>
                 </div>
               </Link>
@@ -88,7 +87,7 @@ export default function Instagram() {
                   alt="1"
                   className="relative h-full w-full duration-500"
                 />
-                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black">
+                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black hover:bg-black/75">
                   <div className="icon-instagram text-2xl text-black"></div>
                 </div>
               </Link>
@@ -106,7 +105,7 @@ export default function Instagram() {
                   alt="1"
                   className="relative h-full w-full duration-500"
                 />
-                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black">
+                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black hover:bg-black/75">
                   <div className="icon-instagram text-2xl text-black"></div>
                 </div>
               </Link>
@@ -124,7 +123,7 @@ export default function Instagram() {
                   alt="1"
                   className="relative h-full w-full duration-500"
                 />
-                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black">
+                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black hover:bg-black/75">
                   <div className="icon-instagram text-2xl text-black"></div>
                 </div>
               </Link>
@@ -142,7 +141,7 @@ export default function Instagram() {
                   alt="1"
                   className="relative h-full w-full duration-500"
                 />
-                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black">
+                <div className="icon absolute left-1/2 top-1/2 z-[1] flex h-12 w-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-white duration-500 hover:bg-black hover:bg-black/75">
                   <div className="icon-instagram text-2xl text-black"></div>
                 </div>
               </Link>

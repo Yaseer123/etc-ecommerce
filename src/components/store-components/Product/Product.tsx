@@ -167,7 +167,7 @@ export default function Product({ data }: ProductProps) {
       <div className="bg-img relative w-full">
         {/* Sale badge */}
         {data.discountedPrice && (
-          <div className="bg-red-500 absolute left-2 -top-3 z-10 rounded-full px-2 py-1 text-xs font-bold text-white">
+          <div className="absolute -top-3 left-2 z-10 rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
             -{discountPercentage}%
           </div>
         )}
@@ -181,7 +181,6 @@ export default function Product({ data }: ProductProps) {
               src={data.images?.[0] ?? "/images/products/1000x1000.png"}
               alt={data.title}
             />
-        
           </div>
         </Link>
         <div className="list-action absolute right-1 top-1 flex flex-col gap-2">
@@ -198,12 +197,12 @@ export default function Product({ data }: ProductProps) {
               <Heart
                 size={18}
                 weight="fill"
-                className="text-red-500 cursor-pointer"
+                className="cursor-pointer text-red-500"
               />
             ) : (
               <Heart size={18} className="cursor-pointer" />
             )}
-            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/75 group-hover:visible group-hover:opacity-100">
               {isInWishlist(data.id)
                 ? "Remove from Wishlist"
                 : "Add to Wishlist"}
@@ -218,7 +217,7 @@ export default function Product({ data }: ProductProps) {
             }}
           >
             <Eye size={18} />
-            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/75 group-hover:visible group-hover:opacity-100">
               Quick View
             </div>
           </button>
@@ -230,7 +229,7 @@ export default function Product({ data }: ProductProps) {
             }}
           >
             <ShoppingBagOpen size={18} />
-            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 group-hover:visible group-hover:opacity-100">
+            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/75 group-hover:visible group-hover:opacity-100">
               Add To Cart
             </div>
           </button>

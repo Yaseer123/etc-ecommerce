@@ -48,10 +48,10 @@ const ModalNewsletter = () => {
                 New customers save <span className="text-red-500">30%</span>
                 with the code
               </div>
-              <div className="text-button-uppercase text-red-500 rounded-lg bg-white px-4 py-2">
+              <div className="text-button-uppercase rounded-lg bg-white px-4 py-2 text-red-500">
                 GET20off
               </div>
-              <div className="button-main w-fit bg-black uppercase text-white hover:bg-white">
+              <div className="button-main w-fit bg-black uppercase text-white hover:bg-black/75 hover:bg-white">
                 Copy coupon code
               </div>
             </div>
@@ -99,7 +99,7 @@ const ModalNewsletter = () => {
                       </div>
                     </div>
                     <button
-                      className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-green sm:px-5 sm:py-3"
+                      className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-black/75 hover:bg-green sm:px-5 sm:py-3"
                       onClick={() => openQuickView(item)}
                     >
                       QUICK VIEW

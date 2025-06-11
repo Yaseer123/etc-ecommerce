@@ -432,7 +432,7 @@ export default function AdminFAQsPage() {
                             <Button
                               variant="ghost"
                               size="icon"
-                              className="h-8 w-8 rounded-full hover:bg-black hover:text-white"
+                              className="h-8 w-8 rounded-full hover:bg-black hover:bg-black/75 hover:text-white"
                             >
                               <MoreVertical className="h-4 w-4" />
                               <span className="sr-only">Actions</span>
@@ -563,7 +563,7 @@ export default function AdminFAQsPage() {
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="h-7 w-7 rounded-full hover:bg-black hover:text-white sm:h-8 sm:w-8"
+                                      className="h-7 w-7 rounded-full hover:bg-black hover:bg-black/75 hover:text-white sm:h-8 sm:w-8"
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         openEditFaqItemDialog(faq);

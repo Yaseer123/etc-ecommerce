@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
 import { type BlogType } from "@/types/BlogType";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
+import React from "react";
 
 interface BlogProps {
   data: BlogType;
@@ -42,7 +42,7 @@ const BlogItem: React.FC<BlogProps> = ({ data }) => {
             <div className="blog-author text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
               by {data.createdBy.name}
             </div>
-            <span className="h-[1px] w-[20px] bg-black"></span>
+            <span className="h-[1px] w-[20px] bg-black hover:bg-black/75"></span>
             <div className="blog-date text-base font-normal leading-[22] text-secondary md:text-[13px] md:leading-5">
               {" "}
               {new Date(data.updatedAt)

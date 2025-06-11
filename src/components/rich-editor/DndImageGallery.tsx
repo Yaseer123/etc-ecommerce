@@ -1,7 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
-import { DndContext, type DragEndEvent, closestCenter } from "@dnd-kit/core";
+import { removeImage, uploadFile } from "@/app/actions/file";
+import {
+  type ProductImage,
+  useProductImageStore,
+} from "@/context/admin-context/ProductImageProvider";
+import { closestCenter, DndContext, type DragEndEvent } from "@dnd-kit/core";
 import {
   arrayMove,
   rectSortingStrategy,
@@ -9,16 +13,12 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  type ProductImage,
-  useProductImageStore,
-} from "@/context/admin-context/ProductImageProvider";
+import Image from "next/image";
+import { useState } from "react";
+import { FileUploader } from "react-drag-drop-files";
+import { BiSolidTrash } from "react-icons/bi";
 import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
-import { FileUploader } from "react-drag-drop-files";
-import { removeImage, uploadFile } from "@/app/actions/file";
-import Image from "next/image";
-import { BiSolidTrash } from "react-icons/bi";
 import { Button } from "../ui/button";
 
 export default function DndImageGallery({
@@ -59,7 +59,7 @@ export default function DndImageGallery({
       onKeyDown={({ key }) => {
         if (key === "Escape") handleClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm hover:bg-black/75"
     >
       <div className="relative h-[80%] w-[80%] overflow-y-auto rounded-md bg-white p-4 md:w-[760px]">
         <div className="absolute right-4 top-4 z-50 p-2">

@@ -178,7 +178,7 @@ const Cart = () => {
                   />
                   <button
                     onClick={() => null}
-                    className="duration-400 absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-lg bg-black px-5 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                    className="duration-400 absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-lg bg-black px-5 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   >
                     Apply Code
                   </button>
@@ -209,7 +209,7 @@ const Cart = () => {
                       Code: AN6810
                     </div>
                     <div
-                      className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-2.5 py-1 text-xs font-semibold capitalize leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                      className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-2.5 py-1 text-xs font-semibold capitalize leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                       onClick={() =>
                         handleApplyCode(200, Math.floor((totalCart / 100) * 10))
                       }
@@ -314,7 +314,7 @@ const Cart = () => {
                 </div>
                 <div className="block-button mt-5 flex flex-col items-center gap-y-4">
                   <div
-                    className="duration-400 text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-[15px] md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-5"
+                    className="duration-400 text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-[15px] md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-5"
                     onClick={redirectToCheckout}
                   >
                     Process To Checkout

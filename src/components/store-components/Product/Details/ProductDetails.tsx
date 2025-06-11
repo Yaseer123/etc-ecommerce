@@ -399,7 +399,7 @@ export default function ProductDetails({
                   </div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border ${isInWishlist(productMain.id) ? "border-black bg-black" : "border-line bg-white"} duration-300 hover:bg-black hover:text-white`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border ${isInWishlist(productMain.id) ? "border-black bg-black hover:bg-black/75" : "border-line bg-white"} duration-300 hover:bg-black hover:bg-black/75 hover:text-white`}
                   onClick={handleAddToWishlist}
                 >
                   {isInWishlist(productMain.id) ? (
@@ -462,14 +462,14 @@ export default function ProductDetails({
                   </div>
                   <div
                     onClick={handleAddToCart}
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Add To Cart
                   </div>
                 </div>
                 <div className="button-block mt-5">
                   <div
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-black/75/75 inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={handleBuyNow}
                   >
                     Buy It Now
@@ -477,7 +477,7 @@ export default function ProductDetails({
                 </div>
                 <div className="mt-5 flex items-center gap-8 border-b border-line pb-6 lg:gap-20">
                   <div className="share flex cursor-pointer items-center gap-3">
-                    <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:text-white md:h-12 md:w-12">
+                    <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:bg-black/75 hover:text-white md:h-12 md:w-12">
                       <ShareNetwork weight="fill" className="heading6" />
                     </div>
                     <span>Share Products</span>
@@ -682,7 +682,7 @@ export default function ProductDetails({
                         <h3 className="text-lg font-semibold">
                           Overall Rating
                         </h3>
-                        <div className="rounded-full bg-black/5 px-2 py-0.5 text-xs">
+                        <div className="hover:bg-black/75/5 rounded-full bg-black px-2 py-0.5 text-xs">
                           {reviewStats.totalCount}{" "}
                           {reviewStats.totalCount === 1 ? "Review" : "Reviews"}
                         </div>
@@ -753,7 +753,7 @@ export default function ProductDetails({
                       </p>
                       <Link
                         href={"#form-review"}
-                        className="mt-auto inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-black/80"
+                        className="hover:bg-black/75/80 mt-auto inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-center text-sm font-semibold text-white transition-all hover:bg-black hover:bg-black/75"
                       >
                         Write a Review
                       </Link>
@@ -924,7 +924,7 @@ export default function ProductDetails({
                             <button
                               type="submit"
                               disabled={addReviewMutation.isPending}
-                              className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                              className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] border border-black bg-white px-6 py-3 text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white disabled:opacity-50 sm:w-auto sm:px-10 sm:py-4 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                             >
                               {addReviewMutation.isPending
                                 ? "Submitting..."
@@ -964,7 +964,7 @@ export default function ProductDetails({
               <Button
                 asChild
                 variant="default"
-                className="bg-black text-white hover:bg-black/90"
+                className="hover:bg-black/75/90 bg-black text-white hover:bg-black hover:bg-black/75"
               >
                 <a href="#ask-question-form">Ask Question</a>
               </Button>
@@ -972,7 +972,7 @@ export default function ProductDetails({
               <Button
                 asChild
                 variant="default"
-                className="bg-black text-white hover:bg-black/90"
+                className="hover:bg-black/75/90 bg-black text-white hover:bg-black hover:bg-black/75"
               >
                 <a href="/login">Ask Question</a>
               </Button>
@@ -1066,7 +1066,7 @@ export default function ProductDetails({
               <Button
                 type="submit"
                 disabled={askQuestionMutation.isPending}
-                className="w-full bg-black text-white hover:bg-black/90"
+                className="hover:bg-black/75/90 w-full bg-black text-white hover:bg-black hover:bg-black/75"
               >
                 {askQuestionMutation.isPending
                   ? "Submitting..."

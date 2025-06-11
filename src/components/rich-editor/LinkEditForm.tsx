@@ -29,7 +29,7 @@ const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
           onMouseDown={() => {
             onSubmit(link);
           }}
-          className="flex aspect-square w-8 items-center justify-center bg-black text-white"
+          className="flex aspect-square w-8 items-center justify-center bg-black text-white hover:bg-black/75"
         >
           ok
         </button>
@@ -37,7 +37,7 @@ const LinkEditForm: FC<Props> = ({ initialState, onSubmit }) => {
           onMouseDown={() => {
             onSubmit("");
           }}
-          className="bg-red-400 flex aspect-square w-8 items-center justify-center text-white"
+          className="flex aspect-square w-8 items-center justify-center bg-red-400 text-white"
         >
           <BiUnlink />
         </button>

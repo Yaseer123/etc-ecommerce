@@ -155,7 +155,7 @@ export default function Menu({
 
   return (
     <>
-      <TopNav props="style-one bg-black" />
+      <TopNav props="style-one bg-black hover:bg-black/75" />
 
       {/* Main header - not sticky */}
       <div className="header-menu relative w-full bg-white lg:pt-5">
@@ -198,7 +198,7 @@ export default function Menu({
                     }
                   />
                   <button
-                    className="search-button duration-400 md:text-md !flex h-full cursor-pointer !items-center !justify-center rounded-[12px] !rounded-l-none !rounded-r bg-black px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="search-button duration-400 md:text-md !flex h-full cursor-pointer !items-center !justify-center rounded-[12px] !rounded-l-none !rounded-r bg-black px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => handleSearch(searchKeyword)}
                   >
                     Search
@@ -297,14 +297,14 @@ export default function Menu({
                       {isAuthenticated ? (
                         <Link
                           href={"/api/auth/signout"}
-                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         >
                           Sign Out
                         </Link>
                       ) : (
                         <Link
                           href={"/login"}
-                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         >
                           Login
                         </Link>
@@ -339,7 +339,7 @@ export default function Menu({
                     onClick={openModalCart}
                   >
                     <Handbag size={24} color="black" />
-                    <span className="quantity cart-quantity absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white">
+                    <span className="quantity cart-quantity absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white hover:bg-black/75">
                       {cartArray.length}
                     </span>
                   </div>
@@ -445,7 +445,7 @@ export default function Menu({
               autoFocus
             />
             <button
-              className="h-full rounded-r-md bg-black px-4 text-white"
+              className="h-full rounded-r-md bg-black px-4 text-white hover:bg-black/75"
               onClick={() => handleSearch(searchKeyword)}
             >
               <MagnifyingGlass size={18} />

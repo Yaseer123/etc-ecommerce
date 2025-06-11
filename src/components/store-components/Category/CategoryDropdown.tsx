@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import useCategoryPopup from "@/hooks/useCategoryPopup";
-import { useState } from "react";
+import type { CategoryTree } from "@/schemas/categorySchema";
 import { api } from "@/trpc/react";
 import { CaretDown, CaretRight } from "@phosphor-icons/react/dist/ssr";
-import type { CategoryTree } from "@/schemas/categorySchema";
+import Link from "next/link";
+import { useState } from "react";
 
 const CategoryDropdown = () => {
   const [categories, { error }] = api.category.getAll.useSuspenseQuery();
@@ -75,7 +75,7 @@ const CategoryDropdown = () => {
       {/* Main Category Button */}
       <button
         id="multiLevelDropdownButton"
-        className="inline-flex h-full items-center text-nowrap rounded-l-md bg-black px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none"
+        className="inline-flex h-full items-center text-nowrap rounded-l-md bg-black px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-black/75 focus:outline-none"
         onClick={handleCategoryPopup}
         type="button"
       >

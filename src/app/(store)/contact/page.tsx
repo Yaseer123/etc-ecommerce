@@ -182,7 +182,7 @@ const ContactUs = () => {
                   <button
                     type="submit"
                     disabled={contactMutation.isPending || !isFormValid}
-                    className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:text-sm md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                    className="duration-400 inline-block cursor-pointer rounded-[12px] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:text-sm md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   >
                     {contactMutation.isPending ? "Sending..." : "Send message"}
                   </button>

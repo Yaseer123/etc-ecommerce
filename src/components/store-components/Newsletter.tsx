@@ -65,7 +65,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                 />
                 <Button
                   variant="default"
-                  className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black text-white"
+                  className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black text-white hover:bg-black/75"
                   type="submit"
                   disabled={newsletterMutation.isPending}
                 >
@@ -93,7 +93,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                 disabled={newsletterMutation.isPending}
               />
               <button
-                className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
+                className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black hover:bg-black/75"
                 type="submit"
                 disabled={newsletterMutation.isPending}
               >

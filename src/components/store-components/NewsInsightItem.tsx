@@ -1,8 +1,7 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
 import { type BlogType } from "@/types/BlogType";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface BlogProps {
@@ -43,7 +42,7 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
                 <div className="blog-author text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                   by {data.createdBy.name}
                 </div>
-                <span className="h-[1px] w-[15px] bg-black sm:w-[20px]"></span>
+                <span className="h-[1px] w-[15px] bg-black hover:bg-black/75 sm:w-[20px]"></span>
                 <div className="blog-date text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                   {new Date(data.updatedAt)
                     .toLocaleDateString("en-US", {
@@ -85,7 +84,7 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
                     <div className="blog-author text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                       by {data.createdBy.name}
                     </div>
-                    <span className="h-[1px] w-[15px] bg-black sm:w-[20px]"></span>
+                    <span className="h-[1px] w-[15px] bg-black hover:bg-black/75 sm:w-[20px]"></span>
                     <div className="blog-date text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                       {new Date(data.updatedAt)
                         .toLocaleDateString("en-US", {
@@ -133,7 +132,7 @@ export default function NewsInsightItem({ data, type }: BlogProps) {
                         <div className="blog-author text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                           by {data.createdBy.name}
                         </div>
-                        <span className="h-[1px] w-[15px] bg-black sm:w-[20px]"></span>
+                        <span className="h-[1px] w-[15px] bg-black hover:bg-black/75 sm:w-[20px]"></span>
                         <div className="blog-date text-xs font-normal text-secondary sm:text-sm md:text-base md:leading-[22px]">
                           {new Date(data.updatedAt)
                             .toLocaleDateString("en-US", {

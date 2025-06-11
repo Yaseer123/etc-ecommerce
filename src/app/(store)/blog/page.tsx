@@ -62,9 +62,9 @@ const BlogsPage = () => {
                   {tags.map((tag) => (
                     <div
                       key={tag.id}
-                      className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:text-white ${
+                      className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:bg-black/75 hover:text-white ${
                         category === tag.slug
-                          ? "active bg-black text-white"
+                          ? "active bg-black text-white hover:bg-black/75"
                           : ""
                       }`}
                       onClick={() => handleCategory(tag.slug)}

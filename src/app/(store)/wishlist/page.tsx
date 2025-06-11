@@ -112,7 +112,7 @@ export default function WishlistPage() {
         </div>
         <div className="py-10 md:py-14 lg:py-20">
           <div className="mx-auto w-full !max-w-[1322px] px-4">
-            <div className="text-red-600 text-center text-lg font-semibold">
+            <div className="text-center text-lg font-semibold text-red-600">
               Failed to load your wishlist. Please try again later.
             </div>
           </div>
@@ -135,7 +135,9 @@ export default function WishlistPage() {
                   {/* Three-column layout */}
                   <div
                     className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
-                      layoutCol === 3 ? "border-black bg-black" : ""
+                      layoutCol === 3
+                        ? "border-black bg-black hover:bg-black/75"
+                        : ""
                     }`}
                     onClick={() => handleLayoutCol(3)}
                   >
@@ -154,7 +156,9 @@ export default function WishlistPage() {
                   {/* Four-column layout */}
                   <div
                     className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
-                      layoutCol === 4 ? "border-black bg-black" : ""
+                      layoutCol === 4
+                        ? "border-black bg-black hover:bg-black/75"
+                        : ""
                     }`}
                     onClick={() => handleLayoutCol(4)}
                   >
@@ -173,7 +177,9 @@ export default function WishlistPage() {
                   {/* Five-column layout */}
                   <div
                     className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
-                      layoutCol === 5 ? "border-black bg-black" : ""
+                      layoutCol === 5
+                        ? "border-black bg-black hover:bg-black/75"
+                        : ""
                     }`}
                     onClick={() => handleLayoutCol(5)}
                   >

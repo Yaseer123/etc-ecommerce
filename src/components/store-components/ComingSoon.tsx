@@ -85,7 +85,7 @@ export default function ComingSoon() {
                     className="h-full w-full rounded-xl border border-line pl-4 pr-14 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
                     required
                   />
-                  <button className="absolute bottom-1 right-1 top-1 flex aspect-square items-center justify-center rounded-xl bg-black text-white">
+                  <button className="absolute bottom-1 right-1 top-1 flex aspect-square items-center justify-center rounded-xl bg-black text-white hover:bg-black/75">
                     <ArrowRight className="heading5 text-white" />
                   </button>
                 </form>

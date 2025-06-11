@@ -42,7 +42,7 @@ const ModalCart = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Shopping Cart ({cartState.length})</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:text-white"
+                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalCart}
               >
                 <X size={14} />
@@ -128,14 +128,14 @@ const ModalCart = () => {
                 <div className="flex items-center gap-4">
                   <Link
                     href={"/cart"}
-                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     View cart
                   </Link>
                   <Link
                     href={"/checkout"}
-                    className="duration-400 md:text-md inline-block basis-1/2 cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-black/75/75 inline-block basis-1/2 cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     Check Out
@@ -172,7 +172,7 @@ const ModalCart = () => {
                   </div>
                   <div className="block-button px-6 pb-6 pt-4 text-center">
                     <div
-                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[12px] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       onClick={() => {
                         setNote(tempNote);
                         setActiveTab("");

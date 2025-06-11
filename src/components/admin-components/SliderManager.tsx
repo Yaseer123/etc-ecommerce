@@ -139,7 +139,7 @@ export const SliderManager = () => {
               link: "",
             })
           }
-          className="rounded-lg bg-black px-6 py-2.5 text-white transition-colors duration-200 hover:bg-gray-800"
+          className="rounded-lg bg-black px-6 py-2.5 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
         >
           Add New Slide
         </button>
@@ -266,7 +266,7 @@ export const SliderManager = () => {
             <div className="flex gap-3">
               <button
                 onClick={handleSave}
-                className="rounded-lg bg-black px-6 py-2.5 text-white transition-colors duration-200 hover:bg-gray-800"
+                className="rounded-lg bg-black px-6 py-2.5 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
               >
                 Save
               </button>
@@ -333,7 +333,7 @@ export const SliderManager = () => {
                     imageId: slider.imageId,
                   })
                 }
-                className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-gray-800"
+                className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
               >
                 Delete
               </button>

@@ -1,12 +1,12 @@
 "use client";
+import { removeImage, uploadFile } from "@/app/actions/file";
+import { useImageStore } from "@/context/admin-context/ImageProvider";
+import Image from "next/image";
 import { type FC, useState } from "react";
-import { IoMdClose } from "react-icons/io";
 import { FileUploader } from "react-drag-drop-files";
+import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import GalleryImage from "../admin-components/GalleryImage";
-import { removeImage, uploadFile } from "@/app/actions/file";
-import Image from "next/image";
-import { useImageStore } from "@/context/admin-context/ImageProvider";
 
 interface ImageGalleryProps {
   visible: string;
@@ -41,7 +41,7 @@ const ImageGallery: FC<ImageGalleryProps> = ({
       onKeyDown={({ key }) => {
         if (key === "Escape") handleClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm hover:bg-black/75"
     >
       <div className="relative h-[80%] w-[80%] overflow-y-auto rounded-md bg-white p-4 md:w-[760px]">
         <div className="absolute right-4 top-4 z-50 p-2">

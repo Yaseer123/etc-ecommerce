@@ -1,12 +1,14 @@
 "use client";
 
+import { removeImage, uploadFile } from "@/app/actions/file";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import {
   Form,
@@ -18,35 +20,31 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
 import {
-  PlusCircle,
-  X,
   ArrowLeft,
+  Database,
+  Layout,
+  PlusCircle,
   Save,
+  Tag,
   Trash2,
   Upload,
-  Layout,
-  Database,
-  Tag,
+  X,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import Image from "next/image";
-import { removeImage, uploadFile } from "@/app/actions/file";
-import Link from "next/link";
-import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
-import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
 
-import { cn } from "@/lib/utils";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,6 +55,8 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface CategoryAttributesManagerProps {
   categoryId: string;
@@ -439,7 +439,7 @@ export default function CategoryAttributesManager({
                                     sizes="(max-width: 768px) 100vw, 50vw"
                                     className="object-cover"
                                   />
-                                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-all group-hover:opacity-100">
+                                  <div className="hover:bg-black/75/50 absolute inset-0 flex items-center justify-center bg-black opacity-0 transition-all group-hover:opacity-100">
                                     <Button
                                       variant="destructive"
                                       size="sm"
@@ -666,8 +666,7 @@ export default function CategoryAttributesManager({
                                                       ...currentOptions,
                                                       inputValue,
                                                     ]);
-                                                    e.currentTarget.value =
-                                                      "";
+                                                    e.currentTarget.value = "";
                                                   } else {
                                                     toast.error(
                                                       "This option already exists",
@@ -678,9 +677,7 @@ export default function CategoryAttributesManager({
                                             }}
                                           />
                                           <div className="flex flex-wrap gap-2">
-                                            {normalizeOptions(
-                                              field.value,
-                                            ).map(
+                                            {normalizeOptions(field.value).map(
                                               (option, optionIndex) => (
                                                 <Badge
                                                   key={optionIndex}

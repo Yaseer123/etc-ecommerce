@@ -61,7 +61,7 @@ export default function MobileSearch() {
             </button>
           ) : null}
           <button
-            className="flex h-full w-10 items-center justify-center bg-black text-white"
+            className="flex h-full w-10 items-center justify-center bg-black text-white hover:bg-black/75"
             onClick={() => handleSearch(searchKeyword)}
           >
             <MagnifyingGlass size={18} />

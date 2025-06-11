@@ -1,5 +1,5 @@
-import type { FC, ReactNode } from "react";
 import clsx from "clsx";
+import type { FC, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;
@@ -13,7 +13,7 @@ const ToolButton: FC<Props> = ({ children, active, onClick }) => {
       onClick={onClick}
       className={clsx(
         "rounded-md p-2",
-        active ? "bg-black text-white" : "text-black",
+        active ? "bg-black text-white hover:bg-black/75" : "text-black",
       )}
     >
       {children}
