@@ -65,7 +65,6 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log("clicked");
                       setProductsExpanded((prev) => !prev);
                     }}
                   >
