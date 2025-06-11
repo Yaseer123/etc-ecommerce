@@ -18,7 +18,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
       className={`tab text-content w-full ${activeTab === "dashboard" ? "block" : "hidden"}`}
     >
       <div className="overview grid gap-5 sm:grid-cols-3">
-        <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-line p-5">
+        <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]">
           <div className="counter">
             <span className="text-secondary">Awaiting Pickup</span>
             <h5 className="heading5 mt-1">
@@ -27,7 +27,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           </div>
           <HourglassMedium className="text-4xl" />
         </div>
-        <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-line p-5">
+        <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]">
           <div className="counter">
             <span className="text-secondary">Cancelled Orders</span>
             <h5 className="heading5 mt-1">
@@ -36,7 +36,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           </div>
           <ReceiptX className="text-4xl" />
         </div>
-        <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-line p-5">
+        <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]">
           <div className="counter">
             <span className="text-secondary">Total Number of Orders</span>
             <h5 className="heading5 mt-1">{orders?.length}</h5>
@@ -44,11 +44,11 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           <Package className="text-4xl" />
         </div>
       </div>
-      <div className="recent_order mt-7 rounded-xl border border-line px-5 pb-2 pt-5">
+      <div className="recent_order mt-7 rounded-xl border border-[#ddd] px-5 pb-2 pt-5 focus:border-[#ddd]">
         <h6 className="heading6">Recent Orders</h6>
         <div className="list mt-5 w-full overflow-x-auto">
           <table className="w-full max-[1400px]:w-[700px] max-md:w-[700px]">
-            <thead className="border-b border-line">
+            <thead className="border-b border-[#ddd] focus:border-[#ddd]">
               <tr>
                 <th
                   scope="col"

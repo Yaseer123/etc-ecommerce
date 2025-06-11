@@ -81,7 +81,7 @@ export default function Page() {
                 <input
                   type="text"
                   placeholder="Search..."
-                  className="h-full w-full rounded-xl border border-line pl-4 pr-32 text-base font-normal leading-[22] md:pr-[150px] md:text-[13px] md:leading-5"
+                  className="h-full w-full rounded-xl border border-[#ddd] pl-4 pr-32 text-base font-normal leading-[22] focus:border-[#ddd] md:pr-[150px] md:text-[13px] md:leading-5"
                   value={searchKeyword}
                   onChange={(e) => setSearchKeyword(e.target.value)}
                   onKeyDown={(e) =>
@@ -89,7 +89,7 @@ export default function Page() {
                   }
                 />
                 <button
-                  className="duration-400 md:text-md absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                  className="duration-400 md:text-md hover:bg-green absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   onClick={() => handleSearch(searchKeyword)}
                 >
                   search

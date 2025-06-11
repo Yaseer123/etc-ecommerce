@@ -42,7 +42,7 @@ const ModalWishlist = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Wishlist</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
+                className="close-btn bg-surface absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalWishlist}
               >
                 <X size={14} />
@@ -83,7 +83,7 @@ const ModalWishlist = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Wishlist</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
+                className="close-btn bg-surface absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalWishlist}
               >
                 <X size={14} />
@@ -113,7 +113,7 @@ const ModalWishlist = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Wishlist</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
+                className="close-btn bg-surface absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalWishlist}
               >
                 <X size={14} />
@@ -142,7 +142,7 @@ const ModalWishlist = () => {
           <div className="heading relative flex items-center justify-between px-6 pb-3">
             <div className="heading5">Wishlist</div>
             <div
-              className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
+              className="close-btn bg-surface absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
               onClick={closeModalWishlist}
             >
               <X size={14} />
@@ -152,7 +152,7 @@ const ModalWishlist = () => {
             {wishList?.map((w) => (
               <div
                 key={w.product.id}
-                className="item flex items-center justify-between gap-3 border-b border-line py-5"
+                className="item flex items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
               >
                 <div className="infor flex items-center gap-5">
                   <div className="bg-img">
@@ -194,7 +194,7 @@ const ModalWishlist = () => {
               </div>
             ))}
           </div>
-          <div className="footer-modal absolute bottom-0 left-0 w-full border-t border-line bg-white p-6 text-center">
+          <div className="footer-modal absolute bottom-0 left-0 w-full border-t border-[#ddd] bg-white p-6 text-center focus:border-[#ddd]">
             <Link
               href={"/wishlist"}
               onClick={closeModalWishlist}

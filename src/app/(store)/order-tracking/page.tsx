@@ -20,17 +20,15 @@ interface OrderResult {
     quantity: number;
     price: number;
   }>;
-  address:
-    | {
-        street: string;
-        city: string;
-        state: string;
-        zipCode: string;
-        phone: string;
-        email: string;
-        name: string | null;
-      }
-    | null;
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phone: string;
+    email: string;
+    name: string | null;
+  } | null;
 }
 
 const OrderTracking = () => {
@@ -56,7 +54,8 @@ const OrderTracking = () => {
         throw new Error(
           "Order not found. Please check your invoice number and try again.",
         );
-      }      const data = await res.json();
+      }
+      const data = await res.json();
       setResult(data as OrderResult);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -73,14 +72,17 @@ const OrderTracking = () => {
     <>
       <div id="header" className="relative w-full">
         <Breadcrumb
-          items={[{ label: <HomeIcon size={16} />, href: "/" }, { label: "Order Tracking" }]}
+          items={[
+            { label: <HomeIcon size={16} />, href: "/" },
+            { label: "Order Tracking" },
+          ]}
           pageTitle="Order Tracking"
         />
       </div>
       <div className="order-tracking py-10 md:py-20">
         <div className="container">
           <div className="content-main flex gap-y-8 max-md:flex-col">
-            <div className="left w-full border-line md:w-1/2 md:border-r md:pr-[40px] lg:pr-[60px]">
+            <div className="left w-full border-[#ddd] focus:border-[#ddd] md:w-1/2 md:border-r md:pr-[40px] lg:pr-[60px]">
               <div className="heading4">Order Tracking</div>
               <div className="mt-2">
                 To track your order, please enter your Invoice or Order Number
@@ -91,7 +93,7 @@ const OrderTracking = () => {
               <form className="mt-4 md:mt-7" onSubmit={handleSubmit}>
                 <div className="invoice">
                   <input
-                    className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                    className="w-full rounded-lg border-[#ddd] px-4 pb-3 pt-3 focus:border-[#ddd]"
                     id="invoice"
                     type="text"
                     placeholder="Invoice or Order Number *"
@@ -111,7 +113,7 @@ const OrderTracking = () => {
                 </div>
               </form>
               {result && (
-                <div className="bg-green-100 mt-4 rounded p-4">
+                <div className="mt-4 rounded bg-green-100 p-4">
                   <strong>Order ID:</strong> {result.orderId} <br />
                   <strong>Status:</strong>{" "}
                   <Badge
@@ -124,7 +126,7 @@ const OrderTracking = () => {
                 </div>
               )}
               {error && (
-                <div className="bg-red-100 text-red-700 mt-4 rounded p-4">
+                <div className="mt-4 rounded bg-red-100 p-4 text-red-700">
                   {error}
                 </div>
               )}

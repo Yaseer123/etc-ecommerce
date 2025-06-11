@@ -44,7 +44,7 @@ const BlogsPage = () => {
             <div className="right xl:w-1/4 xl:pl-[52px]">
               <form className="form-search relative h-12 w-full">
                 <input
-                  className="h-full w-full rounded-lg border border-line px-4 py-2"
+                  className="h-full w-full rounded-lg border border-[#ddd] px-4 py-2 focus:border-[#ddd]"
                   type="text"
                   placeholder="Search"
                 />
@@ -63,7 +63,7 @@ const BlogsPage = () => {
                   {tags.map((tag) => (
                     <div
                       key={tag.id}
-                      className={`tags cursor-pointer rounded-full border border-line bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:bg-black/75 hover:text-white ${
+                      className={`tags cursor-pointer rounded-full border border-[#ddd] bg-white px-4 py-1.5 text-sm font-semibold uppercase leading-5 text-secondary duration-300 hover:bg-black hover:bg-black/75 hover:text-white focus:border-[#ddd] ${
                         category === tag.slug
                           ? "active bg-black text-white hover:bg-black/75"
                           : ""

@@ -63,7 +63,7 @@ const Faqs = () => {
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
-          className="question-item overflow-hidden rounded-[20px] border border-line px-7 py-5"
+          className="question-item overflow-hidden rounded-[20px] border border-[#ddd] px-7 py-5 focus:border-[#ddd]"
         >
           <div className="heading flex items-center justify-between gap-6">
             <div className="h-6 w-3/4 animate-pulse rounded bg-gray-200"></div>
@@ -91,7 +91,7 @@ const Faqs = () => {
                     faqCategories.map((category) => (
                       <div
                         key={category.id}
-                        className={`tab-item heading6 has-line-before inline-block w-fit cursor-pointer text-secondary2 duration-300 ${
+                        className={`tab-item heading6 has-line-before text-secondary2 inline-block w-fit cursor-pointer duration-300 ${
                           activeTab === category.id ? "active" : ""
                         }`}
                         onClick={() => handleActiveTab(category.id)}
@@ -120,7 +120,7 @@ const Faqs = () => {
                     faqItems.map((faq) => (
                       <div
                         key={faq.id}
-                        className={`question-item cursor-pointer overflow-hidden rounded-[20px] border border-line px-7 py-5 ${
+                        className={`question-item cursor-pointer overflow-hidden rounded-[20px] border border-[#ddd] px-7 py-5 focus:border-[#ddd] ${
                           activeQuestion === faq.id ? "open" : ""
                         }`}
                         onClick={() => handleActiveQuestion(faq.id)}

@@ -146,7 +146,7 @@ const Checkout = () => {
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
-        <div className="mb-4 flex justify-between rounded-lg bg-surface px-4 py-3">
+        <div className="bg-surface mb-4 flex justify-between rounded-lg px-4 py-3">
           <div className="flex items-center">
             <span className="pr-4">Already have an account? </span>
             <Link
@@ -169,7 +169,7 @@ const Checkout = () => {
           <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <input
-                className="w-full rounded-lg border-line px-4 py-3"
+                className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="name"
                 type="text"
                 placeholder="Full Name *"
@@ -185,7 +185,7 @@ const Checkout = () => {
             </div>
             <div className="sm:col-span-2">
               <input
-                className="w-full rounded-lg border-line px-4 py-3"
+                className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="email"
                 type="email"
                 placeholder="Email Address *"
@@ -201,7 +201,7 @@ const Checkout = () => {
             </div>
             <div className="sm:col-span-2">
               <input
-                className="w-full rounded-lg border-line px-4 py-3"
+                className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="mobile"
                 type="text"
                 placeholder="Mobile Number *"
@@ -217,7 +217,7 @@ const Checkout = () => {
             </div>
             <div className="sm:col-span-2">
               <input
-                className="w-full rounded-lg border-line px-4 py-3"
+                className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="address"
                 type="text"
                 placeholder="Address *"
@@ -243,7 +243,9 @@ const Checkout = () => {
         Choose payment Option:
       </div>
       <div className="mt-5">
-        <div className={`rounded-lg border border-line bg-surface p-5`}>
+        <div
+          className={`bg-surface rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]`}
+        >
           <input
             className="cursor-pointer"
             type="radio"
@@ -316,7 +318,7 @@ const Checkout = () => {
               {renderPaymentSection()}
               <div className="mt-6 md:mt-10">
                 <button
-                  className="duration-400 inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                  className="duration-400 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   onClick={async () => {
                     if (cartArray.length === 0) {
                       setOrderError("Your cart is empty.");
@@ -412,7 +414,7 @@ const Checkout = () => {
                     <input
                       id="coupon"
                       type="text"
-                      className="w-full rounded-lg border-line px-4 py-2"
+                      className="w-full rounded-lg border-[#ddd] px-4 py-2 focus:border-[#ddd]"
                       placeholder="Enter coupon code"
                       value={couponCode}
                       onChange={(e) => setCouponCode(e.target.value)}
@@ -420,7 +422,7 @@ const Checkout = () => {
                     />
                     <button
                       type="button"
-                      className="rounded bg-black px-4 py-2 font-semibold text-white hover:bg-black/75 hover:bg-green disabled:opacity-50"
+                      className="hover:bg-green rounded bg-black px-4 py-2 font-semibold text-white hover:bg-black/75 disabled:opacity-50"
                       onClick={handleApplyCoupon}
                       disabled={!!appliedCoupon || !couponCode.trim()}
                     >
@@ -433,7 +435,7 @@ const Checkout = () => {
                     </div>
                   )}
                   {appliedCoupon && (
-                    <div className="text-green-600 mt-1 text-xs">
+                    <div className="mt-1 text-xs text-green-600">
                       Coupon '{appliedCoupon}' applied!
                     </div>
                   )}
@@ -447,7 +449,7 @@ const Checkout = () => {
                     cartArray.map((product) => (
                       <div
                         key={product.id}
-                        className="mt-5 flex w-full items-center justify-between gap-6 border-b border-line pb-5"
+                        className="mt-5 flex w-full items-center justify-between gap-6 border-b border-[#ddd] pb-5 focus:border-[#ddd]"
                       >
                         <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
                           <Image
@@ -479,7 +481,7 @@ const Checkout = () => {
                     ))
                   )}
                 </div>
-                <div className="flex justify-between border-b border-line py-5">
+                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Discounts
                   </div>
@@ -488,7 +490,7 @@ const Checkout = () => {
                     <span>.00</span>
                   </div>
                 </div>
-                <div className="flex justify-between border-b border-line py-5">
+                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Shipping
                   </div>

@@ -46,7 +46,7 @@ const Login = () => {
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="flex gap-y-8 max-md:flex-col">
-            <div className="left w-full border-line md:w-1/2 md:border-r md:pr-[40px] lg:pr-[60px]">
+            <div className="left w-full border-[#ddd] focus:border-[#ddd] md:w-1/2 md:border-r md:pr-[40px] lg:pr-[60px]">
               <div className="text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                 Login
               </div>
@@ -69,7 +69,7 @@ const Login = () => {
                 </div>
                 <div className="email">
                   <input
-                    className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                    className="w-full rounded-lg border-[#ddd] px-4 pb-3 pt-3 focus:border-[#ddd]"
                     id="username"
                     type="email"
                     placeholder="Email address *"
@@ -80,7 +80,7 @@ const Login = () => {
                 </div>
                 <div className="pass mt-5">
                   <input
-                    className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                    className="w-full rounded-lg border-[#ddd] px-4 pb-3 pt-3 focus:border-[#ddd]"
                     id="password"
                     type="password"
                     placeholder="Password *"
@@ -113,7 +113,7 @@ const Login = () => {
                 {error && <div className="mt-2 text-red-500">{error}</div>}
                 <div className="mt-4 md:mt-7">
                   <button
-                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-green inline-block cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     type="submit"
                     disabled={loading}
                   >
@@ -135,7 +135,7 @@ const Login = () => {
                 <div className="mt-4 md:mt-7">
                   <Link
                     href={"/register"}
-                    className="duration-400 md:text-md inline-block cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-green inline-block cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Register
                   </Link>

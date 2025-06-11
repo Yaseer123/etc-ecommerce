@@ -163,7 +163,7 @@ export default function Product({ data }: ProductProps) {
     : 0;
 
   return (
-    <div className="product-item style-marketplace h-full rounded-2xl border border-line p-4 transition-all duration-300 hover:shadow-md bg-white">
+    <div className="product-item style-marketplace h-full rounded-2xl border border-[#ddd] bg-white p-4 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
       <div className="bg-img relative w-full">
         {/* Sale badge */}
         {data.discountedPrice && (

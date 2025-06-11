@@ -42,7 +42,7 @@ export default function WishListProducts() {
 
   if (isError) {
     return (
-      <div className="text-red-600 text-center text-lg font-semibold">
+      <div className="text-center text-lg font-semibold text-red-600">
         Failed to load your wishlist. Please try again later.
       </div>
     );
@@ -53,7 +53,7 @@ export default function WishListProducts() {
       {wishList?.map((item) => (
         <div
           key={item.id}
-          className="item flex items-center justify-between gap-3 border-b border-line py-5"
+          className="item flex items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
         >
           <div className="infor flex items-center gap-5">
             <div className="bg-img">
@@ -83,7 +83,7 @@ export default function WishListProducts() {
             </div>
           </div>
           <div
-            className="remove-wishlist-btn text-red-500 cursor-pointer text-base font-semibold leading-[22] underline md:text-[13px] md:leading-5"
+            className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red-500 underline md:text-[13px] md:leading-5"
             onClick={() =>
               removeFromWishlistMutation.mutate({ productId: item.product.id })
             }

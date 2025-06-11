@@ -135,7 +135,7 @@ export default function WishlistPage() {
                 <div className="choose-layout flex items-center gap-2">
                   {/* Three-column layout */}
                   <div
-                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
+                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-[#ddd] p-2 transition-all ease-in-out hover:border-black focus:border-[#ddd] ${
                       layoutCol === 3
                         ? "border-black bg-black hover:bg-black/75"
                         : ""
@@ -156,7 +156,7 @@ export default function WishlistPage() {
 
                   {/* Four-column layout */}
                   <div
-                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
+                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-[#ddd] p-2 transition-all ease-in-out hover:border-black focus:border-[#ddd] ${
                       layoutCol === 4
                         ? "border-black bg-black hover:bg-black/75"
                         : ""
@@ -177,7 +177,7 @@ export default function WishlistPage() {
 
                   {/* Five-column layout */}
                   <div
-                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-line p-2 transition-all ease-in-out hover:border-black ${
+                    className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-[#ddd] p-2 transition-all ease-in-out hover:border-black focus:border-[#ddd] ${
                       layoutCol === 5
                         ? "border-black bg-black hover:bg-black/75"
                         : ""
@@ -202,7 +202,7 @@ export default function WishlistPage() {
                   <select
                     id="select-filter"
                     name="select-filter"
-                    className="rounded-lg border border-line py-2 pl-3 pr-10 text-base font-normal leading-[22] md:pr-20 md:text-[13px] md:leading-5"
+                    className="rounded-lg border border-[#ddd] py-2 pl-3 pr-10 text-base font-normal leading-[22] focus:border-[#ddd] md:pr-20 md:text-[13px] md:leading-5"
                     onChange={(e) => {
                       handleSortChange(e.target.value);
                     }}

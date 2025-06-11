@@ -16,7 +16,6 @@ import {
   Minus,
   Plus,
   Question,
-  ShareNetwork,
   Star,
   Timer,
   X,
@@ -50,7 +49,9 @@ export default function ProductDetails({
 
   const [openPopupImg, setOpenPopupImg] = useState(false);
   const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
-  const [activeTab, setActiveTab] = useState<string | undefined>("specifications");
+  const [activeTab, setActiveTab] = useState<string | undefined>(
+    "specifications",
+  );
   const [productQuantity, setProductQuantity] = useState<number>(1);
   const [reviewForm, setReviewForm] = useState({
     rating: 5,
@@ -298,7 +299,7 @@ export default function ProductDetails({
   return (
     <>
       <div className="product-detail sale">
-        <div className="featured-product underwear py-10 md:py-20 bg-white">
+        <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-wrap justify-between gap-y-6">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
               <Swiper
@@ -399,7 +400,7 @@ export default function ProductDetails({
                   </div>
                 </div>
                 <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border ${isInWishlist(productMain.id) ? "border-black bg-black hover:bg-black/75" : "border-line bg-white"} duration-300 hover:bg-black hover:bg-black/75 hover:text-white`}
+                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border ${isInWishlist(productMain.id) ? "border-black bg-black hover:bg-black/75" : "border-[#ddd] bg-white focus:border-[#ddd]"} duration-300 hover:bg-black hover:bg-black/75 hover:text-white`}
                   onClick={handleAddToWishlist}
                 >
                   {isInWishlist(productMain.id) ? (
@@ -425,8 +426,8 @@ export default function ProductDetails({
                     <div className="product-price heading5 discounted-price">
                       ৳{productMain.discountedPrice.toFixed(2)}
                     </div>
-                    <div className="h-4 w-px bg-line"></div>
-                    <div className="product-origin-price font-normal text-secondary2">
+                    <div className="bg-line h-4 w-px"></div>
+                    <div className="product-origin-price text-secondary2 font-normal">
                       <del>৳{productMain.price.toFixed(2)}</del>
                     </div>
                     {percentSale > 0 && (
@@ -441,13 +442,13 @@ export default function ProductDetails({
                   </div>
                 )}
               </div>
-              <div className="desc mt-5 block border-b border-line pb-6 text-base text-secondary lg:text-lg">
+              <div className="desc mt-5 block border-b border-[#ddd] pb-6 text-base text-secondary focus:border-[#ddd] lg:text-lg">
                 {productMain.shortDescription}
               </div>
               <div className="list-action mt-6">
                 <div className="text-title mt-5">Quantity:</div>
                 <div className="choose-quantity mt-3 flex items-center gap-5 gap-y-3 lg:justify-between">
-                  <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line bg-white max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
+                  <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] bg-white focus:border-[#ddd] max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
                     <Minus
                       size={20}
                       onClick={handleDecreaseQuantity}
@@ -469,15 +470,15 @@ export default function ProductDetails({
                 </div>
                 <div className="button-block mt-5">
                   <div
-                    className="duration-400 md:text-md hover:bg-black/75/75 inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-black/75/75 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={handleBuyNow}
                   >
                     Buy It Now
                   </div>
                 </div>
-                <div className="mt-5 flex items-center gap-8 border-b border-line pb-6 lg:gap-20">
+                <div className="mt-5 flex items-center gap-8 border-b border-[#ddd] pb-6 focus:border-[#ddd] lg:gap-20">
                   {/* <div className="share flex cursor-pointer items-center gap-3">
-                    <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:bg-black/75 hover:text-white md:h-12 md:w-12">
+                    <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#ddd] focus:border-[#ddd] duration-300 hover:bg-black hover:bg-black/75 hover:text-white md:h-12 md:w-12">
                       <ShareNetwork weight="fill" className="heading6" />
                     </div>
                     <span>Share Products</span>
@@ -520,7 +521,7 @@ export default function ProductDetails({
                   </div>
                 </div>
                 {/* <div className="list-payment mt-7">
-                  <div className="main-content relative w-full rounded-xl border border-line px-2 pb-4 pt-6 sm:px-3 md:px-4 lg:pb-6 lg:pt-8">
+                  <div className="main-content relative w-full rounded-xl border border-[#ddd] focus:border-[#ddd] px-2 pb-4 pt-6 sm:px-3 md:px-4 lg:pb-6 lg:pt-8">
                     <div className="heading6 bg-linear absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap px-3 text-sm sm:px-5 sm:text-base">
                       Guranteed safe checkout
                     </div>
@@ -586,7 +587,7 @@ export default function ProductDetails({
               {/* <div className="heading5">Get it today</div> */}
 
               <div className="get-it mt-6 flex flex-col gap-4 sm:flex-row">
-                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 bg-white px-3 py-1">
+                <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
                   <div>
                     <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
                     <div className="text-title">Free shipping</div>
@@ -596,7 +597,7 @@ export default function ProductDetails({
                   </div>
                 </div>
 
-                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 bg-white px-3 py-1">
+                <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
                   <div>
                     <div className="icon-phone-call text-3xl sm:text-4xl"></div>
                     <div className="text-title">Support everyday</div>
@@ -606,7 +607,7 @@ export default function ProductDetails({
                   </div>
                 </div>
 
-                <div className="item mt-4 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3 bg-white px-3 py-1">
+                <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
                   <div>
                     <div className="icon-return text-3xl sm:text-4xl"></div>
                     <div className="text-title">100 Day Returns</div>
@@ -621,12 +622,12 @@ export default function ProductDetails({
             </div>
           </div>
         </div>
-        
-        <div className="desc-tab py-10 md:py-20 bg-white mt-10">
+
+        <div className="desc-tab mt-10 bg-white py-10 md:py-20">
           <div className="mx-auto w-full !max-w-[1322px] px-4">
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
-              <div
+                <div
                   className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "specifications" ? "active" : ""}`}
                   onClick={() => handleActiveTab("specifications")}
                 >
@@ -638,7 +639,7 @@ export default function ProductDetails({
                 >
                   Description
                 </div>
-            
+
                 <div
                   className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "review" ? "active" : ""}`}
                   onClick={() => handleActiveTab("review")}
@@ -676,15 +677,15 @@ export default function ProductDetails({
               <div
                 className={`desc-item review-block ${activeTab === "review" ? "open" : ""}`}
               >
-                <div className="top-overview border-b border-line pb-6">
+                <div className="top-overview border-b border-[#ddd] pb-6 focus:border-[#ddd]">
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     {/* Rating Summary Card */}
-                    <div className="rating-summary rounded-xl bg-surface p-5 shadow-sm transition-all duration-300 hover:shadow-md">
+                    <div className="rating-summary bg-surface rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md">
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold">
                           Overall Rating
                         </h3>
-                        <div className="hover:bg-black/75 rounded-full bg-black px-2 py-0.5 text-xs text-white">
+                        <div className="rounded-full bg-black px-2 py-0.5 text-xs text-white hover:bg-black/75">
                           {reviewStats.totalCount}{" "}
                           {reviewStats.totalCount === 1 ? "Review" : "Reviews"}
                         </div>
@@ -711,7 +712,7 @@ export default function ProductDetails({
                     </div>
 
                     {/* Rating Distribution Card */}
-                    <div className="rating-distribution rounded-xl bg-surface p-5 shadow-sm transition-all duration-300 hover:shadow-md sm:col-span-1 lg:col-span-1">
+                    <div className="rating-distribution bg-surface rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md sm:col-span-1 lg:col-span-1">
                       <h3 className="mb-3 text-lg font-semibold">
                         Rating Distribution
                       </h3>
@@ -729,7 +730,7 @@ export default function ProductDetails({
                             <div className="flex-1">
                               <div className="relative h-2 w-full overflow-hidden rounded-full bg-gray-200">
                                 <div
-                                  className="bg-yellow-500 absolute left-0 top-0 h-full rounded-full"
+                                  className="absolute left-0 top-0 h-full rounded-full bg-yellow-500"
                                   style={{
                                     width: `${reviewStats.ratingPercentages[rating]}%`,
                                   }}
@@ -745,7 +746,7 @@ export default function ProductDetails({
                     </div>
 
                     {/* Write Review Card */}
-                    <div className="write-review-card flex flex-col rounded-xl bg-surface p-5 shadow-sm transition-all duration-300 hover:shadow-md">
+                    <div className="write-review-card bg-surface flex flex-col rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md">
                       <h3 className="mb-3 text-lg font-semibold">
                         Share Your Experience
                       </h3>
@@ -780,7 +781,7 @@ export default function ProductDetails({
                         <select
                           id="select-filter"
                           name="select-filter"
-                          className="w-full rounded-lg border border-line bg-white py-2 pl-3 pr-10 text-sm font-semibold capitalize leading-[26px] sm:w-auto sm:text-base md:pr-14 md:text-base md:leading-6"
+                          className="w-full rounded-lg border border-[#ddd] bg-white py-2 pl-3 pr-10 text-sm font-semibold capitalize leading-[26px] focus:border-[#ddd] sm:w-auto sm:text-base md:pr-14 md:text-base md:leading-6"
                           value={reviewSortOrder}
                           onChange={handleReviewSortChange}
                         >
@@ -806,7 +807,7 @@ export default function ProductDetails({
                     ) : (
                       sortedReviews.map((review) => (
                         <div
-                          className="item mb-8 rounded-lg bg-surface/30 p-3 transition-all duration-300 hover:bg-surface sm:p-5"
+                          className="item bg-surface/30 hover:bg-surface mb-8 rounded-lg p-3 transition-all duration-300 sm:p-5"
                           key={review.id}
                         >
                           <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center sm:gap-0">
@@ -832,7 +833,7 @@ export default function ProductDetails({
                                   <Rate currentRate={review.rating} size={12} />
                                 </div>
                                 <div className="flex items-center gap-2">
-                                  <div className="text-sm text-secondary2">
+                                  <div className="text-secondary2 text-sm">
                                     {formatDistanceToNow(
                                       new Date(review.createdAt),
                                       { addSuffix: true },
@@ -875,7 +876,7 @@ export default function ProductDetails({
                     ) : canReview ? (
                       <div
                         id="form-review"
-                        className="form-review rounded-lg bg-surface/20 p-4 pt-6 sm:p-6"
+                        className="form-review bg-surface/20 rounded-lg p-4 pt-6 sm:p-6"
                       >
                         <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                           Leave A comment
@@ -908,7 +909,7 @@ export default function ProductDetails({
                             </div>
                           </div>
                           <textarea
-                            className="w-full rounded-lg border border-[#ddd] focus:border-[#ddd] px-4 py-3"
+                            className="w-full rounded-lg border border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                             id="message"
                             name="comment"
                             placeholder="Your review *"
@@ -937,7 +938,7 @@ export default function ProductDetails({
                         </form>
                       </div>
                     ) : (
-                      <div className="form-review rounded-lg bg-surface/20 p-4 pt-6 text-red-500 sm:p-6">
+                      <div className="form-review bg-surface/20 rounded-lg p-4 pt-6 text-red-500 sm:p-6">
                         You can only review products you have purchased.
                       </div>
                     ))}
@@ -949,10 +950,10 @@ export default function ProductDetails({
       </div>
       {/* Q&A Section */}
       <section
-        className="mx-8 sm:mx-auto mb-16 mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white  px-8 pb-12 pt-8 shadow sm:px-8"
+        className="mx-8 mb-16 mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white px-8 pb-12 pt-8 shadow sm:mx-auto sm:px-8"
         id="product-qa"
       >
-        <div className="section-head mb-8 flex px-3 gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="section-head mb-8 flex gap-4 px-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="title-n-action">
             <h2 className="mb-1 text-xl font-bold text-gray-900 sm:text-2xl">
               Questions ({questions?.length ?? 0})
@@ -1017,13 +1018,13 @@ export default function ProductDetails({
                   {q.answer ? (
                     <div className="mt-2 pl-12">
                       <div className="mb-1 flex items-center gap-2">
-                        <span className="bg-green-500 inline-block h-2 w-2 rounded-full"></span>
-                        <span className="text-green-700 flex items-center gap-1 text-sm font-semibold">
+                        <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                        <span className="flex items-center gap-1 text-sm font-semibold text-green-700">
                           <Question size={16} className="text-green-500" />
                           Answer from Admin
                         </span>
                       </div>
-                      <div className="bg-green-50 border-green-100 rounded-lg border px-4 py-2 text-sm text-gray-700">
+                      <div className="rounded-lg border border-green-100 bg-green-50 px-4 py-2 text-sm text-gray-700">
                         {q.answer}
                       </div>
                     </div>
@@ -1055,7 +1056,7 @@ export default function ProductDetails({
               </label>
               <textarea
                 id="question"
-                className="w-full rounded-lg border border-[#ddd] focus:border-[#ddd] px-4 py-3 text-base focus:border-primary focus:ring-2 focus:ring-primary"
+                className="w-full rounded-lg border border-[#ddd] px-4 py-3 text-base focus:border-[#ddd] focus:border-primary focus:ring-2 focus:ring-primary"
                 placeholder="Type your question here..."
                 value={questionText}
                 minLength={5}

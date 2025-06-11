@@ -56,11 +56,11 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
 
   return (
     <div
-      className={`tab_address text-content w-full rounded-xl border border-line p-7 ${activeTab === "address" ? "block" : "hidden"}`}
+      className={`tab_address text-content w-full rounded-xl border border-[#ddd] p-7 focus:border-[#ddd] ${activeTab === "address" ? "block" : "hidden"}`}
     >
       <form onSubmit={handleSubmit}>
         <div className={`form_address`}>
-          <h6 className="heading6 mb-4 border-b-2 border-b-line p-2">
+          <h6 className="heading6 border-b-line mb-4 border-b-2 p-2">
             Shipping Address
           </h6>
           <div className="mt-5 grid gap-4 gap-y-5 sm:grid-cols-2">
@@ -69,7 +69,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 Full Name <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="name"
                 type="text"
                 value={address.name}
@@ -82,7 +82,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 Street Address <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="street"
                 type="text"
                 value={address.street}
@@ -95,7 +95,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 Town / City <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="city"
                 type="text"
                 value={address.city}
@@ -108,7 +108,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 State <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="state"
                 type="text"
                 value={address.state}
@@ -121,7 +121,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 ZIP <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="zip"
                 type="text"
                 value={address.zip}
@@ -134,7 +134,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 Phone <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="phone"
                 type="text"
                 value={address.phone}
@@ -147,7 +147,7 @@ export default function AddressTab({ activeTab }: { activeTab?: string }) {
                 Email <span className="text-red-500">*</span>
               </label>
               <input
-                className="mt-2 w-full rounded-lg border-line px-4 py-3"
+                className="mt-2 w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="email"
                 type="email"
                 value={address.email}

@@ -11,7 +11,7 @@ export default function RecentPosts() {
   };
 
   return (
-    <div className="recent mt-6 border-b border-line pb-8 md:mt-10">
+    <div className="recent mt-6 border-b border-[#ddd] pb-8 focus:border-[#ddd] md:mt-10">
       <div className="heading6">Recent Posts</div>
       <div className="list-recent pt-1">
         {recentPosts.slice(0, 3).map((item) => (
@@ -29,7 +29,7 @@ export default function RecentPosts() {
             />
             <div>
               <div
-                className="blog-tag inline-block overflow-hidden text-ellipsis whitespace-nowrap rounded-full bg-green px-2 py-0.5 text-xs font-semibold uppercase leading-5"
+                className="blog-tag bg-green inline-block overflow-hidden text-ellipsis whitespace-nowrap rounded-full px-2 py-0.5 text-xs font-semibold uppercase leading-5"
                 style={{ maxWidth: "150px" }}
               >
                 {item.tags.map((tag) => tag.name).join(", ")}

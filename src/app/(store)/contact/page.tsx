@@ -122,14 +122,14 @@ const ContactUs = () => {
               <div className="text-[36px] font-semibold capitalize leading-[40px] md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
                 Drop Us A Line
               </div>
-              <div className="body1 mt-3 text-secondary2">
+              <div className="body1 text-secondary2 mt-3">
                 Use the form below to get in touch with the sales team
               </div>
               <form className="mt-4 md:mt-6" onSubmit={handleSubmit} noValidate>
                 <div className="grid grid-cols-1 gap-4 gap-y-5 sm:grid-cols-2">
                   <div className="name">
                     <input
-                      className="w-full rounded-lg border-line px-4 py-3"
+                      className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                       name="name"
                       type="text"
                       placeholder="Your Name *"
@@ -146,7 +146,7 @@ const ContactUs = () => {
                   </div>
                   <div className="email">
                     <input
-                      className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                      className="w-full rounded-lg border-[#ddd] px-4 pb-3 pt-3 focus:border-[#ddd]"
                       name="email"
                       type="email"
                       placeholder="Your Email *"
@@ -163,7 +163,7 @@ const ContactUs = () => {
                   </div>
                   <div className="message sm:col-span-2">
                     <textarea
-                      className="w-full rounded-lg border-line px-4 pb-3 pt-3"
+                      className="w-full rounded-lg border-[#ddd] px-4 pb-3 pt-3 focus:border-[#ddd]"
                       name="message"
                       rows={3}
                       placeholder="Your Message *"
@@ -183,7 +183,7 @@ const ContactUs = () => {
                   <button
                     type="submit"
                     disabled={contactMutation.isPending || !isFormValid}
-                    className="duration-400 inline-block cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:text-sm md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                    className="duration-400 hover:bg-green inline-block cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 disabled:opacity-50 md:rounded-[8px] md:px-4 md:py-2.5 md:text-sm md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   >
                     {contactMutation.isPending ? "Sending..." : "Send message"}
                   </button>

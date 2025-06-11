@@ -35,7 +35,7 @@ const ModalNewsletter = () => {
           }}
         >
           <div className="main-content flex w-full overflow-hidden rounded-[20px]">
-            <div className="left flex flex-col items-center justify-center gap-5 bg-green py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
+            <div className="left bg-green flex flex-col items-center justify-center gap-5 py-14 max-sm:hidden sm:w-2/5 lg:w-1/2">
               <div className="text-center text-xs font-semibold uppercase">
                 Special Offer
               </div>
@@ -57,7 +57,7 @@ const ModalNewsletter = () => {
             </div>
             <div className="right relative w-full bg-white max-sm:p-6 sm:w-3/5 sm:pl-10 sm:pt-10 lg:w-1/2">
               <div
-                className="close-newsletter-btn absolute right-5 top-5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-line"
+                className="close-newsletter-btn absolute right-5 top-5 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-[#ddd] focus:border-[#ddd]"
                 onClick={() => setOpen(false)}
               >
                 <X weight="bold" className="text-xl" />
@@ -66,7 +66,7 @@ const ModalNewsletter = () => {
               <div className="list flex flex-col gap-5 overflow-x-auto sm:pr-6">
                 {productData.products.slice(11, 16).map((item) => (
                   <div
-                    className="product-item item flex items-center justify-between gap-3 border-b border-line pb-5"
+                    className="product-item item flex items-center justify-between gap-3 border-b border-[#ddd] pb-5 focus:border-[#ddd]"
                     key={item.id}
                   >
                     <div
@@ -99,7 +99,7 @@ const ModalNewsletter = () => {
                       </div>
                     </div>
                     <button
-                      className="quick-view-btn button-main whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-black/75 hover:bg-green sm:px-5 sm:py-3"
+                      className="quick-view-btn button-main hover:bg-green whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-black/75 sm:px-5 sm:py-3"
                       onClick={() => openQuickView(item)}
                     >
                       QUICK VIEW

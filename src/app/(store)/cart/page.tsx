@@ -89,7 +89,7 @@ const Cart = () => {
                     ) : (
                       cartArray.map((product) => (
                         <div
-                          className="mt-5 flex w-full border-b border-line pb-5 md:mt-7 md:pb-7"
+                          className="mt-5 flex w-full border-b border-[#ddd] pb-5 focus:border-[#ddd] md:mt-7 md:pb-7"
                           key={product.id}
                         >
                           <div className="w-1/2">
@@ -120,7 +120,7 @@ const Cart = () => {
                             </div>
                           </div>
                           <div className="flex w-1/6 items-center justify-center">
-                            <div className="quantity-block flex w-20 flex-shrink-0 items-center justify-between rounded-lg border border-line bg-surface p-2 md:w-[100px] md:p-3">
+                            <div className="quantity-block bg-surface flex w-20 flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] p-2 focus:border-[#ddd] md:w-[100px] md:p-3">
                               <Minus
                                 onClick={() => {
                                   if (product.quantity > 1) {
@@ -173,12 +173,12 @@ const Cart = () => {
                   <input
                     type="text"
                     placeholder="Add voucher discount"
-                    className="h-full w-full rounded-lg border border-line bg-surface pl-4 pr-14"
+                    className="bg-surface h-full w-full rounded-lg border border-[#ddd] pl-4 pr-14 focus:border-[#ddd]"
                     required
                   />
                   <button
                     onClick={() => null}
-                    className="duration-400 absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-lg bg-black px-5 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                    className="duration-400 hover:bg-green absolute bottom-1 right-1 top-1 flex cursor-pointer items-center justify-center rounded-lg bg-black px-5 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   >
                     Apply Code
                   </button>
@@ -186,9 +186,9 @@ const Cart = () => {
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-5 sm:mt-7">
                 <div
-                  className={`transition-all duration-300 ease-in-out ${applyCode === 200 ? "border-green bg-green" : ""} rounded-lg border border-line py-2`}
+                  className={`transition-all duration-300 ease-in-out ${applyCode === 200 ? "border-green bg-green" : ""} rounded-lg border border-[#ddd] py-2 focus:border-[#ddd]`}
                 >
-                  <div className="list-voucher-item-top relative flex justify-between gap-10 border-b border-dashed border-line px-3 pb-2">
+                  <div className="list-voucher-item-top relative flex justify-between gap-10 border-b border-dashed border-[#ddd] px-3 pb-2 focus:border-[#ddd]">
                     <div className="left">
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
                         Discount
@@ -209,7 +209,7 @@ const Cart = () => {
                       Code: AN6810
                     </div>
                     <div
-                      className="duration-400 inline-block cursor-pointer rounded-[.25rem] bg-black px-2.5 py-1 text-xs font-semibold capitalize leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+                      className="duration-400 hover:bg-green inline-block cursor-pointer rounded-[.25rem] bg-black px-2.5 py-1 text-xs font-semibold capitalize leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                       onClick={() =>
                         handleApplyCode(200, Math.floor((totalCart / 100) * 10))
                       }
@@ -221,11 +221,11 @@ const Cart = () => {
               </div>
             </div>
             <div className="w-full xl:w-1/3 xl:pl-12">
-              <div className="rounded-2xl bg-surface p-6">
+              <div className="bg-surface rounded-2xl p-6">
                 <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                   Order Summary
                 </div>
-                <div className="total-block flex justify-between border-b border-line py-5">
+                <div className="total-block flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Subtotal
                   </div>
@@ -234,7 +234,7 @@ const Cart = () => {
                     <span>.00</span>
                   </div>
                 </div>
-                <div className="flex justify-between border-b border-line py-5">
+                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Discounts
                   </div>
@@ -245,7 +245,7 @@ const Cart = () => {
                     <span>.00</span>
                   </div>
                 </div>
-                <div className="flex justify-between border-b border-line py-5">
+                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Shipping
                   </div>
@@ -314,7 +314,7 @@ const Cart = () => {
                 </div>
                 <div className="block-button mt-5 flex flex-col items-center gap-y-4">
                   <div
-                    className="duration-400 text-md inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:text-[15px] md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-5"
+                    className="duration-400 text-md hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-[15px] md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-5"
                     onClick={redirectToCheckout}
                   >
                     Process To Checkout

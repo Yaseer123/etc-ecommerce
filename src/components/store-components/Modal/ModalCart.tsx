@@ -42,7 +42,7 @@ const ModalCart = () => {
             <div className="heading relative flex items-center justify-between px-6 pb-3">
               <div className="heading5">Shopping Cart ({cartState.length})</div>
               <div
-                className="close-btn absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
+                className="close-btn bg-surface absolute right-6 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                 onClick={closeModalCart}
               >
                 <X size={14} />
@@ -101,7 +101,7 @@ const ModalCart = () => {
               )}
             </div>
             <div className="footer-modal mt-auto w-full bg-white shadow-lg">
-              <div className="flex items-center justify-center gap-8 border-b border-line bg-gray-50 px-6 py-4 lg:gap-14">
+              <div className="flex items-center justify-center gap-8 border-b border-[#ddd] bg-gray-50 px-6 py-4 focus:border-[#ddd] lg:gap-14">
                 <div
                   className="item flex cursor-pointer items-center gap-3"
                   onClick={() => handleActiveTab("note")}
@@ -135,7 +135,7 @@ const ModalCart = () => {
                   </Link>
                   <Link
                     href={"/checkout"}
-                    className="duration-400 md:text-md hover:bg-black/75/75 inline-block basis-1/2 cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md hover:bg-black/75/75 hover:bg-green inline-block basis-1/2 cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={closeModalCart}
                   >
                     Check Out
@@ -151,7 +151,7 @@ const ModalCart = () => {
               </div>
               {activeTab === "note" && (
                 <div className="tab-item note-block active">
-                  <div className="border-b border-line px-6 py-4">
+                  <div className="border-b border-[#ddd] px-6 py-4 focus:border-[#ddd]">
                     <div className="item flex cursor-pointer items-center gap-3">
                       <NotePencil className="text-xl" />
                       <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
@@ -165,14 +165,14 @@ const ModalCart = () => {
                       id="form-note"
                       rows={4}
                       placeholder="Add special instructions for your order..."
-                      className="w-full rounded-md border-line bg-surface px-4 py-3 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                      className="bg-surface w-full rounded-md border-[#ddd] px-4 py-3 text-base font-normal leading-[22] focus:border-[#ddd] md:text-[13px] md:leading-5"
                       value={tempNote}
                       onChange={(e) => setTempNote(e.target.value)}
                     ></textarea>
                   </div>
                   <div className="block-button px-6 pb-6 pt-4 text-center">
                     <div
-                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       onClick={() => {
                         setNote(tempNote);
                         setActiveTab("");

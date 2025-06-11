@@ -57,7 +57,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                 <input
                   type="email"
                   placeholder="Enter your e-mail"
-                  className="border-line h-full w-full rounded-xl border pl-4 pr-14"
+                  className="border-[#ddd] focus:border-[#ddd] h-full w-full rounded-xl border pl-4 pr-14"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

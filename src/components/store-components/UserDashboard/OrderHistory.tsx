@@ -63,13 +63,13 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
 
   return (
     <div
-      className={`tab text-content w-full overflow-hidden rounded-xl border border-line p-7 ${
+      className={`tab text-content w-full overflow-hidden rounded-xl border border-[#ddd] p-7 focus:border-[#ddd] ${
         activeTab === "orders" ? "block" : "hidden"
       }`}
     >
       <h6 className="heading6">Your Orders</h6>
       <div className="w-full overflow-x-auto">
-        <div className="menu-tab mt-3 grid grid-cols-6 border-b border-line max-lg:w-[500px]">
+        <div className="menu-tab mt-3 grid grid-cols-6 border-b border-[#ddd] focus:border-[#ddd] max-lg:w-[500px]">
           {Object.entries(orderStatusMapping).map(([key, value]) => (
             <button
               key={key}
@@ -100,9 +100,9 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
           orders?.map((order) => (
             <div
               key={order.id}
-              className="order_item box-shadow-xs mt-5 rounded-lg border border-line"
+              className="order_item box-shadow-xs mt-5 rounded-lg border border-[#ddd] focus:border-[#ddd]"
             >
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line p-5">
+              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#ddd] p-5 focus:border-[#ddd]">
                 <div className="flex items-center gap-2">
                   <strong className="text-title">Order Number:</strong>
                   <strong className="order_number text-button uppercase">
@@ -123,7 +123,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
                 {order.items.map((item) => (
                   <div
                     key={item.id}
-                    className="prd_item flex flex-wrap items-center justify-between gap-3 border-b border-line py-5"
+                    className="prd_item flex flex-wrap items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
                   >
                     <Link
                       href={`/products/${item.product.slug}?id=${item.product.id}`}

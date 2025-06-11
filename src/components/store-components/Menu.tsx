@@ -189,7 +189,7 @@ export default function Menu({
                 <div className="search-container relative flex h-full w-full items-center">
                   <input
                     type="text"
-                    className="search-input h-full w-full border border-line px-4"
+                    className="search-input h-full w-full border border-[#ddd] focus:border-[#ddd] px-4"
                     placeholder="What are you looking for today?"
                     value={searchKeyword}
                     onChange={(e) => setSearchKeyword(e.target.value)}
@@ -206,7 +206,7 @@ export default function Menu({
 
                   {/* Search Results Dropdown with Loading State */}
                   {showSearchResults && searchKeyword.length > 1 && (
-                    <div className="search-results absolute left-0 right-0 top-full z-50 mt-1 max-h-[400px] overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg">
+                    <div className="search-results absolute left-0 right-0 top-full z-50 mt-1 max-h-[400px] overflow-y-auto rounded-md border border-[#ddd] focus:border-[#ddd] bg-white shadow-lg">
                       <div className="px-4 py-2 text-sm font-medium text-gray-900">
                         {isSearchLoading ? "Searching..." : "Search Results"}
                       </div>

@@ -145,7 +145,7 @@ const ModalQuickView = () => {
               <div className="heading relative flex items-center justify-between px-4 pb-6">
                 <div className="heading5">Quick View</div>
                 <div
-                  className="close-btn absolute right-0 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-surface duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
+                  className="close-btn bg-surface absolute right-0 top-0 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full duration-300 hover:bg-black hover:bg-black/75 hover:text-white"
                   onClick={closeQuickView}
                 >
                   <X size={14} />
@@ -159,7 +159,7 @@ const ModalQuickView = () => {
                     </div>
                   </div>
                   <div
-                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-line duration-300 hover:bg-black hover:bg-black/75 hover:text-white ${wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
+                    className={`add-wishlist-btn flex h-10 w-10 flex-shrink-0 cursor-pointer items-center justify-center rounded-lg border border-[#ddd] duration-300 hover:bg-black hover:bg-black/75 hover:text-white focus:border-[#ddd] ${wishlistArray.some((item) => item.id === selectedProduct?.id) ? "active" : ""}`}
                     onClick={handleAddToWishlist}
                   >
                     {wishlistArray.some(
@@ -185,7 +185,7 @@ const ModalQuickView = () => {
                     (1.234 reviews)
                   </span>
                 </div>
-                <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-line pb-6">
+                <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-[#ddd] pb-6 focus:border-[#ddd]">
                   <div className="product-price heading5 discounted-price">
                     ৳{selectedProduct.discountedPrice ?? selectedProduct.price}
                     .00
@@ -193,11 +193,11 @@ const ModalQuickView = () => {
                   {selectedProduct.discountedPrice &&
                     selectedProduct.discountedPrice < selectedProduct.price && (
                       <>
-                        <div className="h-4 w-px bg-line"></div>
-                        <div className="product-origin-price font-normal text-secondary2">
+                        <div className="bg-line h-4 w-px"></div>
+                        <div className="product-origin-price text-secondary2 font-normal">
                           <del>৳{selectedProduct.price}.00</del>
                         </div>
-                        <div className="product-sale caption2 inline-block rounded-full bg-green px-3 py-0.5 font-semibold">
+                        <div className="product-sale caption2 bg-green inline-block rounded-full px-3 py-0.5 font-semibold">
                           -{percentSale}%
                         </div>
                       </>
@@ -209,7 +209,7 @@ const ModalQuickView = () => {
                 <div className="list-action mt-6">
                   <div className="text-title mt-5">Quantity:</div>
                   <div className="choose-quantity mt-3 flex items-center gap-5 max-xl:flex-wrap lg:justify-between">
-                    <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-line max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
+                    <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] focus:border-[#ddd] max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
                       <Minus
                         onClick={handleDecreaseQuantity}
                         className={`${quantity === 1 ? "disabled" : ""} body1 cursor-pointer`}
@@ -222,14 +222,14 @@ const ModalQuickView = () => {
                     </div>
                     <div
                       onClick={handleAddToCart}
-                      className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     >
                       Add To Cart
                     </div>
                   </div>
                   <div className="button-block mt-5">
                     <div
-                      className="duration-400 md:text-md hover:bg-black/75/75 inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:bg-green hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                      className="duration-400 md:text-md hover:bg-black/75/75 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                       onClick={handleBuyNow}
                     >
                       Buy It Now
@@ -237,7 +237,7 @@ const ModalQuickView = () => {
                   </div>
                   <div className="mt-5 flex flex-wrap items-center gap-8 gap-y-4 lg:gap-20">
                     <div className="share flex cursor-pointer items-center gap-3">
-                      <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-line duration-300 hover:bg-black hover:bg-black/75 hover:text-white md:h-12 md:w-12">
+                      <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#ddd] duration-300 hover:bg-black hover:bg-black/75 hover:text-white focus:border-[#ddd] md:h-12 md:w-12">
                         <ShareNetwork weight="fill" className="heading6" />
                       </div>
                       <span>Share Products</span>
@@ -280,7 +280,7 @@ const ModalQuickView = () => {
                     </div>
                   </div>
                   <div className="list-payment mt-7">
-                    <div className="main-content relative rounded-xl border border-line px-3 pb-4 pt-6 max-md:w-2/3 max-sm:w-full sm:px-4 lg:pb-6 lg:pt-8">
+                    <div className="main-content relative rounded-xl border border-[#ddd] px-3 pb-4 pt-6 focus:border-[#ddd] max-md:w-2/3 max-sm:w-full sm:px-4 lg:pb-6 lg:pt-8">
                       <div className="heading6 absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap bg-white px-5">
                         Guaranteed safe checkout
                       </div>
