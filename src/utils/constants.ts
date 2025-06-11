@@ -19,7 +19,7 @@ export const ORDER_STATUS_COLORS: Record<
 > = {
   PENDING: {
     label: "Pending",
-    color: "bg-yellow text-black",
+    color: "bg-yellow-400 text-black",
   },
   PROCESSING: {
     label: "Processing",
@@ -27,11 +27,11 @@ export const ORDER_STATUS_COLORS: Record<
   },
   SHIPPED: {
     label: "Shipped",
-    color: "bg-purple text-white",
+    color: "bg-purple-400 text-white",
   },
   DELIVERED: {
     label: "Delivered",
-    color: "bg-green text-black",
+    color: "bg-green-500 text-black",
   },
   CANCELLED: {
     label: "Cancelled",
