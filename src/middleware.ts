@@ -20,6 +20,16 @@ export default auth(async (req) => {
   const isAdminRoutes = nextUrl.pathname.startsWith(adminPrefix);
   const isUserDashboard = nextUrl.pathname.startsWith(userDashboard);
 
+  // Allow /auth/verify-required and /api/auth/verify-email for non-verified users
+  const isVerifyRequiredRoute = nextUrl.pathname === "/auth/verify-required";
+  const isVerifyEmailApiRoute = nextUrl.pathname === "/api/auth/verify-email";
+
+  const isContactRoute =
+    nextUrl.pathname === "/contact" || nextUrl.pathname.startsWith("/contact/");
+  const isVerifyEmailPage =
+    nextUrl.pathname === "/verify-email" ||
+    nextUrl.pathname.startsWith("/verify-email/");
+
   if (isApiAuthRoutes) {
     return NextResponse.next();
   }
@@ -51,6 +61,28 @@ export default auth(async (req) => {
     const loginUrl = new URL(DEFAULT_LOGIN_REDIRECT, nextUrl);
     loginUrl.searchParams.set("redirect", nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
+  }
+
+  if (
+    isLoggedIn &&
+    !req.auth?.user?.emailVerified &&
+    !isVerifyRequiredRoute &&
+    !isVerifyEmailApiRoute &&
+    !isAuthRoutes &&
+    !isContactRoute &&
+    !isVerifyEmailPage
+  ) {
+    return NextResponse.redirect(new URL("/auth/verify-required", nextUrl));
+  }
+
+  // Redirect verified users away from verification pages
+  if (
+    isLoggedIn &&
+    req.auth?.user?.emailVerified &&
+    (nextUrl.pathname === "/auth/verify-required" ||
+      nextUrl.pathname === "/verify-email")
+  ) {
+    return NextResponse.redirect(new URL("/", nextUrl));
   }
 
   // if (!isLoggedIn && !isPublicRoutes) {

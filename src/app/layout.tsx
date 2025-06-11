@@ -4,7 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 import Script from "next/script";
-
+import "@/styles/styles.scss";
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {

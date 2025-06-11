@@ -65,6 +65,12 @@ export const orderRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
+      const user = await ctx.db.user.findUnique({ where: { id: userId } });
+      if (!user?.emailVerified) {
+        throw new Error(
+          "Please verify your email address to place an order. A verification link has been sent to your email.",
+        );
+      }
 
       // Get products for all cart items
       const products = await ctx.db.product.findMany({

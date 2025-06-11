@@ -23,6 +23,7 @@ declare module "next-auth" {
       id: string;
       // ...other properties
       role: UserRole;
+      emailVerified?: Date | null;
     } & DefaultSession["user"];
   }
 
@@ -76,6 +77,7 @@ export const authConfig = {
             email: user.email,
             name: user.name,
             role: user.role,
+            emailVerified: user.emailVerified,
           };
         }
         return null;
@@ -115,6 +117,10 @@ export const authConfig = {
         session.user.role = token.role;
       }
 
+      if (token.emailVerified) {
+        session.user.emailVerified = token.emailVerified;
+      }
+
       return session;
     },
 
@@ -130,8 +136,42 @@ export const authConfig = {
       }
 
       token.role = existingUser.role;
+      token.emailVerified = existingUser.emailVerified;
 
       return token;
+    },
+
+    async signIn({ user, account, profile, email, credentials }) {
+      // Only apply logic for OAuth (e.g., Google)
+      if (account?.provider && account.provider !== "credentials") {
+        const emailToCheck = user?.email;
+        if (!emailToCheck) return false;
+        const existingUser = await db.user.findUnique({
+          where: { email: emailToCheck },
+        });
+        if (existingUser) {
+          if (existingUser.emailVerified) {
+            // Allow sign in, verified user exists
+            return true;
+          } else {
+            // Block sign in, unverified user exists
+            return "/auth/verify-required"; // Or return false to block
+          }
+        } else {
+          // No user exists, create and mark as verified
+          await db.user.create({
+            data: {
+              email: emailToCheck,
+              name: user?.name,
+              image: user?.image,
+              emailVerified: new Date(),
+            },
+          });
+          return true;
+        }
+      }
+      // Default allow for credentials
+      return true;
     },
   },
 } satisfies NextAuthConfig;
