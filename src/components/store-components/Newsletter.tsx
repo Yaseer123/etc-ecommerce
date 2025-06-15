@@ -1,15 +1,13 @@
 "use client";
-import { api } from "@/trpc/react";
 import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
+import { api } from "@/trpc/react";
 import { useState } from "react";
-import { toast } from "sonner";
-import { Button } from "../ui/button";
 
 interface NewsletterProps {
-  variant?: "default" | "footer";
+  variant?: 'default' | 'footer';
 }
 
-export default function Newsletter({ variant = "default" }: NewsletterProps) {
+export default function Newsletter({ variant = 'default' }: NewsletterProps) {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -21,28 +19,19 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
     setError("");
     try {
       await newsletterMutation.mutateAsync({ email });
-      toast.success(
+      setSuccess(
         "Thank you for subscribing! Check your email for a discount code.",
       );
       setEmail("");
-    } catch (err: unknown) {
-      let message = "Something went wrong. Please try again.";
-      if (
-        err &&
-        typeof err === "object" &&
-        "message" in err &&
-        typeof (err as any).message === "string"
-      ) {
-        message = (err as any).message;
-      }
-      toast.error(message);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong. Please try again.");
     }
   };
 
   return (
     <>
-      {variant === "default" ? (
-        <div className="newsletter-block bg-green-300 mb-5 py-7">
+      {variant === 'default' ? (
+        <div className="newsletter-block bg-green py-7">
           <div className="mx-auto flex w-full !max-w-[1322px] items-center justify-center gap-8 gap-y-4 px-4 max-lg:flex-col lg:justify-between">
             <div className="text-content">
               <div className="text-[36px] font-semibold capitalize leading-[40px] max-lg:text-center md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
@@ -57,21 +46,22 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                 <input
                   type="email"
                   placeholder="Enter your e-mail"
-                  className="border-[#ddd] focus:border-[#ddd] h-full w-full rounded-xl border pl-4 pr-14"
+                  className="h-full w-full rounded-xl border border-line pl-4 pr-14"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={newsletterMutation.isPending}
+                  disabled={newsletterMutation.isLoading}
                 />
-                <Button
-                  variant="default"
-                  className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black text-white hover:bg-black/75"
+                <button
+                  className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
                   type="submit"
-                  disabled={newsletterMutation.isPending}
+                  disabled={newsletterMutation.isLoading}
                 >
-                  {newsletterMutation.isPending ? "..." : "Subscribe"}
-                </Button>
+                  {newsletterMutation.isLoading ? "..." : "Subscribe"}
+                </button>
               </form>
+              {success && <div className="text-green-800 mt-2 text-sm">{success}</div>}
+              {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
             </div>
           </div>
         </div>
@@ -86,20 +76,22 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
               <input
                 type="email"
                 placeholder="Enter your e-mail"
-                className="caption1 border-[#ddd] focus:border-[#ddd] h-full w-full rounded-xl border pl-4 pr-14"
+                className="caption1 h-full w-full rounded-xl border border-line pl-4 pr-14"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={newsletterMutation.isPending}
+                disabled={newsletterMutation.isLoading}
               />
               <button
-                className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black hover:bg-black/75"
+                className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
                 type="submit"
-                disabled={newsletterMutation.isPending}
+                disabled={newsletterMutation.isLoading}
               >
                 <ArrowRight size={24} color="#fff" />
               </button>
             </form>
+            {success && <div className="text-green-800 mt-2 text-sm">{success}</div>}
+            {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
           </div>
         </>
       )}

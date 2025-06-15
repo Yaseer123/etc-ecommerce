@@ -4,10 +4,9 @@ import Brand from "@/components/store-components/Brand";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import Instagram from "@/components/store-components/Instagram";
 import Newsletter from "@/components/store-components/Newsletter";
-import { HomeIcon } from "lucide-react";
 import Image from "next/image";
 const breadcrumbItems = [
-  { label: <HomeIcon size={16} />, href: "/" },
+  { label: "Home", href: "/" },
   { label: "About us", href: "/about" },
 ];
 const AboutUs = () => {

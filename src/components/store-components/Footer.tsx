@@ -1,3 +1,4 @@
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
 import { FaXTwitter } from "react-icons/fa6";
@@ -7,7 +8,7 @@ import Newsletter from "./Newsletter";
 const Footer = () => {
   return (
     <>
-      <div id="footer" className="footer bg-white">
+      <div id="footer" className="footer">
         <div className="footer-main bg-surface">
           <div className="container">
             <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
@@ -76,41 +77,31 @@ const Footer = () => {
                     <div className="text-button-uppercase pb-3">Quick Shop</div>
                     <Link
                       className="caption1 has-line-before w-fit duration-300"
-                      href={
-                        "/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"
-                      }
+                      href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"}
                     >
                       Home Electricals
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"
-                      }
+                      href={"/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"}
                     >
                       Energy Solutions
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"
-                      }
+                      href={"/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"}
                     >
                       Smart Gadget
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"
-                      }
+                      href={"/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"}
                     >
                       Health and Fitness
                     </Link>
                     <Link
                       className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"
-                      }
+                      href={"/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"}
                     >
                       Smart Appliances
                     </Link>
@@ -144,8 +135,7 @@ const Footer = () => {
                       Return & Refund
                     </Link>
                   </div>
-                </div>{" "}
-                <div className="newsletter basis-1/3 pl-7 max-md:basis-full max-md:pl-0">
+                </div>                <div className="newsletter basis-1/3 pl-7 max-md:basis-full max-md:pl-0">
                   <Newsletter variant="footer" />
                   <div className="list-social mt-4 flex items-center gap-6">
                     <Link
@@ -183,11 +173,10 @@ const Footer = () => {
                 </div>
               </div>
             </div>
-            <div className="footer-bottom flex items-center justify-between gap-5 border-t border-[#ddd] py-3 focus:border-[#ddd] max-lg:flex-col max-lg:justify-center">
+            <div className="footer-bottom flex items-center justify-between gap-5 border-t border-line py-3 max-lg:flex-col max-lg:justify-center">
               <div className="left flex items-center gap-8">
                 <div className="copyright caption1 text-secondary">
-                  ©{new Date().getFullYear()} Rinors Corporation. All Rights
-                  Reserved.
+                  ©2023 Anvogue. All Rights Reserved.
                 </div>
               </div>
               <div className="right flex items-center gap-2">

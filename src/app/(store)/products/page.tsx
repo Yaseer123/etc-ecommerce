@@ -611,6 +611,17 @@ export default function ProductsPage() {
             <div className="list-product-block w-full md:w-2/3 md:pl-3 lg:w-3/4">
               <div className="filter-heading flex flex-wrap items-center justify-between gap-5">
                 <div className="left has-line flex flex-wrap items-center gap-5">
+                  {/* Filter Button - Only show on mobile */}
+                  <button
+                    className="tool-btn flex items-center gap-1 rounded-md bg-orange-500 px-3 py-2 text-white md:hidden"
+                    id="lc-toggle"
+                    onClick={toggleMobileFilter}
+                    aria-label="Filter products"
+                    type="button"
+                  >
+                    <Funnel size={20} weight="bold" />
+                    <span className="ml-1">Filter</span>
+                  </button>
                   {/* Remove "Show only products on sale" checkbox */}
                 </div>
                 <div className="right flex items-center gap-3">
