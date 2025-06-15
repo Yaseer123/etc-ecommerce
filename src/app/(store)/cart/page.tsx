@@ -169,7 +169,7 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-              {/* <div className="mt-5 h-12 w-full sm:mt-7">
+              <div className="mt-5 h-12 w-full sm:mt-7">
                 <form className="relative h-full w-full">
                   <input
                     type="text"
@@ -184,8 +184,8 @@ const Cart = () => {
                     Apply Code
                   </button>
                 </form>
-              </div> */}
-              <div className="mt-5 flex flex-wrap items-center gap-5 sm:mt-7">
+              </div>
+              {/* <div className="mt-5 flex flex-wrap items-center gap-5 sm:mt-7">
                 <div
                   className={`transition-all duration-300 ease-in-out ${applyCode === 200 ? "border-green bg-green" : ""} rounded-lg border border-[#ddd] py-2 focus:border-[#ddd]`}
                 >
@@ -219,7 +219,7 @@ const Cart = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="w-full xl:w-1/3 xl:pl-12">
               <div className="bg-surface rounded-2xl p-6">
