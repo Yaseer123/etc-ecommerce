@@ -20,6 +20,8 @@ export interface ProductType {
   price: number;
   originPrice: number;
   brand: string;
+  defaultColor?: string;
+  defaultSize?: string;
   sold: number;
   quantity: number;
   quantityPurchase: number;
@@ -34,4 +36,7 @@ export interface ProductType {
 
 export type ProductWithCategory = Product & {
   category: Category | null;
+  defaultColor?: string | null;
+  defaultSize?: string | null;
+  variants?: Variant[] | string | null;
 };

@@ -369,6 +369,8 @@ export default function AddProductForm() {
       setAttributes([]);
       setAttributeValues({});
       setSpecifications([]);
+      setDefaultColor("");
+      setDefaultSize("");
       // Navigate after clearing
       router.push("/admin/product");
     },
@@ -533,6 +535,8 @@ export default function AddProductForm() {
       discountedPrice,
       stock,
       brand,
+      defaultColor,
+      defaultSize,
       slug,
       categoryId: categoryId,
       description: content,

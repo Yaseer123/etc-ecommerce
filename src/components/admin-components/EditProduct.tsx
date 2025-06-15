@@ -494,8 +494,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
   }
 
   // Add state for default product color and size
-  const [defaultColor, setDefaultColor] = useState(product?.color ?? "");
-  const [defaultSize, setDefaultSize] = useState(product?.size ?? "");
+  const [defaultColor, setDefaultColor] = useState(product?.defaultColor ?? "");
+  const [defaultSize, setDefaultSize] = useState(product?.defaultSize ?? "");
 
   // Variants state
   const [enableVariants, setEnableVariants] = useState(
@@ -602,8 +602,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
       stock,
       brand,
       estimatedDeliveryTime: estimatedDeliveryTime,
-      // color: defaultColor || undefined, // Not in backend schema
-      // size: defaultSize || undefined, // Not in backend schema
+      defaultColor,
+      defaultSize,
       variants:
         enableVariants && variants.length > 0
           ? variants.map((v) => ({

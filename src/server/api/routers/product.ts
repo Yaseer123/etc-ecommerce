@@ -438,6 +438,8 @@ export const productRouter = createTRPCRouter({
         stock: input.stock,
         discountedPrice: input.discountedPrice,
         brand: input.brand,
+        defaultColor: input.defaultColor,
+        defaultSize: input.defaultSize,
         estimatedDeliveryTime: input.estimatedDeliveryTime,
         attributes: input.attributes, // Store regular specifications
         categoryAttributes: categoryAttributes || {}, // Store category-specific attributes
@@ -511,6 +513,8 @@ export const productRouter = createTRPCRouter({
         where: { id },
         data: {
           ...updateData,
+          defaultColor: input.defaultColor,
+          defaultSize: input.defaultSize,
           categoryAttributes: categoryAttributes ?? {}, // Update category attributes separately
           category: categoryId ? { connect: { id: categoryId } } : undefined,
           ...(stockStatus ? { stockStatus } : {}),

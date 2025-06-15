@@ -321,16 +321,17 @@ export default function ProductDetails({
 
   // Variant selection state
   const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    undefined,
+    productMain.defaultColor ?? undefined,
   );
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
-    undefined,
+    productMain.defaultSize ?? undefined,
   );
 
   // Get available colors and sizes based on current selection
   const availableColors = variants
     ? [...new Set(variants.map((v) => v.color).filter(Boolean))]
     : [];
+  console.log(availableColors);
   const availableSizes = variants
     ? [
         ...new Set(
@@ -362,11 +363,14 @@ export default function ProductDetails({
       : productMain.discountedPrice;
   const displayStock =
     typeof activeVariant?.stock === "number"
-      ? activeVariant.stck
+      ? activeVariant.stock
       : productMain.stock;
+  console.log(productMain.defaultColor);
 
   return (
-    <>      <div className="product-detail sale">
+    <>
+      {" "}
+      <div className="product-detail sale">
         <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-wrap justify-between gap-y-6">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
@@ -377,48 +381,87 @@ export default function ProductDetails({
                   {availableColors.length > 0 && (
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">Color:</span>
-                      {availableColors.map((color, idx) => (
-                        <button
-                          key={color + idx}
-                          className={`rounded border px-3 py-1 ${selectedColor === color ? "bg-black text-white" : "bg-white text-black"}`}
-                          onClick={() => {
-                            setSelectedColor(color);
-                            setSelectedSize(undefined); // Reset size when color changes
-                          }}
-                        >
-                          {color}
-                        </button>
-                      ))}
+                      {availableColors.map((color, idx) => {
+                        // Try to use Tailwind color class, fallback to default if not valid
+                        let colorClass = "";
+                        if (color.startsWith("bg-")) {
+                          colorClass = color;
+                        } else if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+                          colorClass = ""; // Tailwind does not support dynamic hex, fallback below
+                        } else if (
+                          /^(red|blue|green|yellow|purple|pink|indigo|gray|orange|teal|cyan|lime|amber|emerald|fuchsia|rose|violet|sky|stone|neutral|zinc|slate)-(100|200|300|400|500|600|700|800|900)$/.test(
+                            color,
+                          )
+                        ) {
+                          colorClass = `bg-${color}`;
+                        } else {
+                          colorClass = "bg-gray-200";
+                        }
+                        return (
+                          <button
+                            key={color + idx}
+                            className={`flex h-8 w-8 items-center justify-center rounded-full border p-0 ${selectedColor === color ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"} ${colorClass} `}
+                            style={
+                              /^#[0-9A-Fa-f]{6}$/.test(color)
+                                ? { backgroundColor: color }
+                                : {}
+                            }
+                            onClick={() => {
+                              setSelectedColor(color);
+                              setSelectedSize(undefined);
+                            }}
+                            aria-label={String(color)}
+                          ></button>
+                        );
+                      })}
                       <button
-                        className={`rounded border px-3 py-1 ${!selectedColor ? "bg-black text-white" : "bg-white text-black"}`}
+                        className={`flex h-8 w-8 items-center justify-center rounded-full border p-0 ${selectedColor === productMain.defaultColor && productMain.defaultColor ? "ring-2 ring-blue-400" : ""} ${productMain.defaultColor ? (productMain.defaultColor.startsWith("#") ? "" : `${productMain.defaultColor}`) : ""} `}
+                        style={
+                          productMain.defaultColor &&
+                          /^#[0-9A-Fa-f]{6}$/.test(productMain.defaultColor)
+                            ? { backgroundColor: productMain.defaultColor }
+                            : {}
+                        }
                         onClick={() => {
-                          setSelectedColor(undefined);
-                          setSelectedSize(undefined);
+                          setSelectedColor(
+                            productMain.defaultColor ?? undefined,
+                          );
+                          setSelectedSize(productMain.defaultSize ?? undefined);
                         }}
-                      >
-                        All
-                      </button>
+                        aria-label={String(
+                          productMain.defaultColor ?? "reset-color",
+                        )}
+                      ></button>
                     </div>
                   )}
                   {/* Size selector */}
                   {availableSizes.length > 0 && (
                     <div className="flex items-center gap-2">
                       <span className="font-semibold">Size:</span>
-                      {availableSizes.map((size, idx) => (
+                      {availableSizes.map((size, idx) =>
+                        size ? (
+                          <button
+                            key={size + idx}
+                            className={`rounded border px-3 py-1 ${selectedSize === size ? "border-2 border-blue-500 bg-black text-white" : "bg-white text-black"} ${size === productMain.defaultSize ? "ring-2 ring-blue-400" : ""}`}
+                            onClick={() => setSelectedSize(size)}
+                          >
+                            {size}
+                            {size === productMain.defaultSize ? (
+                              <span className="ml-1 text-xs text-blue-600">
+                                (default)
+                              </span>
+                            ) : null}
+                          </button>
+                        ) : null,
+                      )}
+                      {productMain.defaultSize && (
                         <button
-                          key={size + idx}
-                          className={`rounded border px-3 py-1 ${selectedSize === size ? "bg-black text-white" : "bg-white text-black"}`}
-                          onClick={() => setSelectedSize(size)}
+                          className={`rounded border px-3 py-1 ${!selectedSize ? "bg-black text-white" : "bg-white text-black"}`}
+                          onClick={() => setSelectedSize(undefined)}
                         >
-                          {size}
+                          {productMain.defaultSize}
                         </button>
-                      ))}
-                      <button
-                        className={`rounded border px-3 py-1 ${!selectedSize ? "bg-black text-white" : "bg-white text-black"}`}
-                        onClick={() => setSelectedSize(undefined)}
-                      >
-                        All
-                      </button>
+                      )}
                     </div>
                   )}
                 </div>
