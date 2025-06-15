@@ -186,22 +186,33 @@ const ModalQuickView = () => {
                   </span>
                 </div>
                 <div className="mt-5 flex flex-wrap items-center gap-3 border-b border-[#ddd] pb-6 focus:border-[#ddd]">
-                  <div className="product-price heading5 discounted-price">
-                    ৳{selectedProduct.discountedPrice ?? selectedProduct.price}
-                    .00
-                  </div>
-                  {selectedProduct.discountedPrice &&
-                    selectedProduct.discountedPrice < selectedProduct.price && (
-                      <>
-                        <div className="bg-line h-4 w-px"></div>
-                        <div className="product-origin-price text-secondary2 font-normal">
-                          <del>৳{selectedProduct.price}.00</del>
-                        </div>
-                        <div className="product-sale caption2 bg-green inline-block rounded-full px-3 py-0.5 font-semibold">
-                          -{percentSale}%
-                        </div>
-                      </>
-                    )}
+                  {selectedProduct.stockStatus === "OUT_OF_STOCK" ? (
+                    <div className="product-price heading5 font-bold text-red-500">
+                      Out Of Stock
+                    </div>
+                  ) : (
+                    <>
+                      <div className="product-price heading5 discounted-price">
+                        ৳
+                        {selectedProduct.discountedPrice ??
+                          selectedProduct.price}
+                        .00
+                      </div>
+                      {selectedProduct.discountedPrice &&
+                        selectedProduct.discountedPrice <
+                          selectedProduct.price && (
+                          <>
+                            <div className="bg-line h-4 w-px"></div>
+                            <div className="product-origin-price text-secondary2 font-normal">
+                              <del>৳{selectedProduct.price}.00</del>
+                            </div>
+                            <div className="product-sale caption2 bg-green inline-block rounded-full px-3 py-0.5 font-semibold">
+                              -{percentSale}%
+                            </div>
+                          </>
+                        )}
+                    </>
+                  )}
                   <div className="desc mt-3 text-secondary">
                     {selectedProduct.shortDescription}
                   </div>

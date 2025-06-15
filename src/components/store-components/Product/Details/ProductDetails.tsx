@@ -421,7 +421,11 @@ export default function ProductDetails({
                 </span>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                {productMain.discountedPrice ? (
+                {productMain.stockStatus === "OUT_OF_STOCK" ? (
+                  <div className="product-price heading5 font-bold text-red-500">
+                    Out Of Stock
+                  </div>
+                ) : productMain.discountedPrice ? (
                   <>
                     <div className="product-price heading5 discounted-price">
                       ৳{productMain.discountedPrice.toFixed(2)}

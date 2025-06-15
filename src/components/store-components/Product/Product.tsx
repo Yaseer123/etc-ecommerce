@@ -246,7 +246,9 @@ export default function Product({ data }: ProductProps) {
         </Link>
 
         <div className="mt-auto flex items-center">
-          {data.discountedPrice ? (
+          {data.stockStatus === "OUT_OF_STOCK" ? (
+            <span className="font-bold text-red-500">Out Of Stock</span>
+          ) : data.discountedPrice ? (
             <div className="flex items-center gap-2">
               <span className="text-title discounted-price font-bold">
                 ৳{data.discountedPrice.toFixed(2)}
