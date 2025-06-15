@@ -801,7 +801,7 @@ export default function ProductsPage() {
         <>
           {/* Overlay */}
           <div
-            className="hover:bg-black/75/50 fixed inset-0 z-[9999] bg-black md:hidden"
+            className="fixed inset-0 z-[9999] bg-transparent md:hidden"
             onClick={toggleMobileFilter}
           ></div>
 
