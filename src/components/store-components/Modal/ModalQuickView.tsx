@@ -272,13 +272,7 @@ const ModalQuickView = () => {
                         14 January - 18 January
                       </span>
                     </div>
-                    <div className="mt-3 flex flex-wrap items-center gap-1">
-                      <Eye className="body1" />
-                      <span className="text-title">38</span>
-                      <span className="text-secondary">
-                        people viewing this product right now!
-                      </span>
-                    </div>
+                   
                     <div className="mt-3 flex items-center gap-1">
                       <div className="text-title">SKU:</div>
                       <div className="text-secondary">53453412</div>
