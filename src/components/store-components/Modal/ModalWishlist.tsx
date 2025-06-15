@@ -5,8 +5,8 @@ import { useModalWishlistStore } from "@/context/store-context/ModalWishlistCont
 import { api } from "@/trpc/react";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { signIn, useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
+import WishProductItem, { WishlistProduct } from "./WishProductItem";
 
 const ModalWishlist = () => {
   const { isModalOpen, closeModalWishlist } = useModalWishlistStore();
@@ -148,7 +148,7 @@ const ModalWishlist = () => {
               <X size={14} />
             </div>
           </div>
-          <div className="list-product px-6">
+          <div className="list-product max-h-[350px] overflow-y-auto px-6">
             {!wishList || wishList.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16">
                 <svg
@@ -180,49 +180,16 @@ const ModalWishlist = () => {
                 </Link>
               </div>
             ) : (
-              wishList.map((w) => (
-                <div
+              wishList.map((w: WishlistProduct) => (
+                <WishProductItem
                   key={w.product.id}
-                  className="item flex items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
-                >
-                  <div className="infor flex items-center gap-5">
-                    <div className="bg-img">
-                      <Image
-                        src={w.product.images[0] ?? "/images/product/1.png"}
-                        width={300}
-                        height={300}
-                        alt={w.product.title}
-                        className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
-                      />
-                    </div>
-                    <div className="">
-                      <div className="name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                        {w.product.title}
-                      </div>
-                      <div className="mt-2 flex items-center gap-2">
-                        <div className="product-price text-title">
-                          ৳{w.product.discountedPrice ?? w.product.price}.00
-                        </div>
-                        {w.product.discountedPrice &&
-                          w.product.discountedPrice < w.product.price && (
-                            <div className="product-origin-price text-title text-secondary2">
-                              <del>৳{w.product.price}.00</del>
-                            </div>
-                          )}
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red-500 underline md:text-[13px] md:leading-5"
-                    onClick={() =>
-                      removeFromWishlistMutation.mutate({
-                        productId: w.product.id,
-                      })
-                    }
-                  >
-                    Remove
-                  </div>
-                </div>
+                  item={w}
+                  onRemove={() =>
+                    removeFromWishlistMutation.mutate({
+                      productId: w.product.id,
+                    })
+                  }
+                />
               ))
             )}
           </div>
