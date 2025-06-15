@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { NotePencil, Trash, X } from "@phosphor-icons/react/dist/ssr";
@@ -17,6 +18,7 @@ const ModalCart = () => {
     removeFromCart,
   } = useCartStore();
   const [tempNote, setTempNote] = useState(note);
+  const [showAll, setShowAll] = useState(false);
 
   const handleActiveTab = (tab: string) => {
     setActiveTab(tab);
@@ -28,6 +30,8 @@ const ModalCart = () => {
     (item) =>
       (totalCart += (item.discountedPrice ?? item.price) * item.quantity),
   );
+
+  const itemsToShow = showAll ? cartState : cartState.slice(0, 2);
 
   return (
     <>
@@ -55,49 +59,59 @@ const ModalCart = () => {
                   Your cart is empty
                 </div>
               ) : (
-                cartState.map((item) => (
-                  <div
-                    key={item.id}
-                    className="group relative mb-4 flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:border-gray-200 hover:shadow-md"
-                  >
-                    <div className="relative z-10 h-20 w-20 overflow-hidden rounded-lg bg-gray-50">
-                      <CartProductItem item={item} />
-                    </div>
-                    <div className="flex flex-1 flex-col">
-                      <div className="flex justify-between">
-                        <h4 className="mb-1 text-sm font-medium text-gray-900">
-                          {item.name}
-                        </h4>
-                        <button
-                          className="text-gray-400 transition-colors hover:text-red-500"
-                          onClick={() => removeFromCart(item.id)}
-                          aria-label="Remove item"
-                        >
-                          <Trash size={18} />
-                        </button>
+                <>
+                  {itemsToShow.map((item) => (
+                    <div
+                      key={item.id}
+                      className="group relative mb-4 flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:border-gray-200 hover:shadow-md"
+                    >
+                      <div className="relative z-10 h-20 w-20 overflow-hidden rounded-lg bg-gray-50">
+                        <CartProductItem item={item} />
                       </div>
-                      <div className="mb-2 text-xs text-gray-500">
-                        SKU: {item.id}
-                      </div>
-                      <div className="mt-auto flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="discounted-price text-sm font-medium">
-                            ৳{(item.discountedPrice ?? item.price).toFixed(2)}
-                          </span>
-                          <span className="text-xs text-gray-500">
-                            × {item.quantity}
+                      <div className="flex flex-1 flex-col">
+                        <div className="flex justify-between">
+                          <h4 className="mb-1 text-sm font-medium text-gray-900">
+                            {item.name}
+                          </h4>
+                          <button
+                            className="text-gray-400 transition-colors hover:text-red-500"
+                            onClick={() => removeFromCart(item.id)}
+                            aria-label="Remove item"
+                          >
+                            <Trash size={18} />
+                          </button>
+                        </div>
+                        <div className="mb-2 text-xs text-gray-500">
+                          SKU: {item.id}
+                        </div>
+                        <div className="mt-auto flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="discounted-price text-sm font-medium">
+                              ৳{(item.discountedPrice ?? item.price).toFixed(2)}
+                            </span>
+                            <span className="text-xs text-gray-500">
+                              × {item.quantity}
+                            </span>
+                          </div>
+                          <span className="font-medium text-black">
+                            ৳
+                            {(
+                              (item.discountedPrice ?? item.price) *
+                              item.quantity
+                            ).toFixed(2)}
                           </span>
                         </div>
-                        <span className="font-medium text-black">
-                          ৳
-                          {(
-                            (item.discountedPrice ?? item.price) * item.quantity
-                          ).toFixed(2)}
-                        </span>
                       </div>
                     </div>
-                  </div>
-                ))
+                  ))}
+                  {cartState.length > 3 && !showAll && (
+                    <Button variant="black" className="mt-2 w-full" asChild>
+                      <Link href={"/cart"} onClick={() => closeModalCart()}>
+                        Show All
+                      </Link>
+                    </Button>
+                  )}
+                </>
               )}
             </div>
             <div className="absolute bottom-0 left-0 right-0 border-t border-gray-100 bg-white/70 backdrop-blur-sm">
