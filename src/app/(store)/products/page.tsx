@@ -595,6 +595,17 @@ export default function ProductsPage() {
     }));
   }, []);
 
+  // Add effect to update category state with name from categoryData
+  useEffect(() => {
+    if (
+      categoryId &&
+      categoryData &&
+      (!category || category.name !== categoryData.name)
+    ) {
+      setCategory({ id: categoryId, name: categoryData.name });
+    }
+  }, [categoryId, categoryData]);
+
   return (
     <>
       <CategoryBreadcrumb categoryId={category?.id} pageTitle="Shop" />
@@ -939,8 +950,8 @@ export default function ProductsPage() {
             </div>
           </div>
         </div>
-      {/* Stock Status Section - collapsible with improved styling */}
-      <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+        {/* Stock Status Section - collapsible with improved styling */}
+        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
           <div
             className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
             onClick={() => toggleAttributeSection("stockStatus")}
@@ -985,7 +996,7 @@ export default function ProductsPage() {
             </div>
           )}
         </div>
-        
+
         {/* Categories Section - Collapsible with increased min-height and standardized padding */}
         <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
           <div
@@ -1170,8 +1181,6 @@ export default function ProductsPage() {
             })}
           </>
         )}
-
-  
       </>
     );
   }
