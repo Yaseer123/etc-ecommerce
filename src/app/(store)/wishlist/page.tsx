@@ -7,6 +7,7 @@ import { api } from "@/trpc/react";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { HomeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 
 export default function WishlistPage() {
@@ -71,6 +72,19 @@ export default function WishlistPage() {
     },
   ];
 
+  // Helper to get responsive grid classes
+  const getGridClasses = () => {
+    // Always 2 columns on base, 3 on sm, then dynamic on lg
+    let base = "grid-cols-2";
+    let sm = "sm:grid-cols-3";
+    let gap = "gap-[16px] sm:gap-[20px] md:gap-[30px]";
+    let lg = "";
+    if (layoutCol === 3) lg = "lg:grid-cols-3";
+    else if (layoutCol === 4) lg = "lg:grid-cols-4";
+    else if (layoutCol === 5) lg = "lg:grid-cols-5";
+    return `grid ${base} ${sm} ${lg} ${gap}`;
+  };
+
   if (!session?.user) {
     return (
       <>
@@ -130,9 +144,9 @@ export default function WishlistPage() {
       <div className="py-10 md:py-14 lg:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
           <div className="list-product-block relative">
-            <div className="filter-heading flex flex-wrap items-center justify-between gap-5">
-              <div className="left has-line flex flex-wrap items-center gap-5">
-                <div className="choose-layout flex items-center gap-2">
+            <div className="filter-heading flex flex-col flex-wrap items-center justify-between gap-5 sm:flex-row sm:items-center sm:gap-5">
+              <div className="left has-line flex w-full flex-wrap items-center justify-center gap-5 sm:w-auto sm:justify-start">
+                <div className="choose-layout flex items-center justify-center gap-2">
                   {/* Three-column layout */}
                   <div
                     className={`duration-400 flex cursor-pointer items-center justify-center rounded border border-[#ddd] p-2 transition-all ease-in-out hover:border-black focus:border-[#ddd] ${
@@ -197,12 +211,12 @@ export default function WishlistPage() {
                   </div>
                 </div>
               </div>
-              <div className="right flex items-center gap-3">
-                <div className="relative">
+              <div className="right mt-3 flex w-full items-center justify-center gap-3 sm:mt-0 sm:w-auto sm:justify-end">
+                <div className="relative w-full min-w-0 sm:w-auto sm:max-w-xs">
                   <select
                     id="select-filter"
                     name="select-filter"
-                    className="rounded-lg border border-[#ddd] py-2 pl-3 pr-10 text-base font-normal leading-[22] focus:border-[#ddd] md:pr-20 md:text-[13px] md:leading-5"
+                    className="w-full min-w-0 rounded-lg border border-[#ddd] py-2 pl-3 pr-10 text-base font-normal leading-[22] transition-all focus:border-[#ddd] md:pr-20 md:text-[13px] md:leading-5"
                     onChange={(e) => {
                       handleSortChange(e.target.value);
                     }}
@@ -217,25 +231,25 @@ export default function WishlistPage() {
                     <option value="priceLowToHigh">Price Low To High</option>
                   </select>
                   <CaretDown
-                    size={12}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                    size={16}
+                    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 sm:right-4"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="list-filtered mt-4 flex items-center gap-3">
-              <div className="total-product">
+            <div className="list-filtered mt-4 flex flex-col items-center gap-3 sm:flex-row">
+              <div className="total-product text-base sm:text-lg">
                 {totalProducts}
                 <span className="pl-1 text-secondary">Products Found</span>
               </div>
             </div>
 
             {totalProducts === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20">
+              <div className="flex flex-col items-center justify-center px-2 py-16 sm:py-20">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="mb-6 h-16 w-16 text-gray-300"
+                  className="mb-6 h-14 w-14 text-gray-300 sm:h-16 sm:w-16"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -247,24 +261,22 @@ export default function WishlistPage() {
                     d="M3 8.25V6.75A2.25 2.25 0 015.25 4.5h13.5A2.25 2.25 0 0121 6.75v1.5M3 8.25l1.5 10.5A2.25 2.25 0 006.75 21h10.5a2.25 2.25 0 002.25-2.25L21 8.25M3 8.25h18"
                   />
                 </svg>
-                <div className="mb-2 text-2xl font-semibold text-gray-700">
+                <div className="mb-2 text-center text-xl font-semibold text-gray-700 sm:text-2xl">
                   Your wishlist is empty
                 </div>
-                <div className="mb-6 max-w-md text-center text-gray-500">
+                <div className="mb-6 max-w-md text-center text-sm text-gray-500 sm:text-base">
                   Add products to your wishlist to keep track of items you love.
                   Start exploring our collection and add your favorites!
                 </div>
-                <a
+                <Link
                   href="/products"
-                  className="inline-block rounded bg-black px-6 py-3 font-semibold text-white shadow transition hover:bg-black/80"
+                  className="inline-block rounded bg-black px-6 py-3 text-base font-semibold text-white shadow transition hover:bg-black/80 sm:text-lg"
                 >
                   Browse Products
-                </a>
+                </Link>
               </div>
             ) : (
-              <div
-                className={`list-product grid lg:grid-cols-${layoutCol} mt-7 grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px]`}
-              >
+              <div className={getGridClasses() + " list-product mt-7"}>
                 {currentProducts.map((item) =>
                   item.id === "no-data" ? (
                     <div key={item.id} className="no-data-product">

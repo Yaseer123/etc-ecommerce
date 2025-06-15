@@ -939,7 +939,53 @@ export default function ProductsPage() {
             </div>
           </div>
         </div>
-
+      {/* Stock Status Section - collapsible with improved styling */}
+      <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+          <div
+            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+            onClick={() => toggleAttributeSection("stockStatus")}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-medium text-gray-800">
+                Stock Status
+              </h3>
+              {expandedAttributes.stockStatus !== false ? (
+                <CaretUp size={16} className="text-gray-600" />
+              ) : (
+                <CaretDown size={16} className="text-gray-600" />
+              )}
+            </div>
+          </div>
+          {expandedAttributes.stockStatus !== false && (
+            <div className="bg-white p-1">
+              <div className="flex flex-col gap-2">
+                {["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].map((status) => (
+                  <label
+                    key={status}
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-orange-50"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={stockStatus.includes(status)}
+                      onChange={() => handleStockStatus(status)}
+                      className="h-5 w-5 accent-orange-500"
+                    />
+                    <span className="capitalize">
+                      {status === "IN_STOCK"
+                        ? "In Stock"
+                        : status === "OUT_OF_STOCK"
+                          ? "Out of Stock"
+                          : status === "PRE_ORDER"
+                            ? "Pre Order"
+                            : status}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        
         {/* Categories Section - Collapsible with increased min-height and standardized padding */}
         <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
           <div
@@ -1125,52 +1171,7 @@ export default function ProductsPage() {
           </>
         )}
 
-        {/* Stock Status Section - collapsible with improved styling */}
-        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-          <div
-            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
-            onClick={() => toggleAttributeSection("stockStatus")}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium text-gray-800">
-                Stock Status
-              </h3>
-              {expandedAttributes.stockStatus !== false ? (
-                <CaretUp size={16} className="text-gray-600" />
-              ) : (
-                <CaretDown size={16} className="text-gray-600" />
-              )}
-            </div>
-          </div>
-          {expandedAttributes.stockStatus !== false && (
-            <div className="bg-white p-1">
-              <div className="flex flex-col gap-2">
-                {["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].map((status) => (
-                  <label
-                    key={status}
-                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-orange-50"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={stockStatus.includes(status)}
-                      onChange={() => handleStockStatus(status)}
-                      className="h-5 w-5 accent-orange-500"
-                    />
-                    <span className="capitalize">
-                      {status === "IN_STOCK"
-                        ? "In Stock"
-                        : status === "OUT_OF_STOCK"
-                          ? "Out of Stock"
-                          : status === "PRE_ORDER"
-                            ? "Pre Order"
-                            : status}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+  
       </>
     );
   }
