@@ -31,7 +31,7 @@ const MyAccount = () => {
   }
 
   return (
-    <>
+    <div className="bg-white">
       <div id="header" className="relative w-full">
         <Breadcrumb pageTitle="My Account" items={breadcrumbItems} />
       </div>
@@ -103,7 +103,7 @@ const MyAccount = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
