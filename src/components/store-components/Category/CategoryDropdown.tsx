@@ -59,6 +59,9 @@ const CategoryDropdown = () => {
                 <Link
                   href={`/products?category=${sub.id}`}
                   className="block px-5 py-2.5 text-sm font-medium hover:bg-gray-200"
+                  onMouseEnter={() =>
+                    setActiveCategories((prev) => prev.slice(0, level))
+                  }
                 >
                   {toTitleCase(sub.name)}
                 </Link>
@@ -114,6 +117,7 @@ const CategoryDropdown = () => {
                 <Link
                   href={`/products?category=${category.id}`}
                   className="block px-5 py-2.5 text-sm font-medium hover:bg-gray-200"
+                  onMouseEnter={() => setActiveCategories([])}
                 >
                   {toTitleCase(category.name)}
                 </Link>
