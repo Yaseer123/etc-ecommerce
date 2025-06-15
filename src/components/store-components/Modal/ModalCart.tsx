@@ -32,9 +32,9 @@ const ModalCart = () => {
 
   return (
     <>
-      <div className={`modal-cart-block`} onClick={closeModalCart}>
+      <div className={`modal-wishlist-block`} onClick={closeModalCart}>
         <div
-          className={`modal-cart-main flex h-full flex-col ${isModalOpen ? "open" : ""}`}
+          className={`modal-wishlist-main py-6 ${isModalOpen ? "open" : ""}`}
           onClick={(e) => {
             e.stopPropagation();
           }}
