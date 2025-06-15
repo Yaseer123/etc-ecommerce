@@ -1,4 +1,14 @@
-import type { Product, Category } from "@prisma/client";
+import type { Category, Product } from "@prisma/client";
+
+export interface Variant {
+  color?: string;
+  size?: string;
+  images?: string[];
+  price?: number;
+  discountedPrice?: number;
+  stock?: number;
+  imageId?: string;
+}
 
 export interface ProductType {
   id: string;
@@ -19,8 +29,9 @@ export interface ProductType {
   action: string;
   slug: string;
   attributes: Record<string, string>;
+  variants?: Variant[];
 }
 
 export type ProductWithCategory = Product & {
-  category: Category | null
-}
+  category: Category | null;
+};

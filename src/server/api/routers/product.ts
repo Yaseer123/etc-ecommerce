@@ -442,6 +442,7 @@ export const productRouter = createTRPCRouter({
         attributes: input.attributes, // Store regular specifications
         categoryAttributes: categoryAttributes || {}, // Store category-specific attributes
         stockStatus, // <-- always set
+        variants: input.variants ?? undefined, // Store variants if present
       },
     });
 
@@ -513,6 +514,7 @@ export const productRouter = createTRPCRouter({
           categoryAttributes: categoryAttributes ?? {}, // Update category attributes separately
           category: categoryId ? { connect: { id: categoryId } } : undefined,
           ...(stockStatus ? { stockStatus } : {}),
+          variants: input.variants ?? undefined, // Update variants if present
         },
       });
 

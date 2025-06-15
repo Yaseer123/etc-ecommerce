@@ -10,7 +10,6 @@ import {
   ArrowClockwise,
   CaretDown,
   DotsThree,
-  Eye,
   HandsClapping,
   Heart,
   Minus,
@@ -34,6 +33,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { v4 as uuid } from "uuid";
 import ParseContent from "../../Blog/ParseContent";
 import Rate from "../../Rate";
+
+// Define a type for product variants
+type ProductVariant = {
+  color: string;
+  size?: string;
+  price: number;
+  discountedPrice?: number;
+  stock: number;
+  images: string[];
+};
 
 export default function ProductDetails({
   productMain,
@@ -296,12 +305,130 @@ export default function ProductDetails({
     }
   };
 
+  // Normalize variants field (handle string or array or undefined)
+  let variants: ProductVariant[] = [];
+  // @ts-expect-error: variants is a JSON field on the Product model, not in ProductWithCategory type
+  const rawVariants = (productMain as any).variants;
+  if (rawVariants) {
+    if (typeof rawVariants === "string") {
+      try {
+        variants = JSON.parse(rawVariants) as ProductVariant[];
+      } catch {
+        variants = [];
+      }
+    } else if (Array.isArray(rawVariants)) {
+      variants = rawVariants as ProductVariant[];
+    } else if (typeof rawVariants === "object") {
+      variants = rawVariants as ProductVariant[];
+    }
+  }
+
+  // Variant selection state
+  const [selectedColor, setSelectedColor] = useState<string | undefined>(
+    undefined,
+  );
+  const [selectedSize, setSelectedSize] = useState<string | undefined>(
+    undefined,
+  );
+
+  // Get available colors and sizes based on current selection
+  const availableColors = variants
+    ? [...new Set(variants.map((v) => v.color).filter(Boolean))]
+    : [];
+  const availableSizes = variants
+    ? [
+        ...new Set(
+          variants
+            .filter((v) => (selectedColor ? v.color === selectedColor : true))
+            .map((v) => v.size)
+            .filter(Boolean),
+        ),
+      ]
+    : [];
+
+  // Find the most specific variant (for now, only by color)
+  let activeVariant: ProductVariant | undefined = undefined;
+  if (selectedColor) {
+    activeVariant = variants.find((v) => v.color === selectedColor);
+  }
+  console.log("Active Variant:", activeVariant);
+
+  const displayImages = activeVariant?.images?.length
+    ? activeVariant.images
+    : productMain.images;
+  const displayPrice =
+    typeof activeVariant?.price === "number"
+      ? activeVariant.price
+      : (productMain.discountedPrice ?? productMain.price);
+  const displayDiscountedPrice =
+    typeof activeVariant?.discountedPrice === "number"
+      ? activeVariant.discountedPrice
+      : productMain.discountedPrice;
+  const displayStock =
+    typeof activeVariant?.stock === "number"
+      ? activeVariant.stock
+      : productMain.stock;
+
   return (
     <>
       <div className="product-detail sale">
         <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-wrap justify-between gap-y-6">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
+              {/* Variant selectors */}
+              {variants && variants.length > 0 && (
+                <div className="mb-4 flex flex-col gap-2">
+                  {/* Color selector */}
+                  {availableColors.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Color:</span>
+                      {availableColors.map((color, idx) => (
+                        <button
+                          key={color + idx}
+                          className={`rounded border px-3 py-1 ${selectedColor === color ? "bg-black text-white" : "bg-white text-black"}`}
+                          onClick={() => {
+                            setSelectedColor(color);
+                            setSelectedSize(undefined); // Reset size when color changes
+                          }}
+                        >
+                          {color}
+                        </button>
+                      ))}
+                      <button
+                        className={`rounded border px-3 py-1 ${!selectedColor ? "bg-black text-white" : "bg-white text-black"}`}
+                        onClick={() => {
+                          setSelectedColor(undefined);
+                          setSelectedSize(undefined);
+                        }}
+                      >
+                        All
+                      </button>
+                    </div>
+                  )}
+                  {/* Size selector */}
+                  {availableSizes.length > 0 && (
+                    <div className="flex items-center gap-2">
+                      <span className="font-semibold">Size:</span>
+                      {availableSizes.map((size, idx) => (
+                        <button
+                          key={size + idx}
+                          className={`rounded border px-3 py-1 ${selectedSize === size ? "bg-black text-white" : "bg-white text-black"}`}
+                          onClick={() => setSelectedSize(size)}
+                        >
+                          {size}
+                        </button>
+                      ))}
+                      <button
+                        className={`rounded border px-3 py-1 ${!selectedSize ? "bg-black text-white" : "bg-white text-black"}`}
+                        onClick={() => setSelectedSize(undefined)}
+                      >
+                        All
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* Images Swiper */}
               <Swiper
                 slidesPerView={1}
                 spaceBetween={0}
@@ -309,7 +436,7 @@ export default function ProductDetails({
                 modules={[Thumbs]}
                 className="mySwiper2 overflow-hidden rounded-2xl"
               >
-                {productMain.images.map((item, index) => (
+                {displayImages.map((item, index) => (
                   <SwiperSlide
                     key={index}
                     onClick={() => {
@@ -337,7 +464,7 @@ export default function ProductDetails({
                 modules={[Navigation, Thumbs]}
                 className="mySwiper style-rectangle"
               >
-                {productMain.images.map((item, index) => (
+                {displayImages.map((item, index) => (
                   <SwiperSlide key={index}>
                     <Image
                       src={item}
@@ -370,7 +497,7 @@ export default function ProductDetails({
                     swiperRef.current = swiper;
                   }}
                 >
-                  {productMain.images.map((item, index) => (
+                  {displayImages.map((item, index) => (
                     <SwiperSlide
                       key={index}
                       onClick={() => {
@@ -421,28 +548,24 @@ export default function ProductDetails({
                 </span>
               </div>
               <div className="mt-5 flex flex-wrap items-center gap-3">
-                {productMain.stockStatus === "OUT_OF_STOCK" ? (
+                {displayStock === 0 ? (
                   <div className="product-price heading5 font-bold text-red-500">
                     Out Of Stock
                   </div>
-                ) : productMain.discountedPrice ? (
+                ) : displayDiscountedPrice &&
+                  displayDiscountedPrice < displayPrice ? (
                   <>
                     <div className="product-price heading5 discounted-price">
-                      ৳{productMain.discountedPrice.toFixed(2)}
+                      ৳{displayDiscountedPrice.toFixed(2)}
                     </div>
                     <div className="bg-line h-4 w-px"></div>
                     <div className="product-origin-price text-secondary2 font-normal">
-                      <del>৳{productMain.price.toFixed(2)}</del>
+                      <del>৳{displayPrice.toFixed(2)}</del>
                     </div>
-                    {percentSale > 0 && (
-                      <div className="product-sale caption2 bg-green_custom inline-block rounded-full px-3 py-0.5 font-semibold">
-                        -{percentSale}%
-                      </div>
-                    )}
                   </>
                 ) : (
                   <div className="product-price heading5">
-                    ৳{productMain.price.toFixed(2)}
+                    ৳{displayPrice.toFixed(2)}
                   </div>
                 )}
               </div>
@@ -506,7 +629,7 @@ export default function ProductDetails({
                       {calculateEstimatedDeliveryDate()}
                     </div>
                   </div>
-               
+
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">SKU:</div>
                     <div className="text-secondary">53453412</div>

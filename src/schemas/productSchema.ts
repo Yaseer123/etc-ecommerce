@@ -7,6 +7,16 @@ export const categoryAttributeValueSchema = z.record(
   z.union([z.string(), z.number(), z.boolean()]), // Possible values
 );
 
+// Variant schema for color/size/image variations
+export const variantSchema = z.object({
+  color: z.string().optional(),
+  size: z.string().optional(),
+  images: z.array(z.string()).optional(),
+  price: z.number().optional(),
+  discountedPrice: z.number().optional(),
+  stock: z.number().optional(),
+});
+
 export const productSchema = z.object({
   title: z.string().min(3),
   slug: z.string().min(3),
@@ -23,6 +33,7 @@ export const productSchema = z.object({
   attributes: z.record(z.string(), z.string()).default({}),
   estimatedDeliveryTime: z.number().int().positive().optional(),
   categoryAttributes: categoryAttributeValueSchema.default({}), // Add categoryAttributes field
+  variants: z.array(variantSchema).optional(), // Add variants field
 });
 
 export const updateProductSchema = z.object({
@@ -41,6 +52,7 @@ export const updateProductSchema = z.object({
   attributes: z.record(z.string(), z.string()).optional(),
   estimatedDeliveryTime: z.number().int().positive().optional(),
   categoryAttributes: categoryAttributeValueSchema.optional(), // Add categoryAttributes field
+  variants: z.array(variantSchema).optional(), // Add variants field
 });
 
 export type Product = z.infer<typeof productSchema>;
