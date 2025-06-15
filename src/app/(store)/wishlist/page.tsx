@@ -231,19 +231,51 @@ export default function WishlistPage() {
               </div>
             </div>
 
-            <div
-              className={`list-product grid lg:grid-cols-${layoutCol} mt-7 grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px]`}
-            >
-              {currentProducts.map((item) =>
-                item.id === "no-data" ? (
-                  <div key={item.id} className="no-data-product">
-                    No products match the selected criteria.
-                  </div>
-                ) : (
-                  <Product key={item.id} data={item.product} style="" />
-                ),
-              )}
-            </div>
+            {totalProducts === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mb-6 h-16 w-16 text-gray-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 8.25V6.75A2.25 2.25 0 015.25 4.5h13.5A2.25 2.25 0 0121 6.75v1.5M3 8.25l1.5 10.5A2.25 2.25 0 006.75 21h10.5a2.25 2.25 0 002.25-2.25L21 8.25M3 8.25h18"
+                  />
+                </svg>
+                <div className="mb-2 text-2xl font-semibold text-gray-700">
+                  Your wishlist is empty
+                </div>
+                <div className="mb-6 max-w-md text-center text-gray-500">
+                  Add products to your wishlist to keep track of items you love.
+                  Start exploring our collection and add your favorites!
+                </div>
+                <a
+                  href="/products"
+                  className="inline-block rounded bg-black px-6 py-3 font-semibold text-white shadow transition hover:bg-black/80"
+                >
+                  Browse Products
+                </a>
+              </div>
+            ) : (
+              <div
+                className={`list-product grid lg:grid-cols-${layoutCol} mt-7 grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px]`}
+              >
+                {currentProducts.map((item) =>
+                  item.id === "no-data" ? (
+                    <div key={item.id} className="no-data-product">
+                      No products match the selected criteria.
+                    </div>
+                  ) : (
+                    <Product key={item.id} data={item.product} style="" />
+                  ),
+                )}
+              </div>
+            )}
 
             {pageCount > 1 && (
               <div className="list-pagination mt-7 flex items-center justify-center md:mt-10">

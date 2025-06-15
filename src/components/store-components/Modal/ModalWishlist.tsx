@@ -149,50 +149,82 @@ const ModalWishlist = () => {
             </div>
           </div>
           <div className="list-product px-6">
-            {wishList?.map((w) => (
-              <div
-                key={w.product.id}
-                className="item flex items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
-              >
-                <div className="infor flex items-center gap-5">
-                  <div className="bg-img">
-                    <Image
-                      src={w.product.images[0] ?? "/images/product/1.png"}
-                      width={300}
-                      height={300}
-                      alt={w.product.title}
-                      className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
-                    />
-                  </div>
-                  <div className="">
-                    <div className="name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                      {w.product.title}
-                    </div>
-                    <div className="mt-2 flex items-center gap-2">
-                      <div className="product-price text-title">
-                        ৳{w.product.discountedPrice ?? w.product.price}.00
-                      </div>
-                      {w.product.discountedPrice &&
-                        w.product.discountedPrice < w.product.price && (
-                          <div className="product-origin-price text-title text-secondary2">
-                            <del>৳{w.product.price}.00</del>
-                          </div>
-                        )}
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red-500 underline md:text-[13px] md:leading-5"
-                  onClick={() =>
-                    removeFromWishlistMutation.mutate({
-                      productId: w.product.id,
-                    })
-                  }
+            {!wishList || wishList.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="mb-4 h-14 w-14 text-gray-300"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
                 >
-                  Remove
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M3 8.25V6.75A2.25 2.25 0 015.25 4.5h13.5A2.25 2.25 0 0121 6.75v1.5M3 8.25l1.5 10.5A2.25 2.25 0 006.75 21h10.5a2.25 2.25 0 002.25-2.25L21 8.25M3 8.25h18"
+                  />
+                </svg>
+                <div className="mb-1 text-lg font-semibold text-gray-700">
+                  Your wishlist is empty
                 </div>
+                <div className="mb-4 max-w-xs text-center text-gray-500">
+                  Add products to your wishlist to keep track of items you love.
+                  Start exploring our collection and add your favorites!
+                </div>
+                <a
+                  href="/products"
+                  className="inline-block rounded bg-black px-5 py-2 font-semibold text-white shadow transition hover:bg-black/80"
+                >
+                  Browse Products
+                </a>
               </div>
-            ))}
+            ) : (
+              wishList.map((w) => (
+                <div
+                  key={w.product.id}
+                  className="item flex items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
+                >
+                  <div className="infor flex items-center gap-5">
+                    <div className="bg-img">
+                      <Image
+                        src={w.product.images[0] ?? "/images/product/1.png"}
+                        width={300}
+                        height={300}
+                        alt={w.product.title}
+                        className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
+                      />
+                    </div>
+                    <div className="">
+                      <div className="name text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                        {w.product.title}
+                      </div>
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className="product-price text-title">
+                          ৳{w.product.discountedPrice ?? w.product.price}.00
+                        </div>
+                        {w.product.discountedPrice &&
+                          w.product.discountedPrice < w.product.price && (
+                            <div className="product-origin-price text-title text-secondary2">
+                              <del>৳{w.product.price}.00</del>
+                            </div>
+                          )}
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="remove-wishlist-btn cursor-pointer text-base font-semibold leading-[22] text-red-500 underline md:text-[13px] md:leading-5"
+                    onClick={() =>
+                      removeFromWishlistMutation.mutate({
+                        productId: w.product.id,
+                      })
+                    }
+                  >
+                    Remove
+                  </div>
+                </div>
+              ))
+            )}
           </div>
           <div className="footer-modal absolute bottom-0 left-0 w-full border-t border-[#ddd] bg-white p-6 text-center focus:border-[#ddd]">
             <Link
