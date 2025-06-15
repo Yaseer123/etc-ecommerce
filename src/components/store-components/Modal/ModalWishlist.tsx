@@ -172,12 +172,12 @@ const ModalWishlist = () => {
                   Add products to your wishlist to keep track of items you love.
                   Start exploring our collection and add your favorites!
                 </div>
-                <a
+                <Link
                   href="/products"
                   className="inline-block rounded bg-black px-5 py-2 font-semibold text-white shadow transition hover:bg-black/80"
                 >
                   Browse Products
-                </a>
+                </Link>
               </div>
             ) : (
               wishList.map((w) => (
