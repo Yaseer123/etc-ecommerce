@@ -49,7 +49,7 @@ const ModalCart = () => {
               </div>
             </div>
 
-            <div className="list-product flex-1 overflow-y-auto px-6">
+            <div className="list-product mb-20 px-6">
               {cartState.length === 0 ? (
                 <div className="flex h-40 items-center justify-center text-gray-500">
                   Your cart is empty
@@ -60,7 +60,7 @@ const ModalCart = () => {
                     key={item.id}
                     className="group relative mb-4 flex items-start gap-4 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all hover:border-gray-200 hover:shadow-md"
                   >
-                    <div className="relative h-20 w-20 overflow-hidden rounded-lg bg-gray-50">
+                    <div className="relative z-10 h-20 w-20 overflow-hidden rounded-lg bg-gray-50">
                       <CartProductItem item={item} />
                     </div>
                     <div className="flex flex-1 flex-col">
@@ -100,18 +100,7 @@ const ModalCart = () => {
                 ))
               )}
             </div>
-            <div className="footer-modal mt-auto w-full bg-white shadow-lg">
-              <div className="flex items-center justify-center gap-8 border-b border-[#ddd] bg-gray-50 px-6 py-4 focus:border-[#ddd] lg:gap-14">
-                <div
-                  className="item flex cursor-pointer items-center gap-3"
-                  onClick={() => handleActiveTab("note")}
-                >
-                  <NotePencil className="text-xl" />
-                  <div className="text-base font-normal leading-[22] md:text-[13px] md:leading-5">
-                    Note
-                  </div>
-                </div>
-              </div>
+            <div className="absolute bottom-0 left-0 right-0 border-t border-gray-100 bg-white/70 backdrop-blur-sm">
               <div className="flex flex-col gap-2 px-6 pt-6">
                 <div className="flex items-center justify-between text-gray-600">
                   <span>Items ({cartState.length})</span>

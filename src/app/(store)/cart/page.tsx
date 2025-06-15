@@ -100,8 +100,9 @@ const Cart = () => {
                                     product.coverImage ??
                                     "/images/product/1000x1000.png"
                                   }
-                                  width={1000}
-                                  height={1000}
+                                  width={100}
+                                  height={100}
+                                  sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 100px"
                                   alt={product.name}
                                   className="h-full w-full rounded-lg object-cover"
                                 />

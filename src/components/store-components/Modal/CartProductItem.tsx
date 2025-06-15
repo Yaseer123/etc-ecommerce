@@ -19,7 +19,7 @@ interface CartProductItemProps {
 export default function CartProductItem({ item }: CartProductItemProps) {
   const { removeFromCart } = useCartStore();
   return (
-    <div className="infor flex w-full items-center gap-3">
+    <div className="w-full items-center gap-3 z-50">
       <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
         <Image
           src={item.coverImage ?? "/images/placeholder-image.png"}

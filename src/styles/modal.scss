@@ -112,14 +112,8 @@
     }
 
     .list-product {
-      max-height: calc(100% - 140px - 30px + 14px);
-      overflow-x: auto;
-
-      .item {
-        &:last-child {
-          border-bottom: none;
-        }
-      }
+      /* max-height: calc(100% - 140px - 30px + 14px); */
+      /* Remove max-height to allow all items to be visible */
     }
 
     .list-product::-webkit-scrollbar {
@@ -266,7 +260,8 @@
     }
 
     .list-product {
-      max-height: calc(100% - 210px - 180px);
+      /* max-height: calc(100% - 210px - 180px); */
+      /* Remove max-height to allow all items to be visible */
     }
 
     .tab-item {
