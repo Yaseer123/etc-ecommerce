@@ -60,6 +60,19 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
 
             <div className="list-nav mt-6">
               <ul>
+              <li>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigation("/products")
+                    } }
+                    className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
+                  >
+                    All Products
+                    
+                  </div>
+                </li>
+
                 <li>
                   <div
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
@@ -68,7 +81,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                       setProductsExpanded((prev) => !prev);
                     }}
                   >
-                    Products
+                    Categories
                     <span className="text-right">
                       {productsExpanded ? (
                         <CaretDown size={20} />
@@ -105,9 +118,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Blog
-                    <span className="text-right">
-                      <CaretRight size={20} />
-                    </span>
+
                   </div>
                 </li>
                 <li>
@@ -119,9 +130,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     About Us
-                    <span className="text-right">
-                      <CaretRight size={20} />
-                    </span>
+
                   </div>
                 </li>
                 <li>
@@ -133,9 +142,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     FAQ
-                    <span className="text-right">
-                      <CaretRight size={20} />
-                    </span>
+                    
                   </div>
                 </li>
                 <li>
@@ -147,9 +154,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Contact Us
-                    <span className="text-right">
-                      <CaretRight size={20} />
-                    </span>
+                    
                   </div>
                   <div className="list-social mt-4 flex items-center gap-6">
                     <Link
