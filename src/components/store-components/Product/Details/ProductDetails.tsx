@@ -305,21 +305,17 @@ export default function ProductDetails({
     }
   };
 
-  // Normalize variants field (handle string or array or undefined)
+  // Normalize variants field (handle string or array)
   let variants: ProductVariant[] = [];
-  // @ts-expect-error: variants is a JSON field on the Product model, not in ProductWithCategory type
-  const rawVariants = (productMain as any).variants;
-  if (rawVariants) {
-    if (typeof rawVariants === "string") {
+  if (productMain.variants) {
+    if (typeof productMain.variants === "string") {
       try {
-        variants = JSON.parse(rawVariants) as ProductVariant[];
+        variants = JSON.parse(productMain.variants) as ProductVariant[];
       } catch {
         variants = [];
       }
-    } else if (Array.isArray(rawVariants)) {
-      variants = rawVariants as ProductVariant[];
-    } else if (typeof rawVariants === "object") {
-      variants = rawVariants as ProductVariant[];
+    } else {
+      variants = productMain.variants as ProductVariant[];
     }
   }
 
@@ -366,12 +362,11 @@ export default function ProductDetails({
       : productMain.discountedPrice;
   const displayStock =
     typeof activeVariant?.stock === "number"
-      ? activeVariant.stock
+      ? activeVariant.stck
       : productMain.stock;
 
   return (
-    <>
-      <div className="product-detail sale">
+    <>      <div className="product-detail sale">
         <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-wrap justify-between gap-y-6">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">

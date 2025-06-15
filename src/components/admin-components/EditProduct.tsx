@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 
+import { uploadFile } from "@/app/actions/file";
 import {
   Select,
   SelectContent,
@@ -34,6 +35,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { IoMdClose } from "react-icons/io";
+import { IoCloudUploadOutline } from "react-icons/io5";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import RichEditor from "../rich-editor";
@@ -490,6 +493,74 @@ export default function EditProductForm({ productId }: { productId: string }) {
     setErrors((prev) => ({ ...prev, estimatedDeliveryTime: "" })); // Optional
   }
 
+  // Add state for default product color and size
+  const [defaultColor, setDefaultColor] = useState(product?.color ?? "");
+  const [defaultSize, setDefaultSize] = useState(product?.size ?? "");
+
+  // Variants state
+  const [enableVariants, setEnableVariants] = useState(
+    Array.isArray(product?.variants) && product.variants.length > 0,
+  );
+  const [variants, setVariants] = useState<Variant[]>(
+    Array.isArray(product?.variants) && product.variants.length > 0
+      ? product.variants.map((v) => ({
+          ...v,
+          images: v.images ?? [],
+          imageId: v.imageId ?? uuid(),
+        }))
+      : [
+          {
+            price: undefined,
+            discountedPrice: undefined,
+            stock: undefined,
+            images: [],
+            imageId: uuid(),
+          },
+        ],
+  );
+  const [variantGalleryOpen, setVariantGalleryOpen] = useState(false);
+  const [variantGalleryIdx, setVariantGalleryIdx] = useState<number | null>(
+    null,
+  );
+
+  const handleVariantChange = (
+    index: number,
+    field: string,
+    value: string | number | undefined,
+  ) => {
+    setVariants((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+  const handleVariantImageGallery = (index: number) => {
+    setVariantGalleryIdx(index);
+    setVariantGalleryOpen(true);
+  };
+  const handleAddVariant = () => {
+    setVariants((prev) => [
+      ...prev,
+      {
+        price: undefined,
+        discountedPrice: undefined,
+        stock: undefined,
+        images: [],
+        imageId: uuid(),
+      },
+    ]);
+  };
+  const handleRemoveVariant = (index: number) => {
+    setVariants((prev) => prev.filter((_, i) => i !== index));
+  };
+  const handleVariantImagesUpdate = (index: number, newImages: string[]) => {
+    setVariants((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], images: newImages };
+      return updated;
+    });
+  };
+
   const handleSubmit = async (content: string) => {
     setPending(true);
     const newErrors = validateAllFields();
@@ -500,7 +571,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
       toast.error(errorMessages.join(" | "));
       return;
     }
-
     // Convert specifications array back to object for submission
     const specsObject = specifications.reduce(
       (acc, { key, value }) => {
@@ -511,16 +581,13 @@ export default function EditProductForm({ productId }: { productId: string }) {
       },
       {} as Record<string, string>,
     );
-
     // Log the image order being submitted to database
     console.log(
       "Updating product with images in order:",
       images.map((img) => img.src),
     );
-
     updateProduct.mutate({
       id: productId,
-      // Use ordered images from state - these reflect drag and drop ordering
       images: images.map((image) => image.src),
       descriptionImageId,
       title,
@@ -534,11 +601,33 @@ export default function EditProductForm({ productId }: { productId: string }) {
       categoryAttributes: attributeValues, // Pass category attributes separately
       stock,
       brand,
-      // Remove the published field
       estimatedDeliveryTime: estimatedDeliveryTime,
+      // color: defaultColor || undefined, // Not in backend schema
+      // size: defaultSize || undefined, // Not in backend schema
+      variants:
+        enableVariants && variants.length > 0
+          ? variants.map((v) => ({
+              color: v.color ?? undefined,
+              size: v.size ?? undefined,
+              images: v.images ?? [],
+              price:
+                v.price !== undefined && v.price !== null && v.price !== ""
+                  ? Number(v.price)
+                  : undefined,
+              discountedPrice:
+                v.discountedPrice !== undefined &&
+                v.discountedPrice !== null &&
+                v.discountedPrice !== ""
+                  ? Number(v.discountedPrice)
+                  : undefined,
+              stock:
+                v.stock !== undefined && v.stock !== null && v.stock !== ""
+                  ? Number(v.stock)
+                  : undefined,
+            }))
+          : undefined,
     });
   };
-  // Review section removed - no longer needed
 
   // Add state for the specification rich editor
   const [specRichContent, setSpecRichContent] = useState("");
@@ -796,7 +885,240 @@ export default function EditProductForm({ productId }: { productId: string }) {
             </div>
           </div>
         </div>
+
+        {/* Default Product Color/Size */}
+        <div>
+          <Label>Default Product Color (optional)</Label>
+          <Input
+            type="text"
+            placeholder="Color"
+            value={defaultColor}
+            onChange={(e) => setDefaultColor(e.target.value)}
+          />
+        </div>
+        <div>
+          <Label>Default Product Size (optional)</Label>
+          <Input
+            type="text"
+            placeholder="Size"
+            value={defaultSize}
+            onChange={(e) => setDefaultSize(e.target.value)}
+          />
+        </div>
+
+        {/* Variants Toggle */}
+        <div className="col-span-2 mt-2 flex items-center gap-2">
+          <input
+            type="checkbox"
+            checked={enableVariants}
+            onChange={(e) => setEnableVariants(e.target.checked)}
+            id="enable-variants"
+          />
+          <Label htmlFor="enable-variants" className="text-base">
+            Enable color/size/image variants
+          </Label>
+        </div>
+
+        {/* Variants UI */}
+        {enableVariants && (
+          <div className="col-span-2 mt-2 flex flex-col gap-4 rounded-md border bg-gray-50 p-3">
+            <Label className="text-base">Product Variants</Label>
+            {variants.map((variant, idx) => (
+              <div
+                key={idx}
+                className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row"
+              >
+                <Input
+                  type="text"
+                  placeholder="Color (optional)"
+                  value={variant.color}
+                  onChange={(e) =>
+                    handleVariantChange(idx, "color", e.target.value)
+                  }
+                  className="w-32"
+                />
+                <Input
+                  type="text"
+                  placeholder="Size (optional)"
+                  value={variant.size}
+                  onChange={(e) =>
+                    handleVariantChange(idx, "size", e.target.value)
+                  }
+                  className="w-32"
+                />
+                <Input
+                  type="number"
+                  placeholder="Price (optional)"
+                  value={variant.price ?? ""}
+                  onChange={(e) =>
+                    handleVariantChange(idx, "price", e.target.value)
+                  }
+                  className="w-32"
+                />
+                <Input
+                  type="number"
+                  placeholder="Discounted Price (optional)"
+                  value={variant.discountedPrice ?? ""}
+                  onChange={(e) =>
+                    handleVariantChange(idx, "discountedPrice", e.target.value)
+                  }
+                  className="w-32"
+                />
+                <Input
+                  type="number"
+                  placeholder="Stock (optional)"
+                  value={variant.stock ?? ""}
+                  onChange={(e) =>
+                    handleVariantChange(idx, "stock", e.target.value)
+                  }
+                  className="w-32"
+                />
+                <Button
+                  type="button"
+                  onClick={() => handleVariantImageGallery(idx)}
+                  className="w-40"
+                >
+                  Add Images
+                </Button>
+                {/* Show variant images */}
+                {variant.images && variant.images.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {variant.images.map((img, i) => (
+                      <img
+                        key={i}
+                        src={img}
+                        alt="variant-img"
+                        className="h-12 w-12 rounded object-cover"
+                      />
+                    ))}
+                  </div>
+                )}
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => handleRemoveVariant(idx)}
+                >
+                  Remove
+                </Button>
+              </div>
+            ))}
+            <Button type="button" onClick={handleAddVariant} className="w-40">
+              Add Variant
+            </Button>
+          </div>
+        )}
+
+        {/* Variant Image Gallery Modal */}
+        {variantGalleryOpen &&
+          variantGalleryIdx !== null &&
+          variants[variantGalleryIdx] !== undefined && (
+            <VariantImageGalleryModal
+              variantIndex={variantGalleryIdx}
+              images={variants[variantGalleryIdx]?.images ?? []}
+              onClose={() => setVariantGalleryOpen(false)}
+              onImagesChange={(imgs: string[]) =>
+                handleVariantImagesUpdate(variantGalleryIdx, imgs)
+              }
+            />
+          )}
       </div>
     </RichEditor>
+  );
+}
+
+// VariantImageGalleryModal for uploading images to a specific variant
+function VariantImageGalleryModal({
+  variantIndex,
+  images,
+  onClose,
+  onImagesChange,
+}: {
+  variantIndex: number;
+  images: string[];
+  onClose: () => void;
+  onImagesChange: (imgs: string[]) => void;
+}) {
+  const [isUploading, setIsUploading] = useState(false);
+  const handleUpload = async (files: FileList | File[]) => {
+    setIsUploading(true);
+    try {
+      const newImages: string[] = [];
+      for (const file of Array.from(files)) {
+        const formData = new FormData();
+        formData.append("file", file);
+        // Use a folder for variant images for clarity
+        const res = await uploadFile(formData, `variant-${variantIndex}`);
+        if (res?.secure_url) {
+          newImages.push(res.secure_url);
+        }
+      }
+      onImagesChange([...newImages, ...images]);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error(error);
+    }
+    setIsUploading(false);
+  };
+  const handleRemove = (img: string) => {
+    onImagesChange(images.filter((i) => i !== img));
+  };
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+      <div className="relative w-full max-w-lg rounded-md bg-white p-6">
+        <button className="absolute right-4 top-4" onClick={onClose}>
+          <IoMdClose size={24} />
+        </button>
+        <h2 className="mb-4 text-lg font-semibold">
+          Upload Images for Variant
+        </h2>
+        {/* Styled upload area */}
+        <label
+          htmlFor="variant-image-upload"
+          className="mb-4 flex h-40 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50"
+        >
+          <IoCloudUploadOutline size={30} className="text-gray-500" />
+          <p className="mb-2 text-sm text-gray-500">
+            <span className="font-semibold">Click to upload</span> or drag and
+            drop
+          </p>
+          <p className="text-xs text-gray-500">Image file</p>
+          <input
+            id="variant-image-upload"
+            type="file"
+            accept="image/*"
+            multiple
+            className="hidden"
+            onChange={async (e) => {
+              if (e.target.files) await handleUpload(e.target.files);
+            }}
+            disabled={isUploading}
+          />
+        </label>
+        <div className="mb-4 flex flex-wrap gap-2">
+          {images.map((img, i) => (
+            <div key={i} className="relative">
+              <img
+                src={img}
+                alt="variant-img"
+                className="h-16 w-16 rounded object-cover"
+              />
+              <button
+                className="absolute -right-2 -top-2 rounded-full bg-white p-1 shadow"
+                onClick={() => handleRemove(img)}
+                type="button"
+              >
+                <IoMdClose size={16} />
+              </button>
+            </div>
+          ))}
+        </div>
+        {isUploading && (
+          <div className="mb-2 text-sm text-gray-500">Uploading...</div>
+        )}
+        <Button onClick={onClose} className="mt-2 w-full">
+          Done
+        </Button>
+      </div>
+    </div>
   );
 }
