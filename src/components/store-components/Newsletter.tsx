@@ -1,13 +1,14 @@
 "use client";
-import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { api } from "@/trpc/react";
+import { ArrowRight } from "@phosphor-icons/react/dist/ssr";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 interface NewsletterProps {
-  variant?: 'default' | 'footer';
+  variant?: "default" | "footer";
 }
 
-export default function Newsletter({ variant = 'default' }: NewsletterProps) {
+export default function Newsletter({ variant = "default" }: NewsletterProps) {
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
@@ -30,8 +31,8 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
 
   return (
     <>
-      {variant === 'default' ? (
-        <div className="newsletter-block bg-green py-7">
+      {variant === "default" ? (
+        <div className="newsletter-block bg-green bg-green-300 py-7">
           <div className="mx-auto flex w-full !max-w-[1322px] items-center justify-center gap-8 gap-y-4 px-4 max-lg:flex-col lg:justify-between">
             <div className="text-content">
               <div className="text-[36px] font-semibold capitalize leading-[40px] max-lg:text-center md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
@@ -46,22 +47,27 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
                 <input
                   type="email"
                   placeholder="Enter your e-mail"
-                  className="h-full w-full rounded-xl border border-line pl-4 pr-14"
+                  className="h-full w-full rounded-xl border border-[#ddd] pl-4 pr-14 focus:border-[#ddd]"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   disabled={newsletterMutation.isLoading}
                 />
-                <button
-                  className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
+                <Button
+                  variant="black"
+                  className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black !text-white"
                   type="submit"
                   disabled={newsletterMutation.isLoading}
                 >
                   {newsletterMutation.isLoading ? "..." : "Subscribe"}
-                </button>
+                </Button>
               </form>
-              {success && <div className="text-green-800 mt-2 text-sm">{success}</div>}
-              {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
+              {success && (
+                <div className="mt-2 text-sm text-green-800">{success}</div>
+              )}
+              {error && (
+                <div className="mt-2 text-sm text-red-600">{error}</div>
+              )}
             </div>
           </div>
         </div>
@@ -76,7 +82,7 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
               <input
                 type="email"
                 placeholder="Enter your e-mail"
-                className="caption1 h-full w-full rounded-xl border border-line pl-4 pr-14"
+                className="caption1 h-full w-full rounded-xl border border-[#ddd] pl-4 pr-14 focus:border-[#ddd]"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -90,8 +96,10 @@ export default function Newsletter({ variant = 'default' }: NewsletterProps) {
                 <ArrowRight size={24} color="#fff" />
               </button>
             </form>
-            {success && <div className="text-green-800 mt-2 text-sm">{success}</div>}
-            {error && <div className="mt-2 text-red-600 text-sm">{error}</div>}
+            {success && (
+              <div className="mt-2 text-sm text-green-800">{success}</div>
+            )}
+            {error && <div className="mt-2 text-sm text-red-600">{error}</div>}
           </div>
         </>
       )}
