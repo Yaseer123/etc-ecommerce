@@ -2,7 +2,8 @@ import type { Category, Product } from "@prisma/client";
 
 export interface Variant {
   [key: string]: unknown;
-  color?: string;
+  colorName?: string;
+  colorHex?: string;
   size?: string;
   images?: string[];
   price?: number;
@@ -38,6 +39,7 @@ export interface ProductType {
 export type ProductWithCategory = Product & {
   category: Category | null;
   defaultColor?: string | null;
+  defaultColorHex?: string | null;
   defaultSize?: string | null;
   variants?: Variant[] | string | null;
 };

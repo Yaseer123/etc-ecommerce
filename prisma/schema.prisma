@@ -86,6 +86,7 @@ model Product {
     stockStatus           StockStatus @default(IN_STOCK)
     brand                 String
     defaultColor          String?
+    defaultColorHex       String?
     defaultSize           String?
     sold                  Int         @default(0)
     estimatedDeliveryTime Int? // Changed to Int to represent days

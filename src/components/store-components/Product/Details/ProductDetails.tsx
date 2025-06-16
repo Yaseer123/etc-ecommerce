@@ -36,12 +36,13 @@ import Rate from "../../Rate";
 
 // Define a type for product variants
 type ProductVariant = {
-  color: string;
+  colorName?: string;
+  colorHex?: string;
   size?: string;
-  price: number;
+  price?: number;
   discountedPrice?: number;
-  stock: number;
-  images: string[];
+  stock?: number;
+  images?: string[];
 };
 
 // Utility to get category prefix (with mapping and fallback)
@@ -202,17 +203,17 @@ export default function ProductDetails({
       : productMain.categoryId
         ? { id: productMain.categoryId }
         : { id: "" },
-    { enabled: !!(productMain.category?.id || productMain.categoryId) },
+    { enabled: Boolean(productMain.category?.id ?? productMain.categoryId) },
   );
 
   const handleAddToCart = () => {
     // Determine if a variant is selected
-    const isVariantSelected = !!(selectedColor || selectedSize);
+    const isVariantSelected = !!(selectedColorHex && selectedSize);
     // Build cart item
     const primaryCategoryName = categoryHierarchy?.[0]?.name ?? "XX";
     const cartItem = {
       id: isVariantSelected
-        ? `${productMain.id}-${selectedColor ?? ""}-${selectedSize ?? ""}`
+        ? `${productMain.id}-${selectedColorHex}-${selectedSize}`
         : productMain.id,
       name: productMain.title,
       price:
@@ -233,10 +234,10 @@ export default function ProductDetails({
       sku: generateSKU({
         categoryName: primaryCategoryName,
         productId: productMain.id,
-        color: selectedColor,
+        color: selectedColorHex,
         size: selectedSize,
       }),
-      color: selectedColor,
+      color: selectedColorHex,
       size: selectedSize,
       productId: productMain.id,
     };
@@ -334,11 +335,11 @@ export default function ProductDetails({
 
   const handleBuyNow = () => {
     // Determine if a variant is selected
-    const isVariantSelected = !!(selectedColor ?? selectedSize);
+    const isVariantSelected = !!(selectedColorHex && selectedSize);
     // Build buy-now product object
     const buyNowProduct = {
       id: isVariantSelected
-        ? `${productMain.id}-${selectedColor ?? ""}-${selectedSize ?? ""}`
+        ? `${productMain.id}-${selectedColorHex}-${selectedSize}`
         : productMain.id,
       name: productMain.title,
       price:
@@ -359,10 +360,10 @@ export default function ProductDetails({
       sku: generateSKU({
         categoryName: categoryHierarchy?.[0]?.name ?? "XX",
         productId: productMain.id,
-        color: selectedColor,
+        color: selectedColorHex,
         size: selectedSize,
       }),
-      color: selectedColor,
+      color: selectedColorHex,
       size: selectedSize,
       productId: productMain.id,
     };
@@ -428,23 +429,39 @@ export default function ProductDetails({
   }
 
   // Variant selection state
-  const [selectedColor, setSelectedColor] = useState<string | undefined>(
-    productMain.defaultColor ?? undefined,
+  const [selectedColorHex, setSelectedColorHex] = useState<string | undefined>(
+    productMain.defaultColorHex ?? productMain.defaultColor ?? undefined,
   );
+  const [selectedColorName, setSelectedColorName] = useState<
+    string | undefined
+  >(productMain.defaultColor ?? undefined);
   const [selectedSize, setSelectedSize] = useState<string | undefined>(
     productMain.defaultSize ?? undefined,
   );
 
+  // Show default color swatch and name
+  const defaultColorHex =
+    productMain.defaultColorHex ?? productMain.defaultColor ?? undefined;
+  const defaultColorName =
+    productMain.defaultColor ?? productMain.defaultColorHex ?? undefined;
+
   // Get available colors and sizes based on current selection
   const availableColors = variants
-    ? [...new Set(variants.map((v) => v.color).filter(Boolean))]
+    ? variants
+        .map((v) => ({
+          colorHex: v.colorHex ?? v.colorName ?? "#ffffff",
+          colorName: v.colorName ?? v.colorHex ?? "Unnamed",
+        }))
+        .filter((v) => v.colorHex && v.colorName)
     : [];
   console.log(availableColors);
   const availableSizes = variants
     ? [
         ...new Set(
           variants
-            .filter((v) => (selectedColor ? v.color === selectedColor : true))
+            .filter((v) =>
+              selectedColorHex ? v.colorHex === selectedColorHex : true,
+            )
             .map((v) => v.size)
             .filter(Boolean),
         ),
@@ -453,8 +470,8 @@ export default function ProductDetails({
 
   // Find the most specific variant (for now, only by color)
   let activeVariant: ProductVariant | undefined = undefined;
-  if (selectedColor) {
-    activeVariant = variants.find((v) => v.color === selectedColor);
+  if (selectedColorHex) {
+    activeVariant = variants.find((v) => v.colorHex === selectedColorHex);
   }
   console.log("Active Variant:", activeVariant);
 
@@ -479,80 +496,87 @@ export default function ProductDetails({
   const displaySKU = generateSKU({
     categoryName: categoryHierarchy?.[0]?.name ?? "XX",
     productId: productMain.id,
-    color: selectedColor,
+    color: selectedColorHex,
     size: selectedSize,
   });
 
+  // Build a unified color list: default color (if set) + unique variant colors (excluding duplicate with default)
+  const unifiedColors: { colorHex: string; colorName: string }[] = [];
+  if (defaultColorHex) {
+    unifiedColors.push({
+      colorHex: defaultColorHex,
+      colorName: defaultColorName ?? defaultColorHex,
+    });
+  }
+  if (availableColors.length > 0) {
+    availableColors.forEach((colorObj) => {
+      // Avoid duplicate with default color
+      if (!unifiedColors.some((c) => c.colorHex === colorObj.colorHex)) {
+        unifiedColors.push({
+          colorHex: colorObj.colorHex ?? "#ffffff",
+          colorName: colorObj.colorName ?? colorObj.colorHex ?? "Unnamed",
+        });
+      }
+    });
+  }
+
   return (
     <>
-      {" "}
       <div className="product-detail sale">
         <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-wrap justify-between gap-y-6">
             <div className="list-img w-full md:w-1/2 md:pr-[45px]">
-              {/* Variant selectors */}
-              {variants && variants.length > 0 && (
+              {/* Unified Color Selector */}
+              {unifiedColors.length > 0 && (
                 <div className="mb-4 flex flex-col gap-2">
-                  {/* Color selector */}
-                  {availableColors.length > 0 && (
-                    <div className="flex items-center gap-2">
-                      <span className="font-semibold">Color:</span>
-                      {availableColors.map((color, idx) => {
-                        // Try to use Tailwind color class, fallback to default if not valid
-                        let colorClass = "";
-                        if (color.startsWith("bg-")) {
-                          colorClass = color;
-                        } else if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
-                          colorClass = ""; // Tailwind does not support dynamic hex, fallback below
-                        } else if (
-                          /^(red|blue|green|yellow|purple|pink|indigo|gray|orange|teal|cyan|lime|amber|emerald|fuchsia|rose|violet|sky|stone|neutral|zinc|slate)-(100|200|300|400|500|600|700|800|900)$/.test(
-                            color,
-                          )
-                        ) {
-                          colorClass = `bg-${color}`;
-                        } else {
-                          colorClass = "bg-gray-200";
-                        }
-                        return (
-                          <button
-                            key={color + idx}
-                            className={`flex h-8 w-8 items-center justify-center rounded-full border p-0 ${selectedColor === color ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"} ${colorClass} `}
-                            style={
-                              /^#[0-9A-Fa-f]{6}$/.test(color)
-                                ? { backgroundColor: color }
-                                : {}
-                            }
-                            onClick={() => {
-                              setSelectedColor(color);
-                              setSelectedSize(undefined);
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">Color:</span>
+                    {unifiedColors.map((colorObj, idx) => (
+                      <div
+                        key={String(colorObj.colorHex) + idx}
+                        className="mx-1 flex flex-col items-center"
+                      >
+                        <button
+                          className={`rounded-full border p-0 ${selectedColorHex === colorObj.colorHex ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"}`}
+                          style={{
+                            width: 28,
+                            height: 28,
+                            backgroundColor: colorObj.colorHex,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                          onClick={() => {
+                            setSelectedColorHex(colorObj.colorHex);
+                            setSelectedColorName(colorObj.colorName);
+                            setSelectedSize(undefined);
+                          }}
+                          aria-label={colorObj.colorName}
+                          title={colorObj.colorName}
+                        >
+                          <span
+                            style={{
+                              display: "inline-block",
+                              width: 20,
+                              height: 20,
+                              backgroundColor: colorObj.colorHex,
+                              borderRadius: "50%",
+                              // border: "1px solid #ccc",
                             }}
-                            aria-label={String(color)}
-                          ></button>
-                        );
-                      })}
-                      <button
-                        className={`flex h-8 w-8 items-center justify-center rounded-full border p-0 ${selectedColor === productMain.defaultColor && productMain.defaultColor ? "ring-2 ring-blue-400" : ""} ${productMain.defaultColor ? (productMain.defaultColor.startsWith("#") ? "" : `${productMain.defaultColor}`) : ""} `}
-                        style={
-                          productMain.defaultColor &&
-                          /^#[0-9A-Fa-f]{6}$/.test(productMain.defaultColor)
-                            ? { backgroundColor: productMain.defaultColor }
-                            : {}
-                        }
-                        onClick={() => {
-                          setSelectedColor(
-                            productMain.defaultColor ?? undefined,
-                          );
-                          setSelectedSize(productMain.defaultSize ?? undefined);
-                        }}
-                        aria-label={String(
-                          productMain.defaultColor ?? "reset-color",
-                        )}
-                      ></button>
-                    </div>
-                  )}
-                  {/* Size selector */}
+                          />
+                        </button>
+                        <span
+                          className="mt-1 text-center text-xs"
+                          style={{ maxWidth: 48, wordBreak: "break-word" }}
+                        >
+                          {colorObj.colorName}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Size selector (only if sizes available for selected color) */}
                   {availableSizes.length > 0 && (
-                    <div className="flex items-center gap-2">
+                    <div className="mt-2 flex items-center gap-2">
                       <span className="font-semibold">Size:</span>
                       {availableSizes.map((size, idx) =>
                         size ? (

@@ -43,6 +43,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/css";
 import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { toast } from "sonner";
@@ -148,13 +150,15 @@ export default function AddProductForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Add state for default product color and size
-  const [defaultColor, setDefaultColor] = useState<string>("");
-  const [defaultSize, setDefaultSize] = useState<string>("");
+  const [defaultColorName, setDefaultColorName] = useState<string>("");
+  const [defaultColorHex, setDefaultColorHex] = useColor("#ffffff");
 
   // Variants state
   const [enableVariants, setEnableVariants] = useState(false);
   const [variants, setVariants] = useState<Variant[]>([
     {
+      colorName: "",
+      colorHex: "#ffffff",
       price: undefined,
       discountedPrice: undefined,
       stock: undefined,
@@ -380,8 +384,8 @@ export default function AddProductForm() {
       setAttributes([]);
       setAttributeValues({});
       setSpecifications([]);
-      setDefaultColor("");
-      setDefaultSize("");
+      setDefaultColorName("");
+      setDefaultColorHex("#ffffff");
       // Navigate after clearing
       router.push("/admin/product");
     },
@@ -492,6 +496,8 @@ export default function AddProductForm() {
     setVariants((prev) => [
       ...prev,
       {
+        colorName: "",
+        colorHex: "#ffffff",
         price: undefined,
         discountedPrice: undefined,
         stock: undefined,
@@ -546,8 +552,8 @@ export default function AddProductForm() {
       discountedPrice,
       stock,
       brand,
-      defaultColor,
-      defaultSize,
+      defaultColorName,
+      defaultColorHex,
       slug,
       categoryId: categoryId,
       description: content,
@@ -557,8 +563,8 @@ export default function AddProductForm() {
       variants:
         enableVariants && variants.length > 0
           ? variants.map((v) => ({
-              color: v.color ?? undefined,
-              size: v.size ?? undefined,
+              colorName: v.colorName,
+              colorHex: v.colorHex,
               images: v.images ?? [],
               price:
                 v.price !== undefined && v.price !== null
@@ -599,21 +605,33 @@ export default function AddProductForm() {
           <Label className="text-base">Default Product Color (optional)</Label>
           <Input
             type="text"
-            placeholder="Color"
-            value={defaultColor}
-            onChange={(e) => setDefaultColor(e.target.value)}
+            placeholder="Color Name (e.g. Red, Sky Blue)"
+            value={defaultColorName}
+            onChange={(e) => setDefaultColorName(e.target.value)}
             style={{ width: "100%" }}
           />
-        </div>
-        <div className="flex w-full flex-col space-y-2">
-          <Label className="text-base">Default Product Size (optional)</Label>
-          <Input
-            type="text"
-            placeholder="Size"
-            value={defaultSize}
-            onChange={(e) => setDefaultSize(e.target.value)}
-            style={{ width: "100%" }}
-          />
+          <div className="mt-2 flex items-center gap-2">
+            <ColorPicker
+              color={defaultColorHex}
+              onChange={setDefaultColorHex}
+              hideInput={["rgb", "hsv"]}
+            />
+            <span
+              style={{
+                display: "inline-block",
+                width: 32,
+                height: 32,
+                backgroundColor: defaultColorHex.hex,
+                borderRadius: "50%",
+                border: "1px solid #ccc",
+              }}
+              aria-label={defaultColorName}
+              title={defaultColorName}
+            />
+            <span>
+              {defaultColorName} ({defaultColorHex.hex})
+            </span>
+          </div>
         </div>
         {/* Variants Toggle */}
         <div className="flex items-center gap-2">
@@ -634,13 +652,39 @@ export default function AddProductForm() {
               >
                 <Input
                   type="text"
-                  placeholder="Color (optional)"
-                  value={variant.color}
+                  placeholder="Color Name (optional)"
+                  value={variant.colorName}
                   onChange={(e) =>
-                    handleVariantChange(idx, "color", e.target.value)
+                    handleVariantChange(idx, "colorName", e.target.value)
                   }
                   className="w-32"
                 />
+                <ColorPicker
+                  color={{
+                    hex: variant.colorHex || "#ffffff",
+                    rgb: { r: 255, g: 255, b: 255, a: 1 },
+                    hsv: { h: 0, s: 0, v: 100, a: 1 },
+                  }}
+                  onChange={(color) =>
+                    handleVariantChange(idx, "colorHex", color.hex)
+                  }
+                  hideInput={["rgb", "hsv"]}
+                />
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: 24,
+                    height: 24,
+                    backgroundColor: variant.colorHex || "#ffffff",
+                    borderRadius: "50%",
+                    border: "1px solid #ccc",
+                  }}
+                  aria-label={variant.colorName}
+                  title={variant.colorName}
+                />
+                <span>
+                  {variant.colorName} ({variant.colorHex})
+                </span>
                 <Input
                   type="text"
                   placeholder="Size (optional)"

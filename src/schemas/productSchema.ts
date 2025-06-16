@@ -9,7 +9,8 @@ export const categoryAttributeValueSchema = z.record(
 
 // Variant schema for color/size/image variations
 export const variantSchema = z.object({
-  color: z.string().optional(),
+  colorName: z.string().optional(),
+  colorHex: z.string().optional(),
   size: z.string().optional(),
   images: z.array(z.string()).optional(),
   price: z.number().optional(),
@@ -27,6 +28,7 @@ export const productSchema = z.object({
   stock: z.number().int().nonnegative(),
   brand: z.string(),
   defaultColor: z.string().optional(),
+  defaultColorHex: z.string().optional(),
   defaultSize: z.string().optional(),
   imageId: z.string(),
   images: z.array(z.string()),
@@ -49,6 +51,7 @@ export const updateProductSchema = z.object({
   stock: z.number().int().nonnegative().optional(),
   brand: z.string().optional(),
   defaultColor: z.string().optional(),
+  defaultColorHex: z.string().optional(),
   defaultSize: z.string().optional(),
   images: z.array(z.string()).optional(),
   categoryId: z.string().optional(),

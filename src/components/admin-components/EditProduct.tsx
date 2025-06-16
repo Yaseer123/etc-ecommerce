@@ -37,6 +37,8 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/css";
 import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { toast } from "sonner";
@@ -510,7 +512,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
   }
 
   // Add state for default product color and size
-  const [defaultColor, setDefaultColor] = useState(product?.defaultColor ?? "");
+  const [defaultColorName, setDefaultColorName] = useState(
+    product?.defaultColor ?? "",
+  );
+  const [defaultColorHex, setDefaultColorHex] = useColor(
+    product?.defaultColorHex ?? "#ffffff",
+  );
   const [defaultSize, setDefaultSize] = useState(product?.defaultSize ?? "");
 
   // Variants state
@@ -544,6 +551,8 @@ export default function EditProductForm({ productId }: { productId: string }) {
   const [variants, setVariants] = useState<Variant[]>(
     normalizeVariants(product?.variants).map((v) => ({
       ...v,
+      colorName: v.colorName ?? "",
+      colorHex: v.colorHex ?? "#ffffff",
       images: v.images ?? [],
       imageId: v.imageId ?? uuid(),
     })),
@@ -632,13 +641,15 @@ export default function EditProductForm({ productId }: { productId: string }) {
       stock,
       brand,
       estimatedDeliveryTime: estimatedDeliveryTime,
-      defaultColor,
+      defaultColor: defaultColorName,
+      defaultColorHex: defaultColorHex.hex,
       defaultSize,
       variants:
         enableVariants && variants.length > 0
           ? variants.map((v) => ({
-              color: v.color ?? undefined,
-              size: v.size ?? undefined,
+              colorName: v.colorName,
+              colorHex: v.colorHex,
+              size: v.size,
               images: v.images ?? [],
               price:
                 v.price !== undefined && v.price !== null
@@ -919,10 +930,32 @@ export default function EditProductForm({ productId }: { productId: string }) {
           <Label>Default Product Color (optional)</Label>
           <Input
             type="text"
-            placeholder="Color"
-            value={defaultColor}
-            onChange={(e) => setDefaultColor(e.target.value)}
+            placeholder="Color Name (e.g. Red, Sky Blue)"
+            value={defaultColorName}
+            onChange={(e) => setDefaultColorName(e.target.value)}
           />
+          <div className="mt-2 flex items-center gap-2">
+            <ColorPicker
+              color={defaultColorHex}
+              onChange={setDefaultColorHex}
+              hideInput={["rgb", "hsv"]}
+            />
+            <span
+              style={{
+                display: "inline-block",
+                width: 32,
+                height: 32,
+                backgroundColor: defaultColorHex.hex,
+                borderRadius: "50%",
+                border: "1px solid #ccc",
+              }}
+              aria-label={defaultColorName}
+              title={defaultColorName}
+            />
+            <span>
+              {defaultColorName} ({defaultColorHex.hex})
+            </span>
+          </div>
         </div>
         <div>
           <Label>Default Product Size (optional)</Label>
@@ -951,87 +984,129 @@ export default function EditProductForm({ productId }: { productId: string }) {
         {enableVariants && (
           <div className="col-span-2 mt-2 flex flex-col gap-4 rounded-md border bg-gray-50 p-3">
             <Label className="text-base">Product Variants</Label>
-            {variants.map((variant, idx) => (
-              <div
-                key={idx}
-                className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row"
-              >
-                <Input
-                  type="text"
-                  placeholder="Color (optional)"
-                  value={variant.color}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "color", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="text"
-                  placeholder="Size (optional)"
-                  value={variant.size}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "size", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="number"
-                  placeholder="Price (optional)"
-                  value={variant.price ?? ""}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "price", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="number"
-                  placeholder="Discounted Price (optional)"
-                  value={variant.discountedPrice ?? ""}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "discountedPrice", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="number"
-                  placeholder="Stock (optional)"
-                  value={variant.stock ?? ""}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "stock", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Button
-                  type="button"
-                  onClick={() => handleVariantImageGallery(idx)}
-                  className="w-40"
+            {variants.map((variant, idx) => {
+              // Use a local useColor for each variant's color picker
+              const [variantColor, setVariantColor] = useColor(
+                variant.colorHex || "#ffffff",
+              );
+
+              // Sync local color state with parent state
+              useEffect(() => {
+                if (variant.colorHex !== variantColor.hex) {
+                  setVariantColor(variant.colorHex || "#ffffff");
+                }
+                // eslint-disable-next-line react-hooks/exhaustive-deps
+              }, [variant.colorHex]);
+
+              return (
+                <div
+                  key={idx}
+                  className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row"
                 >
-                  Add Images
-                </Button>
-                {/* Show variant images */}
-                {variant.images && variant.images.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {variant.images.map((img, i) => (
-                      <Image
-                        key={i}
-                        src={img}
-                        alt="variant-img"
-                        width={48}
-                        height={48}
-                        className="h-12 w-12 rounded object-cover"
-                      />
-                    ))}
-                  </div>
-                )}
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => handleRemoveVariant(idx)}
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
+                  <Input
+                    type="text"
+                    placeholder="Color Name (optional)"
+                    value={variant.colorName}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "colorName", e.target.value)
+                    }
+                    className="w-32"
+                  />
+                  <ColorPicker
+                    color={variantColor}
+                    onChange={(color) => {
+                      setVariantColor(color);
+                      handleVariantChange(idx, "colorHex", color.hex);
+                    }}
+                    hideInput={["rgb", "hsv"]}
+                  />
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: 24,
+                      height: 24,
+                      backgroundColor: variant.colorHex || "#ffffff",
+                      borderRadius: "50%",
+                      border: "1px solid #ccc",
+                    }}
+                    aria-label={variant.colorName}
+                    title={variant.colorName}
+                  />
+                  <span>
+                    {variant.colorName} ({variant.colorHex})
+                  </span>
+                  <Input
+                    type="text"
+                    placeholder="Size (optional)"
+                    value={variant.size}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "size", e.target.value)
+                    }
+                    className="w-32"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Price (optional)"
+                    value={variant.price ?? ""}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "price", e.target.value)
+                    }
+                    className="w-32"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Discounted Price (optional)"
+                    value={variant.discountedPrice ?? ""}
+                    onChange={(e) =>
+                      handleVariantChange(
+                        idx,
+                        "discountedPrice",
+                        e.target.value,
+                      )
+                    }
+                    className="w-32"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Stock (optional)"
+                    value={variant.stock ?? ""}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "stock", e.target.value)
+                    }
+                    className="w-32"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => handleVariantImageGallery(idx)}
+                    className="w-40"
+                  >
+                    Add Images
+                  </Button>
+                  {/* Show variant images */}
+                  {variant.images && variant.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {variant.images.map((img, i) => (
+                        <Image
+                          key={i}
+                          src={img}
+                          alt="variant-img"
+                          width={48}
+                          height={48}
+                          className="h-12 w-12 rounded object-cover"
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => handleRemoveVariant(idx)}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              );
+            })}
             <Button type="button" onClick={handleAddVariant} className="w-40">
               Add Variant
             </Button>
