@@ -186,7 +186,8 @@ const Footer = () => {
             <div className="footer-bottom flex items-center justify-between gap-5 border-t border-[#ddd] py-3 focus:border-[#ddd] max-lg:flex-col max-lg:justify-center">
               <div className="left flex items-center gap-8">
                 <div className="copyright caption1 text-secondary">
-                  ©2023 Anvogue. All Rights Reserved.
+                  ©{new Date().getFullYear()} Rinors Corporation. All Rights
+                  Reserved.
                 </div>
               </div>
               <div className="right flex items-center gap-2">
