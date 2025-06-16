@@ -47,7 +47,7 @@ export const EditSaleBanner = () => {
     if (editingBanner) {
       setSelectedImageName("");
     }
-  }, [editingBanner?.id]);
+  }, [editingBanner]);
 
   const handleImageUpload = async (file: File) => {
     try {

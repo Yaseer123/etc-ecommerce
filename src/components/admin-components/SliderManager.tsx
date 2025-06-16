@@ -32,7 +32,7 @@ export const SliderManager = () => {
     if (editingSlider) {
       setSelectedImageName("");
     }
-  }, [editingSlider?.id]);
+  }, [editingSlider]);
 
   const handleImageUpload = async (file: File) => {
     try {

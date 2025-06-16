@@ -604,7 +604,7 @@ export default function ProductsPage() {
     ) {
       setCategory({ id: categoryId, name: categoryData.name });
     }
-  }, [categoryId, categoryData]);
+  }, [categoryId, categoryData, category]);
 
   return (
     <>

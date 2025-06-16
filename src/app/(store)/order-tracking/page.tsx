@@ -55,8 +55,8 @@ const OrderTracking = () => {
           "Order not found. Please check your invoice number and try again.",
         );
       }
-      const data = await res.json();
-      setResult(data as OrderResult);
+      const data = (await res.json()) as OrderResult;
+      setResult(data);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);

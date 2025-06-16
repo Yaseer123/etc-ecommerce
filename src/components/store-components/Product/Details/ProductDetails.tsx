@@ -143,14 +143,6 @@ export default function ProductDetails({
     },
   });
 
-  // Calculate discount percentage if discounted price is available
-  const percentSale =
-    productMain.discountedPrice && productMain.price > 0
-      ? Math.floor(
-          100 - (productMain.discountedPrice / productMain.price) * 100,
-        )
-      : 0;
-
   const handleSwiper = (swiper: SwiperCore) => {
     setThumbsSwiper(swiper);
   };

@@ -6,7 +6,11 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function POST(req: Request) {
   try {
-    const { email, name, password } = await req.json();
+    const { email, name, password } = (await req.json()) as {
+      email?: string;
+      name?: string;
+      password?: string;
+    };
     if (!email || !password) {
       return NextResponse.json(
         { error: "Email and password are required." },
@@ -19,7 +23,7 @@ export async function POST(req: Request) {
           <h2 style="margin: 0;">Welcome to Rinors Ecommerce!</h2>
         </div>
         <div style="padding: 24px 32px;">
-          <p style="font-size: 16px;">Hi ${name || "there"},</p>
+          <p style="font-size: 16px;">Hi ${name ?? "there"},</p>
           <p style="font-size: 16px;">We have created an account for you. Here are your credentials:</p>
           <ul style="font-size: 16px;">
             <li><strong>Email:</strong> ${email}</li>

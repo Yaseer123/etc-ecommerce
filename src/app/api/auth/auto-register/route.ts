@@ -9,7 +9,10 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 export async function POST(req: Request) {
   try {
-    const { email, name } = await req.json();
+    const { email, name } = (await req.json()) as {
+      email?: string;
+      name?: string;
+    };
     if (!email) {
       return NextResponse.json(
         { error: "Email is required." },
@@ -40,7 +43,7 @@ export async function POST(req: Request) {
           <h2 style="margin: 0;">Welcome to Rinors Ecommerce!</h2>
         </div>
         <div style="padding: 24px 32px;">
-          <p style="font-size: 16px;">Hi ${name || "there"},</p>
+          <p style="font-size: 16px;">Hi ${name ?? "there"},</p>
           <p style="font-size: 16px;">We have created an account for you. Here are your credentials:</p>
           <ul style="font-size: 16px;">
             <li><strong>Email:</strong> ${email}</li>
@@ -60,7 +63,7 @@ export async function POST(req: Request) {
       html,
     });
     return NextResponse.json({ success: true });
-  } catch (err) {
+  } catch (_err) {
     return NextResponse.json(
       { error: "Failed to auto-register user." },
       { status: 500 },

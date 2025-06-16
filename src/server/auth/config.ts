@@ -118,7 +118,13 @@ export const authConfig = {
       }
 
       if (token.emailVerified) {
-        session.user.emailVerified = token.emailVerified;
+        if (typeof token.emailVerified === "string") {
+          session.user.emailVerified = new Date(token.emailVerified);
+        } else if (token.emailVerified instanceof Date) {
+          session.user.emailVerified = token.emailVerified;
+        } else {
+          session.user.emailVerified = null;
+        }
       }
 
       return session;
@@ -141,7 +147,13 @@ export const authConfig = {
       return token;
     },
 
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({
+      user,
+      account,
+      profile: _profile,
+      email: _email,
+      credentials: _credentials,
+    }) {
       // Only apply logic for OAuth (e.g., Google)
       if (account?.provider && account.provider !== "credentials") {
         const emailToCheck = user?.email;

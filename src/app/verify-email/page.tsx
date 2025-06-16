@@ -24,7 +24,7 @@ export default function VerifyEmailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       });
-      const data = await res.json();
+      const data = (await res.json()) as { error?: string };
       if (res.ok) {
         setStatus("success");
         setMessage(
@@ -32,10 +32,10 @@ export default function VerifyEmailPage() {
         );
       } else {
         setStatus("error");
-        setMessage(data.error || "Verification failed.");
+        setMessage(data.error ?? "Verification failed.");
       }
     }
-    verify();
+    void verify();
   }, [token]);
 
   return (

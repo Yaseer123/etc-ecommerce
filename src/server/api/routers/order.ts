@@ -249,6 +249,13 @@ export const orderRouter = createTRPCRouter({
 
         return order;
       });
+
+      // Fetch the full order with relations to return to the frontend
+      const createdOrder = await ctx.db.order.findUnique({
+        where: { id: order.id },
+        include: { items: { include: { product: true } }, address: true },
+      });
+      return createdOrder;
     }),
 
   updateOrderStatus: protectedProcedure

@@ -21,16 +21,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { RouterOutputs } from "@/trpc/react";
 import { api } from "@/trpc/react";
 import {
-  DndContext,
-  type DragEndEvent,
   closestCenter,
+  DndContext,
   PointerSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from "@dnd-kit/core";
-import type { RouterOutputs } from "@/trpc/shared";
 import {
   arrayMove,
   SortableContext,
@@ -43,11 +43,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
-import { toast } from "sonner";
 
 type FeaturedProduct = RouterOutputs["product"]["getFeaturedProducts"][number];
 
-const SortableRow = ({ product }: { product: FeaturedProduct }) => {
+const SortableRow = ({
+  product,
+  onRemove,
+}: {
+  product: FeaturedProduct;
+  onRemove: (id: string) => void;
+}) => {
   const {
     attributes,
     listeners,
@@ -118,9 +123,7 @@ const SortableRow = ({ product }: { product: FeaturedProduct }) => {
                 Edit product
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => handleRemoveFromFeatured(product.id)}
-            >
+            <DropdownMenuItem onClick={() => onRemove(product.id)}>
               Remove from featured
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
@@ -144,7 +147,8 @@ export default function FeaturedProductsPage() {
   const [search, setSearch] = React.useState("");
   const [dragItems, setDragItems] = React.useState<FeaturedProduct[]>();
 
-  const { data: featuredProducts, isLoading } = api.product.getFeaturedProducts.useQuery();
+  const { data: featuredProducts, isLoading } =
+    api.product.getFeaturedProducts.useQuery({ limit: 100 });
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -152,15 +156,16 @@ export default function FeaturedProductsPage() {
 
   const filteredProducts = React.useMemo(() => {
     if (!featuredProducts) return [];
-    const base = (dragItems ?? featuredProducts);
+    const base = dragItems ?? featuredProducts;
     if (!search.trim()) return base;
-    return base.filter((product) =>
-      product.title.toLowerCase().includes(search.toLowerCase()) ||
-      product.brand.toLowerCase().includes(search.toLowerCase())
+    return base.filter(
+      (product) =>
+        product.title.toLowerCase().includes(search.toLowerCase()) ||
+        product.brand.toLowerCase().includes(search.toLowerCase()),
     );
   }, [featuredProducts, search, dragItems]);
 
-  const updatePositions = api.product.updateFeaturedPositions.useMutation({
+  const updatePositions = api.product.updateProductPositions.useMutation({
     onSuccess: () => {
       void utils.product.getFeaturedProducts.invalidate();
     },
@@ -186,10 +191,10 @@ export default function FeaturedProductsPage() {
 
     if (active.id !== over.id) {
       const oldIndex = featuredProducts.findIndex(
-        (item) => item.id === active.id
+        (item) => item.id === active.id,
       );
       const newIndex = featuredProducts.findIndex(
-        (item) => item.id === over.id
+        (item) => item.id === over.id,
       );
 
       if (oldIndex === -1 || newIndex === -1) return;
@@ -298,6 +303,7 @@ export default function FeaturedProductsPage() {
                         <SortableRow
                           key={product.id}
                           product={product}
+                          onRemove={handleRemoveFromFeatured}
                         />
                       ))}
                     </TableBody>

@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
   try {
-    const { token } = await req.json();
+    const { token } = (await req.json()) as { token?: string };
     if (!token) {
       return NextResponse.json(
         { error: "Token is required." },

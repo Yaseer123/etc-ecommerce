@@ -75,9 +75,9 @@ export default function WishlistPage() {
   // Helper to get responsive grid classes
   const getGridClasses = () => {
     // Always 2 columns on base, 3 on sm, then dynamic on lg
-    let base = "grid-cols-2";
-    let sm = "sm:grid-cols-3";
-    let gap = "gap-[16px] sm:gap-[20px] md:gap-[30px]";
+    const base = "grid-cols-2";
+    const sm = "sm:grid-cols-3";
+    const gap = "gap-[16px] sm:gap-[20px] md:gap-[30px]";
     let lg = "";
     if (layoutCol === 3) lg = "lg:grid-cols-3";
     else if (layoutCol === 4) lg = "lg:grid-cols-4";

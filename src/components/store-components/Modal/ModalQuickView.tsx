@@ -8,7 +8,6 @@ import { useModalWishlistStore } from "@/context/store-context/ModalWishlistCont
 import { useWishlistStore } from "@/context/store-context/WishlistContext";
 import {
   ArrowClockwise,
-  Eye,
   Heart,
   Minus,
   Plus,
@@ -272,7 +271,7 @@ const ModalQuickView = () => {
                         14 January - 18 January
                       </span>
                     </div>
-                   
+
                     <div className="mt-3 flex items-center gap-1">
                       <div className="text-title">SKU:</div>
                       <div className="text-secondary">53453412</div>

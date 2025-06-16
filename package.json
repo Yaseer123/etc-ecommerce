@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "clean": "rimraf .next",
+    "clean": "rimraf .next", 
     "prebuild": "pnpm clean",
-    "build": "next build",
+    "build": "pnpm run check && next build",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
     "db:migrate": "prisma migrate deploy",

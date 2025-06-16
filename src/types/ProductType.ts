@@ -1,6 +1,7 @@
 import type { Category, Product } from "@prisma/client";
 
 export interface Variant {
+  [key: string]: unknown;
   color?: string;
   size?: string;
   images?: string[];

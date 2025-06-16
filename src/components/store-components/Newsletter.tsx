@@ -24,8 +24,17 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
         "Thank you for subscribing! Check your email for a discount code.",
       );
       setEmail("");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      if (
+        err &&
+        typeof err === "object" &&
+        "message" in err &&
+        typeof (err as { message?: string }).message === "string"
+      ) {
+        setError((err as { message: string }).message);
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     }
   };
 
@@ -51,15 +60,15 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  disabled={newsletterMutation.isLoading}
+                  disabled={newsletterMutation.isPending}
                 />
                 <Button
                   variant="black"
                   className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black !text-white"
                   type="submit"
-                  disabled={newsletterMutation.isLoading}
+                  disabled={newsletterMutation.isPending}
                 >
-                  {newsletterMutation.isLoading ? "..." : "Subscribe"}
+                  {newsletterMutation.isPending ? "..." : "Subscribe"}
                 </Button>
               </form>
               {success && (
@@ -86,12 +95,12 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                disabled={newsletterMutation.isLoading}
+                disabled={newsletterMutation.isPending}
               />
               <button
                 className="absolute right-1 top-1 flex h-[44px] w-[44px] items-center justify-center rounded-xl bg-black"
                 type="submit"
-                disabled={newsletterMutation.isLoading}
+                disabled={newsletterMutation.isPending}
               >
                 <ArrowRight size={24} color="#fff" />
               </button>

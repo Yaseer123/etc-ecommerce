@@ -21,9 +21,8 @@ const Cart = () => {
 
   const moneyForFreeship = 150;
   const [totalCart, setTotalCart] = useState<number>(0);
-  const [discountCart, setDiscountCart] = useState<number>(0);
+  const [discountCart] = useState<number>(0);
   const [shipCart, setShipCart] = useState<number>(30);
-  const [applyCode, setApplyCode] = useState<number>(0);
 
   useEffect(() => {
     const total = cartArray.reduce(
@@ -32,15 +31,6 @@ const Cart = () => {
     );
     setTotalCart(total);
   }, [cartArray]);
-
-  const handleApplyCode = (minValue: number, discount: number) => {
-    if (totalCart > minValue) {
-      setApplyCode(minValue);
-      setDiscountCart(discount);
-    } else {
-      alert(`Minimum order must be ${minValue}৳`);
-    }
-  };
 
   const redirectToCheckout = () => {
     router.push(`/checkout?discount=${discountCart}&ship=${shipCart}`);

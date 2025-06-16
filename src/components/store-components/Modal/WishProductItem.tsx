@@ -11,7 +11,7 @@ export interface WishlistProduct {
     id: string;
     title: string;
     price: number;
-    discountedPrice?: number;
+    discountedPrice?: number | null;
     images: string[];
   };
 }
@@ -27,8 +27,8 @@ export default function WishProductItem({
 }: WishProductItemProps) {
   const { product } = item;
   return (
-    <div className="item flex w-full  items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd] sm:flex-row ">
-      <div className="infor flex w-full  items-center gap-3 sm:flex-row sm:gap-5">
+    <div className="item flex w-full items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd] sm:flex-row">
+      <div className="infor flex w-full items-center gap-3 sm:flex-row sm:gap-5">
         <div className="bg-img aspect-square w-[80px] flex-shrink-0 overflow-hidden rounded-lg sm:w-[100px]">
           <Image
             src={product.images[0] ?? "/images/product/1.png"}

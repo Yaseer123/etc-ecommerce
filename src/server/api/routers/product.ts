@@ -83,7 +83,7 @@ export const productRouter = createTRPCRouter({
       if (sort === "priceAsc") orderBy = { price: "asc" };
       if (sort === "priceDesc") orderBy = { price: "desc" };
 
-      const [products, total] = await Promise.all([
+      const [products] = await Promise.all([
         ctx.db.product.findMany({
           where,
           include: { category: true },
@@ -91,13 +91,10 @@ export const productRouter = createTRPCRouter({
           skip,
           take: limit,
         }),
-        ctx.db.product.count({ where }),
       ]);
 
       // Filter out soft-deleted products
-      const filteredProducts = products.filter(
-        (p: any) => p.deletedAt === null,
-      );
+      const filteredProducts = products.filter((p) => p.deletedAt === null);
       const filteredTotal = filteredProducts.length;
       const totalPages = Math.ceil(filteredTotal / limit);
 
@@ -122,7 +119,7 @@ export const productRouter = createTRPCRouter({
         const products = await ctx.db.product.findMany({
           include: { category: true },
         });
-        return products.filter((p: any) => p.deletedAt === null);
+        return products.filter((p) => p.deletedAt === null);
       }
 
       // Fetch all child category IDs recursively
@@ -150,7 +147,7 @@ export const productRouter = createTRPCRouter({
         include: { category: true },
         orderBy: { position: "asc" },
       });
-      return products.filter((p: any) => p.deletedAt === null);
+      return products.filter((p) => p.deletedAt === null);
     }),
 
   getProductById: publicProcedure
@@ -322,7 +319,7 @@ export const productRouter = createTRPCRouter({
       });
 
       // Filter out soft-deleted products
-      return products.filter((p: any) => p.deletedAt === null);
+      return products.filter((p) => p.deletedAt === null);
     }),
 
   search: publicProcedure

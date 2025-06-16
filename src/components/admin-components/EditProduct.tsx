@@ -1,6 +1,7 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import Image from "next/image";
 
 import { uploadFile } from "@/app/actions/file";
 import {
@@ -14,6 +15,7 @@ import { useProductImageStore } from "@/context/admin-context/ProductImageProvid
 import type { CategoryAttribute } from "@/schemas/categorySchema";
 import { updateProductSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
+import type { Variant } from "@/types/ProductType";
 import {
   closestCenter,
   DndContext,
@@ -357,12 +359,25 @@ export default function EditProductForm({ productId }: { productId: string }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Helper: validate a single field
-  function validateField(field: string, value: any) {
+  function validateField(field: string, value: unknown) {
     try {
-      updateProductSchema.pick({ [field]: true }).parse({ [field]: value });
+      updateProductSchema.shape[
+        field as keyof typeof updateProductSchema.shape
+      ].parse(value);
       return "";
-    } catch (e: any) {
-      return e.errors?.[0]?.message || "Invalid value";
+    } catch (e: unknown) {
+      if (
+        e &&
+        typeof e === "object" &&
+        "errors" in e &&
+        Array.isArray((e as { errors?: unknown }).errors)
+      ) {
+        return (
+          (e as { errors?: { message?: string }[] }).errors?.[0]?.message ??
+          "Invalid value"
+        );
+      }
+      return "Invalid value";
     }
   }
 
@@ -387,7 +402,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       // description is handled separately
     ];
     const newErrors: Record<string, string> = {};
-    let parsedErrors: Record<string, string> = {};
+    const parsedErrors: Record<string, string> = {};
     try {
       updateProductSchema.parse({
         id: productId,
@@ -413,28 +428,29 @@ export default function EditProductForm({ productId }: { productId: string }) {
         categoryAttributes: attributeValues,
         description: "", // RichEditor content, validated separately if needed
       });
-    } catch (e) {
-      // e is ZodError
+    } catch (e: unknown) {
       if (
         e &&
         typeof e === "object" &&
         "errors" in e &&
-        Array.isArray((e as any).errors)
+        Array.isArray((e as { errors?: unknown }).errors)
       ) {
-        for (const err of (e as any).errors) {
-          if (err.path && err.path[0]) {
-            parsedErrors[err.path[0]] = err.message;
+        for (const err of (
+          e as { errors: { path?: string[]; message?: string }[] }
+        ).errors ?? []) {
+          if (err?.path?.[0]) {
+            parsedErrors[err.path[0]] = err.message ?? "Invalid value";
           }
         }
       }
     }
     // Set all fields, even if no error
     for (const field of allFields) {
-      newErrors[field] = parsedErrors[field] || "";
+      newErrors[field] = parsedErrors[field] ?? "";
     }
     // Custom error for categoryId if not selected
     if (!categoryId) {
-      newErrors["categoryId"] = "Category is required.";
+      newErrors.categoryId = "Category is required.";
     }
     return newErrors;
   }
@@ -498,25 +514,39 @@ export default function EditProductForm({ productId }: { productId: string }) {
   const [defaultSize, setDefaultSize] = useState(product?.defaultSize ?? "");
 
   // Variants state
+  const normalizeVariants = (variants: unknown): Variant[] => {
+    if (Array.isArray(variants)) {
+      // Ensure all items are objects (not null, not string/number)
+      return variants.filter(
+        (v): v is Variant =>
+          v !== null && typeof v === "object" && !Array.isArray(v),
+      );
+    }
+    if (typeof variants === "string") {
+      try {
+        const parsed: unknown = JSON.parse(variants);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(
+            (v): v is Variant =>
+              v !== null && typeof v === "object" && !Array.isArray(v),
+          );
+        }
+      } catch {
+        return [];
+      }
+      return [];
+    }
+    return [];
+  };
   const [enableVariants, setEnableVariants] = useState(
     Array.isArray(product?.variants) && product.variants.length > 0,
   );
   const [variants, setVariants] = useState<Variant[]>(
-    Array.isArray(product?.variants) && product.variants.length > 0
-      ? product.variants.map((v) => ({
-          ...v,
-          images: v.images ?? [],
-          imageId: v.imageId ?? uuid(),
-        }))
-      : [
-          {
-            price: undefined,
-            discountedPrice: undefined,
-            stock: undefined,
-            images: [],
-            imageId: uuid(),
-          },
-        ],
+    normalizeVariants(product?.variants).map((v) => ({
+      ...v,
+      images: v.images ?? [],
+      imageId: v.imageId ?? uuid(),
+    })),
   );
   const [variantGalleryOpen, setVariantGalleryOpen] = useState(false);
   const [variantGalleryIdx, setVariantGalleryIdx] = useState<number | null>(
@@ -611,17 +641,15 @@ export default function EditProductForm({ productId }: { productId: string }) {
               size: v.size ?? undefined,
               images: v.images ?? [],
               price:
-                v.price !== undefined && v.price !== null && v.price !== ""
+                v.price !== undefined && v.price !== null
                   ? Number(v.price)
                   : undefined,
               discountedPrice:
-                v.discountedPrice !== undefined &&
-                v.discountedPrice !== null &&
-                v.discountedPrice !== ""
+                v.discountedPrice !== undefined && v.discountedPrice !== null
                   ? Number(v.discountedPrice)
                   : undefined,
               stock:
-                v.stock !== undefined && v.stock !== null && v.stock !== ""
+                v.stock !== undefined && v.stock !== null
                   ? Number(v.stock)
                   : undefined,
             }))
@@ -984,10 +1012,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
                 {variant.images && variant.images.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {variant.images.map((img, i) => (
-                      <img
+                      <Image
                         key={i}
                         src={img}
                         alt="variant-img"
+                        width={48}
+                        height={48}
                         className="h-12 w-12 rounded object-cover"
                       />
                     ))}
@@ -1097,10 +1127,12 @@ function VariantImageGalleryModal({
         <div className="mb-4 flex flex-wrap gap-2">
           {images.map((img, i) => (
             <div key={i} className="relative">
-              <img
+              <Image
                 src={img}
                 alt="variant-img"
-                className="h-16 w-16 rounded object-cover"
+                width={48}
+                height={48}
+                className="h-12 w-12 rounded object-cover"
               />
               <button
                 className="absolute -right-2 -top-2 rounded-full bg-white p-1 shadow"

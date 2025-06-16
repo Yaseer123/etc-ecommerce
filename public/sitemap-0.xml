@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://rinors.com/verify-email</loc><lastmod>2025-06-16T01:23:26.094Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/auth/verify-required</loc><lastmod>2025-06-16T01:23:26.094Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/about</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/blog/[slug]</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -18,11 +20,22 @@
 <url><loc>https://rinors.com/search-result</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/wishlist</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/products/tuya-smart-switch-gang-4</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-fan-light-switch-with-rf</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-gayjar-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-dimmer-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-door-bell-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/ttlock-smart-door-lock</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/products/tuya-smart-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/products/tuya-smart-switch-gang-2</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://rinors.com/products/tuya-smart-3-gang-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://rinors.com/products/tuya-smart-fan-light-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://rinors.com/products/tuya-smart-1-gang-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch-gang-3</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/products/tuya-smart-door-lock</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/test-product</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://rinors.com/products/tigerneo-jinko-solar</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-switch-gang1</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://rinors.com/products/tuya-smart-fan-switch</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

@@ -10,13 +10,15 @@ const useMenuMobile = () => {
 
   const handleClickOutsideMenuMobile = useCallback((event: Event) => {
     // Use composedPath for better event path detection
-    const path = (event.composedPath && event.composedPath()) || [];
-    const isInsideMenu = path.some(
-      (el) =>
-        el instanceof Element &&
-        (el.id?.toString() === "menu-mobile" ||
-          el.classList?.contains("menu-mobile-icon")),
-    );
+    const path = event.composedPath?.() || [];
+    const isInsideMenu = path.some((el) => {
+      if (el instanceof Element) {
+        return (
+          el.id === "menu-mobile" || el.classList?.contains("menu-mobile-icon")
+        );
+      }
+      return false;
+    });
     if (!isInsideMenu) {
       setOpenMenuMobile(false);
     }

@@ -6,7 +6,8 @@ import { api } from "@/trpc/react";
 import { X } from "@phosphor-icons/react/dist/ssr";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
-import WishProductItem, { WishlistProduct } from "./WishProductItem";
+import type { WishlistProduct } from "./WishProductItem";
+import WishProductItem from "./WishProductItem";
 
 const ModalWishlist = () => {
   const { isModalOpen, closeModalWishlist } = useModalWishlistStore();

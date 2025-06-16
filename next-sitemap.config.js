@@ -1,5 +1,18 @@
+import fs from "fs";
 import { getAllProductSlugs } from "./scripts/getAllProductSlugs.js";
-import staticRoutes from "./scripts/staticRoutes.json" assert { type: "json" };
+
+/** @type {string[]} */
+// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+const staticRoutes = JSON.parse(
+  fs.readFileSync("./scripts/staticRoutes.json", "utf-8"),
+);
+
+if (
+  !Array.isArray(staticRoutes) ||
+  !staticRoutes.every((r) => typeof r === "string")
+) {
+  throw new Error("staticRoutes must be an array of strings");
+}
 
 export default {
   siteUrl: process.env.NEXTAUTH_URL ?? "https://rinors.com",

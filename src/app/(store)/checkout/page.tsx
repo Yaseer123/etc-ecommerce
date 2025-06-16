@@ -11,6 +11,35 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 
+type OrderWithRelations = Order & {
+  address?: {
+    name: string;
+    id: string;
+    userId: string | null;
+    email: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    phone: string;
+    isDefault: boolean;
+  } | null;
+  items?: Array<{
+    id: string;
+    orderId: string;
+    productId: string;
+    quantity: number;
+    price: number;
+    product: {
+      id: string;
+      title: string;
+      // add other product fields as needed
+    } | null;
+  }>;
+};
+
+type OrderSuccessType = Order | OrderWithRelations | null;
+
 const Checkout = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -21,7 +50,7 @@ const Checkout = () => {
 
   const { cartArray } = useCartStore();
   const [totalCart, setTotalCart] = useState<number>(0);
-  const [orderSuccess, setOrderSuccess] = useState<Order | null>(null);
+  const [orderSuccess, setOrderSuccess] = useState<OrderSuccessType>(null);
   const [orderError, setOrderError] = useState("");
 
   const [newAddress, setNewAddress] = useState({
@@ -48,7 +77,7 @@ const Checkout = () => {
       useCartStore.getState().clearCart();
     },
     onError: (err) => {
-      setOrderError(err.message || "Order failed. Please try again.");
+      setOrderError(err.message ?? "Order failed. Please try again.");
     },
   });
 
@@ -127,17 +156,23 @@ const Checkout = () => {
         couponCode: couponCode,
       });
       if (res.valid) {
-        const discount = Math.round(totalCart * (res.discount || 0));
+        const discount = Math.round(totalCart * (res.discount ?? 0));
         setDiscountValue(discount);
         setAppliedCoupon(couponCode);
         setCouponError("");
       } else {
-        setCouponError(res.message || "Invalid or expired coupon code.");
+        setCouponError(res.message ?? "Invalid or expired coupon code.");
         setAppliedCoupon(null);
         setDiscountValue(0);
       }
-    } catch (err: any) {
-      setCouponError(err.message || "Something went wrong. Please try again.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setCouponError(
+          err.message ?? "Something went wrong. Please try again.",
+        );
+      } else {
+        setCouponError("Something went wrong. Please try again.");
+      }
       setAppliedCoupon(null);
       setDiscountValue(0);
     }
@@ -272,13 +307,13 @@ const Checkout = () => {
   );
 
   const placeOrder = api.order.placeOrder.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data: OrderSuccessType) => {
       setOrderSuccess(data);
       setOrderError("");
       useCartStore.getState().clearCart();
     },
     onError: (err) => {
-      setOrderError(err.message || "Order failed. Please try again.");
+      setOrderError(err.message ?? "Order failed. Please try again.");
     },
   });
 
@@ -436,7 +471,7 @@ const Checkout = () => {
                   )}
                   {appliedCoupon && (
                     <div className="mt-1 text-xs text-green-600">
-                      Coupon '{appliedCoupon}' applied!
+                      Coupon &apos;{appliedCoupon}&apos; applied!
                     </div>
                   )}
                 </div>
