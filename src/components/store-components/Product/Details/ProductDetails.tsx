@@ -234,10 +234,11 @@ export default function ProductDetails({
       sku: generateSKU({
         categoryName: primaryCategoryName,
         productId: productMain.id,
-        color: selectedColorHex,
+        color: selectedColorName,
         size: selectedSize,
       }),
-      color: selectedColorHex,
+      color: selectedColorHex, // for swatch
+      colorName: selectedColorName, // for display
       size: selectedSize,
       productId: productMain.id,
     };
@@ -360,10 +361,11 @@ export default function ProductDetails({
       sku: generateSKU({
         categoryName: categoryHierarchy?.[0]?.name ?? "XX",
         productId: productMain.id,
-        color: selectedColorHex,
+        color: selectedColorName,
         size: selectedSize,
       }),
-      color: selectedColorHex,
+      color: selectedColorHex, // for swatch
+      colorName: selectedColorName, // for display
       size: selectedSize,
       productId: productMain.id,
     };

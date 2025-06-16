@@ -50,6 +50,7 @@ type CartItem = {
   coverImage?: string;
   sku?: string;
   color?: string;
+  colorName?: string;
   size?: string;
   // add other fields as needed
 };
@@ -440,7 +441,7 @@ const Checkout = () => {
                         cartItems: checkoutItems.map((item) => ({
                           productId: item.productId,
                           quantity: item.quantity,
-                          color: item.color,
+                          color: item.colorName ?? item.color,
                           size: item.size,
                           sku: item.sku,
                         })),
@@ -451,7 +452,7 @@ const Checkout = () => {
                         cartItems: checkoutItems.map((item) => ({
                           productId: item.productId,
                           quantity: item.quantity,
-                          color: item.color,
+                          color: item.colorName ?? item.color,
                           size: item.size,
                           sku: item.sku,
                         })),
@@ -548,9 +549,9 @@ const Checkout = () => {
                             {(product.sku || product.color || product.size) && (
                               <div className="mt-1 text-xs text-gray-500">
                                 {product.sku && <span>SKU: {product.sku}</span>}
-                                {product.color && (
+                                {(product.colorName ?? product.color) && (
                                   <span className="ml-2">
-                                    Color: {product.color}
+                                    Color: {product.colorName ?? product.color}
                                   </span>
                                 )}
                                 {product.size && (

@@ -117,6 +117,7 @@ export const orderRouter = createTRPCRouter({
             color: z.string().optional(),
             size: z.string().optional(),
             sku: z.string().optional(),
+            colorName: z.string().optional(),
           }),
         ),
         addressId: z.string().optional(),
@@ -190,6 +191,7 @@ export const orderRouter = createTRPCRouter({
               color: item.color,
               size: item.size,
               sku: item.sku,
+              colorName: item.colorName,
             })),
           },
         };
@@ -227,8 +229,8 @@ export const orderRouter = createTRPCRouter({
 
       // Build product details table
       let productRows = "";
-      if (createdOrder && createdOrder.items && createdOrder.items.length > 0) {
-        for (const item of createdOrder.items) {
+      if (createdOrder && (createdOrder as any).items?.length > 0) {
+        for (const item of (createdOrder as any).items) {
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -237,9 +239,11 @@ export const orderRouter = createTRPCRouter({
             productTitle = prod?.title ?? "Unknown Product";
           }
           // Variant details (show if available)
-          const color = item.color
-            ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
-            : "";
+          const color = item.colorName
+            ? `<br/><span style='color:#555;'>Color: ${item.colorName}</span>`
+            : item.color
+              ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+              : "";
           const size = item.size
             ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
             : "";
@@ -446,6 +450,7 @@ export const orderRouter = createTRPCRouter({
             color: z.string().optional(),
             size: z.string().optional(),
             sku: z.string().optional(),
+            colorName: z.string().optional(),
           }),
         ),
         addressId: z.string().optional(),
@@ -505,6 +510,7 @@ export const orderRouter = createTRPCRouter({
                 color: item.color,
                 size: item.size,
                 sku: item.sku,
+                colorName: item.colorName,
               })),
             },
           },
@@ -538,8 +544,8 @@ export const orderRouter = createTRPCRouter({
 
       // Build product details table
       let productRows = "";
-      if (fullOrder && fullOrder.items && fullOrder.items.length > 0) {
-        for (const item of fullOrder.items) {
+      if (fullOrder && (fullOrder as any).items?.length > 0) {
+        for (const item of (fullOrder as any).items) {
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -549,9 +555,11 @@ export const orderRouter = createTRPCRouter({
           }
           // Variant details (show if available)
           console.log(item);
-          const color = item.color
-            ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
-            : "";
+          const color = item.colorName
+            ? `<br/><span style='color:#555;'>Color: ${item.colorName}</span>`
+            : item.color
+              ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+              : "";
           const size = item.size
             ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
             : "";
