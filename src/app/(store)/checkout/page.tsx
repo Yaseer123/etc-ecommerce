@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
 type OrderWithRelations = Order & {
   address?: {
@@ -40,6 +40,20 @@ type OrderWithRelations = Order & {
 
 type OrderSuccessType = Order | OrderWithRelations | null;
 
+type CartItem = {
+  id: string;
+  productId: string;
+  name: string;
+  price: number;
+  discountedPrice?: number;
+  quantity: number;
+  coverImage?: string;
+  sku?: string;
+  color?: string;
+  size?: string;
+  // add other fields as needed
+};
+
 const Checkout = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -48,10 +62,33 @@ const Checkout = () => {
   const discount = searchParams?.get("discount") ?? "0";
   const ship = searchParams?.get("ship") ?? "0";
 
-  const { cartArray } = useCartStore();
+  const { cartArray } = useCartStore() as { cartArray: CartItem[] };
   const [totalCart, setTotalCart] = useState<number>(0);
   const [orderSuccess, setOrderSuccess] = useState<OrderSuccessType>(null);
   const [orderError, setOrderError] = useState("");
+
+  // Buy Now support
+  const [buyNowProduct, setBuyNowProduct] = useState<CartItem | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const buyNow = window.sessionStorage.getItem("buyNowProduct");
+      if (buyNow) {
+        setBuyNowProduct(JSON.parse(buyNow) as CartItem);
+      }
+    }
+  }, []);
+
+  // Use buyNowProduct if present, else cartArray
+  const checkoutItems = buyNowProduct ? [buyNowProduct] : cartArray;
+
+  useEffect(() => {
+    const sum = checkoutItems.reduce(
+      (acc, item) => acc + (item.discountedPrice ?? item.price) * item.quantity,
+      0,
+    );
+    setTotalCart(sum);
+  }, [checkoutItems]);
 
   const [newAddress, setNewAddress] = useState({
     name: "",
@@ -75,6 +112,9 @@ const Checkout = () => {
       setOrderSuccess(data);
       setOrderError("");
       useCartStore.getState().clearCart();
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem("buyNowProduct");
+      }
     },
     onError: (err) => {
       setOrderError(err.message ?? "Order failed. Please try again.");
@@ -89,14 +129,6 @@ const Checkout = () => {
 
   const validateCouponMutation =
     api.coupon.validateNewsletterCoupon.useMutation();
-
-  React.useEffect(() => {
-    const sum = cartArray.reduce(
-      (acc, item) => acc + (item.discountedPrice ?? item.price) * item.quantity,
-      0,
-    );
-    setTotalCart(sum);
-  }, [cartArray]);
 
   const breadcrumbItems = [
     {
@@ -311,6 +343,9 @@ const Checkout = () => {
       setOrderSuccess(data);
       setOrderError("");
       useCartStore.getState().clearCart();
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem("buyNowProduct");
+      }
     },
     onError: (err) => {
       setOrderError(err.message ?? "Order failed. Please try again.");
@@ -355,7 +390,7 @@ const Checkout = () => {
                 <button
                   className="duration-400 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
                   onClick={async () => {
-                    if (cartArray.length === 0) {
+                    if (checkoutItems.length === 0) {
                       setOrderError("Your cart is empty.");
                       return;
                     }
@@ -402,17 +437,23 @@ const Checkout = () => {
                     }
                     if (session) {
                       placeOrder.mutate({
-                        cartItems: cartArray.map((item) => ({
-                          productId: item.id,
+                        cartItems: checkoutItems.map((item) => ({
+                          productId: item.productId,
                           quantity: item.quantity,
+                          color: item.color,
+                          size: item.size,
+                          sku: item.sku,
                         })),
                         addressId,
                       });
                     } else {
                       placeGuestOrder.mutate({
-                        cartItems: cartArray.map((item) => ({
-                          productId: item.id,
+                        cartItems: checkoutItems.map((item) => ({
+                          productId: item.productId,
                           quantity: item.quantity,
+                          color: item.color,
+                          size: item.size,
+                          sku: item.sku,
                         })),
                         addressId,
                       });
@@ -476,12 +517,12 @@ const Checkout = () => {
                   )}
                 </div>
                 <div>
-                  {cartArray.length < 1 ? (
+                  {checkoutItems.length < 1 ? (
                     <p className="pt-3 text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
                       No product in cart
                     </p>
                   ) : (
-                    cartArray.map((product) => (
+                    checkoutItems.map((product) => (
                       <div
                         key={product.id}
                         className="mt-5 flex w-full items-center justify-between gap-6 border-b border-[#ddd] pb-5 focus:border-[#ddd]"
@@ -503,6 +544,22 @@ const Checkout = () => {
                             <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                               {product.name}
                             </div>
+                            {/* Variant details */}
+                            {(product.sku || product.color || product.size) && (
+                              <div className="mt-1 text-xs text-gray-500">
+                                {product.sku && <span>SKU: {product.sku}</span>}
+                                {product.color && (
+                                  <span className="ml-2">
+                                    Color: {product.color}
+                                  </span>
+                                )}
+                                {product.size && (
+                                  <span className="ml-2">
+                                    Size: {product.size}
+                                  </span>
+                                )}
+                              </div>
+                            )}
                           </div>
                           <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                             <span className="quantity">{product.quantity}</span>

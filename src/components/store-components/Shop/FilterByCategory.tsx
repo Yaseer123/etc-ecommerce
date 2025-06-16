@@ -68,6 +68,7 @@ export default function FilterByCategory({
   return (
     <div className="space-y-1 rounded-lg">
       {categories.map((category) => (
+        console.log(category),
         <CategoryItem
           handleCategory={handleCategory}
           key={category.id}

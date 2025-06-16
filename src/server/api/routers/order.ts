@@ -12,7 +12,21 @@ export const orderRouter = createTRPCRouter({
   getOrders: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.order.findMany({
       where: { userId: ctx.session.user.id },
-      include: { items: { include: { product: true } }, address: true },
+      include: {
+        items: {
+          select: {
+            id: true,
+            productId: true,
+            quantity: true,
+            price: true,
+            color: true,
+            size: true,
+            sku: true,
+            product: true,
+          },
+        },
+        address: true,
+      },
       orderBy: { createdAt: "desc" },
     });
   }),
@@ -29,7 +43,21 @@ export const orderRouter = createTRPCRouter({
           userId: ctx.session.user.id,
           ...(input && { status: input }),
         },
-        include: { items: { include: { product: true } }, address: true },
+        include: {
+          items: {
+            select: {
+              id: true,
+              productId: true,
+              quantity: true,
+              price: true,
+              color: true,
+              size: true,
+              sku: true,
+              product: true,
+            },
+          },
+          address: true,
+        },
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -37,7 +65,21 @@ export const orderRouter = createTRPCRouter({
   getLatestOrder: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.order.findFirst({
       where: { userId: ctx.session.user.id },
-      include: { items: { include: { product: true } }, address: true },
+      include: {
+        items: {
+          select: {
+            id: true,
+            productId: true,
+            quantity: true,
+            price: true,
+            color: true,
+            size: true,
+            sku: true,
+            product: true,
+          },
+        },
+        address: true,
+      },
       orderBy: { createdAt: "desc" },
     });
   }),
@@ -47,7 +89,21 @@ export const orderRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       return await ctx.db.order.findUnique({
         where: { id: input },
-        include: { items: { include: { product: true } }, address: true },
+        include: {
+          items: {
+            select: {
+              id: true,
+              productId: true,
+              quantity: true,
+              price: true,
+              color: true,
+              size: true,
+              sku: true,
+              product: true,
+            },
+          },
+          address: true,
+        },
       });
     }),
 
@@ -58,6 +114,9 @@ export const orderRouter = createTRPCRouter({
           z.object({
             productId: z.string(),
             quantity: z.number().min(1),
+            color: z.string().optional(),
+            size: z.string().optional(),
+            sku: z.string().optional(),
           }),
         ),
         addressId: z.string().optional(),
@@ -104,7 +163,7 @@ export const orderRouter = createTRPCRouter({
         0,
       );
 
-      // Start transaction
+      // Start transaction (DB only)
       const order = await ctx.db.$transaction(async (tx) => {
         // Update product stock
         for (const cartItem of input.cartItems) {
@@ -128,48 +187,78 @@ export const orderRouter = createTRPCRouter({
               productId: item.productId,
               quantity: item.quantity,
               price: productPriceMap.get(item.productId) ?? 0,
+              color: item.color,
+              size: item.size,
+              sku: item.sku,
             })),
           },
         };
 
-        const order = await tx.order.create({ data: orderData });
+        return await tx.order.create({ data: orderData });
+      });
 
-        // Fetch order with items and products for email
-        const fullOrder = await tx.order.findUnique({
-          where: { id: order.id },
-          include: { items: { include: { product: true } } },
+      // Fetch the full order with relations to return to the frontend
+      const createdOrder = await ctx.db.order.findUnique({
+        where: { id: order.id },
+        include: {
+          items: {
+            select: {
+              id: true,
+              productId: true,
+              quantity: true,
+              price: true,
+              color: true,
+              size: true,
+              sku: true,
+              product: true,
+            },
+          },
+          address: true,
+        },
+      });
+
+      // Fetch address details if available
+      let address = null;
+      if (order.addressId) {
+        address = await ctx.db.address.findUnique({
+          where: { id: order.addressId },
         });
+      }
 
-        // Fetch address details if available
-        let address = null;
-        if (order.addressId) {
-          address = await tx.address.findUnique({
-            where: { id: order.addressId },
-          });
-        }
-
-        // Build product details table
-        let productRows = "";
-        if (fullOrder && fullOrder.items && fullOrder.items.length > 0) {
-          for (const item of fullOrder.items) {
-            let productTitle = item.product?.title;
-            if (!productTitle && item.productId) {
-              const prod = await tx.product.findUnique({
-                where: { id: item.productId },
-              });
-              productTitle = prod?.title ?? "Unknown Product";
-            }
-            productRows += `
-              <tr>
-                <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${productTitle}</td>
-                <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
-                <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
-              </tr>
-            `;
+      // Build product details table
+      let productRows = "";
+      if (createdOrder && createdOrder.items && createdOrder.items.length > 0) {
+        for (const item of createdOrder.items) {
+          let productTitle = item.product?.title;
+          if (!productTitle && item.productId) {
+            const prod = await ctx.db.product.findUnique({
+              where: { id: item.productId },
+            });
+            productTitle = prod?.title ?? "Unknown Product";
           }
+          // Variant details (show if available)
+          const color = item.color
+            ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+            : "";
+          const size = item.size
+            ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
+            : "";
+          const sku = item.sku
+            ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
+            : "";
+          productRows += `
+            <tr>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
+                ${productTitle}${color}${size}${sku}
+              </td>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
+            </tr>
+          `;
         }
-        const productsTable = productRows
-          ? `<div style="margin-bottom: 24px;">
+      }
+      const productsTable = productRows
+        ? `<div style="margin-bottom: 24px;">
                 <strong>Products:</strong>
                 <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px;">
                   <thead>
@@ -184,77 +273,69 @@ export const orderRouter = createTRPCRouter({
                   </tbody>
                 </table>
               </div>`
-          : "";
-        const addressBlock = address
-          ? `<div style="margin-bottom: 16px;">
+        : "";
+      const addressBlock = address
+        ? `<div style="margin-bottom: 16px;">
                 <strong>Shipping Address:</strong><br/>
                 ${address.street}<br/>
                 ${address.city}, ${address.state} ${address.zipCode}<br/>
                 <strong>Mobile:</strong> ${address.phone}<br/>
                 <strong>Email:</strong> ${address.email}
              </div>`
-          : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
-        const html = `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-            <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-              <h2 style="margin: 0;">New Order Placed</h2>
-            </div>
-            <div style="padding: 24px 32px;">
-              <p style="font-size: 16px;">A new order has been placed on Rinors Ecommerce Admin.</p>
-              <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
-              <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
-              ${productsTable}
-              ${addressBlock}
-              <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
-            </div>
+        : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+          <div style="background: #007b55; color: #fff; padding: 24px 32px;">
+            <h2 style="margin: 0;">New Order Placed</h2>
           </div>
-        `;
-        await resend.emails.send({
-          from: "no-reply@rinors.com",
-          to: "rinorscorporation@gmail.com",
-          subject: "New Order Placed",
-          html,
-        });
+          <div style="padding: 24px 32px;">
+            <p style="font-size: 16px;">A new order has been placed on Rinors Ecommerce Admin.</p>
+            <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
+            <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
+            ${productsTable}
+            ${addressBlock}
+            <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
+          </div>
+        </div>
+      `;
+      // Send admin email (outside transaction)
+      await resend.emails.send({
+        from: "no-reply@rinors.com",
+        to: "rinorscorporation@gmail.com",
+        subject: "New Order Placed",
+        html,
+      });
 
-        // Send confirmation email to customer
-        try {
-          if (user?.email) {
-            const html = `
-              <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-                <div style="background: #222; color: #fff; padding: 24px 32px;">
-                  <h2 style="margin: 0;">Order Confirmed!</h2>
-                </div>
-                <div style="padding: 24px 32px;">
-                  <p>Hi${user.name ? ` ${user.name}` : ""},</p>
-                  <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
-                  <p><strong>Order ID:</strong> ${order.id}</p>
-                  <p><strong>Total:</strong> ৳${order.total}</p>
-                  <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
-                </div>
+      // Send confirmation email to customer (outside transaction)
+      try {
+        if (user?.email) {
+          const html = `
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
+              <div style="background: #222; color: #fff; padding: 24px 32px;">
+                <h2 style="margin: 0;">Order Confirmed!</h2>
               </div>
-            `;
-            await resend.emails.send({
-              from: "no-reply@rinors.com",
-              to: user.email,
-              subject: "Your order is confirmed!",
-              html,
-            });
-          }
-        } catch (e) {
-          console.error(
-            "Failed to send order confirmation email to customer",
-            e,
-          );
+              <div style="padding: 24px 32px;">
+                <p>Hi${user.name ? ` ${user.name}` : ""},</p>
+                <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
+                <p><strong>Order ID:</strong> ${order.id}</p>
+                <p><strong>Total:</strong> ৳${order.total}</p>
+                ${productsTable}
+                ${addressBlock}
+                <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
+              </div>
+            </div>
+          `;
+          await resend.emails.send({
+            from: "no-reply@rinors.com",
+            to: user.email,
+            subject: "Your order is confirmed!",
+            html,
+          });
         }
+      } catch (e) {
+        console.error("Failed to send order confirmation email to customer", e);
+      }
 
-        return order;
-      });
-
-      // Fetch the full order with relations to return to the frontend
-      const createdOrder = await ctx.db.order.findUnique({
-        where: { id: order.id },
-        include: { items: { include: { product: true } }, address: true },
-      });
       return createdOrder;
     }),
 
@@ -337,7 +418,18 @@ export const orderRouter = createTRPCRouter({
     return await ctx.db.order.findMany({
       include: {
         user: { select: { id: true, name: true, email: true } },
-        items: { include: { product: true } },
+        items: {
+          select: {
+            id: true,
+            productId: true,
+            quantity: true,
+            price: true,
+            color: true,
+            size: true,
+            sku: true,
+            product: true,
+          },
+        },
         address: true,
       },
       orderBy: { createdAt: "desc" },
@@ -351,6 +443,9 @@ export const orderRouter = createTRPCRouter({
           z.object({
             productId: z.string(),
             quantity: z.number().min(1),
+            color: z.string().optional(),
+            size: z.string().optional(),
+            sku: z.string().optional(),
           }),
         ),
         addressId: z.string().optional(),
@@ -389,7 +484,7 @@ export const orderRouter = createTRPCRouter({
         0,
       );
 
-      // Start transaction
+      // Start transaction (DB only)
       const order = await ctx.db.$transaction(async (tx) => {
         for (const cartItem of input.cartItems) {
           await tx.product.update({
@@ -407,6 +502,9 @@ export const orderRouter = createTRPCRouter({
                 productId: item.productId,
                 quantity: item.quantity,
                 price: productPriceMap.get(item.productId) ?? 0,
+                color: item.color,
+                size: item.size,
+                sku: item.sku,
               })),
             },
           },
@@ -416,7 +514,20 @@ export const orderRouter = createTRPCRouter({
       // After transaction, fetch order with items/products, address, and user
       const fullOrder = await ctx.db.order.findUnique({
         where: { id: order.id },
-        include: { items: { include: { product: true } } },
+        include: {
+          items: {
+            select: {
+              id: true,
+              productId: true,
+              quantity: true,
+              price: true,
+              color: true,
+              size: true,
+              sku: true,
+              product: true,
+            },
+          },
+        },
       });
       let address = null;
       if (order.addressId) {
@@ -436,9 +547,23 @@ export const orderRouter = createTRPCRouter({
             });
             productTitle = prod?.title ?? "Unknown Product";
           }
+          // Variant details (show if available)
+          console.log(item);
+          const color = item.color
+            ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+            : "";
+          const size = item.size
+            ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
+            : "";
+          const sku = item.sku
+            ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
+            : "";
+          console.log(color, size, sku);
           productRows += `
             <tr>
-              <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">${productTitle}</td>
+              <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
+                ${productTitle}${color}${size}${sku}
+              </td>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
             </tr>
@@ -472,7 +597,7 @@ export const orderRouter = createTRPCRouter({
            </div>`
         : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
 
-      // Send emails
+      // Send emails (outside transaction)
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
           <div style="background: #007b55; color: #fff; padding: 24px 32px;">
@@ -506,6 +631,8 @@ export const orderRouter = createTRPCRouter({
               <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
               <p><strong>Order ID:</strong> ${order.id}</p>
               <p><strong>Total:</strong> ৳${order.total}</p>
+              ${productsTable}
+              ${addressBlock}
               <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
             </div>
           </div>

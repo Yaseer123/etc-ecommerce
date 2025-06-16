@@ -250,6 +250,9 @@ model OrderItem {
     productId String
     quantity  Int
     price     Float // Price at the time of purchase
+    color     String?
+    size      String?
+    sku       String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 

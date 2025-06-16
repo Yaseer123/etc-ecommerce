@@ -6,6 +6,7 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { useWishlistStore } from "@/context/store-context/WishlistContext";
+import { api } from "@/trpc/react";
 import {
   ArrowClockwise,
   Heart,
@@ -20,6 +21,7 @@ import type { Product } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { generateSKU } from "../Product/Details/ProductDetails";
 import Rate from "../Rate";
 
 const ModalQuickView = () => {
@@ -34,6 +36,14 @@ const ModalQuickView = () => {
     useWishlistStore();
   const { openModalWishlist } = useModalWishlistStore();
   const router = useRouter();
+
+  // Fetch category hierarchy for primary category name
+  const { data: categoryHierarchy } = api.category.getHierarchy.useQuery(
+    selectedProduct?.categoryId
+      ? { id: selectedProduct.categoryId }
+      : { id: "" },
+    { enabled: !!selectedProduct?.categoryId },
+  );
 
   // Reset quantity when selected product changes
   useEffect(() => {
@@ -59,21 +69,32 @@ const ModalQuickView = () => {
 
   const handleAddToCart = () => {
     if (selectedProduct) {
+      // Get primary category name for SKU
+      const primaryCategoryName = categoryHierarchy?.[0]?.name ?? "XX";
+      // Use color/size if available
+      const color = (selectedProduct as any).color;
+      const size = (selectedProduct as any).size;
+      const sku = generateSKU({
+        categoryName: primaryCategoryName,
+        productId: selectedProduct.id,
+        color,
+        size,
+      });
       if (!cartArray.find((item) => item.id === selectedProduct.id)) {
         // Create a new item to add to cart
         addToCart({
           ...selectedProduct,
-          // Ensure the Product object has the expected structure for addToCart
           id: selectedProduct.id,
           title: selectedProduct.title,
           images: selectedProduct.images,
           price: selectedProduct.price,
+          sku,
+          color,
+          size,
         });
       }
-
       // Always update the quantity whether it's a new item or existing one
       updateCart(selectedProduct.id, quantity);
-
       openModalCart();
       closeQuickView();
     }

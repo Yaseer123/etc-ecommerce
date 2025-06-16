@@ -73,7 +73,7 @@ const ModalCart = () => {
                             </button>
                           </div>
                           <div className="mb-2 text-xs text-gray-500">
-                            SKU: {item.id}
+                            SKU: {item.sku}
                           </div>
                           <div className="mt-auto flex items-center justify-between">
                             <div className="flex items-center gap-2">

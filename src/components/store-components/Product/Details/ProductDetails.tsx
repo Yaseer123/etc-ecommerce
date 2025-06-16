@@ -44,12 +44,49 @@ type ProductVariant = {
   images: string[];
 };
 
+// Utility to get category prefix (with mapping and fallback)
+export function getCategoryPrefix(categoryName?: string) {
+  if (!categoryName) return "XX";
+  const mapping: Record<string, string> = {
+    "Home Electrics": "HE",
+    // Add more mappings as needed
+  };
+  if (categoryName in mapping) return mapping[categoryName];
+  // Fallback: use first letter of each word, up to 3 letters
+  return categoryName
+    .split(" ")
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("")
+    .slice(0, 3);
+}
+
+// Utility to generate SKU
+export function generateSKU({
+  categoryName,
+  productId,
+  color,
+  size,
+}: {
+  categoryName?: string;
+  productId: string;
+  color?: string;
+  size?: string;
+}) {
+  const prefix = getCategoryPrefix(categoryName);
+  // Use last 6 chars of productId for brevity
+  const idPart = productId.slice(-6).toUpperCase();
+  let sku = `${prefix}-${idPart}`;
+  if (color) sku += `-${color.replace(/\s+/g, "").toUpperCase()}`;
+  if (size) sku += `-${size.replace(/\s+/g, "").toUpperCase()}`;
+  return sku;
+}
+
 export default function ProductDetails({
   productMain,
 }: {
   productMain: ProductWithCategory;
 }) {
-  console.log("Product stock:", productMain.stock);
+  console.log("Product :", productMain);
   SwiperCore.use([Navigation, Thumbs]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef: any = useRef();
@@ -148,7 +185,6 @@ export default function ProductDetails({
   };
 
   const handleIncreaseQuantity = () => {
-    // updateCart(productMain.id, productQuantity + 1);
     setProductQuantity(productQuantity + 1);
   };
 
@@ -159,12 +195,57 @@ export default function ProductDetails({
     }
   };
 
+  // Fetch category hierarchy for primary category name
+  const { data: categoryHierarchy } = api.category.getHierarchy.useQuery(
+    productMain.category?.id
+      ? { id: productMain.category.id }
+      : productMain.categoryId
+        ? { id: productMain.categoryId }
+        : { id: "" },
+    { enabled: !!(productMain.category?.id || productMain.categoryId) },
+  );
+
   const handleAddToCart = () => {
-    if (!cartArray.find((item) => item.id === productMain.id)) {
-      addToCart({ ...productMain });
-      updateCart(productMain.id, productQuantity);
+    // Determine if a variant is selected
+    const isVariantSelected = !!(selectedColor || selectedSize);
+    // Build cart item
+    const primaryCategoryName = categoryHierarchy?.[0]?.name ?? "XX";
+    const cartItem = {
+      id: isVariantSelected
+        ? `${productMain.id}-${selectedColor ?? ""}-${selectedSize ?? ""}`
+        : productMain.id,
+      name: productMain.title,
+      price:
+        typeof activeVariant?.price === "number"
+          ? activeVariant.price
+          : (productMain.discountedPrice ?? productMain.price),
+      discountedPrice:
+        typeof activeVariant?.discountedPrice === "number"
+          ? activeVariant.discountedPrice
+          : typeof productMain.discountedPrice === "number"
+            ? productMain.discountedPrice
+            : undefined,
+      quantity: productQuantity,
+      coverImage:
+        activeVariant?.images?.[0] ??
+        productMain.images?.[0] ??
+        "/images/product/1000x1000.png",
+      sku: generateSKU({
+        categoryName: primaryCategoryName,
+        productId: productMain.id,
+        color: selectedColor,
+        size: selectedSize,
+      }),
+      color: selectedColor,
+      size: selectedSize,
+      productId: productMain.id,
+    };
+    // Add to cart (allow multiple variants)
+    if (!cartArray.find((item) => item.id === cartItem.id)) {
+      addToCart(cartItem);
+      updateCart(cartItem.id, productQuantity);
     } else {
-      updateCart(productMain.id, productQuantity);
+      updateCart(cartItem.id, productQuantity);
     }
     openModalCart();
   };
@@ -252,12 +333,47 @@ export default function ProductDetails({
   const router = useRouter();
 
   const handleBuyNow = () => {
-    if (!cartArray.find((item) => item.id === productMain.id)) {
-      addToCart({ ...productMain });
-      updateCart(productMain.id, productQuantity);
-    } else {
-      updateCart(productMain.id, productQuantity);
+    // Determine if a variant is selected
+    const isVariantSelected = !!(selectedColor ?? selectedSize);
+    // Build buy-now product object
+    const buyNowProduct = {
+      id: isVariantSelected
+        ? `${productMain.id}-${selectedColor ?? ""}-${selectedSize ?? ""}`
+        : productMain.id,
+      name: productMain.title,
+      price:
+        typeof activeVariant?.price === "number"
+          ? activeVariant.price
+          : (productMain.discountedPrice ?? productMain.price),
+      discountedPrice:
+        typeof activeVariant?.discountedPrice === "number"
+          ? activeVariant.discountedPrice
+          : typeof productMain.discountedPrice === "number"
+            ? productMain.discountedPrice
+            : undefined,
+      quantity: productQuantity,
+      coverImage:
+        activeVariant?.images?.[0] ??
+        productMain.images?.[0] ??
+        "/images/product/1000x1000.png",
+      sku: generateSKU({
+        categoryName: categoryHierarchy?.[0]?.name ?? "XX",
+        productId: productMain.id,
+        color: selectedColor,
+        size: selectedSize,
+      }),
+      color: selectedColor,
+      size: selectedSize,
+      productId: productMain.id,
+    };
+    // Store in sessionStorage for checkout page
+    if (typeof window !== "undefined") {
+      window.sessionStorage.setItem(
+        "buyNowProduct",
+        JSON.stringify(buyNowProduct),
+      );
     }
+    // Redirect to checkout
     router.push("/checkout");
   };
 
@@ -358,6 +474,14 @@ export default function ProductDetails({
       ? activeVariant.stock
       : productMain.stock;
   console.log(productMain.defaultColor);
+
+  // Generate SKU for display
+  const displaySKU = generateSKU({
+    categoryName: categoryHierarchy?.[0]?.name ?? "XX",
+    productId: productMain.id,
+    color: selectedColor,
+    size: selectedSize,
+  });
 
   return (
     <>
@@ -662,7 +786,7 @@ export default function ProductDetails({
 
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">SKU:</div>
-                    <div className="text-secondary">53453412</div>
+                    <div className="text-secondary">{displaySKU}</div>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">Categories:</div>
