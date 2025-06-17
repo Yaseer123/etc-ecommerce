@@ -103,6 +103,7 @@ model Product {
     deletedAt             DateTime? // Soft delete field
     variants              Json?       // <-- Add this line for color/size/image variations
     sku                   String?   @unique // Add this line for SKU
+    allSkus               String[]  // Add this line to store all SKUs (main + variants)
 
     reviews   Review[]
     orders    OrderItem[]

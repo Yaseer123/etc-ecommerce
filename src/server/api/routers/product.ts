@@ -405,10 +405,7 @@ export const productRouter = createTRPCRouter({
               },
             },
             {
-              // Search for variant SKU in the variants JSON array
-              variants: {
-                array_contains: [{ sku: { contains: query } }],
-              },
+              allSkus: { has: query },
             },
           ],
         },
@@ -528,9 +525,13 @@ export const productRouter = createTRPCRouter({
       color: input.defaultColor ? input.defaultColor : "UNNAMED",
       size: input.defaultSize,
     });
+    const allSkus = [
+      realSKU,
+      ...updatedVariants.map((v) => v.sku).filter(Boolean),
+    ];
     const product = await ctx.db.product.update({
       where: { id: createdProduct.id },
-      data: { sku: realSKU, variants: updatedVariants },
+      data: { sku: realSKU, variants: updatedVariants, allSkus },
       include: { category: true },
     });
 
@@ -636,6 +637,10 @@ export const productRouter = createTRPCRouter({
       });
 
       // Build the update data object field-by-field to avoid linter errors
+      const allSkus = [
+        newSKU,
+        ...updatedVariants.map((v) => v.sku).filter(Boolean),
+      ];
       const product = await ctx.db.product.update({
         where: { id },
         data: {
@@ -659,6 +664,7 @@ export const productRouter = createTRPCRouter({
           ...(stockStatus ? { stockStatus } : {}),
           variants: updatedVariants ?? undefined, // Update variants with SKUs
           sku: newSKU ? newSKU : undefined, // Always set the correct SKU, ensure type safety
+          allSkus,
         },
       });
       return product;
