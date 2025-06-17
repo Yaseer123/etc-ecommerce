@@ -5,7 +5,7 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
-import type { ProductType } from "@/types/ProductType";
+import type { ProductType, ProductWithCategory } from "@/types/ProductType";
 import { Eye, Heart, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -13,8 +13,17 @@ import Link from "next/link";
 import { useEffect } from "react";
 
 interface ProductProps {
-  data: ProductType;
+  data: ProductType | ProductWithCategory;
   style?: string;
+}
+
+// Helper for stockStatus
+const validStockStatuses = ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"] as const;
+type StockStatus = (typeof validStockStatuses)[number];
+function getValidStockStatus(status: unknown): StockStatus {
+  return validStockStatuses.includes(status as StockStatus)
+    ? (status as StockStatus)
+    : "IN_STOCK";
 }
 
 export default function Product({ data }: ProductProps) {
@@ -48,7 +57,23 @@ export default function Product({ data }: ProductProps) {
             ...old,
             {
               id: productId,
-              product: data,
+              product: {
+                ...data,
+                discountedPrice: data.discountedPrice ?? null,
+                stock: typeof data.stock === "number" ? data.stock : 0,
+                stockStatus: ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].includes(
+                  data.stockStatus ?? "",
+                )
+                  ? data.stockStatus
+                  : "IN_STOCK",
+                defaultColor: data.defaultColor ?? null,
+                defaultColorHex: data.defaultColorHex ?? null,
+                defaultSize: data.defaultSize ?? null,
+                estimatedDeliveryTime: data.estimatedDeliveryTime ?? null,
+                categoryId: data.categoryId ?? null,
+                createdAt: data.createdAt ?? new Date(),
+                updatedAt: data.updatedAt ?? new Date(),
+              },
               userId: session?.user.id ?? "temp-user",
               createdAt: new Date(),
               productId: productId,
@@ -110,12 +135,23 @@ export default function Product({ data }: ProductProps) {
     const cartItem = {
       id: data.id,
       productId: data.id,
-      name: data.title,
+      name:
+        "title" in data && data.title
+          ? data.title
+          : "name" in data && data.name
+            ? data.name
+            : "",
       price: data.price,
-      discountedPrice: data.discountedPrice ?? undefined,
+      discountedPrice:
+        "discountedPrice" in data
+          ? (data.discountedPrice ?? undefined)
+          : undefined,
       quantity: 1,
-      coverImage: data.images?.[0] ?? "",
-      sku: data.sku ?? "",
+      coverImage:
+        "images" in data && Array.isArray(data.images) && data.images[0]
+          ? data.images[0]
+          : "",
+      sku: "sku" in data ? (data.sku ?? "") : "",
       color: undefined,
       size: undefined,
     };
@@ -167,21 +203,69 @@ export default function Product({ data }: ProductProps) {
   }, [session?.user]);
 
   const handleQuickViewOpen = () => {
-    openQuickView(data);
+    openQuickView({
+      ...data,
+      discountedPrice: data.discountedPrice ?? null,
+      stock: typeof data.stock === "number" ? data.stock : 0,
+      stockStatus: ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].includes(
+        data.stockStatus ?? "",
+      )
+        ? data.stockStatus
+        : "IN_STOCK",
+      defaultColor: data.defaultColor ?? null,
+      defaultColorHex: data.defaultColorHex ?? null,
+      defaultSize: data.defaultSize ?? null,
+      estimatedDeliveryTime: data.estimatedDeliveryTime ?? null,
+      categoryId: data.categoryId ?? null,
+      createdAt: data.createdAt ?? new Date(),
+      updatedAt: data.updatedAt ?? new Date(),
+    });
   };
 
   // Calculate discount percentage if discounted price is available
-  const discountPercentage = data.discountedPrice
-    ? Math.round(((data.price - data.discountedPrice) / data.price) * 100)
-    : 0;
+  const discountPercentage =
+    data.discountedPrice != null
+      ? Math.round(((data.price - data.discountedPrice) / data.price) * 100)
+      : 0;
+
+  // Calculate amount saved if discounted price is available
+  const amountSaved =
+    data.discountedPrice != null ? data.price - data.discountedPrice : 0;
 
   return (
     <div className="product-item style-marketplace h-full rounded-[.25rem] border border-[#ddd] bg-white p-4 pt-5 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
       <div className="bg-img relative w-full">
-        {/* Sale badge */}
-        {data.discountedPrice && (
-          <div className="absolute -top-4 left-2 z-10 rounded-full bg-red-500 px-2 py-1 text-xs font-bold text-white">
-            -{discountPercentage}%
+        {/* Save badge with amount and percentage */}
+        {data.discountedPrice != null && (
+          <div
+            className="marks"
+            style={{
+              fontFamily: '"Trebuchet MS", sans-serif',
+              lineHeight: 1.15,
+              fontSize: 14,
+              position: "absolute",
+              top: -18,
+              left: 0,
+              zIndex: 10,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-start",
+            }}
+          >
+            <span
+              className="mark"
+              style={{
+                background: "#F97316",
+                color: "#fff",
+                borderRadius: 4,
+                padding: "0px 8px",
+                fontWeight: 700,
+                marginBottom: 2,
+                display: "inline-block",
+              }}
+            >
+              Save: {amountSaved.toLocaleString()}৳ (-{discountPercentage}%)
+            </span>
           </div>
         )}
 
@@ -191,8 +275,11 @@ export default function Product({ data }: ProductProps) {
               className="aspect-square w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
               width={5000}
               height={5000}
-              src={data.images?.[0] ?? "/images/products/1000x1000.png"}
-              alt={data.title}
+              src={
+                ("images" in data && data.images?.[0]) ||
+                "/images/products/1000x1000.png"
+              }
+              alt={"title" in data ? data.title : data.name}
             />
           </div>
         </Link>
@@ -254,14 +341,14 @@ export default function Product({ data }: ProductProps) {
           className="flex-grow"
         >
           <h3 className="text-title line-clamp-2 h-12 cursor-pointer text-sm font-medium hover:underline">
-            {data.title}
+            {"title" in data ? data.title : data.name}
           </h3>
         </Link>
 
         <div className="mt-auto flex items-center">
-          {data.stockStatus === "OUT_OF_STOCK" ? (
+          {"stockStatus" in data && data.stockStatus === "OUT_OF_STOCK" ? (
             <span className="font-bold text-red-500">Out Of Stock</span>
-          ) : data.discountedPrice ? (
+          ) : data.discountedPrice != null ? (
             <div className="flex items-center gap-2">
               <span className="text-title discounted-price font-bold">
                 ৳{data.discountedPrice.toFixed(2)}
