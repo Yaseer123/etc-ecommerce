@@ -43,7 +43,7 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { ColorPicker, useColor } from "react-color-palette";
+import { ColorPicker, useColor, type IColor } from "react-color-palette";
 import "react-color-palette/css";
 import { IoMdClose } from "react-icons/io";
 import { IoCloudUploadOutline } from "react-icons/io5";
@@ -103,6 +103,17 @@ function SortableSpecificationItem({
       </Button>
     </div>
   );
+}
+
+// Helper to convert hex to IColor
+function hexToIColor(hex: string): IColor {
+  return {
+    hex,
+    rgb: { r: 255, g: 255, b: 255, a: 1 },
+    hsv: { h: 0, s: 0, v: 1, a: 1 },
+    oldHue: 0,
+    a: 1,
+  };
 }
 
 export default function AddProductForm() {
@@ -385,7 +396,7 @@ export default function AddProductForm() {
       setAttributeValues({});
       setSpecifications([]);
       setDefaultColorName("");
-      setDefaultColorHex("#ffffff");
+      setDefaultColorHex(hexToIColor("#ffffff"));
       // Navigate after clearing
       router.push("/admin/product");
     },
@@ -552,8 +563,7 @@ export default function AddProductForm() {
       discountedPrice,
       stock,
       brand,
-      defaultColorName,
-      defaultColorHex,
+      defaultColorHex: defaultColorHex.hex,
       slug,
       categoryId: categoryId,
       description: content,
@@ -661,7 +671,7 @@ export default function AddProductForm() {
                 />
                 <ColorPicker
                   color={{
-                    hex: variant.colorHex || "#ffffff",
+                    hex: variant.colorHex ?? "#ffffff",
                     rgb: { r: 255, g: 255, b: 255, a: 1 },
                     hsv: { h: 0, s: 0, v: 100, a: 1 },
                   }}
@@ -675,7 +685,7 @@ export default function AddProductForm() {
                     display: "inline-block",
                     width: 24,
                     height: 24,
-                    backgroundColor: variant.colorHex || "#ffffff",
+                    backgroundColor: variant.colorHex ?? "#ffffff",
                     borderRadius: "50%",
                     border: "1px solid #ccc",
                   }}

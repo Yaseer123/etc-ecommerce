@@ -63,7 +63,7 @@ export async function POST(req: Request) {
       html,
     });
     return NextResponse.json({ success: true });
-  } catch (_err) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to auto-register user." },
       { status: 500 },

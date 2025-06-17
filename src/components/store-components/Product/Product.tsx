@@ -5,15 +5,15 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
+import type { ProductType } from "@/types/ProductType";
 import { Eye, Heart, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
-import { type Product } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
 
 interface ProductProps {
-  data: Product;
+  data: ProductType;
   style?: string;
 }
 
@@ -106,7 +106,20 @@ export default function Product({ data }: ProductProps) {
   };
 
   const handleAddToCart = () => {
-    addToCart(data);
+    // Map Product to CartItem
+    const cartItem = {
+      id: data.id,
+      productId: data.id,
+      name: data.title,
+      price: data.price,
+      discountedPrice: data.discountedPrice ?? undefined,
+      quantity: 1,
+      coverImage: data.images?.[0] ?? "",
+      sku: data.sku ?? "",
+      color: undefined,
+      size: undefined,
+    };
+    addToCart(cartItem);
     openModalCart();
   };
 

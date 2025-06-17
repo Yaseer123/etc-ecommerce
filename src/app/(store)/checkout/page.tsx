@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type OrderWithRelations = Order & {
   address?: {
@@ -81,7 +81,10 @@ const Checkout = () => {
   }, []);
 
   // Use buyNowProduct if present, else cartArray
-  const checkoutItems = buyNowProduct ? [buyNowProduct] : cartArray;
+  const checkoutItems = useMemo(
+    () => (buyNowProduct ? [buyNowProduct] : cartArray),
+    [buyNowProduct, cartArray],
+  );
 
   useEffect(() => {
     const sum = checkoutItems.reduce(
@@ -546,7 +549,7 @@ const Checkout = () => {
                               {product.name}
                             </div>
                             {/* Variant details */}
-                            {(product.sku || product.color || product.size) && (
+                            {(product.sku ?? product.color ?? product.size) && (
                               <div className="mt-1 text-xs text-gray-500">
                                 {product.sku && <span>SKU: {product.sku}</span>}
                                 {(product.colorName ?? product.color) && (

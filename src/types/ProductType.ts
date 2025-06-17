@@ -14,6 +14,12 @@ export interface Variant {
 
 export interface ProductType {
   id: string;
+  title: string;
+  featured: boolean;
+  shortDescription: string;
+  published: boolean;
+  discountedPrice?: number;
+  stockStatus?: string;
   category: string;
   name: string;
   new: boolean;
@@ -34,6 +40,7 @@ export interface ProductType {
   slug: string;
   attributes: Record<string, string>;
   variants?: Variant[];
+  sku?: string;
 }
 
 export type ProductWithCategory = Product & {

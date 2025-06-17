@@ -7,6 +7,7 @@ import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewCo
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { useWishlistStore } from "@/context/store-context/WishlistContext";
 import { api } from "@/trpc/react";
+import type { Variant } from "@/types/ProductType";
 import {
   ArrowClockwise,
   Heart,
@@ -67,30 +68,58 @@ const ModalQuickView = () => {
     }
   };
 
+  const getVariantField = (field: keyof Variant): string | undefined => {
+    if (!selectedProduct) return undefined;
+    let variants: unknown = selectedProduct.variants;
+    if (!variants) return undefined;
+    if (typeof variants === "string") {
+      try {
+        variants = JSON.parse(variants);
+      } catch {
+        return undefined;
+      }
+    }
+    if (
+      Array.isArray(variants) &&
+      variants.length > 0 &&
+      typeof variants[0] === "object" &&
+      variants[0] !== null
+    ) {
+      const variant = variants[0] as Variant;
+      const value = variant[field];
+      return typeof value === "string" ? value : undefined;
+    }
+    return undefined;
+  };
+
   const handleAddToCart = () => {
     if (selectedProduct) {
       // Get primary category name for SKU
       const primaryCategoryName = categoryHierarchy?.[0]?.name ?? "XX";
-      // Use color/size if available
-      const color = (selectedProduct as any).color;
-      const size = (selectedProduct as any).size;
-      const sku = generateSKU({
-        categoryName: primaryCategoryName,
-        productId: selectedProduct.id,
-        color,
-        size,
-      });
+      // Use color/size/sku from variant if available
+      const color = getVariantField("colorName");
+      const size = getVariantField("size");
+      const sku =
+        getVariantField("sku") ??
+        generateSKU({
+          categoryName: primaryCategoryName,
+          productId: selectedProduct.id,
+          color,
+          size,
+        });
       if (!cartArray.find((item) => item.id === selectedProduct.id)) {
         // Create a new item to add to cart
         addToCart({
-          ...selectedProduct,
           id: selectedProduct.id,
-          title: selectedProduct.title,
-          images: selectedProduct.images,
+          name: selectedProduct.title,
           price: selectedProduct.price,
+          discountedPrice: selectedProduct.discountedPrice ?? undefined,
+          quantity,
+          coverImage: selectedProduct.images[0] ?? "",
           sku,
           color,
           size,
+          productId: selectedProduct.id,
         });
       }
       // Always update the quantity whether it's a new item or existing one
@@ -115,13 +144,21 @@ const ModalQuickView = () => {
 
   const handleBuyNow = () => {
     if (selectedProduct) {
+      const color = getVariantField("colorName");
+      const size = getVariantField("size");
+      const sku = getVariantField("sku") ?? "";
       if (!cartArray.find((item) => item.id === selectedProduct.id)) {
         addToCart({
-          ...selectedProduct,
           id: selectedProduct.id,
-          title: selectedProduct.title,
-          images: selectedProduct.images,
+          name: selectedProduct.title,
           price: selectedProduct.price,
+          discountedPrice: selectedProduct.discountedPrice ?? undefined,
+          quantity,
+          coverImage: selectedProduct.images[0] ?? "",
+          sku,
+          color,
+          size,
+          productId: selectedProduct.id,
         });
       }
       updateCart(selectedProduct.id, quantity);

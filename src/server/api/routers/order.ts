@@ -8,6 +8,18 @@ import { z } from "zod";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Define a type for order items at the top of the file or in a types file
+type OrderItem = {
+  productId: string;
+  quantity: number;
+  price: number;
+  colorName?: string;
+  color?: string;
+  size?: string;
+  sku?: string;
+  product?: { title?: string };
+};
+
 export const orderRouter = createTRPCRouter({
   getOrders: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.order.findMany({
@@ -229,8 +241,13 @@ export const orderRouter = createTRPCRouter({
 
       // Build product details table
       let productRows = "";
-      if (createdOrder && (createdOrder as any).items?.length > 0) {
-        for (const item of (createdOrder as any).items) {
+      if (
+        createdOrder &&
+        Array.isArray(createdOrder as unknown as { items: OrderItem[] }) &&
+        (createdOrder as unknown as { items: OrderItem[] }).items.length > 0
+      ) {
+        for (const item of (createdOrder as unknown as { items: OrderItem[] })
+          .items) {
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -544,8 +561,13 @@ export const orderRouter = createTRPCRouter({
 
       // Build product details table
       let productRows = "";
-      if (fullOrder && (fullOrder as any).items?.length > 0) {
-        for (const item of (fullOrder as any).items) {
+      if (
+        fullOrder &&
+        Array.isArray(fullOrder as unknown as { items: OrderItem[] }) &&
+        (fullOrder as unknown as { items: OrderItem[] }).items.length > 0
+      ) {
+        for (const item of (fullOrder as unknown as { items: OrderItem[] })
+          .items) {
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -554,7 +576,6 @@ export const orderRouter = createTRPCRouter({
             productTitle = prod?.title ?? "Unknown Product";
           }
           // Variant details (show if available)
-          console.log(item);
           const color = item.colorName
             ? `<br/><span style='color:#555;'>Color: ${item.colorName}</span>`
             : item.color
@@ -566,7 +587,6 @@ export const orderRouter = createTRPCRouter({
           const sku = item.sku
             ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
             : "";
-          console.log(color, size, sku);
           productRows += `
             <tr>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
