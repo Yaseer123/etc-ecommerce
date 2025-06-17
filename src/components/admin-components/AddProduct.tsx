@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import { generateSKU } from "@/lib/utils";
 import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
 import { productSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
@@ -570,7 +571,7 @@ export default function AddProductForm() {
       estimatedDeliveryTime: estimatedDeliveryTime,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v) => ({
+          ? variants.map((v, idx) => ({
               colorName: v.colorName,
               colorHex: v.colorHex,
               images: v.images ?? [],
@@ -586,6 +587,12 @@ export default function AddProductForm() {
                 v.stock !== undefined && v.stock !== null
                   ? Number(v.stock)
                   : undefined,
+              sku: generateSKU({
+                categoryName: "XX", // TODO: Replace with actual category name variable if available
+                productId: "TEMPID", // Will be replaced in backend if needed
+                color: v.colorName ?? "UNNAMED",
+                size: v.size,
+              }),
             }))
           : undefined,
     });

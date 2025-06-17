@@ -1,3 +1,4 @@
+import { generateSKU } from "@/lib/utils";
 import { type CategoryAttribute } from "@/schemas/categorySchema";
 import { productSchema, updateProductSchema } from "@/schemas/productSchema";
 import {
@@ -11,6 +12,45 @@ import type { Prisma } from "@prisma/client";
 import { StockStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+
+// Helper to ensure variants are an array of objects
+function normalizeVariants(variants: unknown): Record<string, any>[] {
+  if (Array.isArray(variants)) {
+    return variants.filter(
+      (v) => v && typeof v === "object" && !Array.isArray(v),
+    );
+  }
+  if (typeof variants === "string") {
+    try {
+      const parsed = JSON.parse(variants);
+      if (Array.isArray(parsed)) {
+        return parsed.filter(
+          (v) => v && typeof v === "object" && !Array.isArray(v),
+        );
+      }
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+// Helper to get the root/primary category name for a given categoryId
+async function getRootCategoryName(
+  ctx: any,
+  categoryId: string,
+): Promise<string> {
+  let currentId = categoryId;
+  let lastName = "XX";
+  while (currentId) {
+    const cat = await ctx.db.category.findUnique({ where: { id: currentId } });
+    if (!cat) break;
+    lastName = cat.name;
+    if (!cat.parentId) break;
+    currentId = cat.parentId;
+  }
+  return lastName;
+}
 
 export const productRouter = createTRPCRouter({
   getProductByIdAdmin: adminProcedure
@@ -358,6 +398,18 @@ export const productRouter = createTRPCRouter({
                 mode: "insensitive" as Prisma.QueryMode,
               },
             },
+            {
+              sku: {
+                contains: query,
+                mode: "insensitive" as Prisma.QueryMode,
+              },
+            },
+            {
+              // Search for variant SKU in the variants JSON array
+              variants: {
+                array_contains: [{ sku: { contains: query } }],
+              },
+            },
           ],
         },
         include: { category: true },
@@ -420,8 +472,17 @@ export const productRouter = createTRPCRouter({
     }
     // --- End stock status auto logic ---
 
-    // Create the product with validated attributes
-    const product = await ctx.db.product.create({
+    // Prepare categoryName for SKU
+    let categoryName = "XX";
+    if (input.categoryId) {
+      const cat = await ctx.db.category.findUnique({
+        where: { id: input.categoryId },
+      });
+      if (cat?.name) categoryName = cat.name;
+    }
+
+    // Create product without SKU first to get the ID
+    const createdProduct = await ctx.db.product.create({
       data: {
         title: input.title,
         shortDescription: input.shortDescription,
@@ -443,6 +504,34 @@ export const productRouter = createTRPCRouter({
         stockStatus, // <-- always set
         variants: input.variants ?? undefined, // Store variants if present
       },
+    });
+
+    // Update variants with SKUs
+    let updatedVariants = normalizeVariants(createdProduct.variants).map(
+      (v) => ({
+        ...v,
+        sku: generateSKU({
+          categoryName,
+          productId: createdProduct.id,
+          color:
+            typeof v === "object" && "colorName" in v && v.colorName
+              ? v.colorName
+              : "UNNAMED",
+          size: typeof v === "object" && "size" in v ? v.size : undefined,
+        }),
+      }),
+    );
+    // Now update with the real SKU (using the new product ID) and updated variants
+    const realSKU = generateSKU({
+      categoryName,
+      productId: createdProduct.id,
+      color: input.defaultColor ? input.defaultColor : "UNNAMED",
+      size: input.defaultSize,
+    });
+    const product = await ctx.db.product.update({
+      where: { id: createdProduct.id },
+      data: { sku: realSKU, variants: updatedVariants },
+      include: { category: true },
     });
 
     return product;
@@ -506,19 +595,72 @@ export const productRouter = createTRPCRouter({
       }
       // --- End stock status auto logic ---
 
+      // Fetch product to get current values if needed
+      const existingProduct = await ctx.db.product.findUnique({
+        where: { id },
+        include: { category: true },
+      });
+
+      // Always fetch the root/primary category from the DB for SKU
+      const rootCategoryName = await getRootCategoryName(
+        ctx,
+        categoryId ?? existingProduct?.categoryId ?? "",
+      );
+      let newCategoryName = rootCategoryName;
+
+      // Always regenerate SKU for main product
+      const newSKU = generateSKU({
+        categoryName: newCategoryName,
+        productId: id,
+        color: input.defaultColor ?? existingProduct?.defaultColor ?? "UNNAMED",
+        size: input.defaultSize ?? existingProduct?.defaultSize,
+      });
+
+      // Debug log for SKU update
+      console.log("Updating SKU to:", newSKU, "for product", id);
+
+      // Always regenerate SKUs for all variants, ignore incoming variant SKUs
+      let updatedVariants = normalizeVariants(input.variants).map((v) => {
+        return {
+          ...v,
+          sku: generateSKU({
+            categoryName: newCategoryName,
+            productId: id,
+            color:
+              typeof v === "object" && "colorName" in v && v.colorName
+                ? v.colorName
+                : "UNNAMED",
+            size: typeof v === "object" && "size" in v ? v.size : undefined,
+          }),
+        };
+      });
+
+      // Build the update data object field-by-field to avoid linter errors
       const product = await ctx.db.product.update({
         where: { id },
         data: {
-          ...updateData,
+          // Only set allowed fields
+          title: updateData.title,
+          slug: updateData.slug,
+          shortDescription: updateData.shortDescription,
+          description: updateData.description,
+          price: updateData.price,
+          discountedPrice: updateData.discountedPrice,
+          stock: updateData.stock,
+          brand: updateData.brand,
           defaultColor: input.defaultColor,
           defaultSize: input.defaultSize,
-          categoryAttributes: categoryAttributes ?? {}, // Update category attributes separately
+          images: updateData.images,
+          descriptionImageId: updateData.descriptionImageId,
+          attributes: updateData.attributes,
+          estimatedDeliveryTime: updateData.estimatedDeliveryTime,
+          categoryAttributes: categoryAttributes ?? {},
           category: categoryId ? { connect: { id: categoryId } } : undefined,
           ...(stockStatus ? { stockStatus } : {}),
-          variants: input.variants ?? undefined, // Update variants if present
+          variants: updatedVariants ?? undefined, // Update variants with SKUs
+          sku: newSKU ? newSKU : undefined, // Always set the correct SKU, ensure type safety
         },
       });
-
       return product;
     }),
 

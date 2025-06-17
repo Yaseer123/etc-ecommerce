@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
+import { generateSKU } from "@/lib/utils";
 import type { CategoryAttribute } from "@/schemas/categorySchema";
 import { updateProductSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
@@ -646,7 +647,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       defaultSize,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v) => ({
+          ? variants.map((v, idx) => ({
               colorName: v.colorName,
               colorHex: v.colorHex,
               size: v.size,
@@ -663,6 +664,12 @@ export default function EditProductForm({ productId }: { productId: string }) {
                 v.stock !== undefined && v.stock !== null
                   ? Number(v.stock)
                   : undefined,
+              sku: generateSKU({
+                categoryName: "XX", // TODO: Replace with actual category name variable if available
+                productId: productId,
+                color: v.colorName ?? "UNNAMED",
+                size: v.size,
+              }),
             }))
           : undefined,
     });

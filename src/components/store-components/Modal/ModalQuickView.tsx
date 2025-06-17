@@ -6,6 +6,7 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { useWishlistStore } from "@/context/store-context/WishlistContext";
+import { generateSKU } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import type { Variant } from "@/types/ProductType";
 import {
@@ -22,7 +23,6 @@ import type { Product } from "@prisma/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { generateSKU } from "../Product/Details/ProductDetails";
 import Rate from "../Rate";
 
 const ModalQuickView = () => {

@@ -10,6 +10,7 @@ export interface Variant {
   discountedPrice?: number;
   stock?: number;
   imageId?: string;
+  sku?: string;
 }
 
 export type StockStatus = "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER";

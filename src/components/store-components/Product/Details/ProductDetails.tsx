@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
+import { generateSKU } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import type { ProductWithCategory } from "@/types/ProductType";
 import {
@@ -59,27 +60,6 @@ export function getCategoryPrefix(categoryName?: string) {
     .map((w) => w[0]?.toUpperCase() ?? "")
     .join("")
     .slice(0, 3);
-}
-
-// Utility to generate SKU
-export function generateSKU({
-  categoryName,
-  productId,
-  color,
-  size,
-}: {
-  categoryName?: string;
-  productId: string;
-  color?: string;
-  size?: string;
-}) {
-  const prefix = getCategoryPrefix(categoryName);
-  // Use last 6 chars of productId for brevity
-  const idPart = productId.slice(-6).toUpperCase();
-  let sku = `${prefix}-${idPart}`;
-  if (color) sku += `-${color.replace(/\s+/g, "").toUpperCase()}`;
-  if (size) sku += `-${size.replace(/\s+/g, "").toUpperCase()}`;
-  return sku;
 }
 
 export default function ProductDetails({
@@ -500,7 +480,7 @@ export default function ProductDetails({
   const displaySKU = generateSKU({
     categoryName: categoryHierarchy?.[0]?.name ?? "XX",
     productId: productMain.id,
-    color: selectedColorHex,
+    color: selectedColorName ?? "UNNAMED",
     size: selectedSize,
   });
 
