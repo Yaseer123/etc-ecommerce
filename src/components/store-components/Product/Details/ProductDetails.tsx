@@ -775,14 +775,15 @@ export default function ProductDetails({
                 </div>
                 <div className="more-infor mt-6">
                   <div className="flex flex-wrap items-center gap-4">
-                    <div className="flex items-center gap-1">
+                    <Link href={"/faqs"} className="flex items-center gap-1">
                       <ArrowClockwise className="body1" />
                       <div className="text-title">Delivery & Return</div>
-                    </div>
-                    <div className="flex items-center gap-1">
+                    </Link>
+                    <Link href="#ask-question-form"
+                    className="flex items-center gap-1">
                       <Question className="body1" />
                       <div className="text-title">Ask A Question</div>
-                    </div>
+                    </Link>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <Timer className="body1" />

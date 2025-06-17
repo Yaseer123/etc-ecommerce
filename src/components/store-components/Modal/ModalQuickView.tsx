@@ -24,6 +24,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Rate from "../Rate";
+import Link from "next/link";
 
 const ModalQuickView = () => {
   const { selectedProduct, closeQuickView } = useModalQuickViewStore() as {
@@ -313,10 +314,10 @@ const ModalQuickView = () => {
                   </div>
                   <div className="more-infor mt-6">
                     <div className="flex flex-wrap items-center gap-4">
-                      <div className="flex items-center gap-1">
+                      <Link href={"/faqs"} className="flex items-center gap-1">
                         <ArrowClockwise className="body1" />
                         <div className="text-title">Delivery & Return</div>
-                      </div>
+                      </Link>
                       <div className="flex items-center gap-1">
                         <Question className="body1" />
                         <div className="text-title">Ask A Question</div>
