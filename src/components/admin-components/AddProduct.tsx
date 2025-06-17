@@ -111,8 +111,6 @@ function hexToIColor(hex: string): IColor {
     hex,
     rgb: { r: 255, g: 255, b: 255, a: 1 },
     hsv: { h: 0, s: 0, v: 1, a: 1 },
-    oldHue: 0,
-    a: 1,
   };
 }
 

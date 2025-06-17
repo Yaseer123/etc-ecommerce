@@ -67,7 +67,7 @@ const Footer = () => {
                       <div className="flex flex-col">
                         <p className="text-xs text-[#838383]">Store Locator</p>
                         <h5 className="text-lg font-bold text-[#081621]">
-                          Find Our Stores
+                          Find Our Store
                         </h5>
                       </div>
                     </a>

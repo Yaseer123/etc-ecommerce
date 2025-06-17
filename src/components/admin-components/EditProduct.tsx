@@ -15,7 +15,7 @@ import { useProductImageStore } from "@/context/admin-context/ProductImageProvid
 import type { CategoryAttribute } from "@/schemas/categorySchema";
 import { updateProductSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
-import type { Variant } from "@/types/ProductType";
+import type { Variant, Variant as VariantType } from "@/types/ProductType";
 import {
   closestCenter,
   DndContext,
@@ -1124,9 +1124,9 @@ function VariantRow({
   handleVariantChange,
   handleVariantImageGallery,
   handleRemoveVariant,
-  handleVariantImagesUpdate,
+  handleVariantImagesUpdate: _handleVariantImagesUpdate,
 }: {
-  variant: import("@/types/ProductType").Variant;
+  variant: VariantType;
   idx: number;
   handleVariantChange: (
     idx: number,

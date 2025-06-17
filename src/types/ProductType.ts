@@ -12,14 +12,16 @@ export interface Variant {
   imageId?: string;
 }
 
+export type StockStatus = "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER";
+
 export interface ProductType {
   id: string;
   title: string;
   featured: boolean;
   shortDescription: string;
   published: boolean;
-  discountedPrice?: number;
-  stockStatus?: string;
+  discountedPrice: number | null;
+  stockStatus?: StockStatus;
   category: string;
   name: string;
   new: boolean;
@@ -29,6 +31,7 @@ export interface ProductType {
   originPrice: number;
   brand: string;
   defaultColor?: string;
+  defaultColorHex?: string | null;
   defaultSize?: string;
   sold: number;
   quantity: number;
@@ -39,8 +42,18 @@ export interface ProductType {
   action: string;
   slug: string;
   attributes: Record<string, string>;
-  variants?: Variant[];
+  variants?: Variant[] | string | null;
   sku?: string;
+  imageId?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
+  stock?: number;
+  estimatedDeliveryTime?: number;
+  categoryId?: string;
+  deletedAt?: Date | null;
+  descriptionImageId?: string;
+  categoryAttributes?: Record<string, unknown>;
+  position?: number;
 }
 
 export type ProductWithCategory = Product & {
