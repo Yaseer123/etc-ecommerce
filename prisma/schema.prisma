@@ -239,6 +239,7 @@ model Order {
     couponUsed Boolean     @default(false)
     createdAt  DateTime    @default(now())
     updatedAt  DateTime    @updatedAt
+    notes      String?     // Optional additional notes from customer
 
     // Relationships
     user      User?       @relation(fields: [userId], references: [id])

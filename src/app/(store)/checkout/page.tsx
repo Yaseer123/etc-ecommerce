@@ -63,7 +63,9 @@ const Checkout = () => {
   const discount = searchParams?.get("discount") ?? "0";
   const ship = searchParams?.get("ship") ?? "0";
 
-  const { cartArray } = useCartStore() as { cartArray: CartItem[] };
+  const { cartArray, note, setNote } = useCartStore() as {
+    cartArray: CartItem[];
+  };
   const [totalCart, setTotalCart] = useState<number>(0);
   const [orderSuccess, setOrderSuccess] = useState<OrderSuccessType>(null);
   const [orderError, setOrderError] = useState("");
@@ -304,6 +306,20 @@ const Checkout = () => {
             </div>
           </div>
         </form>
+        {/* Additional Notes Field */}
+        <div className="mt-4">
+          <label htmlFor="additional-notes" className="mb-1 block font-medium">
+            Additional Notes (optional)
+          </label>
+          <textarea
+            id="additional-notes"
+            className="w-full rounded-lg border-[#ddd] px-4 py-2 focus:border-[#ddd]"
+            placeholder="Any special instructions or notes for your order?"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            rows={3}
+          />
+        </div>
       </div>
     </div>
   );
@@ -313,7 +329,7 @@ const Checkout = () => {
       <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
         Choose payment Option:
       </div>
-      <div className="mt-5">
+      <div className="mt-5 bg-white">
         <div
           className={`bg-surface rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]`}
         >
@@ -362,7 +378,7 @@ const Checkout = () => {
 
   if (orderSuccess) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center bg-white">
         <h2 className="mb-4 text-2xl font-bold">Order Completed!</h2>
         <p className="mb-2">Thank you for your order.</p>
         <p className="mb-2">Your Invoice/Order Number:</p>
@@ -449,6 +465,7 @@ const Checkout = () => {
                           sku: item.sku,
                         })),
                         addressId,
+                        notes: note,
                       });
                     } else {
                       placeGuestOrder.mutate({
@@ -460,6 +477,7 @@ const Checkout = () => {
                           sku: item.sku,
                         })),
                         addressId,
+                        notes: note,
                       });
                       // Auto-register guest user after order
                       await fetch("/api/auth/auto-register", {
@@ -529,7 +547,7 @@ const Checkout = () => {
                     checkoutItems.map((product) => (
                       <div
                         key={product.id}
-                        className="mt-5 flex w-full items-center justify-between gap-6 border-b border-[#ddd] pb-5 focus:border-[#ddd]"
+                        className="mt-5 flex w-full items-center justify-between gap-6 border-b border-[#ddd] pb-5 focus:border-[#ddd] bg-white p-3 rounded-sm"
                       >
                         <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
                           <Image

@@ -133,6 +133,7 @@ export const orderRouter = createTRPCRouter({
           }),
         ),
         addressId: z.string().optional(),
+        notes: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -195,6 +196,7 @@ export const orderRouter = createTRPCRouter({
           userId,
           total,
           addressId: input.addressId,
+          notes: input.notes,
           items: {
             create: input.cartItems.map((item) => ({
               productId: item.productId,
@@ -231,6 +233,9 @@ export const orderRouter = createTRPCRouter({
         },
       });
 
+      // Debug log for order and items
+      console.log("Order for email:", JSON.stringify(createdOrder, null, 2));
+
       // Fetch address details if available
       let address = null;
       if (order.addressId) {
@@ -243,11 +248,10 @@ export const orderRouter = createTRPCRouter({
       let productRows = "";
       if (
         createdOrder &&
-        Array.isArray(createdOrder as unknown as { items: OrderItem[] }) &&
-        (createdOrder as unknown as { items: OrderItem[] }).items.length > 0
+        Array.isArray(createdOrder.items) &&
+        createdOrder.items.length > 0
       ) {
-        for (const item of (createdOrder as unknown as { items: OrderItem[] })
-          .items) {
+        for (const item of createdOrder.items) {
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -255,12 +259,9 @@ export const orderRouter = createTRPCRouter({
             });
             productTitle = prod?.title ?? "Unknown Product";
           }
-          // Variant details (show if available)
-          const color = item.colorName
-            ? `<br/><span style='color:#555;'>Color: ${item.colorName}</span>`
-            : item.color
-              ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
-              : "";
+          const color = item.color
+            ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+            : "";
           const size = item.size
             ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
             : "";
@@ -304,22 +305,78 @@ export const orderRouter = createTRPCRouter({
                 <strong>Email:</strong> ${address.email}
              </div>`
         : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
+      const notesBlock = input.notes
+        ? `<div style="margin-bottom: 16px;"><strong>Additional Notes:</strong><br/>${input.notes}</div>`
+        : "";
+
+      // --- Professional Email Wrapper ---
+      const emailHeader = `
+        <div style="background: #fff; text-align: center; padding: 24px 0 8px 0;">
+          <img src="https://rinors.com/images/brand/RINORS.png" alt="Rinors Logo" style="height: 48px;" />
+        </div>
+      `;
+      const contactInfo = `
+        <div style="text-align: center; font-size: 14px; color: #333; margin-bottom: 12px;">
+          <strong>Contact:</strong> rinorscorporation@gmail.com | <strong>Phone:</strong> 01312223452<br/>
+          <span>41/5 east badda Dhaka, Bangladesh</span>
+        </div>
+      `;
+      const socialLinks = `
+        <div style="text-align: center; margin: 12px 0;">
+          <a href="https://www.facebook.com/profile.php?id=61572946813700" style="margin: 0 6px; text-decoration: none;" target="_blank">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/facebook.svg" alt="Facebook" width="24" height="24" style="vertical-align:middle;"/>
+          </a>
+          <a href="https://www.instagram.com/rinors_electronic_store/" style="margin: 0 6px; text-decoration: none;" target="_blank">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" width="24" height="24" style="vertical-align:middle;"/>
+          </a>
+          <a href="https://x.com/Rinors_Corpor" style="margin: 0 6px; text-decoration: none;" target="_blank">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="24" height="24" style="vertical-align:middle;"/>
+          </a>
+          <a href="https://www.tiktok.com/@rinors_ecommerce" style="margin: 0 6px; text-decoration: none;" target="_blank">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="24" height="24" style="vertical-align:middle;"/>
+          </a>
+          <a href="https://www.youtube.com/@rinorsgreenenergy" style="margin: 0 6px; text-decoration: none;" target="_blank">
+            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="24" height="24" style="vertical-align:middle;"/>
+          </a>
+        </div>
+      `;
+      const importantLinks = `
+        <div style="text-align: center; margin-bottom: 16px; font-size: 14px;">
+          <a href="https://rinors.com/contact" style="margin: 0 10px; color: #007b55; text-decoration: none;">Contact Us</a> |
+          <a href="https://rinors.com/my-account" style="margin: 0 10px; color: #007b55; text-decoration: none;">My Account</a> |
+          <a href="https://rinors.com/order-tracking" style="margin: 0 10px; color: #007b55; text-decoration: none;">Order Tracking</a> |
+          <a href="https://rinors.com/faqs" style="margin: 0 10px; color: #007b55; text-decoration: none;">FAQs</a> |
+          <a href="https://rinors.com/privacy-policy" style="margin: 0 10px; color: #007b55; text-decoration: none;">Privacy Policy</a>
+        </div>
+      `;
+      const emailFooter = `
+        <div style="background: #f7f7f7; color: #888; text-align: center; padding: 12px 0; font-size: 13px;">
+          &copy; 2024 Rinors Corporation. All Rights Reserved.
+        </div>
+      `;
+      // --- END Professional Email Wrapper ---
+
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-          <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-            <h2 style="margin: 0;">New Order Placed</h2>
-          </div>
+          ${emailHeader}
           <div style="padding: 24px 32px;">
+            <h2 style="margin: 0; color: #007b55;">New Order Placed</h2>
             <p style="font-size: 16px;">A new order has been placed on Rinors Ecommerce Admin.</p>
             <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
             <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
             ${productsTable}
             ${addressBlock}
+            ${notesBlock}
             <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
           </div>
+          ${contactInfo}
+          ${socialLinks}
+          ${importantLinks}
+          ${emailFooter}
         </div>
       `;
       // Send admin email (outside transaction)
+      console.log("EMAIL HTML:", html);
       await resend.emails.send({
         from: "no-reply@rinors.com",
         to: "rinorscorporation@gmail.com",
@@ -332,20 +389,25 @@ export const orderRouter = createTRPCRouter({
         if (user?.email) {
           const html = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-              <div style="background: #222; color: #fff; padding: 24px 32px;">
-                <h2 style="margin: 0;">Order Confirmed!</h2>
-              </div>
+              ${emailHeader}
               <div style="padding: 24px 32px;">
+                <h2 style="margin: 0; color: #222;">Order Confirmed!</h2>
                 <p>Hi${user.name ? ` ${user.name}` : ""},</p>
                 <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
                 <p><strong>Order ID:</strong> ${order.id}</p>
                 <p><strong>Total:</strong> ৳${order.total}</p>
                 ${productsTable}
                 ${addressBlock}
+                ${notesBlock}
                 <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
               </div>
+              ${contactInfo}
+              ${socialLinks}
+              ${importantLinks}
+              ${emailFooter}
             </div>
           `;
+          console.log("EMAIL HTML:", html);
           await resend.emails.send({
             from: "no-reply@rinors.com",
             to: user.email,
@@ -471,6 +533,7 @@ export const orderRouter = createTRPCRouter({
           }),
         ),
         addressId: z.string().optional(),
+        notes: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -519,6 +582,7 @@ export const orderRouter = createTRPCRouter({
             userId: null,
             total,
             ...(input.addressId ? { addressId: input.addressId } : {}),
+            notes: input.notes,
             items: {
               create: input.cartItems.map((item) => ({
                 productId: item.productId,
@@ -552,6 +616,8 @@ export const orderRouter = createTRPCRouter({
           },
         },
       });
+      // Debug log for guest order and items
+      console.log("Guest order for email:", JSON.stringify(fullOrder, null, 2));
       let address = null;
       if (order.addressId) {
         address = await ctx.db.address.findUnique({
@@ -559,15 +625,14 @@ export const orderRouter = createTRPCRouter({
         });
       }
 
-      // Build product details table
-      let productRows = "";
+      // Build product details table for guest order
+      let guestProductRows = "";
       if (
         fullOrder &&
-        Array.isArray(fullOrder as unknown as { items: OrderItem[] }) &&
-        (fullOrder as unknown as { items: OrderItem[] }).items.length > 0
+        Array.isArray(fullOrder.items) &&
+        fullOrder.items.length > 0
       ) {
-        for (const item of (fullOrder as unknown as { items: OrderItem[] })
-          .items) {
+        for (const item of fullOrder.items) {
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -575,19 +640,16 @@ export const orderRouter = createTRPCRouter({
             });
             productTitle = prod?.title ?? "Unknown Product";
           }
-          // Variant details (show if available)
-          const color = item.colorName
-            ? `<br/><span style='color:#555;'>Color: ${item.colorName}</span>`
-            : item.color
-              ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
-              : "";
+          const color = item.color
+            ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+            : "";
           const size = item.size
             ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
             : "";
           const sku = item.sku
             ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
             : "";
-          productRows += `
+          guestProductRows += `
             <tr>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
                 ${productTitle}${color}${size}${sku}
@@ -598,7 +660,7 @@ export const orderRouter = createTRPCRouter({
           `;
         }
       }
-      const productsTable = productRows
+      const guestProductsTable = guestProductRows
         ? `<div style="margin-bottom: 24px;">
               <strong>Products:</strong>
               <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px;">
@@ -610,7 +672,7 @@ export const orderRouter = createTRPCRouter({
                   </tr>
                 </thead>
                 <tbody>
-                  ${productRows}
+                  ${guestProductRows}
                 </tbody>
               </table>
             </div>`
@@ -624,8 +686,12 @@ export const orderRouter = createTRPCRouter({
               <strong>Email:</strong> ${address.email}
            </div>`
         : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
+      const notesBlock = input.notes
+        ? `<div style="margin-bottom: 16px;"><strong>Additional Notes:</strong><br/>${input.notes}</div>`
+        : "";
 
       // Send emails (outside transaction)
+      console.log("EMAIL HTML:", html);
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
           <div style="background: #007b55; color: #fff; padding: 24px 32px;">
@@ -635,8 +701,9 @@ export const orderRouter = createTRPCRouter({
             <p style="font-size: 16px;">A new guest order has been placed on Rinors Ecommerce Admin.</p>
             <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
             <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
-            ${productsTable}
+            ${guestProductsTable}
             ${addressBlock}
+            ${notesBlock}
             <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
           </div>
         </div>
@@ -659,12 +726,14 @@ export const orderRouter = createTRPCRouter({
               <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
               <p><strong>Order ID:</strong> ${order.id}</p>
               <p><strong>Total:</strong> ৳${order.total}</p>
-              ${productsTable}
+              ${guestProductsTable}
               ${addressBlock}
+              ${notesBlock}
               <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
             </div>
           </div>
         `;
+        console.log("EMAIL HTML:", guestHtml);
         await resend.emails.send({
           from: "no-reply@rinors.com",
           to: address.email,
