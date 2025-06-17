@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaLocationDot, FaXTwitter } from "react-icons/fa6";
 import { SiTiktok } from "react-icons/si";
 import Newsletter from "./Newsletter";
 
@@ -35,6 +35,44 @@ const Footer = () => {
                       41/5 east badda Dhaka, Bangladesh
                     </span>
                   </div>
+
+
+                  <div className="support-block mb-8 flex basis-1/4 flex-col pr-12 max-lg:basis-full">
+                  <div>
+                     <h4 className="mb-4 text-lg font-semibold">Support</h4>
+                  <Link
+                    href="tel:01312223452"
+                    className="helpline-btn footer-big-btn mb-4 flex items-center gap-4  bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] border border-[#ddd] focus:border-[#ddd] rounded-3xl "
+                  >
+                    <div className="ic text-2xl text-[#ef4a23]">
+                      <i className="icon-phone-call"></i>
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-xs text-[#838383]">9 AM - 8 PM</p>
+                      <h5 className="text-lg font-bold text-[#081621]">
+                        01312223452
+                      </h5>
+                    </div>
+                  </Link>
+                  </div>
+                 
+                  <a
+                    href="https://g.co/kgs/MX7BqyL"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="store-locator-btn footer-big-btn flex items-center gap-4  bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] border border-[#ddd] focus:border-[#ddd] rounded-3xl "
+                  >
+                    <div className="ic text-2xl text-[#3749bb]">
+                      <FaLocationDot />
+                    </div>
+                    <div className="flex flex-col">
+                      <p className="text-xs text-[#838383]">Store Locator</p>
+                      <h5 className="text-lg font-bold text-[#081621]">
+                        Find Our Stores
+                      </h5>
+                    </div>
+                  </a>
+                </div>
                 </div>
               </div>
               <div className="right-content flex basis-3/4 flex-wrap gap-y-8 max-lg:basis-full">
@@ -144,7 +182,8 @@ const Footer = () => {
                       Return & Refund
                     </Link>
                   </div>
-                </div>{" "}
+                </div>
+
                 <div className="newsletter basis-1/3 pl-7 max-md:basis-full max-md:pl-0">
                   <Newsletter variant="footer" />
                   <div className="list-social mt-4 flex items-center gap-6">
