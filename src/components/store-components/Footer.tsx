@@ -7,7 +7,7 @@ import Newsletter from "./Newsletter";
 const Footer = () => {
   return (
     <>
-      <div id="footer" className="footer">
+      <div id="footer" className="footer bg-white">
         <div className="footer-main bg-surface">
           <div className="container">
             <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
