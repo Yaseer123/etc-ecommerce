@@ -233,10 +233,10 @@ export default function Product({ data }: ProductProps) {
     data.discountedPrice != null ? data.price - data.discountedPrice : 0;
 
   return (
-    <div className="product-item style-marketplace h-full rounded-[.25rem] border border-[#ddd] bg-white p-4 pt-5 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
-      <div className="bg-img relative w-full">
+    <div className="product-item style-marketplace h-full min-h-[300px] rounded-[.25rem] border border-[#ddd] bg-white p-4 pt-5 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
+      <div className="bg-img relative w-full pt-6">
         {/* Save badge with amount and percentage */}
-        {data.discountedPrice != null && (
+        {discountPercentage > 0 && amountSaved > 0 && (
           <div
             className="marks"
             style={{
@@ -244,8 +244,8 @@ export default function Product({ data }: ProductProps) {
               lineHeight: 1.15,
               fontSize: 14,
               position: "absolute",
-              top: -18,
-              left: 0,
+              top: -12,
+              left: -18,
               zIndex: 10,
               display: "flex",
               flexDirection: "column",
@@ -257,7 +257,8 @@ export default function Product({ data }: ProductProps) {
               style={{
                 background: "#F97316",
                 color: "#fff",
-                borderRadius: 4,
+                borderTopRightRadius: "10px",
+                borderBottomRightRadius: "10px",
                 padding: "0px 8px",
                 fontWeight: 700,
                 marginBottom: 2,
