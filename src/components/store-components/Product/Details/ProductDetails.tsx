@@ -176,8 +176,10 @@ export default function ProductDetails({
       await utils.review.getReviewStats.invalidate(productMain.id);
       void refetchReviews();
     },
-    onError: (error) => {
-      toast.error(`Error submitting review: ${error.message}`);
+    onError: (_error: unknown) => {
+      const message =
+        _error instanceof Error ? _error.message : "Error submitting review";
+      toast.error(`Error submitting review: ${message}`);
     },
   });
 
@@ -267,7 +269,7 @@ export default function ProductDetails({
       removeFromWishlistMutation.mutate(
         { productId: productMain.id },
         {
-          onError: () => {
+          onError: (_error: unknown) => {
             // **Rollback on failure**
             void utils.wishList.getWishList.invalidate();
           },
@@ -289,7 +291,7 @@ export default function ProductDetails({
       addToWishlistMutation.mutate(
         { productId: productMain.id },
         {
-          onError: () => {
+          onError: (_error: unknown) => {
             // **Rollback on failure**
             void utils.wishList.getWishList.invalidate();
           },

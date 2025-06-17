@@ -18,13 +18,8 @@ interface ProductProps {
 }
 
 // Helper for stockStatus
-const validStockStatuses = ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"] as const;
-type StockStatus = (typeof validStockStatuses)[number];
-function getValidStockStatus(status: unknown): StockStatus {
-  return validStockStatuses.includes(status as StockStatus)
-    ? (status as StockStatus)
-    : "IN_STOCK";
-}
+// const validStockStatuses = ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"] as const;
+// type StockStatus = (typeof validStockStatuses)[number];
 
 export default function Product({ data }: ProductProps) {
   const { openModalCart } = useModalCartStore();
@@ -40,7 +35,7 @@ export default function Product({ data }: ProductProps) {
   });
 
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
-    onMutate: async ({ productId }) => {
+    onMutate: async ({ productId: _productId }) => {
       // Cancel outgoing refetch to avoid overwriting optimistic update
       await utils.wishList.getWishList.cancel();
 
@@ -48,46 +43,18 @@ export default function Product({ data }: ProductProps) {
       const previousWishlist = utils.wishList.getWishList.getData();
 
       // Check if item already exists to prevent duplicates
-      if (!previousWishlist?.some((item) => item.id === productId)) {
-        // Optimistically update the wishlist by adding the new item with correct structure
-        utils.wishList.getWishList.setData(undefined, (old) => {
-          if (!old) return [];
-          // Create proper wishlist item structure with product property
-          return [
-            ...old,
-            {
-              id: productId,
-              product: {
-                ...data,
-                discountedPrice: data.discountedPrice ?? null,
-                stock: typeof data.stock === "number" ? data.stock : 0,
-                stockStatus: ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].includes(
-                  data.stockStatus ?? "",
-                )
-                  ? data.stockStatus
-                  : "IN_STOCK",
-                defaultColor: data.defaultColor ?? null,
-                defaultColorHex: data.defaultColorHex ?? null,
-                defaultSize: data.defaultSize ?? null,
-                estimatedDeliveryTime: data.estimatedDeliveryTime ?? null,
-                categoryId: data.categoryId ?? null,
-                createdAt: data.createdAt ?? new Date(),
-                updatedAt: data.updatedAt ?? new Date(),
-              },
-              userId: session?.user.id ?? "temp-user",
-              createdAt: new Date(),
-              productId: productId,
-            },
-          ];
-        });
-      }
+      // (No optimistic update for adding, only for removal)
 
       return { previousWishlist };
     },
-    onError: (err, variables, context) => {
+    onError: (err: unknown, variables, context) => {
       // If mutation fails, revert back to the previous state
       if (context?.previousWishlist) {
         utils.wishList.getWishList.setData(undefined, context.previousWishlist);
+      }
+      // Optionally log error safely
+      if (err instanceof Error) {
+        console.error(err.message);
       }
     },
     onSettled: async () => {
@@ -98,24 +65,28 @@ export default function Product({ data }: ProductProps) {
 
   const removeFromWishlistMutation =
     api.wishList.removeFromWishList.useMutation({
-      onMutate: async ({ productId }) => {
+      onMutate: async ({ productId: _productId }) => {
         await utils.wishList.getWishList.cancel();
         const previousWishlist = utils.wishList.getWishList.getData();
 
         // Optimistically update the wishlist by removing the item
         utils.wishList.getWishList.setData(undefined, (old) => {
           if (!old) return [];
-          return old.filter((item) => item.id !== productId);
+          return old.filter((item) => item.id !== _productId);
         });
 
         return { previousWishlist };
       },
-      onError: (err, variables, context) => {
+      onError: (err: unknown, variables, context) => {
         if (context?.previousWishlist) {
           utils.wishList.getWishList.setData(
             undefined,
             context.previousWishlist,
           );
+        }
+        // Optionally log error safely
+        if (err instanceof Error) {
+          console.error(err.message);
         }
       },
       onSettled: async () => {
@@ -277,8 +248,13 @@ export default function Product({ data }: ProductProps) {
               width={5000}
               height={5000}
               src={
-                ("images" in data && data.images?.[0]) ||
-                "/images/products/1000x1000.png"
+                typeof data === "object" &&
+                "images" in data &&
+                Array.isArray(data.images) &&
+                typeof data.images[0] === "string" &&
+                data.images[0]
+                  ? data.images[0]
+                  : "/images/products/1000x1000.png"
               }
               alt={"title" in data ? data.title : data.name}
             />
