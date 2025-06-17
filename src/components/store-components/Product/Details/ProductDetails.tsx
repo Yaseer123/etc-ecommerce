@@ -731,7 +731,10 @@ export default function ProductDetails({
                   </div>
                 )}
               </div>
-              <div className="desc mt-5 block border-b border-[#ddd] pb-6 text-base text-secondary focus:border-[#ddd] lg:text-lg">
+              <div
+                className="desc mt-5 block border-b border-[#ddd] pb-6 text-base text-secondary focus:border-[#ddd] lg:text-lg"
+                style={{ whiteSpace: "pre-line" }}
+              >
                 {productMain.shortDescription}
               </div>
               <div className="list-action mt-6">
@@ -779,8 +782,10 @@ export default function ProductDetails({
                       <ArrowClockwise className="body1" />
                       <div className="text-title">Delivery & Return</div>
                     </Link>
-                    <Link href="#ask-question-form"
-                    className="flex items-center gap-1">
+                    <Link
+                      href="#ask-question-form"
+                      className="flex items-center gap-1"
+                    >
                       <Question className="body1" />
                       <div className="text-title">Ask A Question</div>
                     </Link>

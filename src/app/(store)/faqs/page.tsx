@@ -135,7 +135,10 @@ const Faqs = () => {
                           />
                         </div>
                         {activeQuestion === faq.id && (
-                          <div className="content body1 mt-4 text-secondary">
+                          <div
+                            className="content body1 mt-4 text-secondary"
+                            style={{ whiteSpace: "pre-line" }}
+                          >
                             {faq.answer}
                           </div>
                         )}
