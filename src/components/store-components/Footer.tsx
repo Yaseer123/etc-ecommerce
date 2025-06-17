@@ -36,43 +36,42 @@ const Footer = () => {
                     </span>
                   </div>
 
-
                   <div className="support-block mb-8 flex basis-1/4 flex-col pr-12 max-lg:basis-full">
-                  <div>
-                     <h4 className="mb-4 text-lg font-semibold">Support</h4>
-                  <Link
-                    href="tel:01312223452"
-                    className="helpline-btn footer-big-btn mb-4 flex items-center gap-4  bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] border border-[#ddd] focus:border-[#ddd] rounded-3xl "
-                  >
-                    <div className="ic text-2xl text-[#ef4a23]">
-                      <i className="icon-phone-call"></i>
+                    <div>
+                      <h4 className="mb-4 text-lg font-semibold">Support</h4>
+                      <Link
+                        href="tel:01312223452"
+                        className="helpline-btn footer-big-btn mb-4 flex items-center gap-4 rounded-3xl border border-[#ddd] bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] focus:border-[#ddd]"
+                      >
+                        <div className="ic text-2xl text-[#ef4a23]">
+                          <i className="icon-phone-call"></i>
+                        </div>
+                        <div className="flex flex-col">
+                          <p className="text-xs text-[#838383]">9 AM - 8 PM</p>
+                          <h5 className="text-lg font-bold text-[#081621]">
+                            01312223452
+                          </h5>
+                        </div>
+                      </Link>
                     </div>
-                    <div className="flex flex-col">
-                      <p className="text-xs text-[#838383]">9 AM - 8 PM</p>
-                      <h5 className="text-lg font-bold text-[#081621]">
-                        01312223452
-                      </h5>
-                    </div>
-                  </Link>
+
+                    <a
+                      href="https://g.co/kgs/MX7BqyL"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="store-locator-btn footer-big-btn flex items-center gap-4 rounded-3xl border border-[#ddd] bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] focus:border-[#ddd]"
+                    >
+                      <div className="ic text-2xl text-[#3749bb]">
+                        <FaLocationDot />
+                      </div>
+                      <div className="flex flex-col">
+                        <p className="text-xs text-[#838383]">Store Locator</p>
+                        <h5 className="text-lg font-bold text-[#081621]">
+                          Find Our Stores
+                        </h5>
+                      </div>
+                    </a>
                   </div>
-                 
-                  <a
-                    href="https://g.co/kgs/MX7BqyL"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="store-locator-btn footer-big-btn flex items-center gap-4  bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] border border-[#ddd] focus:border-[#ddd] rounded-3xl "
-                  >
-                    <div className="ic text-2xl text-[#3749bb]">
-                      <FaLocationDot />
-                    </div>
-                    <div className="flex flex-col">
-                      <p className="text-xs text-[#838383]">Store Locator</p>
-                      <h5 className="text-lg font-bold text-[#081621]">
-                        Find Our Stores
-                      </h5>
-                    </div>
-                  </a>
-                </div>
                 </div>
               </div>
               <div className="right-content flex basis-3/4 flex-wrap gap-y-8 max-lg:basis-full">
