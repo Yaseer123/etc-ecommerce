@@ -44,6 +44,7 @@ export default function AdminOrdersPage() {
                 <th className="border p-2">Order ID</th>
                 <th className="border p-2">User</th>
                 <th className="border p-2">Address</th>
+                <th className="border p-2">SKU</th>
                 <th className="border p-2">Status</th>
                 <th className="border p-2">Total</th>
                 <th className="border p-2">Created At</th>
@@ -61,6 +62,19 @@ export default function AdminOrdersPage() {
                     {order.address
                       ? `${order.address.street}, ${order.address.city}, ${order.address.state} ${order.address.zipCode}\n${order.address.phone}`
                       : "-"}
+                  </td>
+                  <td className="border p-2">
+                    {order.items && order.items.length > 0 ? (
+                      <div className="flex flex-col gap-1">
+                        {order.items.map((item) => (
+                          <span key={item.id} className="font-mono text-xs">
+                            {item.sku ?? "-"}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      "-"
+                    )}
                   </td>
                   <td className="border p-2">
                     {updatingId === order.id ? (
