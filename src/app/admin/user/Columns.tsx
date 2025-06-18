@@ -1,15 +1,5 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,8 +11,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { type User } from "@/schemas/userSchema";
 import { api } from "@/trpc/react";
+import { type ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -36,6 +36,23 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: "role",
     header: "Role",
+    cell: ({ row }) => {
+      const role = row.original.role;
+      if (role === "ADMIN") {
+        return (
+          <span className="flex items-center gap-2">
+            <span
+              className="inline-block h-2 w-2 rounded-full bg-green-500"
+              title="Admin"
+            />
+            <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
+              Admin
+            </span>
+          </span>
+        );
+      }
+      return <span>{role.charAt(0) + role.slice(1).toLowerCase()}</span>;
+    },
   },
   {
     id: "actions",
