@@ -219,7 +219,7 @@ const Checkout = () => {
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
-        <div className="bg-surface mb-4 flex justify-between rounded-lg px-4 py-3">
+        <div className="bg-surface mb-4 flex justify-between rounded-lg  py-3">
           <div className="flex items-center">
             <span className="pr-4">Already have an account? </span>
             <Link
@@ -229,9 +229,7 @@ const Checkout = () => {
               Login
             </Link>
           </div>
-          <div>
-            <CaretDown className="cursor-pointer" />
-          </div>
+          
         </div>
       )}
       <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
