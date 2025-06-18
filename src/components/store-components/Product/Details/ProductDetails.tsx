@@ -804,9 +804,12 @@ export default function ProductDetails({
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <div className="text-title">Categories:</div>
-                    <div className="text-secondary">
+                    <Link
+                      href={`/products?category=${productMain.category?.id}`}
+                      className="text-secondary hover:underline"
+                    >
                       {productMain.category?.name}
-                    </div>
+                    </Link>
                   </div>
                 </div>
                 {/* <div className="list-payment mt-7">
