@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 // import TopNav from '@/components/store-components/TopNav'
@@ -36,6 +37,7 @@ const OrderTracking = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<OrderResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { data: session } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,7 +84,7 @@ const OrderTracking = () => {
       <div className="order-tracking py-10 md:py-20">
         <div className="container">
           <div className="content-main flex gap-y-8 max-md:flex-col">
-            <div className="left w-full border-[#ddd] focus:border-[#ddd] md:w-1/2 md:border-r md:pr-[40px] lg:pr-[60px]">
+            <div className="left w-full md:w-1/2 md:pr-[40px] lg:pr-[60px]">
               <div className="heading4">Order Tracking</div>
               <div className="mt-2">
                 To track your order, please enter your Invoice or Order Number
@@ -131,21 +133,24 @@ const OrderTracking = () => {
                 </div>
               )}
             </div>
-            <div className="right flex w-full items-center md:w-1/2 md:pl-[40px] lg:pl-[60px]">
-              <div className="text-content">
-                <div className="heading4">Already have an account?</div>
-                <div className="mt-2 text-secondary">
-                  Welcome back. Sign in to access your personalized experience,
-                  saved preferences, and more. We{"'re"} thrilled to have you
-                  with us again!
-                </div>
-                <div className="block-button mt-4 md:mt-7">
-                  <Link href={"/login"} className="button-main">
-                    Login
-                  </Link>
+            {/* Only show to non-logged-in users */}
+            {!session && (
+              <div className="right flex w-full items-center border-[#ddd] focus:border-[#ddd] md:w-1/2 md:border-l md:pl-[40px] lg:pl-[60px]">
+                <div className="text-content">
+                  <div className="heading4">Already have an account?</div>
+                  <div className="mt-2 text-secondary">
+                    Welcome back. Sign in to access your personalized
+                    experience, saved preferences, and more. We{"'re"} thrilled
+                    to have you with us again!
+                  </div>
+                  <div className="block-button mt-4 md:mt-7">
+                    <Link href={"/login"} className="button-main">
+                      Login
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
