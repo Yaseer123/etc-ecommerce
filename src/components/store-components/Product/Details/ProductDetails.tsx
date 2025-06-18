@@ -34,6 +34,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { v4 as uuid } from "uuid";
 import ParseContent from "../../Blog/ParseContent";
 import Rate from "../../Rate";
+import RelatedProductsSidebar from "../RelatedProductsSidebar";
 
 // Define a type for product variants
 type ProductVariant = {
@@ -508,8 +509,8 @@ export default function ProductDetails({
     <>
       <div className="product-detail sale">
         <div className="featured-product underwear bg-white py-10 md:py-20">
-          <div className="container flex flex-wrap justify-between gap-y-6">
-            <div className="list-img w-full md:w-1/2 md:pr-[45px]">
+          <div className="container flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
+            <div className="list-img w-full lg:w-1/2 lg:pr-[45px]">
               {/* Unified Color Selector */}
               {unifiedColors.length > 0 && (
                 <div className="mb-4 flex flex-col gap-2">
@@ -681,7 +682,7 @@ export default function ProductDetails({
                 </Swiper>
               </div>
             </div>
-            <div className="product-infor w-full md:w-1/2 md:pl-2 lg:pl-[15px]">
+            <div className="product-infor w-full lg:w-1/2 lg:pl-[15px]">
               <div className="flex justify-between">
                 <div>
                   <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
@@ -782,13 +783,26 @@ export default function ProductDetails({
                       <ArrowClockwise className="body1" />
                       <div className="text-title">Delivery & Return</div>
                     </Link>
-                    <Link
-                      href="#ask-question-form"
+                    <button
+                      type="button"
                       className="flex items-center gap-1"
+                      onClick={() => {
+                        setActiveTab("questions");
+                        setTimeout(() => {
+                          const el =
+                            document.getElementById("ask-question-form");
+                          if (el) {
+                            el.scrollIntoView({
+                              behavior: "smooth",
+                              block: "start",
+                            });
+                          }
+                        }, 100); // Delay to allow tab content to render
+                      }}
                     >
                       <Question className="body1" />
                       <div className="text-title">Ask A Question</div>
-                    </Link>
+                    </button>
                   </div>
                   <div className="mt-3 flex items-center gap-1">
                     <Timer className="body1" />
@@ -915,8 +929,8 @@ export default function ProductDetails({
           </div>
         </div>
 
-        <div className="desc-tab mt-10 bg-white py-10 md:py-20">
-          <div className="mx-auto w-full !max-w-[1322px] px-4">
+        <div className="desc-tab mt-10 lg:flex lg:gap-x-8">
+          <div className="mx-auto w-full min-w-0 !max-w-[1322px] flex-1 bg-white px-4 py-10 md:py-20">
             <div className="flex w-full items-center justify-center">
               <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
                 <div
@@ -931,12 +945,22 @@ export default function ProductDetails({
                 >
                   Description
                 </div>
+                {/* Questions */}
+                <div
+                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "questions" ? "active" : ""}`}
+                  onClick={() => handleActiveTab("questions")}
+                >
+                  Questions ({questions?.length ?? 0})
+                </div>
 
+                {/* Questions */}
+
+                {/* Reviews */}
                 <div
                   className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "review" ? "active" : ""}`}
                   onClick={() => handleActiveTab("review")}
                 >
-                  Review
+                  Reviews ({reviewStats.totalCount})
                 </div>
               </div>
             </div>
@@ -965,6 +989,154 @@ export default function ProductDetails({
                       ),
                     )}
                 </div>
+              </div>
+              {/* Questions Tab Content */}
+              <div
+                className={`desc-item questions-block ${activeTab === "questions" ? "open" : ""}`}
+              >
+                {activeTab === "questions" && (
+                  <section
+                    className="mx-8 mb-16 mt-0 max-w-3xl rounded-2xl border border-gray-100 bg-white px-8 pb-12 pt-8 shadow sm:mx-auto sm:px-8"
+                    id="product-qa"
+                  >
+                    <div className="section-head mb-8 flex gap-4 px-3 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="title-n-action">
+                        <h2 className="mb-1 text-xl font-bold text-gray-900 sm:text-2xl">
+                          Questions ({questions?.length ?? 0})
+                        </h2>
+                        <p className="section-blurb text-sm text-gray-500">
+                          Have question about this product? Get specific details
+                          about this product from expert.
+                        </p>
+                      </div>
+                      <div className="q-action">
+                        {session?.user ? (
+                          <Button
+                            asChild
+                            variant="default"
+                            className="hover:bg-black/75/90 bg-black text-white hover:bg-black hover:bg-black/75"
+                          >
+                            <a href="#ask-question-form">Ask Question</a>
+                          </Button>
+                        ) : (
+                          <Button
+                            asChild
+                            variant="default"
+                            className="hover:bg-black/75/90 bg-black text-white hover:bg-black hover:bg-black/75"
+                          >
+                            <a href="/login">Ask Question</a>
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                    <div id="question">
+                      {isLoading ? (
+                        <div className="py-10 text-center text-lg font-medium text-secondary">
+                          Loading questions...
+                        </div>
+                      ) : questions && questions.length > 0 ? (
+                        <div className="mb-10 space-y-7">
+                          {questions.map((q) => (
+                            <div
+                              key={q.id}
+                              className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+                            >
+                              <div className="mb-1 flex items-center gap-3">
+                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-lg font-bold text-primary">
+                                  {q.user?.name
+                                    ? q.user.name.charAt(0).toUpperCase()
+                                    : "U"}
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="font-semibold leading-tight text-gray-800">
+                                    {q.user?.name ?? "User"}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    {new Date(q.createdAt).toLocaleDateString(
+                                      undefined,
+                                      {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                      },
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="mb-1 pl-12 text-base text-gray-900">
+                                {q.question}
+                              </div>
+                              {q.answer ? (
+                                <div className="mt-2 pl-12">
+                                  <div className="mb-1 flex items-center gap-2">
+                                    <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
+                                    <span className="flex items-center gap-1 text-sm font-semibold text-green-700">
+                                      <Question
+                                        size={16}
+                                        className="text-green-500"
+                                      />
+                                      Answer from Admin
+                                    </span>
+                                  </div>
+                                  <div className="rounded-lg border border-green-100 bg-green-50 px-4 py-2 text-sm text-gray-700">
+                                    {q.answer}
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="empty-content flex flex-col items-center justify-center py-12">
+                          <div className="empty-text text-center text-lg text-gray-500">
+                            There are no questions asked yet. Be the first one
+                            to ask a question.
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    {/* Ask Question Form (if logged in) */}
+                    {session?.user && (
+                      <div id="ask-question-form" className="mt-12">
+                        <form
+                          onSubmit={handleAskQuestion}
+                          className="mx-auto flex max-w-lg flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-8 shadow"
+                        >
+                          <label
+                            htmlFor="question"
+                            className="text-lg font-semibold text-gray-800"
+                          >
+                            Ask a question about this product:
+                          </label>
+                          <textarea
+                            id="question"
+                            className="w-full rounded-lg border border-[#ddd] px-4 py-3 text-base focus:border-[#ddd] focus:border-primary focus:ring-2 focus:ring-primary"
+                            placeholder="Type your question here..."
+                            value={questionText}
+                            minLength={5}
+                            maxLength={500}
+                            onChange={(e) => setQuestionText(e.target.value)}
+                            required
+                            rows={3}
+                            disabled={askQuestionMutation.isPending}
+                          />
+                          {error && (
+                            <div className="text-sm text-red-500">{error}</div>
+                          )}
+                          <Button
+                            type="submit"
+                            disabled={askQuestionMutation.isPending}
+                            className="hover:bg-black/75/90 w-full bg-black text-white hover:bg-black hover:bg-black/75"
+                          >
+                            {askQuestionMutation.isPending
+                              ? "Submitting..."
+                              : "Submit Question"}
+                          </Button>
+                        </form>
+                      </div>
+                    )}
+                  </section>
+                )}
               </div>
               <div
                 className={`desc-item review-block ${activeTab === "review" ? "open" : ""}`}
@@ -1055,323 +1227,204 @@ export default function ProductDetails({
                     </div>
                   </div>
                 </div>
-
-                <div className="mt-8">
-                  <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-                    <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                      {reviewStats.totalCount}{" "}
-                      {reviewStats.totalCount === 1 ? "Comment" : "Comments"}
-                    </div>
-                    <div className="right flex w-full items-center gap-3 sm:w-auto">
-                      <label
-                        htmlFor="select-filter"
-                        className="text-sm uppercase sm:text-base"
-                      >
-                        Sort by:
-                      </label>
-                      <div className="select-block relative flex-grow sm:flex-grow-0">
-                        <select
-                          id="select-filter"
-                          name="select-filter"
-                          className="w-full rounded-lg border border-[#ddd] bg-white py-2 pl-3 pr-10 text-sm font-semibold capitalize leading-[26px] focus:border-[#ddd] sm:w-auto sm:text-base md:pr-14 md:text-base md:leading-6"
-                          value={reviewSortOrder}
-                          onChange={handleReviewSortChange}
+                {activeTab === "review" && (
+                  <div className="mt-8">
+                    <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                      <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                        {reviewStats.totalCount}{" "}
+                        {reviewStats.totalCount === 1 ? "Comment" : "Comments"}
+                      </div>
+                      <div className="right flex w-full items-center gap-3 sm:w-auto">
+                        <label
+                          htmlFor="select-filter"
+                          className="text-sm uppercase sm:text-base"
                         >
-                          <option value="newest">Newest</option>
-                          <option value="5star">5 Star</option>
-                          <option value="4star">4 Star</option>
-                          <option value="3star">3 Star</option>
-                          <option value="2star">2 Star</option>
-                          <option value="1star">1 Star</option>
-                        </select>
-                        <CaretDown
-                          size={12}
-                          className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
-                        />
+                          Sort by:
+                        </label>
+                        <div className="select-block relative flex-grow sm:flex-grow-0">
+                          <select
+                            id="select-filter"
+                            name="select-filter"
+                            className="w-full rounded-lg border border-[#ddd] bg-white py-2 pl-3 pr-10 text-sm font-semibold capitalize leading-[26px] focus:border-[#ddd] sm:w-auto sm:text-base md:pr-14 md:text-base md:leading-6"
+                            value={reviewSortOrder}
+                            onChange={handleReviewSortChange}
+                          >
+                            <option value="newest">Newest</option>
+                            <option value="5star">5 Star</option>
+                            <option value="4star">4 Star</option>
+                            <option value="3star">3 Star</option>
+                            <option value="2star">2 Star</option>
+                            <option value="1star">1 Star</option>
+                          </select>
+                          <CaretDown
+                            size={12}
+                            className="absolute right-2 top-1/2 -translate-y-1/2 md:right-4"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="list-review mt-6">
-                    {sortedReviews.length === 0 ? (
-                      <div className="py-6 text-center">
-                        No reviews yet. Be the first to review!
-                      </div>
-                    ) : (
-                      sortedReviews.map((review) => (
+                    <div className="list-review mt-6">
+                      {sortedReviews.length === 0 ? (
+                        <div className="py-6 text-center">
+                          No reviews yet. Be the first to review!
+                        </div>
+                      ) : (
+                        sortedReviews.map((review) => (
+                          <div
+                            className="item bg-surface/30 hover:bg-surface mb-8 rounded-lg p-3 transition-all duration-300 sm:p-5"
+                            key={review.id}
+                          >
+                            <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center sm:gap-0">
+                              <div className="user-infor flex gap-4">
+                                <div className="avatar">
+                                  <Image
+                                    src={
+                                      review.user?.image ??
+                                      "/images/avatar/default.png"
+                                    }
+                                    width={200}
+                                    height={200}
+                                    alt={review.user?.name ?? "Anonymous"}
+                                    className="aspect-square w-[40px] rounded-full object-cover sm:w-[52px]"
+                                  />
+                                </div>
+                                <div className="user">
+                                  <div className="flex items-center gap-2">
+                                    <div className="text-title">
+                                      {review.user?.name ?? "Anonymous"}
+                                    </div>
+                                    <div className="span text-line">-</div>
+                                    <Rate
+                                      currentRate={review.rating}
+                                      size={12}
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <div className="text-secondary2 text-sm">
+                                      {formatDistanceToNow(
+                                        new Date(review.createdAt),
+                                        { addSuffix: true },
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="more-action cursor-pointer">
+                                <DotsThree size={24} weight="bold" />
+                              </div>
+                            </div>
+                            <div className="mt-3 text-sm sm:text-base">
+                              {review.comment ?? "No comment provided."}
+                            </div>
+                            <div className="action mt-3">
+                              <div className="flex items-center gap-4">
+                                <div className="like-btn flex cursor-pointer items-center gap-1">
+                                  <HandsClapping size={18} />
+                                  <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
+                                    0
+                                  </div>
+                                </div>
+                                <Link
+                                  href={"#form-review"}
+                                  className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary md:text-base md:leading-6"
+                                >
+                                  Reply
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    {/* Only show review form if user can review */}
+                    {session &&
+                      (canReviewLoading ? (
+                        <div>Checking purchase status...</div>
+                      ) : canReview ? (
                         <div
-                          className="item bg-surface/30 hover:bg-surface mb-8 rounded-lg p-3 transition-all duration-300 sm:p-5"
-                          key={review.id}
+                          id="form-review"
+                          className="form-review bg-surface/20 rounded-lg p-4 pt-6 sm:p-6"
                         >
-                          <div className="heading flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center sm:gap-0">
-                            <div className="user-infor flex gap-4">
-                              <div className="avatar">
-                                <Image
-                                  src={
-                                    review.user?.image ??
-                                    "/images/avatar/default.png"
-                                  }
-                                  width={200}
-                                  height={200}
-                                  alt={review.user?.name ?? "Anonymous"}
-                                  className="aspect-square w-[40px] rounded-full object-cover sm:w-[52px]"
-                                />
-                              </div>
-                              <div className="user">
-                                <div className="flex items-center gap-2">
-                                  <div className="text-title">
-                                    {review.user?.name ?? "Anonymous"}
-                                  </div>
-                                  <div className="span text-line">-</div>
-                                  <Rate currentRate={review.rating} size={12} />
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <div className="text-secondary2 text-sm">
-                                    {formatDistanceToNow(
-                                      new Date(review.createdAt),
-                                      { addSuffix: true },
-                                    )}
-                                  </div>
-                                </div>
+                          <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                            Leave A comment
+                          </div>
+                          <form
+                            className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6"
+                            onSubmit={handleReviewSubmit}
+                          >
+                            <div className="col-span-2 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
+                              <div className="text-title">Your Rating:</div>
+                              <div className="flex cursor-pointer">
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                  <Star
+                                    key={star}
+                                    size={20}
+                                    weight={
+                                      star <= reviewForm.rating
+                                        ? "fill"
+                                        : "regular"
+                                    }
+                                    className="text-yellow-500 transition-all hover:scale-110"
+                                    onClick={() =>
+                                      setReviewForm({
+                                        ...reviewForm,
+                                        rating: star,
+                                      })
+                                    }
+                                  />
+                                ))}
                               </div>
                             </div>
-                            <div className="more-action cursor-pointer">
-                              <DotsThree size={24} weight="bold" />
-                            </div>
-                          </div>
-                          <div className="mt-3 text-sm sm:text-base">
-                            {review.comment ?? "No comment provided."}
-                          </div>
-                          <div className="action mt-3">
-                            <div className="flex items-center gap-4">
-                              <div className="like-btn flex cursor-pointer items-center gap-1">
-                                <HandsClapping size={18} />
-                                <div className="text-base font-semibold capitalize leading-[26px] md:text-base md:leading-6">
-                                  0
-                                </div>
-                              </div>
-                              <Link
-                                href={"#form-review"}
-                                className="reply-btn cursor-pointer text-base font-semibold capitalize leading-[26px] text-secondary md:text-base md:leading-6"
+                            <textarea
+                              className="w-full rounded-lg border border-[#ddd] px-4 py-3 focus:border-[#ddd]"
+                              id="message"
+                              name="comment"
+                              placeholder="Your review *"
+                              required
+                              rows={4}
+                              value={reviewForm.comment}
+                              onChange={(e) =>
+                                setReviewForm({
+                                  ...reviewForm,
+                                  comment: e.target.value,
+                                })
+                              }
+                            ></textarea>
+                            <div className="col-span-full sm:pt-3">
+                              <Button
+                                variant="black"
+                                type="submit"
+                                disabled={addReviewMutation.isPending}
+                                className=""
                               >
-                                Reply
-                              </Link>
+                                {addReviewMutation.isPending
+                                  ? "Submitting..."
+                                  : "Submit Review"}
+                              </Button>
                             </div>
-                          </div>
+                          </form>
                         </div>
-                      ))
-                    )}
+                      ) : (
+                        <div className="form-review bg-surface/20 rounded-lg p-4 pt-6 text-red-500 sm:p-6">
+                          You can only review products you have purchased.
+                        </div>
+                      ))}
                   </div>
-                  {/* Only show review form if user can review */}
-                  {session &&
-                    (canReviewLoading ? (
-                      <div>Checking purchase status...</div>
-                    ) : canReview ? (
-                      <div
-                        id="form-review"
-                        className="form-review bg-surface/20 rounded-lg p-4 pt-6 sm:p-6"
-                      >
-                        <div className="text-xl font-semibold capitalize leading-[30px] sm:text-[26px] sm:leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
-                          Leave A comment
-                        </div>
-                        <form
-                          className="mt-3 grid gap-4 gap-y-5 sm:grid-cols-2 md:mt-6"
-                          onSubmit={handleReviewSubmit}
-                        >
-                          <div className="col-span-2 flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-4">
-                            <div className="text-title">Your Rating:</div>
-                            <div className="flex cursor-pointer">
-                              {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                  key={star}
-                                  size={20}
-                                  weight={
-                                    star <= reviewForm.rating
-                                      ? "fill"
-                                      : "regular"
-                                  }
-                                  className="text-yellow-500 transition-all hover:scale-110"
-                                  onClick={() =>
-                                    setReviewForm({
-                                      ...reviewForm,
-                                      rating: star,
-                                    })
-                                  }
-                                />
-                              ))}
-                            </div>
-                          </div>
-                          <textarea
-                            className="w-full rounded-lg border border-[#ddd] px-4 py-3 focus:border-[#ddd]"
-                            id="message"
-                            name="comment"
-                            placeholder="Your review *"
-                            required
-                            rows={4}
-                            value={reviewForm.comment}
-                            onChange={(e) =>
-                              setReviewForm({
-                                ...reviewForm,
-                                comment: e.target.value,
-                              })
-                            }
-                          ></textarea>
-                          <div className="col-span-full sm:pt-3">
-                            <Button
-                              variant="black"
-                              type="submit"
-                              disabled={addReviewMutation.isPending}
-                              className=""
-                            >
-                              {addReviewMutation.isPending
-                                ? "Submitting..."
-                                : "Submit Review"}
-                            </Button>
-                          </div>
-                        </form>
-                      </div>
-                    ) : (
-                      <div className="form-review bg-surface/20 rounded-lg p-4 pt-6 text-red-500 sm:p-6">
-                        You can only review products you have purchased.
-                      </div>
-                    ))}
-                </div>
+                )}
               </div>
             </div>
+          </div>
+          {/* Related Products Sidebar beside tabs, outside white bg */}
+          <div className="mt-10 hidden w-full max-w-xs flex-shrink-0 lg:block">
+            <RelatedProductsSidebar
+              categoryId={
+                productMain.category?.id ?? productMain.categoryId ?? undefined
+              }
+              excludeProductId={productMain.id}
+            />
           </div>
         </div>
       </div>
-      {/* Q&A Section */}
-      <section
-        className="mx-8 mb-16 mt-16 max-w-3xl rounded-2xl border border-gray-100 bg-white px-8 pb-12 pt-8 shadow sm:mx-auto sm:px-8"
-        id="product-qa"
-      >
-        <div className="section-head mb-8 flex gap-4 px-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="title-n-action">
-            <h2 className="mb-1 text-xl font-bold text-gray-900 sm:text-2xl">
-              Questions ({questions?.length ?? 0})
-            </h2>
-            <p className="section-blurb text-sm text-gray-500">
-              Have question about this product? Get specific details about this
-              product from expert.
-            </p>
-          </div>
-          <div className="q-action">
-            {session?.user ? (
-              <Button
-                asChild
-                variant="default"
-                className="hover:bg-black/75/90 bg-black text-white hover:bg-black hover:bg-black/75"
-              >
-                <a href="#ask-question-form">Ask Question</a>
-              </Button>
-            ) : (
-              <Button
-                asChild
-                variant="default"
-                className="hover:bg-black/75/90 bg-black text-white hover:bg-black hover:bg-black/75"
-              >
-                <a href="/login">Ask Question</a>
-              </Button>
-            )}
-          </div>
-        </div>
-        <div id="question">
-          {isLoading ? (
-            <div className="py-10 text-center text-lg font-medium text-secondary">
-              Loading questions...
-            </div>
-          ) : questions && questions.length > 0 ? (
-            <div className="mb-10 space-y-7">
-              {questions.map((q) => (
-                <div
-                  key={q.id}
-                  className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
-                >
-                  <div className="mb-1 flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-lg font-bold text-primary">
-                      {q.user?.name ? q.user.name.charAt(0).toUpperCase() : "U"}
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-semibold leading-tight text-gray-800">
-                        {q.user?.name ?? "User"}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {new Date(q.createdAt).toLocaleDateString(undefined, {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="mb-1 pl-12 text-base text-gray-900">
-                    {q.question}
-                  </div>
-                  {q.answer ? (
-                    <div className="mt-2 pl-12">
-                      <div className="mb-1 flex items-center gap-2">
-                        <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                        <span className="flex items-center gap-1 text-sm font-semibold text-green-700">
-                          <Question size={16} className="text-green-500" />
-                          Answer from Admin
-                        </span>
-                      </div>
-                      <div className="rounded-lg border border-green-100 bg-green-50 px-4 py-2 text-sm text-gray-700">
-                        {q.answer}
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="empty-content flex flex-col items-center justify-center py-12">
-              <div className="empty-text text-center text-lg text-gray-500">
-                There are no questions asked yet. Be the first one to ask a
-                question.
-              </div>
-            </div>
-          )}
-        </div>
-        {/* Ask Question Form (if logged in) */}
-        {session?.user && (
-          <div id="ask-question-form" className="mt-12">
-            <form
-              onSubmit={handleAskQuestion}
-              className="mx-auto flex max-w-lg flex-col gap-4 rounded-xl border border-gray-200 bg-gray-50 p-8 shadow"
-            >
-              <label
-                htmlFor="question"
-                className="text-lg font-semibold text-gray-800"
-              >
-                Ask a question about this product:
-              </label>
-              <textarea
-                id="question"
-                className="w-full rounded-lg border border-[#ddd] px-4 py-3 text-base focus:border-[#ddd] focus:border-primary focus:ring-2 focus:ring-primary"
-                placeholder="Type your question here..."
-                value={questionText}
-                minLength={5}
-                maxLength={500}
-                onChange={(e) => setQuestionText(e.target.value)}
-                required
-                rows={3}
-                disabled={askQuestionMutation.isPending}
-              />
-              {error && <div className="text-sm text-red-500">{error}</div>}
-              <Button
-                type="submit"
-                disabled={askQuestionMutation.isPending}
-                className="hover:bg-black/75/90 w-full bg-black text-white hover:bg-black hover:bg-black/75"
-              >
-                {askQuestionMutation.isPending
-                  ? "Submitting..."
-                  : "Submit Question"}
-              </Button>
-            </form>
-          </div>
-        )}
-      </section>
     </>
   );
 }

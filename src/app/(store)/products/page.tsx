@@ -797,7 +797,7 @@ export default function ProductsPage() {
       </div>
 
       {/* Mobile Filter Button - Fixed at bottom right */}
-      <div className="fixed bottom-6 right-6 z-50 md:hidden">
+      {/* <div className="fixed bottom-6 right-6 z-50 md:hidden">
         <button
           onClick={toggleMobileFilter}
           className="flex items-center justify-center rounded-full bg-orange-500 p-4 text-white shadow-xl transition-colors hover:bg-orange-600"
@@ -805,7 +805,7 @@ export default function ProductsPage() {
         >
           <Funnel size={24} weight="bold" />
         </button>
-      </div>
+      </div> */}
 
       {/* Mobile Filter Sidebar */}
       {showMobileFilter && (
