@@ -20,9 +20,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
     setError("");
     try {
       await newsletterMutation.mutateAsync({ email });
-      setSuccess(
-        "Thank you for subscribing! Check your email for a discount code.",
-      );
+      setSuccess("Thank you for subscribing to our newsletter!");
       setEmail("");
     } catch (err: unknown) {
       if (
@@ -45,10 +43,10 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
           <div className="mx-auto flex w-full !max-w-[1322px] items-center justify-center gap-8 gap-y-4 px-4 max-lg:flex-col lg:justify-between">
             <div className="text-content">
               <div className="text-[36px] font-semibold capitalize leading-[40px] max-lg:text-center md:text-[20px] md:leading-[28px] lg:text-[30px] lg:leading-[38px]">
-                Sign up and get 10% off
+                Subscribe to our newsletter
               </div>
               <div className="mt-2 max-lg:text-center">
-                Sign up for early sale access, new in, promotions and more
+                Sign up for updates, early sale access, promotions and more
               </div>
             </div>
             <div className="input-block h-[52px] w-full sm:w-3/5 md:w-1/2 xl:w-5/12">
@@ -84,7 +82,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
         <>
           <div className="text-button-uppercase">Newsletter</div>
           <div className="caption1 mt-3">
-            Sign up for our newsletter and get 10% off your first purchase
+            Subscribe to our newsletter for updates and offers
           </div>
           <div className="input-block mt-4 h-[52px] w-full">
             <form className="relative h-full w-full" onSubmit={handleSubmit}>

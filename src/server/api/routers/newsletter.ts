@@ -20,7 +20,7 @@ export const newsletterRouter = createTRPCRouter({
         data: { email: input.email },
       });
 
-      // Send welcome email with discount code
+      // Send welcome email without discount code
       const resend = new Resend(process.env.RESEND_API_KEY);
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
@@ -29,11 +29,7 @@ export const newsletterRouter = createTRPCRouter({
           </div>
           <div style="padding: 24px 32px;">
             <p>Thank you for subscribing to our newsletter!</p>
-            <p>As promised, here's your 10% discount code:</p>
-            <div style="background: #f7f7f7; padding: 16px; border-radius: 4px; text-align: center; margin: 24px 0;">
-              <strong style="font-size: 24px;">WELCOME10</strong>
-            </div>
-            <p>Use this code at checkout to get 10% off your first purchase.</p>
+            <p>You'll now receive updates, news, and exclusive offers from us.</p>
             <p style="margin-top: 32px; color: #888; font-size: 13px;">You can unsubscribe at any time by clicking the unsubscribe link in our emails.</p>
           </div>
         </div>
@@ -42,7 +38,7 @@ export const newsletterRouter = createTRPCRouter({
       await resend.emails.send({
         from: "no-reply@rinors.com",
         to: input.email,
-        subject: "Welcome to Rinors Newsletter - Your 10% Discount Code",
+        subject: "Welcome to Rinors Newsletter!",
         html,
       });
 
