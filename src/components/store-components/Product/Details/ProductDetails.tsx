@@ -932,36 +932,32 @@ export default function ProductDetails({
         <div className="desc-tab mt-10 lg:flex lg:gap-x-8">
           <div className="mx-auto w-full min-w-0 !max-w-[1322px] flex-1 bg-white px-4 py-10 md:py-20">
             <div className="flex w-full items-center justify-center">
-              <div className="menu-tab flex items-center gap-8 md:gap-[60px]">
-                <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "specifications" ? "active" : ""}`}
-                  onClick={() => handleActiveTab("specifications")}
-                >
-                  Specifications
-                </div>
-                <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "description" ? "active" : ""}`}
-                  onClick={() => handleActiveTab("description")}
-                >
-                  Description
-                </div>
-                {/* Questions */}
-                <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "questions" ? "active" : ""}`}
-                  onClick={() => handleActiveTab("questions")}
-                >
-                  Questions ({questions?.length ?? 0})
-                </div>
-
-                {/* Questions */}
-
-                {/* Reviews */}
-                <div
-                  className={`tab-item heading5 has-line-before text-secondary2 duration-300 ${activeTab === "review" ? "active" : ""}`}
-                  onClick={() => handleActiveTab("review")}
-                >
-                  Reviews ({reviewStats.totalCount})
-                </div>
+              <div className="menu-tab relative flex items-center gap-2 overflow-x-auto rounded-2xl bg-gray-100 p-1">
+                {[
+                  { key: "specifications", label: "Specifications" },
+                  { key: "description", label: "Description" },
+                  {
+                    key: "questions",
+                    label: `Questions (${questions?.length ?? 0})`,
+                  },
+                  {
+                    key: "review",
+                    label: `Reviews (${reviewStats.totalCount})`,
+                  },
+                ].map((tab) => (
+                  <div
+                    id={`tab-${tab.key}`}
+                    key={tab.key}
+                    className={`relative flex-shrink-0 cursor-pointer rounded-2xl px-5 py-2 font-semibold transition-all duration-300 ${
+                      activeTab === tab.key
+                        ? "bg-white text-black shadow"
+                        : "bg-transparent text-secondary hover:bg-white/70"
+                    }`}
+                    onClick={() => handleActiveTab(tab.key)}
+                  >
+                    {tab.label}
+                  </div>
+                ))}
               </div>
             </div>
             <div className="desc-block mt-8">
