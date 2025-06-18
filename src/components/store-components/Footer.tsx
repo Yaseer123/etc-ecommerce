@@ -36,7 +36,10 @@ const Footer = () => {
                     </span>
                   </div>
 
-                  <div className="support-block mb-8 flex basis-1/4 flex-col pr-12 max-lg:basis-full">
+                  
+                </div>
+              </div>
+              <div className="support-block mb-8 flex basis-1/4 flex-col pr-12 max-lg:basis-full">
                     <div>
                       <h4 className="mb-4 text-lg font-semibold">Support</h4>
                       <Link
@@ -66,14 +69,13 @@ const Footer = () => {
                       </div>
                       <div className="flex flex-col border-[#ddd] border-l-2 pl-4">
                         <p className="text-xs text-[#838383]">Store Locator</p>
-                        <h5 className="text-lg font-bold text-[#081621]">
+                        <h3 className="text-lg font-bold text-[#081621] whitespace-nowrap">
                           Find Our Store
-                        </h5>
+                        </h3>
                       </div>
                     </a>
                   </div>
-                </div>
-              </div>
+
               <div className="right-content flex basis-3/4 flex-wrap gap-y-8 max-lg:basis-full">
                 <div className="list-nav flex basis-2/3 justify-between gap-4 max-md:basis-full">
                   <div className="item flex basis-1/3 flex-col">
