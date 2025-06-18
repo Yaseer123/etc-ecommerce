@@ -20,7 +20,7 @@ const RelatedProductsSidebar: React.FC<RelatedProductsSidebarProps> = ({
   // Filter out the current product and limit to 4
   const relatedProducts = (products || [])
     .filter((p) => p.id !== excludeProductId)
-    .slice(0, 4);
+    .slice(0, 2);
 
   if (!categoryId) return null;
 

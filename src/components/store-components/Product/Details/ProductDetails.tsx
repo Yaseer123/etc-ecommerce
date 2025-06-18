@@ -507,7 +507,7 @@ export default function ProductDetails({
 
   return (
     <>
-      <div className="product-detail sale">
+      <div className="product-detail sale mb-5">
         <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
             <div className="list-img w-full lg:w-1/2 lg:pr-[45px]">
@@ -1415,7 +1415,7 @@ export default function ProductDetails({
             </div>
           </div>
           {/* Related Products Sidebar beside tabs, outside white bg */}
-          <div className="mt-10 hidden w-full max-w-xs flex-shrink-0 lg:block">
+          <div className="hidden w-full max-w-xs flex-shrink-0 lg:block">
             <RelatedProductsSidebar
               categoryId={
                 productMain.category?.id ?? productMain.categoryId ?? undefined
