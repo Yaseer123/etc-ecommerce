@@ -20,6 +20,53 @@ type OrderItem = {
   product?: { title?: string };
 };
 
+// --- Branded Email Components ---
+const emailHeader = `
+  <div style="background: #fff; text-align: center; padding: 24px 0 8px 0;">
+    <img src="https://rinors.com/images/brand/RINORS.png" alt="Rinors Logo" style="height: 48px;" />
+  </div>
+`;
+const contactInfo = `
+  <div style="text-align: center; font-size: 14px; color: #333; margin-bottom: 12px;">
+    <strong>Contact:</strong> rinorscorporation@gmail.com | <strong>Phone:</strong> 01312223452<br/>
+    <span>41/5 east badda Dhaka, Bangladesh</span>
+  </div>
+`;
+const socialLinks = `
+  <div style="text-align: center; margin: 12px 0;">
+    <a href="https://www.facebook.com/profile.php?id=61572946813700" style="margin: 0 6px; text-decoration: none;" target="_blank">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/facebook.svg" alt="Facebook" width="24" height="24" style="vertical-align:middle;"/>
+    </a>
+    <a href="https://www.instagram.com/rinors_electronic_store/" style="margin: 0 6px; text-decoration: none;" target="_blank">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" width="24" height="24" style="vertical-align:middle;"/>
+    </a>
+    <a href="https://x.com/Rinors_Corpor" style="margin: 0 6px; text-decoration: none;" target="_blank">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="24" height="24" style="vertical-align:middle;"/>
+    </a>
+    <a href="https://www.tiktok.com/@rinors_ecommerce" style="margin: 0 6px; text-decoration: none;" target="_blank">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="24" height="24" style="vertical-align:middle;"/>
+    </a>
+    <a href="https://www.youtube.com/@rinorsgreenenergy" style="margin: 0 6px; text-decoration: none;" target="_blank">
+      <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="24" height="24" style="vertical-align:middle;"/>
+    </a>
+  </div>
+`;
+const importantLinks = `
+  <div style="text-align: center; margin-bottom: 16px; font-size: 14px;">
+    <a href="https://rinors.com/contact" style="margin: 0 10px; color: #007b55; text-decoration: none;">Contact Us</a> |
+    <a href="https://rinors.com/my-account" style="margin: 0 10px; color: #007b55; text-decoration: none;">My Account</a> |
+    <a href="https://rinors.com/order-tracking" style="margin: 0 10px; color: #007b55; text-decoration: none;">Order Tracking</a> |
+    <a href="https://rinors.com/faqs" style="margin: 0 10px; color: #007b55; text-decoration: none;">FAQs</a> |
+    <a href="https://rinors.com/privacy-policy" style="margin: 0 10px; color: #007b55; text-decoration: none;">Privacy Policy</a>
+  </div>
+`;
+const emailFooter = `
+  <div style="background: #f7f7f7; color: #888; text-align: center; padding: 12px 0; font-size: 13px;">
+    &copy; 2024 Rinors Corporation. All Rights Reserved.
+  </div>
+`;
+// --- END Branded Email Components ---
+
 export const orderRouter = createTRPCRouter({
   getOrders: protectedProcedure.query(async ({ ctx }) => {
     return await ctx.db.order.findMany({
@@ -310,52 +357,6 @@ export const orderRouter = createTRPCRouter({
         : "";
 
       // --- Professional Email Wrapper ---
-      const emailHeader = `
-        <div style="background: #fff; text-align: center; padding: 24px 0 8px 0;">
-          <img src="https://rinors.com/images/brand/RINORS.png" alt="Rinors Logo" style="height: 48px;" />
-        </div>
-      `;
-      const contactInfo = `
-        <div style="text-align: center; font-size: 14px; color: #333; margin-bottom: 12px;">
-          <strong>Contact:</strong> rinorscorporation@gmail.com | <strong>Phone:</strong> 01312223452<br/>
-          <span>41/5 east badda Dhaka, Bangladesh</span>
-        </div>
-      `;
-      const socialLinks = `
-        <div style="text-align: center; margin: 12px 0;">
-          <a href="https://www.facebook.com/profile.php?id=61572946813700" style="margin: 0 6px; text-decoration: none;" target="_blank">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/facebook.svg" alt="Facebook" width="24" height="24" style="vertical-align:middle;"/>
-          </a>
-          <a href="https://www.instagram.com/rinors_electronic_store/" style="margin: 0 6px; text-decoration: none;" target="_blank">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/instagram.svg" alt="Instagram" width="24" height="24" style="vertical-align:middle;"/>
-          </a>
-          <a href="https://x.com/Rinors_Corpor" style="margin: 0 6px; text-decoration: none;" target="_blank">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg" alt="X (Twitter)" width="24" height="24" style="vertical-align:middle;"/>
-          </a>
-          <a href="https://www.tiktok.com/@rinors_ecommerce" style="margin: 0 6px; text-decoration: none;" target="_blank">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="24" height="24" style="vertical-align:middle;"/>
-          </a>
-          <a href="https://www.youtube.com/@rinorsgreenenergy" style="margin: 0 6px; text-decoration: none;" target="_blank">
-            <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="24" height="24" style="vertical-align:middle;"/>
-          </a>
-        </div>
-      `;
-      const importantLinks = `
-        <div style="text-align: center; margin-bottom: 16px; font-size: 14px;">
-          <a href="https://rinors.com/contact" style="margin: 0 10px; color: #007b55; text-decoration: none;">Contact Us</a> |
-          <a href="https://rinors.com/my-account" style="margin: 0 10px; color: #007b55; text-decoration: none;">My Account</a> |
-          <a href="https://rinors.com/order-tracking" style="margin: 0 10px; color: #007b55; text-decoration: none;">Order Tracking</a> |
-          <a href="https://rinors.com/faqs" style="margin: 0 10px; color: #007b55; text-decoration: none;">FAQs</a> |
-          <a href="https://rinors.com/privacy-policy" style="margin: 0 10px; color: #007b55; text-decoration: none;">Privacy Policy</a>
-        </div>
-      `;
-      const emailFooter = `
-        <div style="background: #f7f7f7; color: #888; text-align: center; padding: 12px 0; font-size: 13px;">
-          &copy; 2024 Rinors Corporation. All Rights Reserved.
-        </div>
-      `;
-      // --- END Professional Email Wrapper ---
-
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
           ${emailHeader}
@@ -447,38 +448,133 @@ export const orderRouter = createTRPCRouter({
         try {
           const user = updatedOrder.user;
           if (user?.email) {
+            // Fetch order items and address for product table
+            const orderWithDetails = await ctx.db.order.findUnique({
+              where: { id: updatedOrder.id },
+              include: {
+                items: {
+                  select: {
+                    id: true,
+                    productId: true,
+                    quantity: true,
+                    price: true,
+                    color: true,
+                    size: true,
+                    sku: true,
+                    product: true,
+                  },
+                },
+                address: true,
+              },
+            });
+            // Build product details table
+            let productRows = "";
+            if (
+              orderWithDetails &&
+              Array.isArray(orderWithDetails.items) &&
+              orderWithDetails.items.length > 0
+            ) {
+              for (const item of orderWithDetails.items) {
+                let productTitle = item.product?.title;
+                if (!productTitle && item.productId) {
+                  const prod = await ctx.db.product.findUnique({
+                    where: { id: item.productId },
+                  });
+                  productTitle = prod?.title ?? "Unknown Product";
+                }
+                const color = item.color
+                  ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+                  : "";
+                const size = item.size
+                  ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
+                  : "";
+                const sku = item.sku
+                  ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
+                  : "";
+                productRows += `
+                  <tr>
+                    <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
+                      ${productTitle}${color}${size}${sku}
+                    </td>
+                    <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+                    <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
+                  </tr>
+                `;
+              }
+            }
+            const productsTable = productRows
+              ? `<div style="margin-bottom: 24px;">
+                      <strong>Products:</strong>
+                      <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px;">
+                        <thead>
+                          <tr style="background: #f7f7f7;">
+                            <th style="text-align: left; padding: 8px 12px; border-bottom: 2px solid #ddd;">Product</th>
+                            <th style="text-align: center; padding: 8px 12px; border-bottom: 2px solid #ddd;">Qty</th>
+                            <th style="text-align: right; padding: 8px 12px; border-bottom: 2px solid #ddd;">Price</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${productRows}
+                        </tbody>
+                      </table>
+                    </div>`
+              : "";
+            const addressBlock = orderWithDetails?.address
+              ? `<div style="margin-bottom: 16px;">
+                      <strong>Shipping Address:</strong><br/>
+                      ${orderWithDetails.address.street}<br/>
+                      ${orderWithDetails.address.city}, ${orderWithDetails.address.state} ${orderWithDetails.address.zipCode}<br/>
+                      <strong>Mobile:</strong> ${orderWithDetails.address.phone}<br/>
+                      <strong>Email:</strong> ${orderWithDetails.address.email}
+                   </div>`
+              : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
+            const notesBlock = orderWithDetails?.notes
+              ? `<div style="margin-bottom: 16px;"><strong>Additional Notes:</strong><br/>${orderWithDetails.notes}</div>`
+              : "";
             let subject = "";
             let html = "";
             if (input.status === "SHIPPED") {
               subject = "Your order has been shipped!";
               html = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-                  <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-                    <h2 style="margin: 0;">Order Shipped!</h2>
-                  </div>
+                  ${emailHeader}
                   <div style="padding: 24px 32px;">
+                    <h2 style="margin: 0; color: #007b55;">Order Shipped!</h2>
                     <p>Hi${user.name ? ` ${user.name}` : ""},</p>
                     <p>Your order <b>${updatedOrder.id}</b> has been <b>shipped</b> and is on its way!</p>
                     <p><strong>Order ID:</strong> ${updatedOrder.id}</p>
                     <p><strong>Total:</strong> ৳${updatedOrder.total}</p>
+                    ${productsTable}
+                    ${addressBlock}
+                    ${notesBlock}
                     <p style="margin-top: 32px; color: #888; font-size: 13px;">Thank you for shopping with us!</p>
                   </div>
+                  ${contactInfo}
+                  ${socialLinks}
+                  ${importantLinks}
+                  ${emailFooter}
                 </div>
               `;
             } else if (input.status === "CANCELLED") {
               subject = "Your order has been cancelled";
               html = `
                 <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-                  <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-                    <h2 style="margin: 0;">Order Cancelled</h2>
-                  </div>
+                  ${emailHeader}
                   <div style="padding: 24px 32px;">
+                    <h2 style="margin: 0; color: #d32f2f;">Order Cancelled</h2>
                     <p>Hi${user.name ? ` ${user.name}` : ""},</p>
                     <p>Your order <b>${updatedOrder.id}</b> has been <b>cancelled</b>.</p>
                     <p><strong>Order ID:</strong> ${updatedOrder.id}</p>
                     <p><strong>Total:</strong> ৳${updatedOrder.total}</p>
+                    ${productsTable}
+                    ${addressBlock}
+                    ${notesBlock}
                     <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
                   </div>
+                  ${contactInfo}
+                  ${socialLinks}
+                  ${importantLinks}
+                  ${emailFooter}
                 </div>
               `;
             }
@@ -691,13 +787,11 @@ export const orderRouter = createTRPCRouter({
         : "";
 
       // Send emails (outside transaction)
-      console.log("EMAIL HTML:", html);
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-          <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-            <h2 style="margin: 0;">New Guest Order Placed</h2>
-          </div>
+          ${emailHeader}
           <div style="padding: 24px 32px;">
+            <h2 style="margin: 0; color: #007b55;">New Guest Order Placed</h2>
             <p style="font-size: 16px;">A new guest order has been placed on Rinors Ecommerce Admin.</p>
             <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
             <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
@@ -706,8 +800,13 @@ export const orderRouter = createTRPCRouter({
             ${notesBlock}
             <p style="margin-top: 32px; color: #888; font-size: 13px;">Please process this order promptly.</p>
           </div>
+          ${contactInfo}
+          ${socialLinks}
+          ${importantLinks}
+          ${emailFooter}
         </div>
       `;
+      console.log("EMAIL HTML:", html);
       await resend.emails.send({
         from: "no-reply@rinors.com",
         to: "rinorscorporation@gmail.com",
@@ -718,10 +817,9 @@ export const orderRouter = createTRPCRouter({
       if (address?.email) {
         const guestHtml = `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-            <div style="background: #222; color: #fff; padding: 24px 32px;">
-              <h2 style="margin: 0;">Order Confirmed!</h2>
-            </div>
+            ${emailHeader}
             <div style="padding: 24px 32px;">
+              <h2 style="margin: 0; color: #222;">Order Confirmed!</h2>
               <p>Hi${address.name ? ` ${address.name}` : ""},</p>
               <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
               <p><strong>Order ID:</strong> ${order.id}</p>
@@ -731,6 +829,10 @@ export const orderRouter = createTRPCRouter({
               ${notesBlock}
               <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
             </div>
+            ${contactInfo}
+            ${socialLinks}
+            ${importantLinks}
+            ${emailFooter}
           </div>
         `;
         console.log("EMAIL HTML:", guestHtml);
@@ -785,18 +887,107 @@ export const orderRouter = createTRPCRouter({
       try {
         const user = updatedOrder.user;
         if (user?.email) {
+          // Fetch order items and address for product table
+          const orderWithDetails = await ctx.db.order.findUnique({
+            where: { id: updatedOrder.id },
+            include: {
+              items: {
+                select: {
+                  id: true,
+                  productId: true,
+                  quantity: true,
+                  price: true,
+                  color: true,
+                  size: true,
+                  sku: true,
+                  product: true,
+                },
+              },
+              address: true,
+            },
+          });
+          // Build product details table
+          let productRows = "";
+          if (
+            orderWithDetails &&
+            Array.isArray(orderWithDetails.items) &&
+            orderWithDetails.items.length > 0
+          ) {
+            for (const item of orderWithDetails.items) {
+              let productTitle = item.product?.title;
+              if (!productTitle && item.productId) {
+                const prod = await ctx.db.product.findUnique({
+                  where: { id: item.productId },
+                });
+                productTitle = prod?.title ?? "Unknown Product";
+              }
+              const color = item.color
+                ? `<br/><span style='color:#555;'>Color: ${item.color}</span>`
+                : "";
+              const size = item.size
+                ? `<br/><span style='color:#555;'>Size: ${item.size}</span>`
+                : "";
+              const sku = item.sku
+                ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
+                : "";
+              productRows += `
+                <tr>
+                  <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
+                    ${productTitle}${color}${size}${sku}
+                  </td>
+                  <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
+                  <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
+                </tr>
+              `;
+            }
+          }
+          const productsTable = productRows
+            ? `<div style="margin-bottom: 24px;">
+                    <strong>Products:</strong>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15px;">
+                      <thead>
+                        <tr style="background: #f7f7f7;">
+                          <th style="text-align: left; padding: 8px 12px; border-bottom: 2px solid #ddd;">Product</th>
+                          <th style="text-align: center; padding: 8px 12px; border-bottom: 2px solid #ddd;">Qty</th>
+                          <th style="text-align: right; padding: 8px 12px; border-bottom: 2px solid #ddd;">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        ${productRows}
+                      </tbody>
+                    </table>
+                  </div>`
+            : "";
+          const addressBlock = orderWithDetails?.address
+            ? `<div style="margin-bottom: 16px;">
+                    <strong>Shipping Address:</strong><br/>
+                    ${orderWithDetails.address.street}<br/>
+                    ${orderWithDetails.address.city}, ${orderWithDetails.address.state} ${orderWithDetails.address.zipCode}<br/>
+                    <strong>Mobile:</strong> ${orderWithDetails.address.phone}<br/>
+                    <strong>Email:</strong> ${orderWithDetails.address.email}
+                 </div>`
+            : '<div style="margin-bottom: 16px;"><em>No address provided.</em></div>';
+          const notesBlock = orderWithDetails?.notes
+            ? `<div style="margin-bottom: 16px;"><strong>Additional Notes:</strong><br/>${orderWithDetails.notes}</div>`
+            : "";
           const html = `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #eee; border-radius: 8px; overflow: hidden;">
-              <div style="background: #007b55; color: #fff; padding: 24px 32px;">
-                <h2 style="margin: 0;">Order Cancelled</h2>
-              </div>
+              ${emailHeader}
               <div style="padding: 24px 32px;">
+                <h2 style="margin: 0; color: #d32f2f;">Order Cancelled</h2>
                 <p>Hi${user.name ? ` ${user.name}` : ""},</p>
                 <p>Your order <b>${updatedOrder.id}</b> has been <b>cancelled</b>.</p>
                 <p><strong>Order ID:</strong> ${updatedOrder.id}</p>
                 <p><strong>Total:</strong> ৳${updatedOrder.total}</p>
+                ${productsTable}
+                ${addressBlock}
+                ${notesBlock}
                 <p style="margin-top: 32px; color: #888; font-size: 13px;">If you have any questions, reply to this email.</p>
               </div>
+              ${contactInfo}
+              ${socialLinks}
+              ${importantLinks}
+              ${emailFooter}
             </div>
           `;
           await resend.emails.send({
