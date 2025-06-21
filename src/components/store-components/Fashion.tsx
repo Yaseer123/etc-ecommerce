@@ -10,7 +10,7 @@ const RecentlyAdded = () => {
     data: categories,
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
-  } = api.category.getAllParent.useQuery();
+  } = api.category.getAllParentOrderedByRecentProduct.useQuery();
 
   const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
 
@@ -122,7 +122,7 @@ const RecentlyAdded = () => {
           ) : (
             <div className="list-product hide-product-sold mt-6 grid grid-cols-2 gap-[20px] sm:gap-[30px] md:mt-10 lg:grid-cols-4">
               {products
-                ?.slice(0, 3)
+                ?.slice(0, 4)
                 .map((prd, index) => (
                   <Product key={index} data={prd} style="style-1" />
                 ))}

@@ -6,6 +6,7 @@ import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
+  type createTRPCContext,
 } from "@/server/api/trpc";
 import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
 import type { Prisma } from "@prisma/client";
@@ -13,19 +14,32 @@ import { StockStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+interface Variant {
+  [key: string]: unknown;
+  colorName?: string;
+  colorHex?: string;
+  size?: string;
+  images?: string[];
+  price?: number;
+  discountedPrice?: number;
+  stock?: number;
+  imageId?: string;
+  sku?: string;
+}
+
 // Helper to ensure variants are an array of objects
-function normalizeVariants(variants: unknown): Record<string, any>[] {
+function normalizeVariants(variants: unknown): Variant[] {
   if (Array.isArray(variants)) {
     return variants.filter(
-      (v) => v && typeof v === "object" && !Array.isArray(v),
+      (v): v is Variant => v && typeof v === "object" && !Array.isArray(v),
     );
   }
   if (typeof variants === "string") {
     try {
-      const parsed = JSON.parse(variants);
+      const parsed = JSON.parse(variants) as unknown;
       if (Array.isArray(parsed)) {
         return parsed.filter(
-          (v) => v && typeof v === "object" && !Array.isArray(v),
+          (v): v is Variant => v && typeof v === "object" && !Array.isArray(v),
         );
       }
     } catch {
@@ -35,9 +49,11 @@ function normalizeVariants(variants: unknown): Record<string, any>[] {
   return [];
 }
 
+type Context = Awaited<ReturnType<typeof createTRPCContext>>;
+
 // Helper to get the root/primary category name for a given categoryId
 async function getRootCategoryName(
-  ctx: any,
+  ctx: Context,
   categoryId: string,
 ): Promise<string> {
   let currentId = categoryId;
@@ -154,40 +170,43 @@ export const productRouter = createTRPCRouter({
       }),
     )
     .query(async ({ ctx, input }) => {
+      let products;
       if (!input.categoryId) {
-        // Remove deletedAt from where clause, filter after query
-        const products = await ctx.db.product.findMany({
+        products = await ctx.db.product.findMany({
           include: { category: true },
         });
-        return products.filter((p) => p.deletedAt === null);
+      } else {
+        const getChildCategoryIds = async (
+          parentId: string,
+        ): Promise<string[]> => {
+          const subcategories = await ctx.db.category.findMany({
+            where: { parentId },
+            select: { id: true },
+          });
+
+          const childIds = subcategories.map((subcategory) => subcategory.id);
+          const nestedChildIds = await Promise.all(
+            childIds.map((id) => getChildCategoryIds(id)),
+          );
+
+          return [parentId, ...nestedChildIds.flat()];
+        };
+
+        const categoryIds = await getChildCategoryIds(input.categoryId);
+
+        products = await ctx.db.product.findMany({
+          where: { categoryId: { in: categoryIds } },
+          include: { category: true },
+          orderBy: { position: "asc" },
+        });
       }
 
-      // Fetch all child category IDs recursively
-      const getChildCategoryIds = async (
-        parentId: string,
-      ): Promise<string[]> => {
-        const subcategories = await ctx.db.category.findMany({
-          where: { parentId },
-          select: { id: true },
-        });
+      const productsWithNormalizedVariants = products.map((product) => ({
+        ...product,
+        variants: normalizeVariants(product.variants) as any,
+      }));
 
-        const childIds = subcategories.map((subcategory) => subcategory.id);
-        const nestedChildIds = await Promise.all(
-          childIds.map((id) => getChildCategoryIds(id)),
-        );
-
-        return [parentId, ...nestedChildIds.flat()];
-      };
-
-      const categoryIds = await getChildCategoryIds(input.categoryId);
-
-      // Fetch products for all category IDs, filter after query
-      const products = await ctx.db.product.findMany({
-        where: { categoryId: { in: categoryIds } },
-        include: { category: true },
-        orderBy: { position: "asc" },
-      });
-      return products.filter((p) => p.deletedAt === null);
+      return productsWithNormalizedVariants.filter((p) => p.deletedAt === null);
     }),
 
   getProductById: publicProcedure
@@ -504,17 +523,14 @@ export const productRouter = createTRPCRouter({
     });
 
     // Update variants with SKUs
-    let updatedVariants = normalizeVariants(createdProduct.variants).map(
+    const updatedVariants = normalizeVariants(createdProduct.variants).map(
       (v) => ({
         ...v,
         sku: generateSKU({
           categoryName,
           productId: createdProduct.id,
-          color:
-            typeof v === "object" && "colorName" in v && v.colorName
-              ? v.colorName
-              : "UNNAMED",
-          size: typeof v === "object" && "size" in v ? v.size : undefined,
+          color: v.colorName ?? "UNNAMED",
+          size: v.size,
         }),
       }),
     );
@@ -607,39 +623,38 @@ export const productRouter = createTRPCRouter({
         ctx,
         categoryId ?? existingProduct?.categoryId ?? "",
       );
-      let newCategoryName = rootCategoryName;
+      const newCategoryName = rootCategoryName;
 
       // Always regenerate SKU for main product
       const newSKU = generateSKU({
         categoryName: newCategoryName,
         productId: id,
         color: input.defaultColor ?? existingProduct?.defaultColor ?? "UNNAMED",
-        size: input.defaultSize ?? existingProduct?.defaultSize,
+        size: (input.defaultSize ?? existingProduct?.defaultSize) || undefined,
       });
 
       // Debug log for SKU update
       console.log("Updating SKU to:", newSKU, "for product", id);
 
       // Always regenerate SKUs for all variants, ignore incoming variant SKUs
-      let updatedVariants = normalizeVariants(input.variants).map((v) => {
-        return {
-          ...v,
-          sku: generateSKU({
-            categoryName: newCategoryName,
-            productId: id,
-            color:
-              typeof v === "object" && "colorName" in v && v.colorName
-                ? v.colorName
-                : "UNNAMED",
-            size: typeof v === "object" && "size" in v ? v.size : undefined,
-          }),
-        };
-      });
+      const updatedVariantsFromInput = normalizeVariants(input.variants).map(
+        (v) => {
+          return {
+            ...v,
+            sku: generateSKU({
+              categoryName: newCategoryName,
+              productId: id,
+              color: v.colorName ?? "UNNAMED",
+              size: v.size,
+            }),
+          };
+        },
+      );
 
       // Build the update data object field-by-field to avoid linter errors
       const allSkus = [
         newSKU,
-        ...updatedVariants.map((v) => v.sku).filter(Boolean),
+        ...updatedVariantsFromInput.map((v) => v.sku).filter(Boolean),
       ];
       const product = await ctx.db.product.update({
         where: { id },
@@ -662,8 +677,8 @@ export const productRouter = createTRPCRouter({
           categoryAttributes: categoryAttributes ?? {},
           category: categoryId ? { connect: { id: categoryId } } : undefined,
           ...(stockStatus ? { stockStatus } : {}),
-          variants: updatedVariants ?? undefined, // Update variants with SKUs
-          sku: newSKU ? newSKU : undefined, // Always set the correct SKU, ensure type safety
+          variants: updatedVariantsFromInput ?? undefined, // Update variants with SKUs
+          sku: newSKU ?? undefined, // Always set the correct SKU, ensure type safety
           allSkus,
         },
       });

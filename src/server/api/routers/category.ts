@@ -6,8 +6,8 @@ import type {
 import {
   adminProcedure,
   createTRPCRouter,
-  publicProcedure,
   protectedProcedure,
+  publicProcedure,
 } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -69,6 +69,51 @@ export const categoryRouter = createTRPCRouter({
     });
 
     return categories;
+  }),
+
+  getAllParentOrderedByRecentProduct: publicProcedure.query(async ({ ctx }) => {
+    const allCategories = await ctx.db.category.findMany();
+    const categoryMap = new Map(allCategories.map((c) => [c.id, c]));
+
+    const getRootParent = (categoryId: string) => {
+      let current = categoryMap.get(categoryId);
+      if (!current) return null;
+
+      while (current.parentId) {
+        const parent = categoryMap.get(current.parentId);
+        if (!parent) break;
+        current = parent;
+      }
+      return current;
+    };
+
+    const recentProducts = await ctx.db.product.findMany({
+      where: {
+        published: true,
+      },
+      orderBy: { createdAt: "desc" },
+      select: { categoryId: true },
+    });
+
+    const orderedParentCategories: typeof allCategories = [];
+    const seenParentIds = new Set<string>();
+
+    for (const product of recentProducts) {
+      if (product.categoryId) {
+        const parent = getRootParent(product.categoryId);
+        if (parent && !seenParentIds.has(parent.id)) {
+          orderedParentCategories.push(parent);
+          seenParentIds.add(parent.id);
+        }
+      }
+    }
+
+    // Add parent categories that might not have products yet to the end of the list
+    const otherParentCategories = allCategories.filter(
+      (c) => c.parentId === null && !seenParentIds.has(c.id),
+    );
+
+    return [...orderedParentCategories, ...otherParentCategories];
   }),
 
   getOne: publicProcedure
