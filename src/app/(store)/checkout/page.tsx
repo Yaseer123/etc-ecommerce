@@ -2,7 +2,7 @@
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { api } from "@/trpc/react";
-import { CaretDown } from "@phosphor-icons/react/dist/ssr";
+import { Minus, Plus } from "@phosphor-icons/react/dist/ssr";
 import type { Order } from "@prisma/client";
 import { HomeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -63,9 +63,14 @@ const Checkout = () => {
   const discount = searchParams?.get("discount") ?? "0";
   const ship = searchParams?.get("ship") ?? "0";
 
-  const { cartArray, note, setNote } = useCartStore() as {
-    cartArray: CartItem[];
-  };
+  const { cartArray, note, setNote, updateCart, removeFromCart } =
+    useCartStore() as {
+      cartArray: CartItem[];
+      note: string;
+      setNote: (note: string) => void;
+      updateCart: (itemId: string, quantity: number) => void;
+      removeFromCart: (itemId: string) => void;
+    };
   const [totalCart, setTotalCart] = useState<number>(0);
   const [orderSuccess, setOrderSuccess] = useState<OrderSuccessType>(null);
   const [orderError, setOrderError] = useState("");
@@ -95,6 +100,14 @@ const Checkout = () => {
     );
     setTotalCart(sum);
   }, [checkoutItems]);
+
+  const handleQuantityChange = (itemId: string, newQuantity: number) => {
+    if (newQuantity > 0) {
+      updateCart(itemId, newQuantity);
+    } else {
+      removeFromCart(itemId);
+    }
+  };
 
   const [newAddress, setNewAddress] = useState({
     name: "",
@@ -219,7 +232,7 @@ const Checkout = () => {
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
-        <div className="bg-surface mb-4 flex justify-between rounded-lg  py-3">
+        <div className="bg-surface mb-4 flex justify-between rounded-lg py-3">
           <div className="flex items-center">
             <span className="pr-4">Already have an account? </span>
             <Link
@@ -229,7 +242,6 @@ const Checkout = () => {
               Login
             </Link>
           </div>
-          
         </div>
       )}
       <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
@@ -370,6 +382,96 @@ const Checkout = () => {
     },
   });
 
+  const handlePlaceOrder = async () => {
+    if (checkoutItems.length === 0) {
+      setOrderError("Your cart is empty.");
+      return;
+    }
+    let addressId = undefined;
+    try {
+      if (session) {
+        const created = await createAddressMutation.mutateAsync({
+          name: newAddress.name,
+          email: newAddress.email,
+          phone: newAddress.mobile,
+          street: newAddress.address,
+          city: "",
+          state: "",
+          zipCode: "",
+        });
+        addressId = created.id;
+      } else {
+        const created = await createGuestAddressMutation.mutateAsync({
+          name: newAddress.name,
+          email: newAddress.email,
+          phone: newAddress.mobile,
+          street: newAddress.address,
+          city: "",
+          state: "",
+          zipCode: "",
+        });
+        addressId = created.id;
+      }
+    } catch (err) {
+      console.error("Failed to save address:", err);
+      setOrderError("Failed to save address. Please try again.");
+      return;
+    }
+    if (!addressId) {
+      setOrderError("No address found. Please enter your address.");
+      return;
+    }
+    if (session) {
+      placeOrder.mutate({
+        cartItems: checkoutItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          color: item.colorName ?? item.color,
+          size: item.size,
+          sku: item.sku,
+        })),
+        addressId,
+        notes: note,
+      });
+    } else {
+      placeGuestOrder.mutate({
+        cartItems: checkoutItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          color: item.colorName ?? item.color,
+          size: item.size,
+          sku: item.sku,
+        })),
+        addressId,
+        notes: note,
+      });
+      // Auto-register guest user after order
+      await fetch("/api/auth/auto-register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: newAddress.email,
+          name: newAddress.name,
+        }),
+      });
+    }
+  };
+
+  const paymentAndOrderSection = (
+    <>
+      {renderPaymentSection()}
+      <div className="mt-6 md:mt-10">
+        <button
+          className="duration-400 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
+          onClick={handlePlaceOrder}
+        >
+          Order Now
+        </button>
+        {orderError && <div className="mt-2 text-red-500">{orderError}</div>}
+      </div>
+    </>
+  );
+
   if (status === "loading") {
     return <div>Loading...</div>;
   }
@@ -400,103 +502,12 @@ const Checkout = () => {
       </div>
       <div className="py-10 md:py-20">
         <div className="mx-auto w-full !max-w-[1322px] px-4">
-          <div className="flex justify-between md:overflow-x-auto">
-            <div className="w-1/2">
+          <div className="flex flex-col justify-between gap-10 md:flex-row md:overflow-x-auto">
+            <div className="w-full md:w-1/2">
               {renderAddressSection()}
-              {renderPaymentSection()}
-              <div className="mt-6 md:mt-10">
-                <button
-                  className="duration-400 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
-                  onClick={async () => {
-                    if (checkoutItems.length === 0) {
-                      setOrderError("Your cart is empty.");
-                      return;
-                    }
-                    let addressId = undefined;
-                    try {
-                      if (session) {
-                        const created = await createAddressMutation.mutateAsync(
-                          {
-                            name: newAddress.name,
-                            email: newAddress.email,
-                            phone: newAddress.mobile,
-                            street: newAddress.address,
-                            city: "",
-                            state: "",
-                            zipCode: "",
-                          },
-                        );
-                        addressId = created.id;
-                      } else {
-                        const created =
-                          await createGuestAddressMutation.mutateAsync({
-                            name: newAddress.name,
-                            email: newAddress.email,
-                            phone: newAddress.mobile,
-                            street: newAddress.address,
-                            city: "",
-                            state: "",
-                            zipCode: "",
-                          });
-                        addressId = created.id;
-                      }
-                    } catch (err) {
-                      console.error("Failed to save address:", err);
-                      setOrderError(
-                        "Failed to save address. Please try again.",
-                      );
-                      return;
-                    }
-                    if (!addressId) {
-                      setOrderError(
-                        "No address found. Please enter your address.",
-                      );
-                      return;
-                    }
-                    if (session) {
-                      placeOrder.mutate({
-                        cartItems: checkoutItems.map((item) => ({
-                          productId: item.productId,
-                          quantity: item.quantity,
-                          color: item.colorName ?? item.color,
-                          size: item.size,
-                          sku: item.sku,
-                        })),
-                        addressId,
-                        notes: note,
-                      });
-                    } else {
-                      placeGuestOrder.mutate({
-                        cartItems: checkoutItems.map((item) => ({
-                          productId: item.productId,
-                          quantity: item.quantity,
-                          color: item.colorName ?? item.color,
-                          size: item.size,
-                          sku: item.sku,
-                        })),
-                        addressId,
-                        notes: note,
-                      });
-                      // Auto-register guest user after order
-                      await fetch("/api/auth/auto-register", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({
-                          email: newAddress.email,
-                          name: newAddress.name,
-                        }),
-                      });
-                    }
-                  }}
-                >
-                  Order Now
-                </button>
-                {orderError && (
-                  <div className="mt-2 text-red-500">{orderError}</div>
-                )}
-              </div>
+              <div className="hidden md:block">{paymentAndOrderSection}</div>
             </div>
-            <div className="right w-5/12">
+            <div className="right w-full md:w-5/12">
               <div>
                 <div className="pb-3 text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                   Your Order
@@ -545,7 +556,7 @@ const Checkout = () => {
                     checkoutItems.map((product) => (
                       <div
                         key={product.id}
-                        className="mt-5 flex w-full items-center justify-between gap-6 border-b border-[#ddd] pb-5 focus:border-[#ddd] bg-white p-3 rounded-sm"
+                        className="mt-5 flex w-full items-start gap-4 border-b border-[#ddd] bg-white p-3 pb-5 focus:border-[#ddd]"
                       >
                         <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
                           <Image
@@ -559,34 +570,63 @@ const Checkout = () => {
                             className="h-full w-full"
                           />
                         </div>
-                        <div className="flex w-full items-center justify-between">
-                          <div>
+                        <div className="w-full">
+                          <div className="flex w-full items-start justify-between gap-4">
                             <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                               {product.name}
                             </div>
-                            {/* Variant details */}
-                            {(product.sku ?? product.color ?? product.size) && (
-                              <div className="mt-1 text-xs text-gray-500">
-                                {product.sku && <span>SKU: {product.sku}</span>}
-                                {(product.colorName ?? product.color) && (
-                                  <span className="ml-2">
-                                    Color: {product.colorName ?? product.color}
-                                  </span>
-                                )}
-                                {product.size && (
-                                  <span className="ml-2">
-                                    Size: {product.size}
-                                  </span>
-                                )}
-                              </div>
-                            )}
+                            <div className="hidden text-right text-base font-medium capitalize leading-6 md:block md:text-base md:leading-5">
+                              ৳{product.discountedPrice ?? product.price}
+                              .00
+                            </div>
                           </div>
-                          <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                            <span className="quantity">{product.quantity}</span>
-                            <span className="px-1">x</span>
-                            <span className="discounted-price">
-                              ৳{product.discountedPrice ?? product.price}.00
+
+                          {(product.sku ?? product.color ?? product.size) && (
+                            <div className="mt-1 text-xs text-gray-500">
+                              {product.sku && <span>SKU: {product.sku}</span>}
+                              {(product.colorName ?? product.color) && (
+                                <span className="ml-2">
+                                  Color: {product.colorName ?? product.color}
+                                </span>
+                              )}
+                              {product.size && (
+                                <span className="ml-2">
+                                  Size: {product.size}
+                                </span>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="mt-2 text-base font-medium capitalize leading-6 md:hidden md:text-base md:leading-5">
+                            ৳{product.discountedPrice ?? product.price}.00
+                          </div>
+
+                          <div className="mt-2 flex items-center">
+                            <button
+                              onClick={() =>
+                                handleQuantityChange(
+                                  product.id,
+                                  product.quantity - 1,
+                                )
+                              }
+                              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100"
+                            >
+                              <Minus size={16} />
+                            </button>
+                            <span className="quantity px-3 text-base font-medium">
+                              {product.quantity}
                             </span>
+                            <button
+                              onClick={() =>
+                                handleQuantityChange(
+                                  product.id,
+                                  product.quantity + 1,
+                                )
+                              }
+                              className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 hover:bg-gray-100"
+                            >
+                              <Plus size={16} />
+                            </button>
                           </div>
                         </div>
                       </div>
@@ -621,6 +661,7 @@ const Checkout = () => {
               </div>
             </div>
           </div>
+          <div className="block w-full md:hidden">{paymentAndOrderSection}</div>
         </div>
       </div>
     </>

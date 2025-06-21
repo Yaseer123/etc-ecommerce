@@ -2,14 +2,14 @@
 
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
-import { Trash, X } from "@phosphor-icons/react/dist/ssr";
+import { Minus, Plus, Trash, X } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { useState } from "react";
 import CartProductItem from "./CartProductItem";
 
 const ModalCart = () => {
   const { isModalOpen, closeModalCart } = useModalCartStore();
-  const { cartArray: cartState, removeFromCart } = useCartStore();
+  const { cartArray: cartState, removeFromCart, updateCart } = useCartStore();
 
   let [totalCart] = useState<number>(0);
 
@@ -77,14 +77,34 @@ const ModalCart = () => {
                           </div>
                           <div className="mt-auto flex items-center justify-between">
                             <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 transition-colors hover:border-gray-500 disabled:opacity-50"
+                                  onClick={() =>
+                                    updateCart(item.id, item.quantity - 1)
+                                  }
+                                  disabled={item.quantity === 1}
+                                >
+                                  <Minus size={12} />
+                                </button>
+                                <span className="text-sm font-medium">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  className="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 transition-colors hover:border-gray-500"
+                                  onClick={() =>
+                                    updateCart(item.id, item.quantity + 1)
+                                  }
+                                >
+                                  <Plus size={12} />
+                                </button>
+                              </div>
+                              <span className="text-xs text-gray-500">×</span>
                               <span className="discounted-price text-sm font-medium">
                                 ৳
                                 {(item.discountedPrice ?? item.price).toFixed(
                                   2,
                                 )}
-                              </span>
-                              <span className="text-xs text-gray-500">
-                                × {item.quantity}
                               </span>
                             </div>
                             <span className="font-medium text-black">
