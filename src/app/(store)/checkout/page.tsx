@@ -9,7 +9,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type OrderWithRelations = Order & {
   address?: {
@@ -62,6 +62,11 @@ const Checkout = () => {
   const searchParams = useSearchParams();
   const discount = searchParams?.get("discount") ?? "0";
   const ship = searchParams?.get("ship") ?? "0";
+
+  const nameInputRef = useRef<HTMLInputElement>(null);
+  const emailInputRef = useRef<HTMLInputElement>(null);
+  const mobileInputRef = useRef<HTMLInputElement>(null);
+  const addressInputRef = useRef<HTMLInputElement>(null);
 
   const { cartArray, note, setNote, updateCart, removeFromCart } =
     useCartStore() as {
@@ -252,6 +257,7 @@ const Checkout = () => {
           <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
             <div className="sm:col-span-2">
               <input
+                ref={nameInputRef}
                 className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="name"
                 type="text"
@@ -268,6 +274,7 @@ const Checkout = () => {
             </div>
             <div className="sm:col-span-2">
               <input
+                ref={emailInputRef}
                 className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="email"
                 type="email"
@@ -284,6 +291,7 @@ const Checkout = () => {
             </div>
             <div className="sm:col-span-2">
               <input
+                ref={mobileInputRef}
                 className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="mobile"
                 type="text"
@@ -300,6 +308,7 @@ const Checkout = () => {
             </div>
             <div className="sm:col-span-2">
               <input
+                ref={addressInputRef}
                 className="w-full rounded-lg border-[#ddd] px-4 py-3 focus:border-[#ddd]"
                 id="address"
                 type="text"
@@ -414,10 +423,8 @@ const Checkout = () => {
       }
     } catch (error) {
       console.error("Failed to save address:", error);
-      let errorMessage = "Failed to save address. Please try again.";
       if (error instanceof Error) {
         try {
-          // tRPC may serialize Zod errors as a JSON string in the message
           const parsedErrors = JSON.parse(error.message) as {
             path: (string | number)[];
             message: string;
@@ -429,18 +436,33 @@ const Checkout = () => {
             parsedErrors[0]?.path &&
             parsedErrors[0]?.message
           ) {
-            errorMessage = `Error in '${parsedErrors[0].path.join(
-              ".",
-            )}' field: ${parsedErrors[0].message}`;
+            const field = parsedErrors[0].path[0];
+            const message = parsedErrors[0].message;
+
+            let clientField: keyof typeof addressErrors = "name";
+            if (field === "name") clientField = "name";
+            if (field === "email") clientField = "email";
+            if (field === "phone") clientField = "mobile";
+            if (field === "street") clientField = "address";
+
+            setAddressErrors((prev) => ({
+              ...prev,
+              [clientField]: message,
+            }));
+
+            if (clientField === "name") nameInputRef.current?.focus();
+            if (clientField === "email") emailInputRef.current?.focus();
+            if (clientField === "mobile") mobileInputRef.current?.focus();
+            if (clientField === "address") addressInputRef.current?.focus();
           } else {
-            errorMessage = error.message;
+            setOrderError(error.message);
           }
         } catch (e) {
-          // If parsing fails, it's probably not a Zod error string
-          errorMessage = error.message;
+          setOrderError(error.message);
         }
+      } else {
+        setOrderError("An unknown error occurred. Please try again.");
       }
-      setOrderError(errorMessage);
       return;
     }
     if (!addressId) {
