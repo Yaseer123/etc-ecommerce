@@ -412,9 +412,35 @@ const Checkout = () => {
         });
         addressId = created.id;
       }
-    } catch (err) {
-      console.error("Failed to save address:", err);
-      setOrderError("Failed to save address. Please try again.");
+    } catch (error) {
+      console.error("Failed to save address:", error);
+      let errorMessage = "Failed to save address. Please try again.";
+      if (error instanceof Error) {
+        try {
+          // tRPC may serialize Zod errors as a JSON string in the message
+          const parsedErrors = JSON.parse(error.message) as {
+            path: (string | number)[];
+            message: string;
+          }[];
+
+          if (
+            Array.isArray(parsedErrors) &&
+            parsedErrors.length > 0 &&
+            parsedErrors[0]?.path &&
+            parsedErrors[0]?.message
+          ) {
+            errorMessage = `Error in '${parsedErrors[0].path.join(
+              ".",
+            )}' field: ${parsedErrors[0].message}`;
+          } else {
+            errorMessage = error.message;
+          }
+        } catch (e) {
+          // If parsing fails, it's probably not a Zod error string
+          errorMessage = error.message;
+        }
+      }
+      setOrderError(errorMessage);
       return;
     }
     if (!addressId) {
