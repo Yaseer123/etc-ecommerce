@@ -119,6 +119,10 @@ export default function AddProductForm() {
   const router = useRouter();
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
 
+  // Fetch all brands (no categoryId = all brands)
+  const { data: brands = [], isLoading: brandsLoading } =
+    api.product.getBrandsByCategory.useQuery({});
+
   const [title, setTitle] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [price, setPrice] = useState(0);
@@ -126,6 +130,8 @@ export default function AddProductForm() {
   const [slug, setSlug] = useState("");
   const [stock, setStock] = useState(0); // New state for stock
   const [brand, setBrand] = useState(""); // New state for brand
+  const [customBrand, setCustomBrand] = useState(""); // For custom brand input
+  const [isCustomBrand, setIsCustomBrand] = useState(false); // Track if custom brand is selected
   const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState<
     number | undefined
   >(undefined);
@@ -893,14 +899,53 @@ export default function AddProductForm() {
         {/* Brand */}
         <div className="flex w-full flex-col space-y-2">
           <Label className="text-base">Brand</Label>
-          <Input
-            type="text"
-            placeholder="Brand"
-            value={brand}
-            onChange={handleBrandChange}
-            className={errors.brand ? "border-red-500" : ""}
-            style={{ width: "100%" }}
-          />
+          {brandsLoading ? (
+            <div className="text-sm text-gray-500">Loading brands...</div>
+          ) : (
+            <Select
+              value={isCustomBrand ? "__custom__" : brand}
+              onValueChange={(value) => {
+                if (value === "__custom__") {
+                  setIsCustomBrand(true);
+                  setBrand("");
+                } else {
+                  setIsCustomBrand(false);
+                  setBrand(value);
+                }
+              }}
+            >
+              <SelectTrigger className={errors.brand ? "border-red-500" : ""}>
+                <SelectValue placeholder="Select a brand or add new" />
+              </SelectTrigger>
+              <SelectContent>
+                {brands.map((b: string) => (
+                  <SelectItem key={b} value={b} className="w-full">
+                    {b}
+                  </SelectItem>
+                ))}
+                <SelectItem value="__custom__" className="w-full text-blue-600">
+                  Other / New Brand...
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+          {isCustomBrand && (
+            <Input
+              type="text"
+              placeholder="Enter new brand name"
+              value={customBrand}
+              onChange={(e) => {
+                setCustomBrand(e.target.value);
+                setBrand(e.target.value);
+                setErrors((prev) => ({
+                  ...prev,
+                  brand: validateField("brand", e.target.value),
+                }));
+              }}
+              className={errors.brand ? "border-red-500" : ""}
+              style={{ width: "100%" }}
+            />
+          )}
           {errors.brand && (
             <p className="mt-1 text-sm text-red-500">{errors.brand}</p>
           )}
