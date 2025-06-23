@@ -357,7 +357,7 @@ export default function ProductsPage() {
 
   const handleSortChange = (option: string) => {
     setCurrentSortOption(option);
-    updateUrlParams({ sort: option === "Sorting" ? null : option });
+    updateUrlParams({ sort: option === "Default" ? null : option });
   };
 
   const handlePriceChange = (values: number | number[]) => {
@@ -549,8 +549,20 @@ export default function ProductsPage() {
     updateUrlParams({ page: selected.toString() });
   };
 
+  // Add products per page state and URL param
+  const perPageParam = searchParams?.get("perPage")
+    ? Number(searchParams.get("perPage"))
+    : 20;
+  const [productsPerPage, setProductsPerPage] = useState(perPageParam);
+
+  // Update URL when productsPerPage changes
+  const handleProductsPerPageChange = (value: number) => {
+    setProductsPerPage(value);
+    setCurrentPage(0); // Reset to first page
+    updateUrlParams({ perPage: value.toString(), page: "0" });
+  };
+
   // Pagination setup
-  const productsPerPage = 12;
   const offset = currentPage * productsPerPage;
   const totalProducts = products?.length ?? 0;
   const pageCount = Math.ceil(totalProducts / productsPerPage);
@@ -636,7 +648,42 @@ export default function ProductsPage() {
                   {/* Remove "Show only products on sale" checkbox */}
                 </div>
                 <div className="right flex items-center gap-3">
+                  {/* Show: Products per page dropdown */}
                   <div className="select-block relative">
+                    <label
+                      htmlFor="select-per-page"
+                      className="mr-2 hidden text-sm text-gray-700 md:inline-block"
+                    >
+                      Show:
+                    </label>
+                    <select
+                      id="select-per-page"
+                      name="select-per-page"
+                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-orange-500 focus:ring focus:ring-orange-200 md:pr-12"
+                      onChange={(e) =>
+                        handleProductsPerPageChange(Number(e.target.value))
+                      }
+                      value={productsPerPage}
+                    >
+                      <option value={20}>20</option>
+                      <option value={24}>24</option>
+                      <option value={48}>48</option>
+                      <option value={75}>75</option>
+                      <option value={90}>90</option>
+                    </select>
+                    <CaretDown
+                      size={12}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 md:right-4"
+                    />
+                  </div>
+                  {/* Sort dropdown (existing) */}
+                  <div className="select-block relative">
+                    <label
+                      htmlFor="select-filter"
+                      className="mr-2 hidden text-sm text-gray-700 md:inline-block"
+                    >
+                      Sort By:
+                    </label>
                     <select
                       id="select-filter"
                       name="select-filter"
@@ -644,13 +691,14 @@ export default function ProductsPage() {
                       onChange={(e) => {
                         handleSortChange(e.target.value);
                       }}
-                      value={currentSortOption || "Sorting"}
+                      value={currentSortOption || "Default"}
                     >
-                      <option value="Sorting" disabled>
-                        Sorting
+                      <option value="Default" disabled>
+                        Default
                       </option>
-                      <option value="priceHighToLow">Price High To Low</option>
+
                       <option value="priceLowToHigh">Price Low To High</option>
+                      <option value="priceHighToLow">Price High To Low</option>
                     </select>
                     <CaretDown
                       size={12}
