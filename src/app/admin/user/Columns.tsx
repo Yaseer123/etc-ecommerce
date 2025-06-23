@@ -41,7 +41,6 @@ export const columns: ColumnDef<User>[] = [
       if (role === "ADMIN") {
         return (
           <span className="flex items-center gap-2">
-           
             <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
               Admin
             </span>
@@ -58,6 +57,11 @@ export const columns: ColumnDef<User>[] = [
       const user = row.original;
       const utils = api.useUtils();
       const makeAdmin = api.user.makeAdmin.useMutation({
+        onSuccess: async () => {
+          await utils.user.getAll.invalidate();
+        },
+      });
+      const removeAdmin = api.user.removeAdmin.useMutation({
         onSuccess: async () => {
           await utils.user.getAll.invalidate();
         },
@@ -96,6 +100,34 @@ export const columns: ColumnDef<User>[] = [
                     onClick={() => makeAdmin.mutate({ id: user.id })}
                   >
                     Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog>
+              <AlertDialogTrigger disabled={user.role !== "ADMIN"} asChild>
+                <DropdownMenuItem
+                  className="cursor-pointer text-destructive"
+                  onSelect={(e) => e.preventDefault()}
+                >
+                  Remove Admin
+                </DropdownMenuItem>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Removing admin rights will demote this user to a regular
+                    user.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={() => removeAdmin.mutate({ id: user.id })}
+                  >
+                    Remove Admin
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

@@ -23,6 +23,17 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
+  removeAdmin: adminProcedure
+    .input(z.object({ id: z.string().min(1) }))
+    .mutation(async ({ ctx, input }) => {
+      return ctx.db.user.update({
+        where: { id: input.id },
+        data: {
+          role: "USER",
+        },
+      });
+    }),
+
   getAddress: protectedProcedure.query(async ({ ctx }) => {
     const address = await ctx.db.address.findFirst({
       where: {
