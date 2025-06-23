@@ -20,7 +20,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
       <div className="overview grid gap-5 sm:grid-cols-3">
         <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]">
           <div className="counter">
-            <span className="text-secondary">Awaiting Pickup</span>
+            <span className="">Awaiting Pickup</span>
             <h5 className="heading5 mt-1">
               {orders?.filter((order) => order.status === "SHIPPED").length}
             </h5>
@@ -29,7 +29,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
         </div>
         <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]">
           <div className="counter">
-            <span className="text-secondary">Cancelled Orders</span>
+            <span className="">Cancelled Orders</span>
             <h5 className="heading5 mt-1">
               {orders?.filter((order) => order.status === "CANCELLED").length}
             </h5>
@@ -38,7 +38,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
         </div>
         <div className="item box-shadow-xs flex items-center justify-between rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]">
           <div className="counter">
-            <span className="text-secondary">Total Number of Orders</span>
+            <span className="">Total Number of Orders</span>
             <h5 className="heading5 mt-1">{orders?.length}</h5>
           </div>
           <Package className="text-4xl" />
@@ -52,25 +52,25 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
               <tr>
                 <th
                   scope="col"
-                  className="whitespace-nowrap pb-3 text-left text-sm font-bold uppercase text-secondary"
+                  className="whitespace-nowrap pb-3 text-left text-sm font-bold uppercase "
                 >
                   Order
                 </th>
                 <th
                   scope="col"
-                  className="whitespace-nowrap pb-3 text-left text-sm font-bold uppercase text-secondary"
+                  className="whitespace-nowrap pb-3 text-left text-sm font-bold uppercase "
                 >
                   Products
                 </th>
                 <th
                   scope="col"
-                  className="whitespace-nowrap pb-3 text-left text-sm font-bold uppercase text-secondary"
+                  className="whitespace-nowrap pb-3 text-left text-sm font-bold uppercase "
                 >
                   Pricing
                 </th>
                 <th
                   scope="col"
-                  className="whitespace-nowrap pb-3 text-right text-sm font-bold uppercase text-secondary"
+                  className="whitespace-nowrap pb-3 text-right text-sm font-bold uppercase "
                 >
                   Status
                 </th>
@@ -101,7 +101,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
                         <strong className="product_name text-button">
                           {item.product.title}
                         </strong>
-                        <span className="product_tag caption1 text-secondary">
+                        <span className="product_tag caption1 ">
                           {item.product.brand}
                         </span>
                       </div>

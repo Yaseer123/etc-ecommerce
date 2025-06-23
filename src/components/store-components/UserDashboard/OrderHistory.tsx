@@ -73,7 +73,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
           {Object.entries(orderStatusMapping).map(([key, value]) => (
             <button
               key={key}
-              className={`item relative px-3 py-2.5 text-center text-secondary duration-300`}
+              className={`item relative px-3 py-2.5 text-center  duration-300`}
               onClick={() => handleActiveOrders(value as OrderStatus)}
             >
               {activeOrders === value && (

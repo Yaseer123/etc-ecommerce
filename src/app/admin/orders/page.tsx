@@ -6,6 +6,7 @@ import { api } from "@/trpc/react";
 import { ORDER_STATUS_COLORS } from "@/utils/constants";
 import type { OrderStatus } from "@prisma/client";
 import { format } from "date-fns";
+import Link from "next/link";
 import { useState } from "react";
 
 const statusOptions = [
@@ -112,7 +113,16 @@ export default function AdminOrdersPage() {
                   <tr key={order.id} className="border-b">
                     <td className="border p-2 font-mono">{order.id}</td>
                     <td className="border p-2">
-                      {order.user?.name ?? order.user?.email ?? "-"}
+                      {order.user ? (
+                        <Link
+                          href={`/admin/user/${order.user.id}/account`}
+                          className="text-blue-600 underline hover:text-blue-800"
+                        >
+                          {order.user.name ?? order.user.email}
+                        </Link>
+                      ) : (
+                        "-"
+                      )}
                     </td>
                     <td className="whitespace-pre-line border p-2">
                       {order.address
