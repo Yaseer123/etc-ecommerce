@@ -41,10 +41,7 @@ export const columns: ColumnDef<User>[] = [
       if (role === "ADMIN") {
         return (
           <span className="flex items-center gap-2">
-            <span
-              className="inline-block h-2 w-2 rounded-full bg-green-500"
-              title="Admin"
-            />
+           
             <span className="rounded bg-green-100 px-2 py-0.5 text-xs font-semibold text-green-800">
               Admin
             </span>
