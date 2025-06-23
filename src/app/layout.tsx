@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/sonner";
-import WhatsAppWidget from "@/components/WhatsAppWidget";
 import "@/styles/styles.scss";
 import { TRPCReactProvider } from "@/trpc/react";
 import { GeistSans } from "geist/font/sans";
@@ -51,7 +50,6 @@ export default function RootLayout({
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </SessionProvider>
         <Toaster />
-        <WhatsAppWidget />
       </body>
     </html>
   );

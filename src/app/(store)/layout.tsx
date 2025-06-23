@@ -1,11 +1,11 @@
-import "@/styles/styles.scss";
 import Footer from "@/components/store-components/Footer";
 import Menu from "@/components/store-components/Menu";
-import React from "react";
-import { auth } from "@/server/auth";
 import ModalWrapper from "@/components/store-components/Modal/ModalWrapper";
+import WhatsAppWidget from "@/components/WhatsAppWidget";
+import { auth } from "@/server/auth";
+import "@/styles/styles.scss";
 import { HydrateClient } from "@/trpc/server";
-
+import React from "react";
 
 export default async function layout({
   children,
@@ -18,6 +18,7 @@ export default async function layout({
     <HydrateClient>
       <Menu isAuthenticated={!!session?.user} />
       {children}
+      <WhatsAppWidget />
       <Footer />
       <ModalWrapper />
     </HydrateClient>
