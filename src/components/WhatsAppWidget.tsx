@@ -6,7 +6,7 @@ const WhatsAppWidget = () => {
     <FloatingWhatsApp
       phoneNumber="+8801312223452"
       accountName="Rinors Corporation"
-      //   avatar="/images/brand/RINORS.png"
+        avatar="/images/brand/rinors-wa.jpg"
     />
   );
 };
