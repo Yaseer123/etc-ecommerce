@@ -158,6 +158,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
               {order.status === "PENDING" && (
                 <div className="flex flex-wrap gap-4 p-5">
                   <Button
+                    className="bg-red-500 hover:bg-red-600 text-white"
                     variant="destructive"
                     onClick={() => setCancelOrderId(order.id)}
                   >
