@@ -180,10 +180,15 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
           </DialogHeader>
           <p>Are you sure you want to cancel this order?</p>
           <DialogFooter>
-            <Button variant="secondary" onClick={() => setCancelOrderId(null)}>
+            <Button
+              className="bg-gray-500 hover:bg-gray-600"
+              variant="secondary"
+              onClick={() => setCancelOrderId(null)}
+            >
               No, Go Back
             </Button>
             <Button
+              className="bg-red-500 hover:bg-red-600"
               variant="destructive"
               onClick={handleCancelOrder}
               disabled={cancelOrderMutation.isPending}
