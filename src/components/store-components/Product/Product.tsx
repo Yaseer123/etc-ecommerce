@@ -340,6 +340,17 @@ export default function Product({ data }: ProductProps) {
             </span>
           )}
         </div>
+        {/* Buy Now Button at the bottom */}
+        {(!("stockStatus" in data) || data.stockStatus !== "OUT_OF_STOCK") && (
+          <button
+            className="mt-4 w-full rounded bg-orange-500 px-4 py-2 font-semibold text-white shadow transition-colors duration-200 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
+            onClick={() => {
+              handleAddToCart();
+            }}
+          >
+            Buy Now
+          </button>
+        )}
       </div>
     </div>
   );
