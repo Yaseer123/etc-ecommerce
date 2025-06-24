@@ -975,12 +975,16 @@ export default function ProductDetails({
                       ([key, value], index) => (
                         <div
                           key={index}
-                          className={`item flex items-center gap-8 ${
+                          className={`item flex min-w-0 flex-wrap items-center gap-8 ${
                             index % 2 === 0 ? "bg-surface" : ""
-                          } px-10 py-3`}
+                          } border-b border-t border-gray-200 px-10 py-3 transition-colors duration-200 hover:bg-gray-100`}
                         >
-                          <div className="text-title w-1/3 sm:w-1/4">{key}</div>
-                          <p>{value}</p>
+                          <div className="text-title w-1/3 min-w-0 break-words pr-4 text-right sm:w-1/4">
+                            {key}
+                          </div>
+                          <p className="min-w-0 flex-1 break-words text-left">
+                            {value}
+                          </p>
                         </div>
                       ),
                     )}
