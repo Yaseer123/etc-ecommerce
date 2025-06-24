@@ -85,8 +85,8 @@ export const EditSaleBanner = () => {
   const handleSave = async () => {
     if (!editingBanner) return;
 
-    if (!editingBanner.title || !editingBanner.imageUrl) {
-      toast.error("Please fill in all required fields");
+    if (!editingBanner.imageUrl) {
+      toast.error("Please upload an image");
       return;
     }
 
@@ -178,7 +178,7 @@ export const EditSaleBanner = () => {
           <div className="space-y-6">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
-                Title *
+                Title
               </label>
               <input
                 type="text"

@@ -10,7 +10,7 @@ export default function AdminSliderPage() {
     <div className="mx-auto max-w-7xl p-8">
       <h1 className="mb-8 text-4xl font-bold text-gray-900">
         Banner Management
-      </h1>
+    </h1>
 
       <Tabs defaultValue="slider" className="w-full space-y-6">
         <TabsList className="inline-flex h-14 items-center justify-center rounded-lg bg-gray-100 p-1">

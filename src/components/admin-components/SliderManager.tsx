@@ -71,13 +71,8 @@ export const SliderManager = () => {
   const handleSave = async () => {
     if (!editingSlider) return;
 
-    // Validate required fields
-    if (
-      !editingSlider.title ||
-      !editingSlider.imageUrl ||
-      !editingSlider.link
-    ) {
-      toast.error("Please fill in all required fields");
+    if (!editingSlider.imageUrl) {
+      toast.error("Please upload an image");
       return;
     }
 
@@ -153,7 +148,7 @@ export const SliderManager = () => {
           <div className="space-y-6">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
-                Title *
+                Title
               </label>
               <input
                 type="text"

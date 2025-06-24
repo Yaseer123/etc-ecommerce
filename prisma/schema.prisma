@@ -287,19 +287,19 @@ model FaqItem {
 
 model Slider {
     id          String   @id @default(cuid())
-    title       String
-    subtitle    String
-    description String
+    title       String?
+    subtitle    String?
+    description String?
     imageUrl    String
     imageId     String
-    link        String
+    link        String?
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
 }
 
 model SaleBanner {
     id          String   @id @default(cuid())
-    title       String
+    title       String?
     subtitle    String?
     description String?
     imageUrl    String

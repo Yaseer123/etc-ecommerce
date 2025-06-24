@@ -11,7 +11,7 @@ export const saleBannerRouter = createTRPCRouter({
   add: protectedProcedure
     .input(
       z.object({
-        title: z.string(),
+        title: z.string().optional(),
         subtitle: z.string().optional(),
         description: z.string().optional(),
         imageUrl: z.string(),
@@ -32,7 +32,7 @@ export const saleBannerRouter = createTRPCRouter({
     .input(
       z.object({
         id: z.string(),
-        title: z.string(),
+        title: z.string().optional(),
         subtitle: z.string().optional(),
         description: z.string().optional(),
         imageUrl: z.string(),

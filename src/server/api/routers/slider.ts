@@ -1,17 +1,17 @@
-import { z } from "zod";
 import {
+  adminProcedure,
   createTRPCRouter,
   publicProcedure,
-  adminProcedure,
 } from "@/server/api/trpc";
+import { z } from "zod";
 
 const sliderSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  subtitle: z.string().min(1, "Subtitle is required"),
-  description: z.string().min(1, "Description is required"),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  description: z.string().optional(),
   imageUrl: z.string().url("Valid image URL is required"),
   imageId: z.string().min(1, "Cloudinary ID is required"),
-  link: z.string().url("Valid link URL is required"),
+  link: z.string().optional(),
 });
 
 export const sliderRouter = createTRPCRouter({
