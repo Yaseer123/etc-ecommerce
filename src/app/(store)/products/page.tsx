@@ -845,9 +845,12 @@ export default function ProductsPage() {
                   <h2 className="mb-2 text-lg font-semibold text-orange-700">
                     About this Category
                   </h2>
-                  <div className="prose max-w-none">
-                    {categoryData.description}
-                  </div>
+                  <div
+                    className="prose max-w-none"
+                    dangerouslySetInnerHTML={{
+                      __html: categoryData.description,
+                    }}
+                  />
                 </div>
               )}
             </div>
