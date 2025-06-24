@@ -39,6 +39,7 @@ export default function AddCategoryForm() {
       name: "",
       parentId: null,
       image: undefined,
+      description: "",
     },
   });
 
@@ -81,6 +82,7 @@ export default function AddCategoryForm() {
       parentId: data.parentId,
       imageId: formData.get("imageId") as string | undefined,
       imageUrl: formData.get("imageUrl") as string | undefined,
+      description: data.description,
     });
   };
 
@@ -96,7 +98,7 @@ export default function AddCategoryForm() {
         <label className="text-sm font-medium">Category Name</label>
         <Input {...register("name")} placeholder="Enter category name" />
         {errors.name && (
-          <p className="text-red-500 text-sm">{errors.name.message}</p>
+          <p className="text-sm text-red-500">{errors.name.message}</p>
         )}
       </div>
 
@@ -133,7 +135,7 @@ export default function AddCategoryForm() {
           </div>
         )}
         {errors.image && (
-          <p className="text-red-500 text-sm">{errors.image.message}</p>
+          <p className="text-sm text-red-500">{errors.image.message}</p>
         )}
       </div>
 
@@ -153,7 +155,20 @@ export default function AddCategoryForm() {
           }}
         />
         {errors.parentId && (
-          <p className="text-red-500 text-sm">{errors.parentId.message}</p>
+          <p className="text-sm text-red-500">{errors.parentId.message}</p>
+        )}
+      </div>
+
+      {/* Description (optional) */}
+      <div>
+        <label className="text-sm font-medium">Description (optional)</label>
+        <textarea
+          {...register("description")}
+          placeholder="Enter category description (for SEO, shown at bottom of category page)"
+          className="min-h-[80px] w-full rounded border border-gray-300 p-2"
+        />
+        {errors.description && (
+          <p className="text-sm text-red-500">{errors.description.message}</p>
         )}
       </div>
 

@@ -839,6 +839,17 @@ export default function ProductsPage() {
                   handlePageChange={handlePageChange}
                 />
               )}
+              {/* Category Description for SEO */}
+              {categoryData?.description && (
+                <div className="mt-10 rounded-lg bg-orange-50 p-6 text-gray-700 shadow-sm">
+                  <h2 className="mb-2 text-lg font-semibold text-orange-700">
+                    About this Category
+                  </h2>
+                  <div className="prose max-w-none">
+                    {categoryData.description}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>

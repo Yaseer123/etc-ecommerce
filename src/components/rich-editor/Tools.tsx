@@ -251,7 +251,10 @@ const Tools: FC<Props> = ({
   };
 
   return (
-    <div className="flex items-start space-x-1">
+    <div
+      className="rich-editor-toolbar flex w-full flex-wrap items-start gap-1 space-x-1 px-2 py-2 md:flex-nowrap md:overflow-x-auto"
+      style={{ WebkitOverflowScrolling: "touch" }}
+    >
       <select
         value={getSelectedHeading()}
         className="p-2"

@@ -133,6 +133,7 @@ export const categoryRouter = createTRPCRouter({
         name: z.string(),
         imageId: z.string().optional(),
         imageUrl: z.string().optional(),
+        description: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -143,6 +144,7 @@ export const categoryRouter = createTRPCRouter({
           parentId: input.parentId ?? null,
           imageId: input.imageId,
           image: input.imageUrl,
+          description: input.description,
         },
       });
 
@@ -156,12 +158,18 @@ export const categoryRouter = createTRPCRouter({
         name: z.string(),
         imageId: z.string().nullable(),
         image: z.string().nullable(),
+        description: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       const category = await ctx.db.category.update({
         where: { id: input.id },
-        data: { name: input.name, imageId: input.imageId, image: input.image },
+        data: {
+          name: input.name,
+          imageId: input.imageId,
+          image: input.image,
+          description: input.description,
+        },
       });
 
       return category;

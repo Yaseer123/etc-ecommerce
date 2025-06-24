@@ -20,7 +20,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -35,7 +34,6 @@ import {
   Save,
   Tag,
   Trash2,
-  Upload,
   X,
 } from "lucide-react";
 import Image from "next/image";
@@ -55,8 +53,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { v4 as uuid } from "uuid";
+import RichEditor from "../rich-editor";
 
 interface CategoryAttributesManagerProps {
   categoryId: string;
@@ -76,6 +75,7 @@ const attributeFormSchema = z.object({
 
 const detailsFormSchema = z.object({
   name: z.string().min(1, "Category name is required"),
+  description: z.string().optional(),
 });
 
 type AttributeFormType = z.infer<typeof attributeFormSchema>;
@@ -166,6 +166,7 @@ export default function CategoryAttributesManager({
     resolver: zodResolver(detailsFormSchema),
     defaultValues: {
       name: "",
+      description: "",
     },
   });
 
@@ -182,10 +183,17 @@ export default function CategoryAttributesManager({
     name: "attributes",
   });
 
+  const [descriptionContent, setDescriptionContent] = useState("");
+  const [descriptionImageId] = useState(() => uuid());
+
   // Set form values and state when category data is loaded
   useEffect(() => {
     if (category) {
-      detailsForm.reset({ name: category.name });
+      detailsForm.reset({
+        name: category.name,
+        description: category.description ?? "",
+      });
+      setDescriptionContent(category.description ?? "");
       setImagePreview(category.image);
 
       try {
@@ -271,6 +279,7 @@ export default function CategoryAttributesManager({
       name: data.name,
       image: imageUrl,
       imageId: imageId,
+      description: descriptionContent,
     });
   };
 
@@ -382,7 +391,7 @@ export default function CategoryAttributesManager({
 
         {/* Category Details Tab */}
         <TabsContent value="details" className="space-y-4">
-          <Card className="border shadow-sm">
+          <Card className="w-full min-w-0 max-w-full overflow-x-auto border p-2 shadow-sm md:p-6">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-2xl">
                 <Layout className="h-5 w-5 text-primary" />
@@ -396,10 +405,10 @@ export default function CategoryAttributesManager({
               <Form {...detailsForm}>
                 <form
                   onSubmit={detailsForm.handleSubmit(onSubmitDetails)}
-                  className="space-y-8"
+                  className="w-full min-w-0 max-w-full space-y-8"
                 >
-                  <div className="grid gap-8 sm:grid-cols-2">
-                    <div className="space-y-8">
+                  <div className="flex w-full min-w-0 max-w-full flex-col gap-8 md:grid md:grid-cols-2">
+                    <div className="w-full min-w-0 max-w-full space-y-8">
                       <FormField
                         control={detailsForm.control}
                         name="name"
@@ -412,72 +421,37 @@ export default function CategoryAttributesManager({
                               <Input
                                 {...field}
                                 placeholder="Enter category name"
-                                className="h-12"
+                                className="h-12 w-full min-w-0 max-w-full"
                               />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
-                      <div className="space-y-3">
-                        <Label className="text-base">Category Image</Label>
-                        <div className="flex flex-col gap-4">
-                          <div className="flex items-center gap-4">
-                            <div
-                              className={cn(
-                                "group relative flex h-40 w-full items-center justify-center overflow-hidden rounded-lg border-2 border-dashed transition-all",
-                                !imagePreview && "bg-muted hover:bg-muted/70",
-                              )}
-                            >
-                              {imagePreview ? (
-                                <>
-                                  <Image
-                                    src={imagePreview}
-                                    alt="Category preview"
-                                    fill
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    className="object-cover"
-                                  />
-                                  <div className="hover:bg-black/75/50 absolute inset-0 flex items-center justify-center bg-black opacity-0 transition-all group-hover:opacity-100">
-                                    <Button
-                                      variant="destructive"
-                                      size="sm"
-                                      onClick={handleRemoveImage}
-                                      disabled={isRemovingImage}
-                                      className="gap-2"
-                                    >
-                                      <Trash2 className="h-4 w-4" />
-                                      {isRemovingImage
-                                        ? "Removing..."
-                                        : "Remove Image"}
-                                    </Button>
-                                  </div>
-                                </>
-                              ) : (
-                                <div className="p-6 text-center">
-                                  <Upload className="mx-auto h-10 w-10 text-muted-foreground/80" />
-                                  <p className="mt-2 text-muted-foreground">
-                                    Drag and drop an image or click to browse
-                                  </p>
-                                </div>
-                              )}
+                      <div className="mt-4 w-full min-w-0 max-w-full">
+                        <FormLabel className="text-base">
+                          Description (optional)
+                        </FormLabel>
+                        <div className="w-full min-w-0 max-w-full">
+                          <RichEditor
+                            key={category.id}
+                            content={descriptionContent}
+                            imageId={descriptionImageId}
+                            handleSubmit={(html) => setDescriptionContent(html)}
+                            pending={isSavingDetails}
+                            submitButtonText="Save Description"
+                          >
+                            <div className="mb-2 text-sm text-gray-500">
+                              Enter category description (for SEO, shown at
+                              bottom of category page)
                             </div>
-                          </div>
-
-                          <Input
-                            id="image-upload"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageChange}
-                            className="cursor-pointer"
-                          />
+                          </RichEditor>
                         </div>
                       </div>
                     </div>
 
                     {imagePreview && (
-                      <div className="flex items-center justify-center">
+                      <div className="flex w-full min-w-0 max-w-full items-center justify-center">
                         <motion.div
                           initial={{ scale: 0.9, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}

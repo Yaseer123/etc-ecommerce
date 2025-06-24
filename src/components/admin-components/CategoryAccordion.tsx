@@ -1,15 +1,41 @@
 "use client";
 
+import { removeImage, uploadFile } from "@/app/actions/file";
 import {
   Accordion,
+  AccordionContent,
   AccordionItem,
   AccordionTrigger,
-  AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { MdDelete } from "react-icons/md";
-import { FaGear } from "react-icons/fa6";
+import { api } from "@/trpc/react";
+import type { DraggableAttributes } from "@dnd-kit/core";
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import type { Category } from "@prisma/client";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FaArrowsAlt } from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
+import { MdDelete } from "react-icons/md";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,33 +47,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { useState, useEffect } from "react";
 import { Input } from "../ui/input";
-import { api } from "@/trpc/react";
-import Image from "next/image";
-import { removeImage, uploadFile } from "@/app/actions/file";
-import type { Category } from "@prisma/client";
-import Link from "next/link";
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { toast } from "sonner";
-import type { DraggableAttributes } from "@dnd-kit/core";
-import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 
 interface CategoryTree extends Category {
   subcategories: CategoryTree[];
@@ -231,6 +231,9 @@ function CategoryItem({
   const [imagePreview, setImagePreview] = useState<string | null>(
     category.image,
   );
+  const [newDescription, setNewDescription] = useState(
+    category.description ?? "",
+  );
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -288,6 +291,7 @@ function CategoryItem({
         name: newCategoryName,
         image: imageUrl,
         imageId: imageId,
+        description: newDescription,
       });
 
       setIsEditing(false);
@@ -410,6 +414,17 @@ function CategoryItem({
               </Button>
             </div>
           )}
+          <div className="mt-4">
+            <label className="text-sm font-medium">
+              Description (optional)
+            </label>
+            <textarea
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
+              placeholder="Enter category description (for SEO, shown at bottom of category page)"
+              className="min-h-[80px] w-full rounded border border-gray-300 p-2"
+            />
+          </div>
           <Button onClick={handleSave} className="mt-2">
             Save Changes
           </Button>

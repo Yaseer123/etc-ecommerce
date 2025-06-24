@@ -168,11 +168,18 @@ export default function RichEditor({
           background: rgba(0, 0, 0, 0.1);
           pointer-events: none;
         }
+        .rich-editor-toolbar {
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE 10+ */
+        }
+        .rich-editor-toolbar::-webkit-scrollbar {
+          display: none; /* Chrome/Safari/Webkit */
+        }
       `}</style>
       <div className="flex flex-col space-y-4">
         {children}
-        <div className="flex min-h-[65vh] flex-col items-center justify-center space-y-4 rounded-md border p-5">
-          <div className="sticky top-0 z-30 bg-white">
+        <div className="flex min-h-[40vh] w-full min-w-0 max-w-full flex-col items-center justify-center space-y-4 rounded-md border p-2 md:min-h-[65vh] md:p-5">
+          <div className="sticky top-0 z-30 w-full bg-white">
             <Tools
               editor={editor}
               onImageSelection={() => handleShowImageGallery(imageId)}
@@ -180,21 +187,24 @@ export default function RichEditor({
               onToggleSource={handleToggleSource}
             />
           </div>
-          <div className="mr-auto w-full flex-1 text-sm">
+          <div className="w-full min-w-0 max-w-full flex-1 text-sm">
             {sourceMode ? (
               <div className="flex h-full w-full flex-col">
                 <textarea
-                  className="h-[60vh] w-full rounded border p-2 font-mono text-xs"
+                  className="h-[40vh] w-full min-w-0 max-w-full rounded border p-2 font-mono text-xs md:h-[60vh]"
                   value={htmlSource}
                   onChange={(e) => setHtmlSource(e.target.value)}
-                  style={{ minHeight: 300 }}
+                  style={{ minHeight: 200 }}
                 />
                 <Button className="mt-2 self-end" onClick={handleToggleSource}>
                   Apply & Return to Editor
                 </Button>
               </div>
             ) : (
-              <EditorContent editor={editor} className="h-full" />
+              <EditorContent
+                editor={editor}
+                className="h-full w-full min-w-0 max-w-full"
+              />
             )}
           </div>
         </div>
