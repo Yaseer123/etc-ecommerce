@@ -20,13 +20,14 @@ export default function CartProductItem({ item }: CartProductItemProps) {
   const { removeFromCart } = useCartStore();
   return (
     <div className="w-full items-center gap-3">
-      <div className="bg-img aspect-square w-[100px] flex-shrink-0 overflow-hidden rounded-lg">
+      <div className="bg-img aspect-square w-full flex-shrink-0 overflow-hidden rounded-lg">
         <Image
           src={item.coverImage ?? "/images/placeholder-image.png"}
           width={300}
           height={300}
           alt={item.name}
-          className="h-full w-full"
+          sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 100px"
+          className="h-full w-full rounded-lg object-contain"
         />
       </div>
       <div className="w-full">
