@@ -969,7 +969,7 @@ export default function ProductDetails({
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
-                <div className="mx-auto w-full overflow-x-auto sm:w-3/4 lg:w-1/2">
+                <div className=" w-full overflow-x-auto ">
                   <h3 className="mb-4 whitespace-nowrap text-sm font-bold">
                     Specifications
                   </h3>
@@ -1426,6 +1426,15 @@ export default function ProductDetails({
               excludeProductId={productMain.id}
             />
           </div>
+        </div>
+        {/* Related Products Sidebar for mobile (below tabs) */}
+        <div className="mt-8 block w-full lg:hidden">
+          <RelatedProductsSidebar
+            categoryId={
+              productMain.category?.id ?? productMain.categoryId ?? undefined
+            }
+            excludeProductId={productMain.id}
+          />
         </div>
       </div>
     </>

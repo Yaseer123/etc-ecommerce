@@ -34,7 +34,7 @@ const RelatedProductsSidebar: React.FC<RelatedProductsSidebarProps> = ({
           No related products found.
         </div>
       ) : (
-        <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
           {relatedProducts.map((product) => (
             <Product key={product.id} data={product as ProductWithCategory} />
           ))}
