@@ -17,11 +17,11 @@ export default function Benefit({ props }: { props: string }) {
             <div className="benefit-item flex flex-col items-center justify-center p-3 sm:p-4 bg-white">
               <i className="icon-return text-4xl sm:text-5xl lg:text-7xl"></i>
               <div className="heading6 mt-3 text-center text-base sm:mt-4 sm:text-lg lg:mt-5">
-                14-Day Money Back
+                3-Day Money Back
               </div>
               <div className="mt-2 text-center text-sm font-normal leading-tight text-secondary sm:mt-3 sm:text-base sm:leading-[22px] md:text-[13px] md:leading-5">
                 If you&apos;re not satisfied with your purchase, simply return
-                it within 14 days for a refund.
+                it within 3 days for a refund.
               </div>
             </div>
             <div className="benefit-item flex flex-col items-center justify-center p-3 sm:p-4 bg-white">

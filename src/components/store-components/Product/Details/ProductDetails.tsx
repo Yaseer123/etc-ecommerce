@@ -916,11 +916,11 @@ export default function ProductDetails({
                 <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
                   <div>
                     <div className="icon-return text-3xl sm:text-4xl"></div>
-                    <div className="text-title">100 Day Returns</div>
+                    <div className="text-title">7 Day Returns</div>
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
                       Not impressed? Get a refund.
                       <br />
-                      You have 100 days to break our hearts.
+                      You have 7 days to break our hearts.
                     </div>
                   </div>
                 </div>
