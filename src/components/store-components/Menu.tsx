@@ -157,10 +157,10 @@ export default function Menu({
     <>
       <TopNav props="style-one bg-black " />
 
-      {/* Main header - not sticky */}
-      <div className="header-menu relative w-full bg-white lg:pt-5">
+      {/* Main header - sticky on mobile */}
+      <div className="header-menu w-full bg-white lg:pt-5">
         <div
-          className={`header-menu style-eight h-[56px] w-full bg-white md:h-[74px] ${props}`}
+          className={`header-menu style-eight h-[56px] w-full bg-white md:h-[74px] ${props} max-lg:fixed max-lg:left-0 max-lg:top-0 max-lg:z-40`}
         >
           <div className="mx-auto h-full w-full !max-w-[1322px] px-4">
             <div className="header-main relative flex h-full items-center justify-between">
@@ -365,6 +365,9 @@ export default function Menu({
           </div>
         </div>
       </div>
+
+      {/* Placeholder for mobile sticky header */}
+      <div className="max-lg:block lg:hidden" style={{ height: 56 }}></div>
 
       {/* Category navbar - can be sticky */}
       <div
