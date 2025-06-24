@@ -84,7 +84,7 @@ const Cart = () => {
                         >
                           <div className="w-1/2">
                             <div className="flex items-center gap-6">
-                              <div className="bg-img aspect-[3/4] w-20 md:w-[100px]">
+                              <div className="bg-img aspect-square w-20 md:w-[100px]">
                                 <Image
                                   src={
                                     product.coverImage ??
@@ -94,7 +94,7 @@ const Cart = () => {
                                   height={100}
                                   sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 100px"
                                   alt={product.name}
-                                  className="h-full w-full rounded-lg object-cover"
+                                  className="h-full w-full rounded-lg object-contain"
                                 />
                               </div>
                               <div>
