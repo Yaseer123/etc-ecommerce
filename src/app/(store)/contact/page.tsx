@@ -202,9 +202,7 @@ const ContactUs = () => {
                 </p>
                 <p className="mt-1">
                   Email:{" "}
-                  <span className="whitespace-nowrap">
-                    rinorscorporation@gmail.com
-                  </span>
+                  <span className="whitespace-nowrap">contact@rinors.com</span>
                 </p>
               </div>
               <div className="item mt-10">

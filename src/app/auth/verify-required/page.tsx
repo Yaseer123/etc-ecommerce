@@ -30,11 +30,11 @@ export default function VerifyRequiredPage() {
             </span>
             <span className="mb-2 block">
               If you can&apos;t find the email, make sure to check your
-              <span className="from-yellow-200 to-yellow-400 text-yellow-900 mx-1 rounded bg-gradient-to-r px-1 font-semibold">
+              <span className="mx-1 rounded bg-gradient-to-r from-yellow-200 to-yellow-400 px-1 font-semibold text-yellow-900">
                 All Mails
               </span>
               ,
-              <span className="from-pink-200 to-pink-400 text-pink-900 mx-1 rounded bg-gradient-to-r px-1 font-semibold">
+              <span className="mx-1 rounded bg-gradient-to-r from-pink-200 to-pink-400 px-1 font-semibold text-pink-900">
                 Spam
               </span>{" "}
               and
@@ -56,17 +56,17 @@ export default function VerifyRequiredPage() {
               <span className="mb-1 block">
                 Mail us at
                 <a
-                  href="mailto:rinorscorporation@gmail.com"
+                  href="mailto:contact@rinors.com"
                   className="ml-1 font-semibold text-blue-700 underline transition-colors hover:text-blue-900"
                 >
-                  rinorscorporation@gmail.com
+                  contact@rinors.com
                 </a>
               </span>
               <span className="block">
                 or call us at
                 <a
                   href="tel:+8801312223452"
-                  className="text-green-700 hover:text-green-900 ml-1 font-semibold underline transition-colors"
+                  className="ml-1 font-semibold text-green-700 underline transition-colors hover:text-green-900"
                 >
                   +8801312223452
                 </a>
