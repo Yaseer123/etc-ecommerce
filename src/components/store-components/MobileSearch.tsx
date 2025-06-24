@@ -112,8 +112,22 @@ export default function MobileSearch() {
                           <div className="line-clamp-1 text-xs text-gray-500">
                             {product.shortDescription}
                           </div>
-                          <div className="mt-0.5 text-sm font-medium text-black">
-                            ৳{product.price.toFixed(2)}
+                          <div className="mt-0.5 text-sm font-medium">
+                            {product.discountedPrice != null &&
+                            product.discountedPrice < product.price ? (
+                              <>
+                                <span className="discounted-price">
+                                  ৳{product.discountedPrice.toFixed(2)}
+                                </span>
+                                <span className="ml-2 text-gray-400 line-through">
+                                  ৳{product.price.toFixed(2)}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="discounted-price">
+                                ৳{product.price.toFixed(2)}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </div>

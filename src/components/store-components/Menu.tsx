@@ -189,7 +189,7 @@ export default function Menu({
                 <div className="search-container relative flex h-full w-full items-center">
                   <input
                     type="text"
-                    className="search-input h-full w-full border border-[#ddd] focus:border-[#ddd] px-4"
+                    className="search-input h-full w-full border border-[#ddd] px-4 focus:border-[#ddd]"
                     placeholder="What are you looking for today?"
                     value={searchKeyword}
                     onChange={(e) => setSearchKeyword(e.target.value)}
@@ -198,7 +198,7 @@ export default function Menu({
                     }
                   />
                   <button
-                    className="search-button duration-400 md:text-md !flex h-full cursor-pointer !items-center !justify-center rounded-[.25rem] !rounded-l-none !rounded-r bg-black px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="search-button duration-400 md:text-md hover:bg-green !flex h-full cursor-pointer !items-center !justify-center rounded-[.25rem] !rounded-l-none !rounded-r bg-black px-7 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                     onClick={() => handleSearch(searchKeyword)}
                   >
                     Search
@@ -206,7 +206,7 @@ export default function Menu({
 
                   {/* Search Results Dropdown with Loading State */}
                   {showSearchResults && searchKeyword.length > 1 && (
-                    <div className="search-results absolute left-0 right-0 top-full z-50 mt-1 max-h-[400px] overflow-y-auto rounded-md border border-[#ddd] focus:border-[#ddd] bg-white shadow-lg">
+                    <div className="search-results absolute left-0 right-0 top-full z-50 mt-1 max-h-[400px] overflow-y-auto rounded-md border border-[#ddd] bg-white shadow-lg focus:border-[#ddd]">
                       <div className="px-4 py-2 text-sm font-medium text-gray-900">
                         {isSearchLoading ? "Searching..." : "Search Results"}
                       </div>
@@ -253,8 +253,24 @@ export default function Menu({
                                     <div className="line-clamp-1 text-xs text-gray-500">
                                       {product.shortDescription}
                                     </div>
-                                    <div className="mt-0.5 text-sm font-medium text-black">
-                                      ৳{product.price.toFixed(2)}
+                                    <div className="mt-0.5 text-sm font-medium">
+                                      {product.discountedPrice != null &&
+                                      product.discountedPrice <
+                                        product.price ? (
+                                        <>
+                                          <span className="discounted-price">
+                                            ৳
+                                            {product.discountedPrice.toFixed(2)}
+                                          </span>
+                                          <span className="ml-2 text-gray-400 line-through">
+                                            ৳{product.price.toFixed(2)}
+                                          </span>
+                                        </>
+                                      ) : (
+                                        <span className="discounted-price">
+                                          ৳{product.price.toFixed(2)}
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
@@ -297,14 +313,14 @@ export default function Menu({
                       {isAuthenticated ? (
                         <Link
                           href={"/api/auth/signout"}
-                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                          className="duration-400 md:text-md hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         >
                           Sign Out
                         </Link>
                       ) : (
                         <Link
                           href={"/login"}
-                          className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 hover:bg-green md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                          className="duration-400 md:text-md hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         >
                           Login
                         </Link>
@@ -505,8 +521,22 @@ export default function Menu({
                             <div className="line-clamp-1 text-xs text-gray-500">
                               {product.shortDescription}
                             </div>
-                            <div className="mt-0.5 text-sm font-medium text-black">
-                              ৳{product.price.toFixed(2)}
+                            <div className="mt-0.5 text-sm font-medium">
+                              {product.discountedPrice != null &&
+                              product.discountedPrice < product.price ? (
+                                <>
+                                  <span className="discounted-price">
+                                    ৳{product.discountedPrice.toFixed(2)}
+                                  </span>
+                                  <span className="ml-2 text-gray-400 line-through">
+                                    ৳{product.price.toFixed(2)}
+                                  </span>
+                                </>
+                              ) : (
+                                <span className="text-black">
+                                  ৳{product.price.toFixed(2)}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
