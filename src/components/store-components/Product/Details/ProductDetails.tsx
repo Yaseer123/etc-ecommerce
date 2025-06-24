@@ -26,6 +26,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
+import { FaFacebookMessenger, FaPinterestP, FaWhatsapp } from "react-icons/fa6";
 import { toast } from "sonner";
 import SwiperCore from "swiper/core";
 import "swiper/css/bundle";
@@ -508,6 +509,67 @@ export default function ProductDetails({
   return (
     <>
       <div className="product-detail sale mb-5">
+        {/* Social Share Row with border, rounded, and shadow */}
+        <div className="mb-4 flex items-center justify-between px-4 pt-4">
+          <div className="w-full">
+            <div className="flex items-center justify-between rounded-full border bg-white px-6 py-2 shadow">
+              <div className="flex items-center gap-2">
+                <span className="font-semibold text-gray-700">Share:</span>
+                {/* Messenger */}
+                <a
+                  href={`https://www.facebook.com/dialog/send?link=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[#101828] text-white hover:opacity-80"
+                  title="Share on Messenger"
+                >
+                  <FaFacebookMessenger size={18} />
+                </a>
+                {/* Pinterest */}
+                <a
+                  href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[#101828] text-white hover:opacity-80"
+                  title="Share on Pinterest"
+                >
+                  <FaPinterestP size={18} />
+                </a>
+                {/* WhatsApp */}
+                <a
+                  href={`https://api.whatsapp.com/send?text=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[#101828] text-white hover:opacity-80"
+                  title="Share on WhatsApp"
+                >
+                  <FaWhatsapp size={18} />
+                </a>
+              </div>
+              {/* Wishlist and Cart Buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  className={`flex items-center gap-1 rounded-lg border px-3 py-1 text-sm font-semibold ${isInWishlist(productMain.id) ? "border-black bg-black text-white" : "border-[#ddd] bg-white text-black hover:border-black hover:bg-black hover:text-white"}`}
+                  onClick={handleAddToWishlist}
+                >
+                  <Heart
+                    size={18}
+                    weight={isInWishlist(productMain.id) ? "fill" : "regular"}
+                  />
+                  {isInWishlist(productMain.id)
+                    ? "Wishlisted"
+                    : "Add to Wishlist"}
+                </button>
+                <button
+                  className="flex items-center gap-1 rounded-lg border border-black bg-white px-3 py-1 text-sm font-semibold text-black hover:bg-black hover:text-white"
+                  onClick={handleAddToCart}
+                >
+                  <Plus size={18} /> Add to Cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="featured-product underwear bg-white py-10 md:py-20">
           <div className="container flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
             <div className="list-img w-full lg:w-1/2 lg:pr-[45px]">
@@ -689,16 +751,6 @@ export default function ProductDetails({
                     {productMain.title}
                   </div>
                 </div>
-                <div
-                  className={`add-wishlist-btn flex h-12 w-12 cursor-pointer items-center justify-center rounded-xl border ${isInWishlist(productMain.id) ? "border-black bg-black hover:bg-black/75" : "border-[#ddd] bg-white focus:border-[#ddd]"} duration-300 hover:bg-black hover:bg-black/75 hover:text-white`}
-                  onClick={handleAddToWishlist}
-                >
-                  {isInWishlist(productMain.id) ? (
-                    <Heart size={24} weight="fill" className="text-white" />
-                  ) : (
-                    <Heart size={24} />
-                  )}
-                </div>
               </div>
               <div className="mt-3 flex items-center">
                 <Rate
@@ -769,14 +821,7 @@ export default function ProductDetails({
                     Buy It Now
                   </div>
                 </div>
-                <div className="mt-5 flex items-center gap-8 border-b border-[#ddd] pb-6 focus:border-[#ddd] lg:gap-20">
-                  {/* <div className="share flex cursor-pointer items-center gap-3">
-                    <div className="share-btn flex h-10 w-10 cursor-pointer items-center justify-center rounded-xl border border-[#ddd] focus:border-[#ddd] duration-300 hover:bg-black hover:bg-black/75 hover:text-white md:h-12 md:w-12">
-                      <ShareNetwork weight="fill" className="heading6" />
-                    </div>
-                    <span>Share Products</span>
-                  </div> */}
-                </div>
+                <div className="mt-5 flex items-center gap-8 border-b border-[#ddd] pb-6 focus:border-[#ddd] lg:gap-20"></div>
                 <div className="more-infor mt-6">
                   <div className="flex flex-wrap items-center gap-4">
                     <Link href={"/faqs"} className="flex items-center gap-1">
@@ -826,71 +871,7 @@ export default function ProductDetails({
                     </Link>
                   </div>
                 </div>
-                {/* <div className="list-payment mt-7">
-                  <div className="main-content relative w-full rounded-xl border border-[#ddd] focus:border-[#ddd] px-2 pb-4 pt-6 sm:px-3 md:px-4 lg:pb-6 lg:pt-8">
-                    <div className="heading6 bg-linear absolute -top-[14px] left-1/2 -translate-x-1/2 whitespace-nowrap px-3 text-sm sm:px-5 sm:text-base">
-                      Guranteed safe checkout
-                    </div>
-                    <div className="list grid grid-cols-3 sm:grid-cols-6">
-                      <div className="item flex items-center justify-center px-1 lg:px-3">
-                        <Image
-                          src={"/images/payment/Frame-0.png"}
-                          width={500}
-                          height={450}
-                          alt="payment"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="item flex items-center justify-center px-1 lg:px-3">
-                        <Image
-                          src={"/images/payment/Frame-1.png"}
-                          width={500}
-                          height={450}
-                          alt="payment"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="item flex items-center justify-center px-1 lg:px-3">
-                        <Image
-                          src={"/images/payment/Frame-2.png"}
-                          width={500}
-                          height={450}
-                          alt="payment"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="item flex items-center justify-center px-1 lg:px-3">
-                        <Image
-                          src={"/images/payment/Frame-3.png"}
-                          width={500}
-                          height={450}
-                          alt="payment"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="item flex items-center justify-center px-1 lg:px-3">
-                        <Image
-                          src={"/images/payment/Frame-4.png"}
-                          width={500}
-                          height={450}
-                          alt="payment"
-                          className="w-full"
-                        />
-                      </div>
-                      <div className="item flex items-center justify-center px-1 lg:px-3">
-                        <Image
-                          src={"/images/payment/Frame-5.png"}
-                          width={500}
-                          height={450}
-                          alt="payment"
-                          className="w-full"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div> */}
               </div>
-              {/* <div className="heading5">Get it today</div> */}
 
               <div className="get-it mt-6 flex flex-col gap-4 sm:flex-row">
                 <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
@@ -969,7 +950,7 @@ export default function ProductDetails({
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
-                <div className=" w-full overflow-x-auto ">
+                <div className="w-full overflow-x-auto">
                   <h3 className="mb-4 whitespace-nowrap text-sm font-bold">
                     Specifications
                   </h3>
@@ -993,7 +974,6 @@ export default function ProductDetails({
                     )}
                 </div>
               </div>
-              {/* Questions Tab Content */}
               <div
                 className={`desc-item questions-block ${activeTab === "questions" ? "open" : ""}`}
               >
@@ -1098,7 +1078,6 @@ export default function ProductDetails({
                         </div>
                       )}
                     </div>
-                    {/* Ask Question Form (if logged in) */}
                     {session?.user && (
                       <div id="ask-question-form" className="mt-12">
                         <form
@@ -1146,7 +1125,6 @@ export default function ProductDetails({
               >
                 <div className="top-overview border-b border-[#ddd] pb-6 focus:border-[#ddd]">
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    {/* Rating Summary Card */}
                     <div className="rating-summary bg-surface rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md">
                       <div className="flex items-center justify-between">
                         <h3 className="text-lg font-semibold">
@@ -1178,7 +1156,6 @@ export default function ProductDetails({
                       </div>
                     </div>
 
-                    {/* Rating Distribution Card */}
                     <div className="rating-distribution bg-surface rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md sm:col-span-1 lg:col-span-1">
                       <h3 className="mb-3 text-lg font-semibold">
                         Rating Distribution
@@ -1212,7 +1189,6 @@ export default function ProductDetails({
                       </div>
                     </div>
 
-                    {/* Write Review Card */}
                     <div className="write-review-card bg-surface flex flex-col rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md">
                       <h3 className="mb-3 text-lg font-semibold">
                         Share Your Experience
@@ -1339,7 +1315,6 @@ export default function ProductDetails({
                         ))
                       )}
                     </div>
-                    {/* Only show review form if user can review */}
                     {session &&
                       (canReviewLoading ? (
                         <div>Checking purchase status...</div>
@@ -1417,7 +1392,6 @@ export default function ProductDetails({
               </div>
             </div>
           </div>
-          {/* Related Products Sidebar beside tabs, outside white bg */}
           <div className="hidden w-full max-w-xs flex-shrink-0 lg:block">
             <RelatedProductsSidebar
               categoryId={
@@ -1427,7 +1401,6 @@ export default function ProductDetails({
             />
           </div>
         </div>
-        {/* Related Products Sidebar for mobile (below tabs) */}
         <div className="mt-8 block w-full lg:hidden">
           <RelatedProductsSidebar
             categoryId={
