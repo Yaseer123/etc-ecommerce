@@ -18,6 +18,7 @@ type OrderItem = {
   size?: string;
   sku?: string;
   product?: { title?: string };
+  deliveryMethod?: string;
 };
 
 // --- Branded Email Components ---
@@ -81,6 +82,7 @@ export const orderRouter = createTRPCRouter({
             color: true,
             size: true,
             sku: true,
+            deliveryMethod: true,
             product: true,
           },
         },
@@ -112,6 +114,7 @@ export const orderRouter = createTRPCRouter({
               color: true,
               size: true,
               sku: true,
+              deliveryMethod: true,
               product: true,
             },
           },
@@ -134,6 +137,7 @@ export const orderRouter = createTRPCRouter({
             color: true,
             size: true,
             sku: true,
+            deliveryMethod: true,
             product: true,
           },
         },
@@ -158,6 +162,7 @@ export const orderRouter = createTRPCRouter({
               color: true,
               size: true,
               sku: true,
+              deliveryMethod: true,
               product: true,
             },
           },
@@ -177,6 +182,7 @@ export const orderRouter = createTRPCRouter({
             size: z.string().optional(),
             sku: z.string().optional(),
             colorName: z.string().optional(),
+            deliveryMethod: z.string().optional(),
           }),
         ),
         addressId: z.string().optional(),
@@ -253,6 +259,7 @@ export const orderRouter = createTRPCRouter({
               size: item.size,
               sku: item.sku,
               colorName: item.colorName,
+              deliveryMethod: item.deliveryMethod,
             })),
           },
         };
@@ -273,6 +280,7 @@ export const orderRouter = createTRPCRouter({
               color: true,
               size: true,
               sku: true,
+              deliveryMethod: true,
               product: true,
             },
           },
@@ -299,6 +307,8 @@ export const orderRouter = createTRPCRouter({
         createdOrder.items.length > 0
       ) {
         for (const item of createdOrder.items) {
+          // Log delivery method for debugging
+          console.log("EMAIL: OrderItem deliveryMethod:", item.deliveryMethod);
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -315,10 +325,13 @@ export const orderRouter = createTRPCRouter({
           const sku = item.sku
             ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
             : "";
+          const delivery = item.deliveryMethod
+            ? `<br/><span style='color:#555;'>Delivery: ${item.deliveryMethod}</span>`
+            : "";
           productRows += `
             <tr>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
-                ${productTitle}${color}${size}${sku}
+                ${productTitle}${color}${size}${sku}${delivery}
               </td>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
@@ -461,6 +474,7 @@ export const orderRouter = createTRPCRouter({
                     color: true,
                     size: true,
                     sku: true,
+                    deliveryMethod: true,
                     product: true,
                   },
                 },
@@ -475,6 +489,11 @@ export const orderRouter = createTRPCRouter({
               orderWithDetails.items.length > 0
             ) {
               for (const item of orderWithDetails.items) {
+                // Log delivery method for debugging
+                console.log(
+                  "EMAIL: OrderItem deliveryMethod:",
+                  item.deliveryMethod,
+                );
                 let productTitle = item.product?.title;
                 if (!productTitle && item.productId) {
                   const prod = await ctx.db.product.findUnique({
@@ -491,10 +510,13 @@ export const orderRouter = createTRPCRouter({
                 const sku = item.sku
                   ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
                   : "";
+                const delivery = item.deliveryMethod
+                  ? `<br/><span style='color:#555;'>Delivery: ${item.deliveryMethod}</span>`
+                  : "";
                 productRows += `
                   <tr>
                     <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
-                      ${productTitle}${color}${size}${sku}
+                      ${productTitle}${color}${size}${sku}${delivery}
                     </td>
                     <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
                     <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
@@ -606,6 +628,7 @@ export const orderRouter = createTRPCRouter({
             color: true,
             size: true,
             sku: true,
+            deliveryMethod: true,
             product: true,
           },
         },
@@ -626,6 +649,7 @@ export const orderRouter = createTRPCRouter({
             size: z.string().optional(),
             sku: z.string().optional(),
             colorName: z.string().optional(),
+            deliveryMethod: z.string().optional(),
           }),
         ),
         addressId: z.string().optional(),
@@ -688,6 +712,7 @@ export const orderRouter = createTRPCRouter({
                 size: item.size,
                 sku: item.sku,
                 colorName: item.colorName,
+                deliveryMethod: item.deliveryMethod,
               })),
             },
           },
@@ -707,6 +732,7 @@ export const orderRouter = createTRPCRouter({
               color: true,
               size: true,
               sku: true,
+              deliveryMethod: true,
               product: true,
             },
           },
@@ -729,6 +755,8 @@ export const orderRouter = createTRPCRouter({
         fullOrder.items.length > 0
       ) {
         for (const item of fullOrder.items) {
+          // Log delivery method for debugging
+          console.log("EMAIL: OrderItem deliveryMethod:", item.deliveryMethod);
           let productTitle = item.product?.title;
           if (!productTitle && item.productId) {
             const prod = await ctx.db.product.findUnique({
@@ -745,10 +773,13 @@ export const orderRouter = createTRPCRouter({
           const sku = item.sku
             ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
             : "";
+          const delivery = item.deliveryMethod
+            ? `<br/><span style='color:#555;'>Delivery: ${item.deliveryMethod}</span>`
+            : "";
           guestProductRows += `
             <tr>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
-                ${productTitle}${color}${size}${sku}
+                ${productTitle}${color}${size}${sku}${delivery}
               </td>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
               <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>
@@ -900,6 +931,7 @@ export const orderRouter = createTRPCRouter({
                   color: true,
                   size: true,
                   sku: true,
+                  deliveryMethod: true,
                   product: true,
                 },
               },
@@ -914,6 +946,11 @@ export const orderRouter = createTRPCRouter({
             orderWithDetails.items.length > 0
           ) {
             for (const item of orderWithDetails.items) {
+              // Log delivery method for debugging
+              console.log(
+                "EMAIL: OrderItem deliveryMethod:",
+                item.deliveryMethod,
+              );
               let productTitle = item.product?.title;
               if (!productTitle && item.productId) {
                 const prod = await ctx.db.product.findUnique({
@@ -930,10 +967,13 @@ export const orderRouter = createTRPCRouter({
               const sku = item.sku
                 ? `<br/><span style='color:#555;'>SKU: ${item.sku}</span>`
                 : "";
+              const delivery = item.deliveryMethod
+                ? `<br/><span style='color:#555;'>Delivery: ${item.deliveryMethod}</span>`
+                : "";
               productRows += `
                 <tr>
                   <td style="padding: 8px 12px; border-bottom: 1px solid #eee;">
-                    ${productTitle}${color}${size}${sku}
+                    ${productTitle}${color}${size}${sku}${delivery}
                   </td>
                   <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: center;">${item.quantity}</td>
                   <td style="padding: 8px 12px; border-bottom: 1px solid #eee; text-align: right;">৳${item.price}</td>

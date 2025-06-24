@@ -257,6 +257,7 @@ model OrderItem {
     color     String?
     size      String?
     sku       String?
+    deliveryMethod String? // Delivery method for this item (e.g., home, pickup, express)
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
