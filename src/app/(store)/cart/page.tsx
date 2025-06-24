@@ -225,70 +225,7 @@ const Cart = () => {
                     <span>.00</span>
                   </div>
                 </div>
-                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
-                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    Discounts
-                  </div>
-                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    {" "}
-                    <span>-৳</span>
-                    <span>{discountCart}</span>
-                    <span>.00</span>
-                  </div>
-                </div>
-                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
-                  <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    Shipping
-                  </div>
-                  <div className="flex gap-12">
-                    <div className="left">
-                      <div>
-                        <input
-                          id="shipping"
-                          type="radio"
-                          name="ship"
-                          checked={shipCart === 0}
-                          onChange={() => setShipCart(0)}
-                          disabled={moneyForFreeship - totalCart > 0}
-                        />
-                        <label className="pl-1" htmlFor="shipping">
-                          Free Shipping:
-                        </label>
-                      </div>
-                      <div className="mt-1">
-                        <input
-                          id="local"
-                          type="radio"
-                          name="ship"
-                          value={30}
-                          checked={shipCart === 30}
-                          onChange={() => setShipCart(30)}
-                        />
-                        <label className="pl-1" htmlFor="local">
-                          Local:
-                        </label>
-                      </div>
-                      <div className="mt-1">
-                        <input
-                          id="flat"
-                          type="radio"
-                          name="ship"
-                          value={40}
-                          checked={shipCart === 40}
-                          onChange={() => setShipCart(40)}
-                        />
-                        <label className="pl-1" htmlFor="flat">
-                          Flat Rate:
-                        </label>
-                      </div>
-                    </div>
-                    <div className="right">
-                      <div className="ship">৳0.00</div>
-                      <div className="local mt-1">৳30.00</div>
-                      <div className="flat mt-1">৳40.00</div>
-                    </div>
-                  </div>
-                </div>
+
                 <div className="flex justify-between pb-4 pt-4">
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                     Total
