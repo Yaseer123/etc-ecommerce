@@ -343,11 +343,12 @@ export default function Product({ data }: ProductProps) {
         {/* Buy Now Button at the bottom */}
         {(!("stockStatus" in data) || data.stockStatus !== "OUT_OF_STOCK") && (
           <button
-            className="mt-4 w-full rounded bg-orange-500 px-4 py-2 font-semibold text-white shadow transition-colors duration-200 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[#f5f7ff] px-4 py-2 font-semibold text-[#2952e3] shadow-none transition-colors duration-200 hover:bg-[#e6eaff] focus:outline-none focus:ring-2 focus:ring-[#2952e3]/30 focus:ring-offset-2"
             onClick={() => {
               handleAddToCart();
             }}
           >
+            <ShoppingBagOpen size={20} className="text-[#2952e3]" />
             Buy Now
           </button>
         )}
