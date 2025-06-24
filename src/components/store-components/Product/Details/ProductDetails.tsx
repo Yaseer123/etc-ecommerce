@@ -969,22 +969,20 @@ export default function ProductDetails({
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
-                <div className="mx-auto w-full overflow-x-auto sm:w-3/4 lg:w-1/2">
+                <div className="mx-auto w-full sm:w-3/4 lg:w-1/2">
                   {productMain.attributes &&
                     Object.entries(productMain.attributes).map(
                       ([key, value], index) => (
                         <div
                           key={index}
-                          className={`border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 sm:px-10 ${
+                          className={`item flex min-w-0 items-center gap-8 ${
                             index % 2 === 0 ? "bg-surface" : ""
-                          } flex flex-col md:flex-row md:items-center md:gap-4`}
+                          } border-b border-t border-gray-200 px-10 py-3 transition-colors duration-200 hover:bg-gray-100`}
                         >
-                          <div className="text-title mb-1 break-words text-left font-semibold md:mb-0 md:w-1/3">
+                          <div className="text-title min-w-0 max-w-full flex-[0_1_300px] overflow-hidden text-ellipsis whitespace-nowrap pr-4 text-left sm:flex-[0_1_350px]">
                             {key}
                           </div>
-                          <div className="break-words text-left md:w-2/3">
-                            {value}
-                          </div>
+                          <p className="min-w-0 flex-1 text-left">{value}</p>
                         </div>
                       ),
                     )}
