@@ -1,5 +1,6 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { api } from "@/trpc/react";
 import { Minus, Plus } from "@phosphor-icons/react/dist/ssr";
@@ -234,6 +235,18 @@ const Checkout = () => {
     }
   };
 
+  const [deliveryMethod, setDeliveryMethod] = useState<
+    "home" | "pickup" | "express"
+  >("home");
+  const [shippingCost, setShippingCost] = useState<number>(60);
+
+  // Update shipping cost when delivery method changes
+  useEffect(() => {
+    if (deliveryMethod === "home") setShippingCost(60);
+    else if (deliveryMethod === "pickup") setShippingCost(0);
+    else if (deliveryMethod === "express") setShippingCost(0); // can update later
+  }, [deliveryMethod]);
+
   const renderAddressSection = () => (
     <div className="mt-5">
       {!session && (
@@ -249,9 +262,13 @@ const Checkout = () => {
           </div>
         </div>
       )}
-      <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+      <div className="mb-2 text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+        <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-red-100 font-bold text-red-500">
+          1
+        </span>
         Shipping Information
       </div>
+      <hr className="mb-4" />
       <div className="mt-5">
         <form>
           <div className="grid flex-wrap gap-4 gap-y-5 sm:grid-cols-2">
@@ -343,11 +360,48 @@ const Checkout = () => {
     </div>
   );
 
+  const renderDeliveryMethodSection = () => (
+    <div className="mb-8 mt-8">
+      <div className="mb-2 flex items-center">
+        <span className="mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-red-100 font-bold text-red-500">
+          3
+        </span>
+        <span className="text-xl font-semibold">Delivery Method</span>
+      </div>
+      <hr className="mb-4" />
+      <div className="mb-2 font-medium">Select a delivery method</div>
+      <RadioGroup
+        value={deliveryMethod}
+        onValueChange={(val) =>
+          setDeliveryMethod(val as "home" | "pickup" | "express")
+        }
+        className="flex flex-col gap-2"
+      >
+        <label className="flex cursor-pointer items-center gap-2">
+          <RadioGroupItem value="home" id="delivery-home" />
+          <span>Home Delivery - 60৳</span>
+        </label>
+        <label className="flex cursor-pointer items-center gap-2">
+          <RadioGroupItem value="pickup" id="delivery-pickup" />
+          <span>Store Pickup - 0৳</span>
+        </label>
+        <label className="flex cursor-pointer items-center gap-2">
+          <RadioGroupItem value="express" id="delivery-express" />
+          <span>Request Express - Charge Applicable</span>
+        </label>
+      </RadioGroup>
+    </div>
+  );
+
   const renderPaymentSection = () => (
     <div className="mt-6 md:mt-10">
       <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
+        <span className="mb-2 mr-2 inline-flex h-7 w-7 items-center justify-center rounded-full bg-red-100 font-bold text-red-500">
+          2
+        </span>
         Choose payment Option:
       </div>
+      <hr className="mb-4" />
       <div className="mt-5 bg-white">
         <div
           className={`bg-surface rounded-lg border border-[#ddd] p-5 focus:border-[#ddd]`}
@@ -508,6 +562,8 @@ const Checkout = () => {
   const paymentAndOrderSection = (
     <>
       {renderPaymentSection()}
+      {renderDeliveryMethodSection()}
+
       <div className="mt-6 md:mt-10">
         <button
           className="duration-400 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:text-xs md:leading-4 lg:rounded-[10px] lg:px-6 lg:py-3"
@@ -695,7 +751,7 @@ const Checkout = () => {
                     Shipping
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    {Number(ship) === 0 ? "Free" : `৳${ship}.00`}
+                    {shippingCost === 0 ? "Free" : `৳${shippingCost}.00`}
                   </div>
                 </div>
                 <div className="flex justify-between pt-5">
@@ -703,7 +759,7 @@ const Checkout = () => {
                     Total
                   </div>
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                    ৳{totalCart - discountValue + Number(ship)}.00
+                    ৳{totalCart - discountValue + shippingCost}.00
                   </div>
                 </div>
               </div>
