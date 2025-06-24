@@ -317,7 +317,7 @@ export default function Product({ data }: ProductProps) {
           href={`/products/${data.slug}?id=${data.id}`}
           className="flex-grow"
         >
-          <h3 className="text-title line-clamp-2 h-12 cursor-pointer text-sm font-medium hover:underline">
+          <h3 className="text-title line-clamp-3 min-h-[4.5rem] cursor-pointer text-base font-medium hover:underline">
             {"title" in data ? data.title : data.name}
           </h3>
         </Link>
