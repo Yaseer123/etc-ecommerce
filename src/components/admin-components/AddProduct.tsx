@@ -918,7 +918,7 @@ export default function AddProductForm() {
                 <SelectValue placeholder="Select a brand or add new" />
               </SelectTrigger>
               <SelectContent>
-                {brands.map((b: string) => (
+                {brands.filter(Boolean).map((b: string) => (
                   <SelectItem key={b} value={b} className="w-full">
                     {b}
                   </SelectItem>
@@ -1004,7 +1004,7 @@ export default function AddProductForm() {
                         <SelectValue placeholder={`Select ${attr.name}`} />
                       </SelectTrigger>
                       <SelectContent>
-                        {attr.options.map((option) => (
+                        {attr.options.filter(Boolean).map((option) => (
                           <SelectItem
                             key={option}
                             value={option}

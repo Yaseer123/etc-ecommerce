@@ -49,6 +49,7 @@ import DndImageGallery from "../rich-editor/DndImageGallery";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import hexToIColor from "./AddProduct";
 import PreSelectedCategory from "./PreSelectedCategory";
 
 // Sortable item component for specifications
@@ -810,7 +811,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                     <SelectValue placeholder="Select a brand or add new" />
                   </SelectTrigger>
                   <SelectContent>
-                    {brands.map((b: string) => (
+                    {brands.filter(Boolean).map((b: string) => (
                       <SelectItem key={b} value={b} className="w-full">
                         {b}
                       </SelectItem>
@@ -888,25 +889,27 @@ export default function EditProductForm({ productId }: { productId: string }) {
                     {attr.name}{" "}
                     {attr.required && <span className="text-red-500">*</span>}
                   </Label>
-                  {attr.type === "select" && attr.options && (
-                    <Select
-                      value={attributeValues[attr.name]?.toString() ?? ""}
-                      onValueChange={(value) =>
-                        handleAttributeChange(attr.name, value)
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder={`Select ${attr.name}`} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {attr.options.map((option) => (
-                          <SelectItem key={option} value={option}>
-                            {option}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
+                  {attr.type === "select" &&
+                    attr.options &&
+                    attr.options.length > 0 && (
+                      <Select
+                        value={attributeValues[attr.name]?.toString() ?? ""}
+                        onValueChange={(value) =>
+                          handleAttributeChange(attr.name, value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder={`Select ${attr.name}`} />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {attr.options.filter(Boolean).map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
                 </div>
               ))}
             </div>
@@ -1214,7 +1217,7 @@ function VariantRow({
   );
   useEffect(() => {
     if (variant.colorHex !== variantColor.hex) {
-      setVariantColor(variant.colorHex ?? "#ffffff");
+      setVariantColor(hexToIColor(variant.colorHex ?? "#ffffff"));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant.colorHex]);
