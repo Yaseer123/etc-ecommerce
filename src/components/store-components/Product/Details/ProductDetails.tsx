@@ -756,7 +756,7 @@ export default function ProductDetails({
                   </div>
                   <div
                     onClick={handleAddToCart}
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-0 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                   >
                     Add To Cart
                   </div>
@@ -969,15 +969,18 @@ export default function ProductDetails({
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
-               <div className="mx-auto w-full overflow-x-auto sm:w-3/4 lg:w-1/2">
+                <div className="mx-auto w-full overflow-x-auto sm:w-3/4 lg:w-1/2">
+                  <h3 className="mb-4 whitespace-nowrap text-sm font-bold">
+                    Specifications
+                  </h3>
                   {productMain.attributes &&
                     Object.entries(productMain.attributes).map(
                       ([key, value], index) => (
                         <div
                           key={index}
-                          className={`border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 sm:px-10 ${
+                          className={`border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 sm:px-5 ${
                             index % 2 === 0 ? "bg-surface" : ""
-                          } flex flex-col md:flex-row md:items-center md:gap-4`}
+                          } flex flex-col md:flex-row md:items-center md:gap-4 lg:justify-between`}
                         >
                           <div className="text-title mb-1 break-words text-left font-semibold md:mb-0 md:w-1/3">
                             {key}
