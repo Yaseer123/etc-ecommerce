@@ -51,19 +51,24 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 <HomeIcon size={16} />
               </Link>
               <CaretRight size={12} className="text-secondary2" />
-              {categoryHierarchy?.map((cat: { id: React.Key | null | undefined; name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: number) => (
-                <React.Fragment key={cat.id}>
-                  <Link
-                    href={`/products?category=${cat.id}`}
-                    className="text-secondary2 truncate text-base font-normal leading-6 hover:underline md:text-base"
-                  >
-                    {cat.name}
-                  </Link>
-                  {index < categoryHierarchy.length - 1 && (
-                    <CaretRight size={12} className="text-secondary2" />
-                  )}
-                </React.Fragment>
-              ))}
+              {categoryHierarchy?.map(
+                (
+                  cat: { id: React.Key | null | undefined; name: string },
+                  index: number,
+                ) => (
+                  <React.Fragment key={cat.id}>
+                    <Link
+                      href={`/products/category/${cat.id}`}
+                      className="text-secondary2 truncate text-base font-normal capitalize leading-6 hover:underline md:text-base"
+                    >
+                      {cat.name}
+                    </Link>
+                    {index < categoryHierarchy.length - 1 && (
+                      <CaretRight size={12} className="text-secondary2" />
+                    )}
+                  </React.Fragment>
+                ),
+              )}
               <CaretRight size={12} className="text-secondary2" />
               <div className="truncate text-base font-normal capitalize leading-6 md:text-base">
                 {data.title}

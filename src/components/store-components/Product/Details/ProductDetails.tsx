@@ -20,6 +20,7 @@ import {
   Timer,
   X,
 } from "@phosphor-icons/react/dist/ssr";
+import type { Product } from "@prisma/client";
 import { addDays, format, formatDistanceToNow } from "date-fns";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -63,6 +64,14 @@ export function getCategoryPrefix(categoryName?: string) {
     .join("")
     .slice(0, 3);
 }
+
+type WishlistItem = {
+  id: string;
+  productId: string;
+  userId: string;
+  createdAt: Date;
+  product: Product;
+};
 
 export default function ProductDetails({
   productMain,
@@ -139,6 +148,18 @@ export default function ProductDetails({
   const addToWishlistMutation = api.wishList.addToWishList.useMutation({
     onSuccess: async () => {
       await utils.wishList.getWishList.invalidate();
+    },
+    onError: (
+      err: unknown,
+      variables: unknown,
+      context?: { previousWishlist?: WishlistItem[] },
+    ) => {
+      if (context?.previousWishlist) {
+        utils.wishList.getWishList.setData(undefined, context.previousWishlist);
+      }
+      if (err instanceof Error) {
+        console.error(err.message);
+      }
     },
   });
 
@@ -236,7 +257,7 @@ export default function ProductDetails({
   };
 
   const isInWishlist = (itemId: string): boolean => {
-    return wishlist.some((item) => item.productId === itemId);
+    return wishlist.some((item: WishlistItem) => item.productId === itemId);
   };
 
   const handleAddToWishlist = () => {
@@ -244,7 +265,8 @@ export default function ProductDetails({
       // **Optimistic UI Update: Remove item immediately**
       utils.wishList.getWishList.setData(
         undefined,
-        (old: any[]) => old?.filter((item: { productId: string; }) => item.productId !== productMain.id) ?? [],
+        (old: WishlistItem[] | undefined) =>
+          old?.filter((item) => item.product.id !== productMain.id) ?? [],
       );
 
       removeFromWishlistMutation.mutate(
@@ -258,16 +280,19 @@ export default function ProductDetails({
       );
     } else {
       // **Optimistic UI Update: Add item immediately**
-      utils.wishList.getWishList.setData(undefined, (old: any) => [
-        ...(old ?? []),
-        {
-          id: uuid(), // Temporary ID for optimistic update
-          product: productMain,
-          createdAt: new Date(),
-          userId: session?.user.id ?? "temp-user", // Replace with actual user ID if available
-          productId: productMain.id,
-        },
-      ]);
+      utils.wishList.getWishList.setData(
+        undefined,
+        (old: WishlistItem[] | undefined) => [
+          ...(old ?? []),
+          {
+            id: uuid(),
+            product: productMain,
+            createdAt: new Date(),
+            userId: session?.user.id ?? "temp-user",
+            productId: productMain.id,
+          },
+        ],
+      );
 
       addToWishlistMutation.mutate(
         { productId: productMain.id },
@@ -401,16 +426,14 @@ export default function ProductDetails({
 
   // Normalize variants field (handle string or array)
   let variants: ProductVariant[] = [];
-  if (productMain.variants) {
-    if (typeof productMain.variants === "string") {
-      try {
-        variants = JSON.parse(productMain.variants) as ProductVariant[];
-      } catch {
-        variants = [];
-      }
-    } else {
-      variants = productMain.variants as ProductVariant[];
+  if (typeof productMain.variants === "string") {
+    try {
+      variants = JSON.parse(productMain.variants) as ProductVariant[];
+    } catch {
+      variants = [];
     }
+  } else if (Array.isArray(productMain.variants)) {
+    variants = productMain.variants as ProductVariant[];
   }
 
   // Variant selection state
@@ -1016,55 +1039,37 @@ export default function ProductDetails({
                         </div>
                       ) : questions && questions.length > 0 ? (
                         <div className="mb-10 space-y-7">
-                          {questions.map((q: { id: React.Key | null | undefined; user: { name: string; }; createdAt: string | number | Date; question: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; answer: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
-                            <div
-                              key={q.id}
-                              className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
-                            >
-                              <div className="mb-1 flex items-center gap-3">
-                                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-100 text-lg font-bold text-primary">
-                                  {q.user?.name
-                                    ? q.user.name.charAt(0).toUpperCase()
-                                    : "U"}
-                                </div>
-                                <div className="flex flex-col">
-                                  <span className="font-semibold leading-tight text-gray-800">
-                                    {q.user?.name ?? "User"}
+                          {questions.map(
+                            (q: {
+                              id: string;
+                              user: { name: string | null };
+                              createdAt: Date;
+                              question: string;
+                              answer?: string | null;
+                            }) => (
+                              <div
+                                key={q.id}
+                                className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+                              >
+                                <div className="flex items-center gap-2">
+                                  <span className="font-semibold">
+                                    {q.user.name ?? "Unknown User"}
                                   </span>
                                   <span className="text-xs text-gray-400">
-                                    {new Date(q.createdAt).toLocaleDateString(
-                                      undefined,
-                                      {
-                                        year: "numeric",
-                                        month: "short",
-                                        day: "numeric",
-                                      },
-                                    )}
+                                    {new Date(q.createdAt).toLocaleDateString()}
                                   </span>
                                 </div>
-                              </div>
-                              <div className="mb-1 pl-12 text-base text-gray-900">
-                                {q.question}
-                              </div>
-                              {q.answer ? (
-                                <div className="mt-2 pl-12">
-                                  <div className="mb-1 flex items-center gap-2">
-                                    <span className="inline-block h-2 w-2 rounded-full bg-green-500"></span>
-                                    <span className="flex items-center gap-1 text-sm font-semibold text-green-700">
-                                      <Question
-                                        size={16}
-                                        className="text-green-500"
-                                      />
-                                      Answer from Admin
-                                    </span>
-                                  </div>
-                                  <div className="rounded-lg border border-green-100 bg-green-50 px-4 py-2 text-sm text-gray-700">
+                                <div className="text-gray-700">
+                                  {q.question}
+                                </div>
+                                {q.answer && (
+                                  <div className="mt-2 rounded bg-gray-100 p-2 text-green-700">
                                     {q.answer}
                                   </div>
-                                </div>
-                              ) : null}
-                            </div>
-                          ))}
+                                )}
+                              </div>
+                            ),
+                          )}
                         </div>
                       ) : (
                         <div className="empty-content flex flex-col items-center justify-center py-12">

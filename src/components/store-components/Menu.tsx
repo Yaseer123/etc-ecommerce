@@ -6,7 +6,6 @@ import { useModalWishlistStore } from "@/context/store-context/ModalWishlistCont
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
 import { api } from "@/trpc/react";
-import type { ProductType } from "@/types/ProductType";
 import {
   CaretDown,
   Handbag,
@@ -224,60 +223,76 @@ export default function Menu({
                         searchResults.length > 0 ? (
                         <>
                           <div className="max-h-[350px] overflow-y-auto">
-                            {searchResults.map((product: ProductType) => (
-                              <div
-                                key={product.id}
-                                className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
-                                onClick={() => {
-                                  router.push(
-                                    `/products/${product.slug}?id=${product.id}`,
-                                  );
-                                  setShowSearchResults(false);
-                                  setSearchKeyword("");
-                                }}
-                              >
-                                <div className="flex items-center gap-3">
-                                  {product.images[0] && (
-                                    <div className="h-12 w-12 flex-shrink-0">
-                                      <Image
-                                        src={product.images[0]}
-                                        alt={product.title}
-                                        width={48}
-                                        height={48}
-                                        className="h-full w-full object-cover"
-                                      />
-                                    </div>
-                                  )}
-                                  <div className="flex-1">
-                                    <div className="line-clamp-1 text-sm font-medium text-gray-900">
-                                      {product.title}
-                                    </div>
-                                    <div className="line-clamp-1 text-xs text-gray-500">
-                                      {product.shortDescription}
-                                    </div>
-                                    <div className="mt-0.5 text-sm font-medium">
-                                      {product.discountedPrice != null &&
-                                      product.discountedPrice <
-                                        product.price ? (
-                                        <>
-                                          <span className="discounted-price">
-                                            ৳
-                                            {product.discountedPrice.toFixed(2)}
-                                          </span>
-                                          <span className="ml-2 text-gray-400 line-through">
-                                            ৳{product.price.toFixed(2)}
-                                          </span>
-                                        </>
-                                      ) : (
-                                        <span className="discounted-price">
-                                          ৳{product.price.toFixed(2)}
-                                        </span>
+                            {searchResults.map((product, idx) => {
+                              if (
+                                typeof product === "object" &&
+                                product !== null &&
+                                "id" in product &&
+                                "title" in product &&
+                                "slug" in product &&
+                                "images" in product &&
+                                Array.isArray(product.images)
+                              ) {
+                                return (
+                                  <div
+                                    key={product.id}
+                                    className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
+                                    onClick={() => {
+                                      router.push(
+                                        `/products/${product.slug}?id=${product.id}`,
+                                      );
+                                      setShowSearchResults(false);
+                                      setSearchKeyword("");
+                                      setIsSearchOpen(false);
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      {product.images[0] && (
+                                        <div className="h-12 w-12 flex-shrink-0">
+                                          <Image
+                                            src={product.images[0]}
+                                            alt={product.title}
+                                            width={48}
+                                            height={48}
+                                            className="h-full w-full object-cover"
+                                          />
+                                        </div>
                                       )}
+                                      <div className="flex-1">
+                                        <div className="line-clamp-1 text-sm font-medium text-gray-900">
+                                          {product.title}
+                                        </div>
+                                        <div className="line-clamp-1 text-xs text-gray-500">
+                                          {product.shortDescription}
+                                        </div>
+                                        <div className="mt-0.5 text-sm font-medium">
+                                          {product.discountedPrice != null &&
+                                          product.discountedPrice <
+                                            product.price ? (
+                                            <>
+                                              <span className="discounted-price">
+                                                ৳
+                                                {product.discountedPrice.toFixed(
+                                                  2,
+                                                )}
+                                              </span>
+                                              <span className="ml-2 text-gray-400 line-through">
+                                                ৳{product.price.toFixed(2)}
+                                              </span>
+                                            </>
+                                          ) : (
+                                            <span className="text-black">
+                                              ৳{product.price.toFixed(2)}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                            ))}
+                                );
+                              }
+                              return null;
+                            })}
                           </div>
                           <div
                             className="cursor-pointer bg-gray-50 p-2 text-center text-sm font-medium text-black hover:bg-gray-100"
@@ -381,56 +396,94 @@ export default function Menu({
           <div className="flex h-full items-center justify-between">
             {/* Category navigation menu - left side */}
             <div className="left flex h-full items-center">
-              {categories?.map((category: { id: Key | null | undefined; name: string; subcategories: any[]; }) => (
-                <div key={category.id} className="group relative h-full">
-                  <Link
-                    href={`/products?category=${category.id}`}
-                    className="relative flex h-full items-center px-4 text-sm font-medium text-gray-700 transition-colors hover:text-orange-500"
-                  >
-                    <span className="py-3.5">
-                      {toTitleCase(category.name)}
-                      {category.subcategories?.length > 0 && (
-                        <CaretDown className="ml-1 inline-block h-3 w-3 transform text-orange-400 transition-transform duration-200 group-hover:rotate-180" />
-                      )}
-                    </span>
-                    <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
-                  </Link>
-                  {/* Category dropdown */}
-                  {category.subcategories?.length > 0 && (
-                    <div className="submenu absolute left-0 top-[calc(100%-1px)] z-50 hidden min-w-[240px] rounded-b-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-opacity duration-300 group-hover:block group-hover:opacity-100">
-                      {/* Add invisible bridge element to prevent hover gap issues */}
-                      <div className="absolute -top-2 left-0 h-2 w-full"></div>
-                      {category.subcategories.map((subcat: { id: Key | null | undefined; name: string; subcategories: any[]; }) => (
-                        <div key={subcat.id} className="group/sub relative">
-                          <Link
-                            href={`/products?category=${subcat.id}`}
-                            className="flex w-full items-center justify-between whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
-                          >
-                            {toTitleCase(subcat.name)}
-                            {subcat.subcategories?.length > 0 && (
-                              <span className="ml-1 text-orange-400">›</span>
-                            )}
-                          </Link>
+              {categories?.map(
+                (
+                  category: {
+                    id: Key | null | undefined;
+                    name: string;
+                    subcategories: {
+                      id: Key | null | undefined;
+                      name: string;
+                      subcategories: {
+                        id: Key | null | undefined;
+                        name: string;
+                      }[];
+                    }[];
+                  },
+                  idx: number,
+                ) => (
+                  <div key={category.id} className="group relative h-full">
+                    <Link
+                      href={`/products?category=${category.id}`}
+                      className="relative flex h-full items-center px-4 text-sm font-medium text-gray-700 transition-colors hover:text-orange-500"
+                    >
+                      <span className="py-3.5">
+                        {toTitleCase(category.name)}
+                        {category.subcategories?.length > 0 && (
+                          <CaretDown className="ml-1 inline-block h-3 w-3 transform text-orange-400 transition-transform duration-200 group-hover:rotate-180" />
+                        )}
+                      </span>
+                      <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+                    </Link>
+                    {/* Category dropdown */}
+                    {category.subcategories?.length > 0 && (
+                      <div className="submenu absolute left-0 top-[calc(100%-1px)] z-50 hidden min-w-[240px] rounded-b-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-opacity duration-300 group-hover:block group-hover:opacity-100">
+                        {/* Add invisible bridge element to prevent hover gap issues */}
+                        <div className="absolute -top-2 left-0 h-2 w-full"></div>
+                        {category.subcategories.map(
+                          (
+                            subcat: {
+                              id: Key | null | undefined;
+                              name: string;
+                              subcategories: {
+                                id: Key | null | undefined;
+                                name: string;
+                              }[];
+                            },
+                            subIdx: number,
+                          ) => (
+                            <div key={subcat.id} className="group/sub relative">
+                              <Link
+                                href={`/products?category=${subcat.id}`}
+                                className="flex w-full items-center justify-between whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
+                              >
+                                {toTitleCase(subcat.name)}
+                                {subcat.subcategories?.length > 0 && (
+                                  <span className="ml-1 text-orange-400">
+                                    ›
+                                  </span>
+                                )}
+                              </Link>
 
-                          {subcat.subcategories?.length > 0 && (
-                            <div className="nested-submenu absolute left-full top-0 z-50 hidden min-w-[220px] rounded-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-all duration-200 group-hover/sub:block group-hover/sub:opacity-100">
-                              {subcat.subcategories.map((childCat: { id: Key | null | undefined; name: string; }) => (
-                                <Link
-                                  key={childCat.id}
-                                  href={`/products?category=${childCat.id}`}
-                                  className="block whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
-                                >
-                                  {toTitleCase(childCat.name)}
-                                </Link>
-                              ))}
+                              {subcat.subcategories?.length > 0 && (
+                                <div className="nested-submenu absolute left-full top-0 z-50 hidden min-w-[220px] rounded-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-all duration-200 group-hover/sub:block group-hover/sub:opacity-100">
+                                  {subcat.subcategories.map(
+                                    (
+                                      childCat: {
+                                        id: Key | null | undefined;
+                                        name: string;
+                                      },
+                                      childIdx: number,
+                                    ) => (
+                                      <Link
+                                        key={childCat.id}
+                                        href={`/products?category=${childCat.id}`}
+                                        className="block whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
+                                      >
+                                        {toTitleCase(childCat.name)}
+                                      </Link>
+                                    ),
+                                  )}
+                                </div>
+                              )}
                             </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
+                          ),
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ),
+              )}
             </div>
 
             {/* Hotline - right side */}
@@ -494,59 +547,72 @@ export default function Menu({
               ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                 <>
                   <div className="max-h-[350px] overflow-y-auto">
-                    {searchResults.map((product: ProductType) => (
-                      <div
-                        key={product.id}
-                        className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
-                        onClick={() => {
-                          router.push(
-                            `/products/${product.slug}?id=${product.id}`,
-                          );
-                          setShowSearchResults(false);
-                          setSearchKeyword("");
-                          setIsSearchOpen(false);
-                        }}
-                      >
-                        <div className="flex items-center gap-3">
-                          {product.images[0] && (
-                            <div className="h-12 w-12 flex-shrink-0">
-                              <Image
-                                src={product.images[0]}
-                                alt={product.title}
-                                width={48}
-                                height={48}
-                                className="h-full w-full object-cover"
-                              />
-                            </div>
-                          )}
-                          <div className="flex-1">
-                            <div className="line-clamp-1 text-sm font-medium text-gray-900">
-                              {product.title}
-                            </div>
-                            <div className="line-clamp-1 text-xs text-gray-500">
-                              {product.shortDescription}
-                            </div>
-                            <div className="mt-0.5 text-sm font-medium">
-                              {product.discountedPrice != null &&
-                              product.discountedPrice < product.price ? (
-                                <>
-                                  <span className="discounted-price">
-                                    ৳{product.discountedPrice.toFixed(2)}
-                                  </span>
-                                  <span className="ml-2 text-gray-400 line-through">
-                                    ৳{product.price.toFixed(2)}
-                                  </span>
-                                </>
-                              ) : (
-                                <span className="text-black">
-                                  ৳{product.price.toFixed(2)}
-                                </span>
+                    {searchResults.map((product, idx) => {
+                      if (
+                        typeof product === "object" &&
+                        product !== null &&
+                        "id" in product &&
+                        "title" in product &&
+                        "slug" in product &&
+                        "images" in product &&
+                        Array.isArray(product.images)
+                      ) {
+                        return (
+                          <div
+                            key={product.id}
+                            className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
+                            onClick={() => {
+                              router.push(
+                                `/products/${product.slug}?id=${product.id}`,
+                              );
+                              setShowSearchResults(false);
+                              setSearchKeyword("");
+                              setIsSearchOpen(false);
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              {product.images[0] && (
+                                <div className="h-12 w-12 flex-shrink-0">
+                                  <Image
+                                    src={product.images[0]}
+                                    alt={product.title}
+                                    width={48}
+                                    height={48}
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
                               )}
+                              <div className="flex-1">
+                                <div className="line-clamp-1 text-sm font-medium text-gray-900">
+                                  {product.title}
+                                </div>
+                                <div className="line-clamp-1 text-xs text-gray-500">
+                                  {product.shortDescription}
+                                </div>
+                                <div className="mt-0.5 text-sm font-medium">
+                                  {product.discountedPrice != null &&
+                                  product.discountedPrice < product.price ? (
+                                    <>
+                                      <span className="discounted-price">
+                                        ৳{product.discountedPrice.toFixed(2)}
+                                      </span>
+                                      <span className="ml-2 text-gray-400 line-through">
+                                        ৳{product.price.toFixed(2)}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="text-black">
+                                      ৳{product.price.toFixed(2)}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    ))}
+                        );
+                      }
+                      return null;
+                    })}
                   </div>
                   <div
                     className="cursor-pointer bg-gray-50 p-2 text-center text-sm font-medium text-black hover:bg-gray-100"

@@ -45,10 +45,12 @@ export const useProductImageStore = create<ProductImageStore>((set) => ({
         // Otherwise, fetch images as before using the filter
         const response = await readAllImages(filter);
         set({
-          images: response.map((image: { public_id: any; secure_url: any; }) => ({
-            id: image.public_id,
-            src: image.secure_url,
-          })),
+          images: response.map(
+            (image: { public_id: string; secure_url: string }) => ({
+              id: image.public_id,
+              src: image.secure_url,
+            }),
+          ),
         });
       }
     } catch (error) {

@@ -27,6 +27,14 @@ interface ProductProps {
 // const validStockStatuses = ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"] as const;
 // type StockStatus = (typeof validStockStatuses)[number];
 
+type WishlistItem = {
+  id: string;
+  productId: string;
+  userId: string;
+  createdAt: Date;
+  product: Product;
+};
+
 export default function Product({ data }: ProductProps) {
   const { openModalCart } = useModalCartStore();
   const { openModalWishlist } = useModalWishlistStore();
@@ -53,12 +61,14 @@ export default function Product({ data }: ProductProps) {
 
       return { previousWishlist };
     },
-    onError: (err: unknown, variables: any, context: { previousWishlist: any; }) => {
-      // If mutation fails, revert back to the previous state
+    onError: (
+      err: unknown,
+      variables: unknown,
+      context?: { previousWishlist?: WishlistItem[] },
+    ) => {
       if (context?.previousWishlist) {
         utils.wishList.getWishList.setData(undefined, context.previousWishlist);
       }
-      // Optionally log error safely
       if (err instanceof Error) {
         console.error(err.message);
       }
@@ -76,21 +86,27 @@ export default function Product({ data }: ProductProps) {
         const previousWishlist = utils.wishList.getWishList.getData();
 
         // Optimistically update the wishlist by removing the item
-        utils.wishList.getWishList.setData(undefined, (old: any[]) => {
-          if (!old) return [];
-          return old.filter((item: { id: any; }) => item.id !== _productId);
-        });
+        utils.wishList.getWishList.setData(
+          undefined,
+          (old: WishlistItem[] | undefined) => {
+            if (!old) return [];
+            return old.filter((item) => item.id !== _productId);
+          },
+        );
 
         return { previousWishlist };
       },
-      onError: (err: unknown, variables: any, context: { previousWishlist: any; }) => {
+      onError: (
+        err: unknown,
+        variables: unknown,
+        context?: { previousWishlist?: WishlistItem[] },
+      ) => {
         if (context?.previousWishlist) {
           utils.wishList.getWishList.setData(
             undefined,
             context.previousWishlist,
           );
         }
-        // Optionally log error safely
         if (err instanceof Error) {
           console.error(err.message);
         }
@@ -101,9 +117,8 @@ export default function Product({ data }: ProductProps) {
     });
 
   const isInWishlist = (itemId: string): boolean => {
-    // Make sure we're checking against the correct property based on wishlist structure
     return wishlist.some(
-      (item: { id: string; product: { id: string; }; }) => item.id === itemId || item.product?.id === itemId,
+      (item: WishlistItem) => item.id === itemId || item.product?.id === itemId,
     );
   };
 
@@ -150,7 +165,7 @@ export default function Product({ data }: ProductProps) {
       removeFromWishlistMutation.mutate({ productId: data.id });
     } else {
       // Check for duplicates before adding
-      if (!wishlist.some((item: { id: string; }) => item.id === data.id)) {
+      if (!wishlist.some((item: WishlistItem) => item.id === data.id)) {
         addToWishlistMutation.mutate({ productId: data.id });
       }
     }

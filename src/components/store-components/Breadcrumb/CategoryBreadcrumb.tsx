@@ -33,7 +33,7 @@ const CategoryBreadcrumb: React.FC<Props> = ({ categoryId, pageTitle }) => {
             <div className="left flex flex-wrap items-center gap-x-1 gap-y-2">
               <Link
                 href={"/"}
-                className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
+                className="text-secondary2 text-base font-normal leading-6 hover:underline md:text-base"
               >
                 <HomeIcon size={16} />
               </Link>
@@ -44,40 +44,32 @@ const CategoryBreadcrumb: React.FC<Props> = ({ categoryId, pageTitle }) => {
                   {pageTitle ?? "Products"}
                 </div>
               ) : isLoading ? (
-                <div className="text-base font-normal leading-6 text-secondary2 md:text-base">
+                <div className="text-secondary2 text-base font-normal leading-6 md:text-base">
                   Loading...
                 </div>
               ) : isError ? (
-                <div className="text-red-500 text-base font-normal leading-6 md:text-base">
+                <div className="text-base font-normal leading-6 text-red-500 md:text-base">
                   Error loading category
                 </div>
               ) : (
-                categoryHierarchy?.map((cat: { id: React.Key | null | undefined; name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; }, index: number) => (
-                  <React.Fragment key={cat.id}>
-                    {index < categoryHierarchy.length - 1 ? (
-                      <>
-                        <Link
-                          href={`/products?category=${cat.id}`}
-                          className="max-w-[150px] truncate text-base font-normal leading-6 text-secondary2 hover:underline md:max-w-none md:text-base"
-                          title={cat.name}
-                        >
-                          {cat.name}
-                        </Link>
-                        <CaretRight
-                          size={10}
-                          className="text-secondary2 md:size-3"
-                        />
-                      </>
-                    ) : (
-                      <div
-                        className="max-w-[180px] truncate text-base font-normal capitalize leading-6 md:max-w-none md:text-base"
-                        title={cat.name}
+                categoryHierarchy?.map(
+                  (
+                    cat: { id: React.Key | null | undefined; name: string },
+                    index: number,
+                  ) => (
+                    <React.Fragment key={cat.id}>
+                      <Link
+                        href={`/products/category/${cat.id}`}
+                        className="text-secondary2 truncate text-base font-normal capitalize leading-6 hover:underline md:text-base"
                       >
                         {cat.name}
-                      </div>
-                    )}
-                  </React.Fragment>
-                ))
+                      </Link>
+                      {index < categoryHierarchy.length - 1 && (
+                        <CaretRight size={12} className="text-secondary2" />
+                      )}
+                    </React.Fragment>
+                  ),
+                )
               )}
             </div>
           </div>

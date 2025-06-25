@@ -17,7 +17,9 @@ export const useImageStore = create<ImageStore>((set) => ({
   loadImages: async (filter: string) => {
     try {
       const images = await readAllImages(filter);
-      const imageUrls = images.map((image: { secure_url: any; }) => image.secure_url);
+      const imageUrls = images.map(
+        (image: { secure_url: string }) => image.secure_url,
+      );
       set({ images: imageUrls });
     } catch (error) {
       console.error("Failed to load images:", error);

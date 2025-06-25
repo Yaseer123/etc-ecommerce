@@ -79,13 +79,10 @@ export default function ProductsPage() {
     max: maxPrice,
   });
 
-  // @ts-expect-error tRPC type mismatch, works at runtime
-  const { data: globalPriceRange } = api.product.getPriceRange.useQuery() as {
-    data: { min: number; max: number };
-  };
+  // Remove unsafe type assertion and @ts-expect-error for globalPriceRange
+  const { data: globalPriceRange } = api.product.getPriceRange.useQuery();
 
   // Fetch products with filters
-  // @ts-expect-error tRPC type mismatch, works at runtime
   const { data: products, isLoading } = api.product.getAllWithFilters.useQuery({
     categoryId: categoryId || undefined,
     brands: brands.length > 0 ? brands : undefined,
@@ -98,7 +95,7 @@ export default function ProductsPage() {
       stockStatus.length > 0
         ? (stockStatus as ("IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER")[])
         : undefined,
-  }) as { data: ProductWithCategory[]; isLoading: boolean };
+  });
 
   // Safely filter and type products
   const safeProducts: ProductWithCategory[] = Array.isArray(products)
@@ -107,24 +104,26 @@ export default function ProductsPage() {
       )
     : [];
 
-  // @ts-expect-error tRPC type mismatch, works at runtime
-  const { data: categoryBrands = [] } =
-    api.product.getBrandsByCategory.useQuery(
-      {
-        categoryId: categoryId || undefined,
-      },
-      {
-        enabled: true,
-        staleTime: Infinity,
-        gcTime: Infinity,
-        placeholderData: (previousData: unknown) => previousData,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-      },
-    ) as { data: string[] };
+  // Remove unsafe type assertion and @ts-expect-error for categoryBrands
+  const { data: categoryBrands } = api.product.getBrandsByCategory.useQuery(
+    {
+      categoryId: categoryId || undefined,
+    },
+    {
+      enabled: true,
+      staleTime: Infinity,
+      gcTime: Infinity,
+      placeholderData: (previousData: unknown) => previousData,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  );
+  const safeCategoryBrands: string[] = Array.isArray(categoryBrands)
+    ? categoryBrands.filter((b): b is string => typeof b === "string")
+    : [];
 
-  // @ts-expect-error tRPC type mismatch, works at runtime
-  const { data: categoryAttributes = [] } =
+  // Remove unsafe type assertion and @ts-expect-error for categoryAttributes
+  const { data: categoryAttributes } =
     api.product.getCategoryAttributes.useQuery(
       { categoryId },
       {
@@ -132,7 +131,18 @@ export default function ProductsPage() {
         staleTime: Infinity,
         gcTime: Infinity,
       },
-    ) as { data: CategoryAttribute[] };
+    );
+  const safeCategoryAttributes: CategoryAttribute[] = Array.isArray(
+    categoryAttributes,
+  )
+    ? categoryAttributes.filter(
+        (attr): attr is CategoryAttribute =>
+          attr &&
+          typeof attr === "object" &&
+          "name" in attr &&
+          typeof attr.name === "string",
+      )
+    : [];
 
   // Add a dedicated query to fetch category information
   const { data: categoryData } = api.category.getById.useQuery(
@@ -226,9 +236,9 @@ export default function ProductsPage() {
     }
 
     // Check if current brands exist in the new category
-    if (categoryId && categoryBrands && brands.length > 0) {
+    if (categoryId && safeCategoryBrands && brands.length > 0) {
       const validBrands = brands.filter((brand) =>
-        categoryBrands.includes(brand.toLowerCase()),
+        safeCategoryBrands.includes(brand.toLowerCase()),
       );
 
       // If any brands were removed, update state and URL
@@ -252,7 +262,7 @@ export default function ProductsPage() {
     categoryId,
     category?.id,
     category?.name,
-    categoryBrands,
+    safeCategoryBrands,
     brands,
     updateUrlParams,
     categoryData,
@@ -260,12 +270,12 @@ export default function ProductsPage() {
 
   // Initialize attribute filters from URL on category change
   useEffect(() => {
-    if (categoryId && categoryAttributes.length > 0) {
+    if (categoryId && safeCategoryAttributes.length > 0) {
       const newFilters: Record<string, string | string[]> = {};
       let hasFilters = false;
 
       // Look for attributes in URL params
-      (categoryAttributes as CategoryAttribute[]).forEach((attr) => {
+      safeCategoryAttributes.forEach((attr) => {
         const paramValue = searchParams?.get(attr.name);
         if (paramValue) {
           hasFilters = true;
@@ -291,7 +301,7 @@ export default function ProductsPage() {
       // Clear attribute filters when category is removed
       setAttributeFilters({});
     }
-  }, [categoryId, categoryAttributes, searchParams, attributeFilters]);
+  }, [categoryId, safeCategoryAttributes, searchParams, attributeFilters]);
 
   // Separate effect specifically for clearing filters when category changes
   useEffect(() => {
@@ -601,14 +611,14 @@ export default function ProductsPage() {
 
   // Initialize all attribute sections as expanded
   useEffect(() => {
-    if (categoryAttributes.length > 0) {
+    if (safeCategoryAttributes.length > 0) {
       const initialExpanded: Record<string, boolean> = {};
-      (categoryAttributes as CategoryAttribute[]).forEach((attr) => {
+      safeCategoryAttributes.forEach((attr) => {
         initialExpanded[attr.name] = true; // Start with all expanded
       });
       setExpandedAttributes(initialExpanded);
     }
-  }, [categoryAttributes]);
+  }, [safeCategoryAttributes]);
 
   // Initialize state for additional collapsible sections
   useEffect(() => {
@@ -1124,15 +1134,15 @@ export default function ProductsPage() {
             {expandedAttributes.brands !== false && (
               <div className="bg-white p-1">
                 <div className="list-brand">
-                  {isLoading && !categoryBrands.length ? (
+                  {isLoading && !safeCategoryBrands.length ? (
                     <div className="my-1 text-gray-500">Loading brands...</div>
-                  ) : categoryBrands.length === 0 ? (
+                  ) : safeCategoryBrands.length === 0 ? (
                     <div className="my-1 text-gray-500">
                       No brands available
                     </div>
                   ) : (
                     <div className="max-h-[250px] min-h-[120px] space-y-0.5 overflow-y-auto pr-1">
-                      {categoryBrands.map((item: string, index: number) => (
+                      {safeCategoryBrands.map((item: string, index: number) => (
                         <div key={index} className="brand-item">
                           <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:bg-orange-50">
                             <div className="block-input relative">
@@ -1168,9 +1178,9 @@ export default function ProductsPage() {
         )}
 
         {/* Specifications Section - collapsible with improved styling */}
-        {category && categoryId && categoryAttributes.length > 0 && (
+        {category && categoryId && safeCategoryAttributes.length > 0 && (
           <>
-            {categoryAttributes.map(
+            {safeCategoryAttributes.map(
               (attr: CategoryAttribute, index: number) => {
                 // Skip if no available options
                 const options =

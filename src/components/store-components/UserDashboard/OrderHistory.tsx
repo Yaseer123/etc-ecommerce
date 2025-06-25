@@ -15,7 +15,7 @@ import type { OrderStatus } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function OrderHistory({ activeTab }: { activeTab?: string }) {
@@ -46,7 +46,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
       toast.success("Order canceled successfully.");
       setCancelOrderId(null); // Close the modal
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: any }) => {
       toast.error(error.message || "Failed to cancel the order.");
     },
   });
@@ -73,7 +73,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
           {Object.entries(orderStatusMapping).map(([key, value]) => (
             <button
               key={key}
-              className={`item relative px-3 py-2.5 text-center  duration-300`}
+              className={`item relative px-3 py-2.5 text-center duration-300`}
               onClick={() => handleActiveOrders(value as OrderStatus)}
             >
               {activeOrders === value && (
@@ -97,77 +97,107 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
         ) : orders?.length === 0 ? (
           <div className="mt-5 text-center">No orders found.</div>
         ) : (
-          orders?.map((order: { id: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | ((prevState: string | null) => string | null) | null | undefined; status: string; items: any[]; }) => (
-            <div
-              key={order.id}
-              className="order_item box-shadow-xs mt-5 rounded-lg border border-[#ddd] focus:border-[#ddd]"
-            >
-              <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#ddd] p-5 focus:border-[#ddd]">
-                <div className="flex items-center gap-2">
-                  <strong className="text-title">Order Number:</strong>
-                  <strong className="order_number text-button uppercase">
-                    {order.id}
-                  </strong>
-                </div>
-                <div className="flex items-center gap-2">
-                  <strong className="text-title">Order status:</strong>
-                  <Badge
-                    variant={undefined}
-                    className={ORDER_STATUS_COLORS[order.status]?.color}
-                  >
-                    {ORDER_STATUS_COLORS[order.status]?.label ?? order.status}
-                  </Badge>
-                </div>
-              </div>
-              <div className="list_prd px-5">
-                {order.items.map((item: { id: Key | null | undefined; product: { slug: any; id: any; images: any[]; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; price: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }; quantity: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
-                  <div
-                    key={item.id}
-                    className="prd_item flex flex-wrap items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
-                  >
-                    <Link
-                      href={`/products/${item.product.slug}?id=${item.product.id}`}
-                      className="flex items-center gap-5"
+          orders?.map(
+            (order: {
+              id: string;
+              status: string;
+              items: {
+                id: string;
+                product: {
+                  slug: string;
+                  id: string;
+                  images: string[];
+                  title: string;
+                  price: number;
+                };
+                quantity: number;
+              }[];
+            }) => (
+              <div
+                key={order.id}
+                className="order_item box-shadow-xs mt-5 rounded-lg border border-[#ddd] focus:border-[#ddd]"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#ddd] p-5 focus:border-[#ddd]">
+                  <div className="flex items-center gap-2">
+                    <strong className="text-title">Order Number:</strong>
+                    <strong className="order_number text-button uppercase">
+                      {order.id}
+                    </strong>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <strong className="text-title">Order status:</strong>
+                    <Badge
+                      variant={undefined}
+                      className={ORDER_STATUS_COLORS[order.status]?.color}
                     >
-                      <div className="bg-img aspect-square w-20 flex-shrink-0 overflow-hidden rounded-lg md:w-[100px]">
-                        <Image
-                          src={
-                            item.product.images[0] ??
-                            "/images/product/1000x1000.png"
-                          }
-                          width={1000}
-                          height={1000}
-                          alt={item.product.title}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                      <div>
-                        <div className="prd_name text-title">
-                          {item.product.title}
+                      {ORDER_STATUS_COLORS[order.status]?.label ?? order.status}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="list_prd px-5">
+                  {order.items.map(
+                    (item: {
+                      id: string;
+                      product: {
+                        slug: string;
+                        id: string;
+                        images: string[];
+                        title: string;
+                        price: number;
+                      };
+                      quantity: number;
+                    }) => (
+                      <div
+                        key={item.id}
+                        className="prd_item flex flex-wrap items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"
+                      >
+                        <Link
+                          href={`/products/${item.product.slug}?id=${item.product.id}`}
+                          className="flex items-center gap-5"
+                        >
+                          <div className="bg-img aspect-square w-20 flex-shrink-0 overflow-hidden rounded-lg md:w-[100px]">
+                            <Image
+                              src={
+                                item.product.images[0] ??
+                                "/images/product/1000x1000.png"
+                              }
+                              width={1000}
+                              height={1000}
+                              alt={item.product.title}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <div className="prd_name text-title">
+                              {item.product.title}
+                            </div>
+                          </div>
+                        </Link>
+                        <div className="text-title">
+                          <span className="prd_quantity">{item.quantity}</span>
+                          <span> X </span>
+                          <span className="prd_price">
+                            ৳{item.product.price}
+                          </span>
                         </div>
                       </div>
-                    </Link>
-                    <div className="text-title">
-                      <span className="prd_quantity">{item.quantity}</span>
-                      <span> X </span>
-                      <span className="prd_price">৳{item.product.price}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              {order.status === "PENDING" && (
-                <div className="flex flex-wrap gap-4 p-5">
-                  <Button
-                    className="bg-red-500 hover:bg-red-600 text-white"
-                    variant="destructive"
-                    onClick={() => setCancelOrderId(order.id)}
-                  >
-                    Cancel Order
-                  </Button>
+                    ),
+                  )}
                 </div>
-              )}
-            </div>
-          ))
+                {order.status === "PENDING" && (
+                  <div className="flex flex-wrap gap-4 p-5">
+                    <Button
+                      className="bg-red-500 text-white hover:bg-red-600"
+                      variant="destructive"
+                      onClick={() => setCancelOrderId(order.id)}
+                    >
+                      Cancel Order
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ),
+          )
         )}
       </div>
 
