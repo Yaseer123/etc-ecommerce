@@ -74,7 +74,7 @@ export default function Navbar() {
 
           {session && (
             <Button asChild variant="outline" className="ml-2">
-              <Link href="/api/auth/signout">Sign out</Link>
+              <Link href="/signout">Sign out</Link>
             </Button>
           )}
         </div>
@@ -116,7 +116,7 @@ export default function Navbar() {
                 className="mt-2 w-full justify-start"
                 onClick={() => setIsMenuOpen(false)}
               >
-                <Link href="/api/auth/signout">Sign out</Link>
+                <Link href="/signout">Sign out</Link>
               </Button>
             )}
           </div>

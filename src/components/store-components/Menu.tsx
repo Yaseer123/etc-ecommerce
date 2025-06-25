@@ -312,7 +312,7 @@ export default function Menu({
                     >
                       {isAuthenticated ? (
                         <Link
-                          href={"/api/auth/signout"}
+                          href={"/signout"}
                           className="duration-400 md:text-md hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black/75 md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
                         >
                           Sign Out
