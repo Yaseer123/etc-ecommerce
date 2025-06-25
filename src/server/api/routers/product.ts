@@ -81,7 +81,13 @@ export const productRouter = createTRPCRouter({
         include: { category: true },
       });
 
-      return product;
+      if (!product) return null;
+
+      // Normalize variants before returning
+      return {
+        ...product,
+        variants: normalizeVariants(product.variants),
+      };
     }),
 
   getAll: publicProcedure
