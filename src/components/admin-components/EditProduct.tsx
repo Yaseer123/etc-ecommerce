@@ -1214,7 +1214,7 @@ function VariantRow({
   }, [variant.colorHex]);
 
   return (
-    <div className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row">
+    <div className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row md:flex-wrap md:items-center md:gap-4 md:overflow-x-auto">
       <Input
         type="text"
         placeholder="Color Name (optional)"
@@ -1275,13 +1275,22 @@ function VariantRow({
         onChange={(e) => handleVariantChange(idx, "stock", e.target.value)}
         className="w-32"
       />
-      <Button
-        type="button"
-        onClick={() => handleVariantImageGallery(idx)}
-        className="w-40"
-      >
-        Add Images
-      </Button>
+      <div className="mt-2 flex gap-2 md:ml-auto md:mt-0">
+        <Button
+          type="button"
+          onClick={() => handleVariantImageGallery(idx)}
+          className="w-40"
+        >
+          Add Images
+        </Button>
+        <Button
+          type="button"
+          variant="destructive"
+          onClick={() => handleRemoveVariant(idx)}
+        >
+          Remove
+        </Button>
+      </div>
       {/* Show variant images */}
       {variant.images && variant.images.length > 0 && (
         <div className="flex flex-wrap gap-2">
@@ -1297,13 +1306,6 @@ function VariantRow({
           ))}
         </div>
       )}
-      <Button
-        type="button"
-        variant="destructive"
-        onClick={() => handleRemoveVariant(idx)}
-      >
-        Remove
-      </Button>
     </div>
   );
 }
