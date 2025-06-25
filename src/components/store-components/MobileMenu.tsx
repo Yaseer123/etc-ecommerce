@@ -42,13 +42,13 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleNavigation("/")
+                  handleNavigation("/");
                 }}
                 className="logo cursor-pointer text-center"
               >
                 <Image
                   src="/images/brand/RINORS.png"
-                  alt="Rinors Logo"
+                  alt="Rinors"
                   width={120}
                   height={40}
                   priority
@@ -60,16 +60,15 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
 
             <div className="list-nav mt-6">
               <ul>
-              <li>
+                <li>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleNavigation("/products")
-                    } }
+                      handleNavigation("/products");
+                    }}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     All Products
-                    
                   </div>
                 </li>
 
@@ -113,48 +112,44 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleNavigation("/blog")
+                      handleNavigation("/blog");
                     }}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Blog
-
                   </div>
                 </li>
                 <li>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleNavigation("/about")
-                    } }
+                      handleNavigation("/about");
+                    }}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     About Us
-
                   </div>
                 </li>
                 <li>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleNavigation("/faqs")
-                    } }
+                      handleNavigation("/faqs");
+                    }}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     FAQ
-                    
                   </div>
                 </li>
                 <li>
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleNavigation("/contact")
-                    } }
+                      handleNavigation("/contact");
+                    }}
                     className="mt-5 flex cursor-pointer items-center justify-between text-xl font-semibold"
                   >
                     Contact Us
-                    
                   </div>
                   <div className="list-social mt-4 flex items-center gap-6">
                     <Link

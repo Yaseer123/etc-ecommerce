@@ -15,7 +15,7 @@ const Footer = () => {
                 <Link href={"/"} className="logo">
                   <Image
                     src="/images/brand/RINORS.png"
-                    alt="Rinors Logo"
+                    alt="Rinors"
                     width={120}
                     height={40}
                     priority

@@ -24,7 +24,7 @@ type OrderItem = {
 // --- Branded Email Components ---
 const emailHeader = `
   <div style="background: #fff; text-align: center; padding: 24px 0 8px 0;">
-    <img src="https://rinors.com/images/brand/RINORS.png" alt="Rinors Logo" style="height: 48px;" />
+    <img src="https://rinors.com/images/brand/RINORS.png" alt="Rinors" style="height: 48px;" />
   </div>
 `;
 const contactInfo = `
