@@ -6,6 +6,7 @@ import { useModalWishlistStore } from "@/context/store-context/ModalWishlistCont
 import useLoginPopup from "@/hooks/useLoginPopup";
 import useMenuMobile from "@/hooks/useMenuMobile";
 import { api } from "@/trpc/react";
+import type { ProductType } from "@/types/ProductType";
 import {
   CaretDown,
   Handbag,
@@ -68,13 +69,14 @@ export default function Menu({
   };
 
   // Use trpc to fetch search results with loading state
-  const { data: searchResults, isLoading: isSearchLoading } =
-    api.product.search.useQuery(
-      { query: debouncedSearchTerm },
-      {
-        enabled: debouncedSearchTerm.length > 1,
-      },
-    );
+  const { data: searchResults = [], isLoading: isSearchLoading } = (
+    api.product.search as any
+  ).useQuery(
+    { query: debouncedSearchTerm },
+    {
+      enabled: debouncedSearchTerm.length > 1,
+    },
+  ) as { data: ProductType[]; isLoading: boolean };
 
   // Show search container when user starts typing
   useEffect(() => {
@@ -222,7 +224,7 @@ export default function Menu({
                       ) : searchResults && searchResults.length > 0 ? (
                         <>
                           <div className="max-h-[350px] overflow-y-auto">
-                            {searchResults.map((product) => (
+                            {searchResults.map((product: ProductType) => (
                               <div
                                 key={product.id}
                                 className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
@@ -492,7 +494,7 @@ export default function Menu({
               ) : searchResults && searchResults.length > 0 ? (
                 <>
                   <div className="max-h-[350px] overflow-y-auto">
-                    {searchResults.map((product) => (
+                    {searchResults.map((product: ProductType) => (
                       <div
                         key={product.id}
                         className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"

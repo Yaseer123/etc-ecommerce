@@ -19,10 +19,9 @@ const Cart = () => {
     }
   };
 
-  const moneyForFreeship = 150;
   const [totalCart, setTotalCart] = useState<number>(0);
   const [discountCart] = useState<number>(0);
-  const [shipCart, setShipCart] = useState<number>(30);
+  const [shipCart] = useState<number>(30);
 
   useEffect(() => {
     const total = cartArray.reduce(

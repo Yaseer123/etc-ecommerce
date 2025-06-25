@@ -8,7 +8,14 @@ import { HomeIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
-export default function MyAccountView({ user }: { user: any }) {
+interface UserAccount {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
+}
+
+export default function MyAccountView({ user }: { user: UserAccount }) {
   const [activeTab, setActiveTab] = useState<string | undefined>("dashboard");
 
   const breadcrumbItems = [
@@ -70,9 +77,9 @@ export default function MyAccountView({ user }: { user: any }) {
             </div>
             <div className="right w-full pl-2.5 md:w-2/3">
               {/* TODO: Update Dashboard, OrderHistory, and AddressTab to accept userId prop and fetch data for that user */}
-              <Dashboard activeTab={activeTab} userId={user.id} />
-              <OrderHistory activeTab={activeTab} userId={user.id} />
-              <AddressTab activeTab={activeTab} userId={user.id} />
+              <Dashboard activeTab={activeTab} />
+              <OrderHistory activeTab={activeTab} />
+              <AddressTab activeTab={activeTab} />
             </div>
           </div>
         </div>

@@ -6,6 +6,18 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+// Define a type for Slider
+interface Slider {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  imageUrl: string;
+  imageId: string;
+  link: string;
+  autoSlideTime: number;
+}
+
 export const SliderManager = () => {
   const { data: sliders, refetch } = api.slider.getAll.useQuery();
   const addSlider = api.slider.add.useMutation({ onSuccess: () => refetch() });
@@ -316,7 +328,7 @@ export const SliderManager = () => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {sliders?.map((slider) => {
-          const safeSlider = {
+          const safeSlider: Slider = {
             id: slider.id,
             title: slider.title ?? "",
             subtitle: slider.subtitle ?? "",
@@ -325,8 +337,8 @@ export const SliderManager = () => {
             imageId: slider.imageId ?? "",
             link: slider.link ?? "",
             autoSlideTime:
-              typeof (slider as any).autoSlideTime === "number"
-                ? (slider as any).autoSlideTime
+              typeof slider.autoSlideTime === "number"
+                ? slider.autoSlideTime
                 : 4000,
           };
           return (

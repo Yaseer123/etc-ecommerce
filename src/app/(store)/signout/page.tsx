@@ -2,11 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
 export default function SignoutPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const done = searchParams.get("done");
 

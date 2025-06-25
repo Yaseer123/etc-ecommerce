@@ -1,29 +1,35 @@
 "use client";
 
 import { api } from "@/trpc/react";
+import type { ProductType } from "@/types/ProductType";
+import type { Category } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Product from "./Product/Product";
 
 const RecentlyAdded = () => {
   const {
-    data: categories,
+    data: categories = [],
     isLoading: isCategoriesLoading,
     isError: isCategoriesError,
   } = api.category.getAllParentOrderedByRecentProduct.useQuery();
 
   const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
 
+  function getAllByCategoryQuery(categoryId: string | undefined) {
+    return api.product.getAllByCategory.useQuery(
+      { categoryId },
+      {
+        enabled: !!categoryId, // Only fetch products if a category is selected
+      },
+    ) as { data: ProductType[]; isLoading: boolean; isError: boolean };
+  }
+
   const {
-    data: products,
+    data: products = [],
     isLoading: isProductsLoading,
     isError: isProductsError,
-  } = api.product.getAllByCategory.useQuery(
-    { categoryId: activeTab },
-    {
-      enabled: !!activeTab, // Only fetch products if a category is selected
-    },
-  );
+  } = getAllByCategoryQuery(activeTab);
 
   const handleTabClick = (categoryId: string) => {
     setActiveTab(categoryId);
@@ -79,7 +85,7 @@ const RecentlyAdded = () => {
             <div className="heading3 mb-2 md:mb-0">Recently Added</div>
             <div className="relative w-full overflow-hidden md:w-auto">
               <div className="menu-tab scrollbar-hide bg-surface flex items-center gap-2 overflow-x-auto whitespace-nowrap rounded-2xl p-1">
-                {categories?.map((category) => (
+                {categories?.map((category: Category) => (
                   <div
                     id={`tab-${category.id}`}
                     key={category.id}
@@ -123,7 +129,7 @@ const RecentlyAdded = () => {
             <div className="list-product hide-product-sold mt-6 grid grid-cols-1 gap-[20px] sm:grid-cols-2 sm:gap-[30px] md:mt-10 lg:grid-cols-4">
               {products
                 ?.slice(0, 12)
-                .map((prd, index) => (
+                .map((prd: ProductType, index: number) => (
                   <Product key={index} data={prd} style="style-1" />
                 ))}
             </div>

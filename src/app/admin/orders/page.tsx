@@ -147,7 +147,9 @@ export default function AdminOrdersPage() {
                       {order.items && order.items.length > 0 ? (
                         <div className="flex flex-col gap-1">
                           {order.items.map((item) => {
-                            const deliveryMethod = (item as any).deliveryMethod;
+                            const deliveryMethod = (
+                              item as { deliveryMethod?: string; id: string }
+                            ).deliveryMethod;
                             console.log(
                               "ADMIN PANEL: OrderItem deliveryMethod:",
                               deliveryMethod,

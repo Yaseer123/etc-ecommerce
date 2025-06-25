@@ -8,19 +8,6 @@ import { z } from "zod";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Define a type for order items at the top of the file or in a types file
-type OrderItem = {
-  productId: string;
-  quantity: number;
-  price: number;
-  colorName?: string;
-  color?: string;
-  size?: string;
-  sku?: string;
-  product?: { title?: string };
-  deliveryMethod?: string;
-};
-
 // --- Branded Email Components ---
 const emailHeader = `
   <div style="background: #fff; text-align: center; padding: 24px 0 8px 0;">

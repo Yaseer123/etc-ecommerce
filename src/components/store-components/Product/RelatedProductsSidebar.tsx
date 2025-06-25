@@ -12,14 +12,15 @@ const RelatedProductsSidebar: React.FC<RelatedProductsSidebarProps> = ({
   categoryId,
   excludeProductId,
 }) => {
-  const { data: products, isLoading } = api.product.getAllByCategory.useQuery(
-    { categoryId },
-    { enabled: !!categoryId },
-  );
+  const { data: products = [], isLoading } =
+    api.product.getAllByCategory.useQuery(
+      { categoryId },
+      { enabled: !!categoryId },
+    );
 
   // Filter out the current product and limit to 4
-  const relatedProducts = (products || [])
-    .filter((p) => p.id !== excludeProductId)
+  const relatedProducts = (products as ProductWithCategory[])
+    .filter((p: ProductWithCategory) => p.id !== excludeProductId)
     .slice(0, 2);
 
   if (!categoryId) return null;
@@ -35,8 +36,8 @@ const RelatedProductsSidebar: React.FC<RelatedProductsSidebarProps> = ({
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-1">
-          {relatedProducts.map((product) => (
-            <Product key={product.id} data={product as ProductWithCategory} />
+          {relatedProducts.map((product: ProductWithCategory) => (
+            <Product key={product.id} data={product} />
           ))}
         </div>
       )}

@@ -1,14 +1,15 @@
 "use client";
 
 import { api } from "@/trpc/react";
+import type { ProductType } from "@/types/ProductType";
 import Product from "./Product/Product";
 
 export default function FeaturedProducts() {
   const { data: featuredProducts = [], isLoading } =
     api.product.getFeaturedProducts.useQuery(
-      { limit: 9999999},
+      { limit: 9999999 },
       { refetchOnWindowFocus: false },
-    );
+    ) as { data: ProductType[]; isLoading: boolean };
 
   if (featuredProducts.length === 0) {
     return null;
@@ -31,7 +32,7 @@ export default function FeaturedProducts() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-4">
-          {featuredProducts.map((product) => (
+          {featuredProducts.map((product: ProductType) => (
             <Product key={product.id} data={product} />
           ))}
         </div>

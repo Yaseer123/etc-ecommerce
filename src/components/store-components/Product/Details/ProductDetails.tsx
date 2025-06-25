@@ -26,7 +26,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useRef, useState } from "react";
-import { FaFacebookMessenger, FaPinterestP, FaWhatsapp } from "react-icons/fa6";
+import { FaPinterestP, FaWhatsapp } from "react-icons/fa6";
 import { toast } from "sonner";
 import SwiperCore from "swiper/core";
 import "swiper/css/bundle";
@@ -71,8 +71,7 @@ export default function ProductDetails({
 }) {
   console.log("Product :", productMain);
   SwiperCore.use([Navigation, Thumbs]);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const swiperRef: any = useRef();
+  const swiperRef = useRef<SwiperCore | null>(null);
 
   const { data: session } = useSession();
 
@@ -556,9 +555,7 @@ export default function ProductDetails({
                     size={18}
                     weight={isInWishlist(productMain.id) ? "fill" : "regular"}
                   />
-                  {isInWishlist(productMain.id)
-                    ? "Wishlisted"
-                    : "Wishlist"}
+                  {isInWishlist(productMain.id) ? "Wishlisted" : "Wishlist"}
                 </button>
                 <button
                   className="flex items-center gap-1 rounded-lg border border-black bg-white px-3 py-1 text-sm font-semibold text-black hover:bg-black hover:text-white"

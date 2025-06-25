@@ -1,6 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
+import type { ProductType } from "@/types/ProductType";
 import { MagnifyingGlass, SpinnerGap, X } from "@phosphor-icons/react/dist/ssr";
 import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
@@ -16,13 +17,13 @@ export default function MobileSearch() {
   const debouncedSearchTerm = useDebounce(searchKeyword, 300);
 
   // Use trpc to fetch search results with loading state
-  const { data: searchResults, isLoading: isSearchLoading } =
+  const { data: searchResults = [], isLoading: isSearchLoading } =
     api.product.search.useQuery(
       { query: debouncedSearchTerm },
       {
         enabled: debouncedSearchTerm.length > 1,
       },
-    );
+    ) as { data: ProductType[]; isLoading: boolean };
 
   // Show search container when user starts typing
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function MobileSearch() {
             ) : searchResults && searchResults.length > 0 ? (
               <>
                 <div className="max-h-[50vh] overflow-y-auto">
-                  {searchResults.map((product) => (
+                  {searchResults.map((product: ProductType) => (
                     <div
                       key={product.id}
                       className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"

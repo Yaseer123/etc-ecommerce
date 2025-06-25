@@ -67,7 +67,6 @@ const Checkout = () => {
 
   const searchParams = useSearchParams();
   const discount = searchParams?.get("discount") ?? "0";
-  const ship = searchParams?.get("ship") ?? "0";
 
   const nameInputRef = useRef<HTMLInputElement>(null);
   const emailInputRef = useRef<HTMLInputElement>(null);
@@ -150,7 +149,14 @@ const Checkout = () => {
         address: fetchedAddress.street || "",
       });
     }
-  }, [session, fetchedAddress]);
+  }, [
+    session,
+    fetchedAddress,
+    newAddress.name,
+    newAddress.email,
+    newAddress.mobile,
+    newAddress.address,
+  ]);
 
   const createAddressMutation = api.address.createAddress.useMutation();
   const createGuestAddressMutation =

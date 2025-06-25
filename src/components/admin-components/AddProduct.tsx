@@ -325,13 +325,6 @@ export default function AddProductForm() {
     setStock(val);
     setErrors((prev) => ({ ...prev, stock: validateField("stock", val) }));
   }
-  function handleBrandChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setBrand(e.target.value);
-    setErrors((prev) => ({
-      ...prev,
-      brand: validateField("brand", e.target.value),
-    }));
-  }
   function handleEstimatedDeliveryTimeChange(
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -577,7 +570,7 @@ export default function AddProductForm() {
       estimatedDeliveryTime: estimatedDeliveryTime,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v, idx) => ({
+          ? variants.map((v, _idx) => ({
               colorName: v.colorName,
               colorHex: v.colorHex,
               images: v.images ?? [],

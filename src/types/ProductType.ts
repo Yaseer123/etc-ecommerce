@@ -1,4 +1,13 @@
+/// <reference types="./glodbal.d.ts" />
 import type { Category, Product } from "@prisma/client";
+
+type JsonValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JsonValue }
+  | Array<JsonValue>
+  | null;
 
 export interface Variant {
   [key: string]: unknown;
@@ -13,7 +22,13 @@ export interface Variant {
   sku?: string;
 }
 
-export type StockStatus = "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER";
+export const StockStatus = {
+  IN_STOCK: "IN_STOCK",
+  OUT_OF_STOCK: "OUT_OF_STOCK",
+  PRE_ORDER: "PRE_ORDER",
+} as const;
+
+export type StockStatus = (typeof StockStatus)[keyof typeof StockStatus];
 
 export interface ProductType {
   id: string;
@@ -52,8 +67,8 @@ export interface ProductType {
   estimatedDeliveryTime?: number;
   categoryId?: string;
   deletedAt?: Date | null;
-  descriptionImageId?: string;
-  categoryAttributes?: Record<string, unknown>;
+  descriptionImageId?: string | null;
+  categoryAttributes?: JsonValue;
   position?: number;
 }
 

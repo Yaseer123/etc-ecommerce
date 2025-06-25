@@ -156,7 +156,7 @@ export default function CategoryAttributesManager({
   // State for image handling
   const [newImage, setNewImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [isRemovingImage, setIsRemovingImage] = useState(false);
+  const _isRemovingImage = false;
 
   // State for handling attribute removal confirmation
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -223,35 +223,6 @@ export default function CategoryAttributesManager({
       }
     }
   }, [category, attributesForm, detailsForm]);
-
-  // Handle image change
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setNewImage(file);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target?.result) {
-          setImagePreview(event.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Handle image removal
-  const handleRemoveImage = async () => {
-    setIsRemovingImage(true);
-    try {
-      if (category?.imageId) {
-        await removeImage(category.imageId);
-      }
-      setNewImage(null);
-      setImagePreview(null);
-    } finally {
-      setIsRemovingImage(false);
-    }
-  };
 
   // Save category details
   const onSubmitDetails = async (data: DetailsFormType) => {

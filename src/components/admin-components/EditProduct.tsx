@@ -495,13 +495,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
     setStock(val);
     setErrors((prev) => ({ ...prev, stock: validateField("stock", val) }));
   }
-  function handleBrandChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setBrand(e.target.value);
-    setErrors((prev) => ({
-      ...prev,
-      brand: validateField("brand", e.target.value),
-    }));
-  }
   function handleEstimatedDeliveryTimeChange(
     e: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -645,7 +638,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       defaultSize,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v, idx) => ({
+          ? variants.map((v, _idx) => ({
               colorName: v.colorName,
               colorHex: v.colorHex,
               size: v.size,

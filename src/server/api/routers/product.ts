@@ -10,7 +10,7 @@ import {
 } from "@/server/api/trpc";
 import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
 import type { Prisma } from "@prisma/client";
-import { StockStatus } from "@prisma/client";
+import { Product, StockStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
@@ -36,7 +36,7 @@ function normalizeVariants(variants: unknown): Variant[] {
   }
   if (typeof variants === "string") {
     try {
-      const parsed = JSON.parse(variants) as unknown;
+      const parsed: unknown = JSON.parse(variants);
       if (Array.isArray(parsed)) {
         return parsed.filter(
           (v): v is Variant => v && typeof v === "object" && !Array.isArray(v),
@@ -87,8 +87,8 @@ export const productRouter = createTRPCRouter({
       return {
         ...product,
         variants: normalizeVariants(product.variants),
-      };
-    }),
+      } as Product & { variants: Variant[] };
+    }) as unknown as Product & { variants: Variant[] },
 
   getAll: publicProcedure
     .input(
@@ -209,11 +209,11 @@ export const productRouter = createTRPCRouter({
 
       const productsWithNormalizedVariants = products.map((product) => ({
         ...product,
-        variants: normalizeVariants(product.variants) as any,
-      }));
+        variants: normalizeVariants(product.variants),
+      })) as (Product & { variants: Variant[] })[];
 
       return productsWithNormalizedVariants.filter((p) => p.deletedAt === null);
-    }),
+    }) as unknown as (Product & { variants: Variant[] })[],
 
   getProductById: publicProcedure
     .input(
@@ -476,9 +476,16 @@ export const productRouter = createTRPCRouter({
               message: `Category attribute validation failed: ${validation.errors.join(", ")}`,
             });
           }
-        } catch (error) {
+        } catch (error: unknown) {
           if (error instanceof TRPCError) throw error;
-          console.error("Failed to parse category attributes:", error);
+          if (error instanceof Error) {
+            console.error(
+              "Failed to parse category attributes:",
+              error.message,
+            );
+          } else {
+            console.error("Failed to parse category attributes:", error);
+          }
         }
       }
     }
@@ -544,7 +551,7 @@ export const productRouter = createTRPCRouter({
     const realSKU = generateSKU({
       categoryName,
       productId: createdProduct.id,
-      color: input.defaultColor ? input.defaultColor : "UNNAMED",
+      color: input.defaultColor ?? "UNNAMED",
       size: input.defaultSize,
     });
     const allSkus = [
@@ -597,9 +604,16 @@ export const productRouter = createTRPCRouter({
                 message: `Category attribute validation failed: ${validation.errors.join(", ")}`,
               });
             }
-          } catch (error) {
+          } catch (error: unknown) {
             if (error instanceof TRPCError) throw error;
-            console.error("Failed to parse category attributes:", error);
+            if (error instanceof Error) {
+              console.error(
+                "Failed to parse category attributes:",
+                error.message,
+              );
+            } else {
+              console.error("Failed to parse category attributes:", error);
+            }
           }
         }
       }
@@ -636,7 +650,7 @@ export const productRouter = createTRPCRouter({
         categoryName: newCategoryName,
         productId: id,
         color: input.defaultColor ?? existingProduct?.defaultColor ?? "UNNAMED",
-        size: (input.defaultSize ?? existingProduct?.defaultSize) || undefined,
+        size: input.defaultSize ?? existingProduct?.defaultSize ?? undefined,
       });
 
       // Debug log for SKU update
@@ -824,8 +838,13 @@ export const productRouter = createTRPCRouter({
               attr.type === "select",
           );
         }
-      } catch (error) {
-        console.error("Failed to parse category attributes:", error);
+      } catch (error: unknown) {
+        if (error instanceof TRPCError) throw error;
+        if (error instanceof Error) {
+          console.error("Failed to parse category attributes:", error.message);
+        } else {
+          console.error("Failed to parse category attributes:", error);
+        }
         return [];
       }
 

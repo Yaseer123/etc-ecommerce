@@ -6,7 +6,9 @@ import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewCo
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
 import type { ProductType, ProductWithCategory } from "@/types/ProductType";
+import { StockStatus } from "@/types/ProductType";
 import { Eye, Heart, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
+import type { Product } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -122,7 +124,7 @@ export default function Product({ data }: ProductProps) {
         "images" in data && Array.isArray(data.images) && data.images[0]
           ? data.images[0]
           : "",
-      sku: "sku" in data ? (data.sku ?? "") : "",
+      sku: typeof data.sku === "string" ? data.sku : "",
       color: undefined,
       size: undefined,
     };
@@ -174,23 +176,74 @@ export default function Product({ data }: ProductProps) {
   }, [session?.user]);
 
   const handleQuickViewOpen = () => {
-    openQuickView({
+    // Type guard for ProductType | ProductWithCategory
+    const getString = (field: keyof (ProductType | ProductWithCategory)) => {
+      return typeof data[field] === "string" ? (data[field] as string) : "";
+    };
+    const getBoolean = (field: keyof (ProductType | ProductWithCategory)) => {
+      return typeof data[field] === "boolean"
+        ? (data[field] as boolean)
+        : false;
+    };
+    const getNumber = (field: keyof (ProductType | ProductWithCategory)) => {
+      return typeof data[field] === "number" ? (data[field] as number) : 0;
+    };
+    const productForQuickView: Product = {
       ...data,
-      discountedPrice: data.discountedPrice ?? null,
+      id: data.id!,
+      title: getString("title"),
+      new: getBoolean("new"),
+      sale: getBoolean("sale"),
+      featured: getBoolean("featured"),
+      slug: getString("slug"),
+      shortDescription: getString("shortDescription"),
+      description:
+        typeof data.description === "string" ? data.description : null,
+      published: getBoolean("published"),
+      price: getNumber("price"),
+      discountedPrice:
+        typeof data.discountedPrice === "number" ? data.discountedPrice : null,
       stock: typeof data.stock === "number" ? data.stock : 0,
       stockStatus: ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].includes(
-        data.stockStatus ?? "",
+        data.stockStatus ?? "IN_STOCK",
       )
-        ? data.stockStatus
-        : "IN_STOCK",
-      defaultColor: data.defaultColor ?? null,
-      defaultColorHex: data.defaultColorHex ?? null,
-      defaultSize: data.defaultSize ?? null,
-      estimatedDeliveryTime: data.estimatedDeliveryTime ?? null,
-      categoryId: data.categoryId ?? null,
+        ? (data.stockStatus as StockStatus)
+        : StockStatus.IN_STOCK,
+      defaultColor:
+        typeof data.defaultColor === "string" ? data.defaultColor : null,
+      defaultColorHex:
+        typeof data.defaultColorHex === "string" ? data.defaultColorHex : null,
+      defaultSize:
+        typeof data.defaultSize === "string" ? data.defaultSize : null,
+      estimatedDeliveryTime:
+        typeof data.estimatedDeliveryTime === "number"
+          ? data.estimatedDeliveryTime
+          : null,
+      categoryId: typeof data.categoryId === "string" ? data.categoryId : null,
       createdAt: data.createdAt ?? new Date(),
       updatedAt: data.updatedAt ?? new Date(),
-    });
+      imageId: typeof data.imageId === "string" ? data.imageId : "",
+      descriptionImageId:
+        typeof data.descriptionImageId === "string"
+          ? data.descriptionImageId
+          : null,
+      allSkus:
+        "allSkus" in data && Array.isArray((data as any).allSkus)
+          ? (data as any).allSkus
+          : [],
+      categoryAttributes: data.categoryAttributes ?? {},
+      position: typeof data.position === "number" ? data.position : 0,
+      deletedAt:
+        typeof data.deletedAt === "object" || data.deletedAt === null
+          ? (data.deletedAt ?? null)
+          : null,
+      variants:
+        "variants" in data && typeof (data as any).variants !== "undefined"
+          ? ((data as any).variants ?? null)
+          : null,
+      sku: typeof data.sku === "string" ? data.sku : "",
+    };
+    openQuickView(productForQuickView);
   };
 
   // Calculate discount percentage if discounted price is available
@@ -256,7 +309,13 @@ export default function Product({ data }: ProductProps) {
                   ? data.images[0]
                   : "/images/products/1000x1000.png"
               }
-              alt={"title" in data ? data.title : data.name}
+              alt={
+                "title" in data && typeof data.title === "string"
+                  ? data.title
+                  : "name" in data && typeof data.name === "string"
+                    ? data.name
+                    : ""
+              }
             />
           </div>
         </Link>
@@ -318,7 +377,11 @@ export default function Product({ data }: ProductProps) {
           className="flex-grow"
         >
           <h3 className="text-title line-clamp-3 min-h-[4.5rem] cursor-pointer text-base font-medium hover:underline">
-            {"title" in data ? data.title : data.name}
+            {"title" in data && typeof data.title === "string"
+              ? data.title
+              : "name" in data && typeof data.name === "string"
+                ? data.name
+                : ""}
           </h3>
         </Link>
 
