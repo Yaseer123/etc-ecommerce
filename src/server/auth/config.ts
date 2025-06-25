@@ -97,6 +97,9 @@ export const authConfig = {
   ],
   adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     // async authorized({ auth, request }) {
     //   console.log(auth?.user.role);

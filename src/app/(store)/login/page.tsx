@@ -51,17 +51,14 @@ const Login = () => {
                 Login
               </div>
               <form className="mt-4 md:mt-7" onSubmit={handleSubmit}>
-                <Link
-                  href={`/api/auth/signin?callbackUrl=${encodeURIComponent(redirect)}`}
+                <button
+                  type="button"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white hover:bg-black/75"
+                  onClick={() => signIn("google", { callbackUrl: redirect })}
                 >
-                  <button
-                    type="button"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg bg-black px-4 py-3 text-white hover:bg-black/75"
-                  >
-                    <GoogleLogo weight="bold" />
-                    <span>Login with Google</span>
-                  </button>
-                </Link>
+                  <GoogleLogo weight="bold" />
+                  <span>Login with Google</span>
+                </button>
                 <div className="relative my-5 text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t after:border-border">
                   <span className="relative z-30 bg-white px-2 text-muted-foreground">
                     Or continue with
