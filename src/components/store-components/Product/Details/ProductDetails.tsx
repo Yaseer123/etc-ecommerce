@@ -510,13 +510,13 @@ export default function ProductDetails({
     <>
       <div className="product-detail sale mb-5">
         {/* Social Share Row with border, rounded, and shadow */}
-        <div className="mb-4 flex items-center justify-between px-4 pt-4">
+        <div className="mb-4 flex items-center justify-between px-4 pt-4 md:px-4">
           <div className="w-full">
-            <div className="flex items-center justify-between rounded-full border bg-white px-6 py-2 shadow">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-row items-center justify-between gap-3 rounded-full border bg-white px-6 py-3 shadow md:flex-row md:gap-0 md:px-6 md:py-2">
+              <div className="flex items-center justify-center gap-2">
                 <span className="font-semibold text-gray-700">Share:</span>
                 {/* Messenger */}
-                <a
+                {/* <a
                   href={`https://www.facebook.com/dialog/send?link=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -524,7 +524,7 @@ export default function ProductDetails({
                   title="Share on Messenger"
                 >
                   <FaFacebookMessenger size={18} />
-                </a>
+                </a> */}
                 {/* Pinterest */}
                 <a
                   href={`https://pinterest.com/pin/create/button/?url=${encodeURIComponent(typeof window !== "undefined" ? window.location.href : "")}`}
@@ -547,7 +547,7 @@ export default function ProductDetails({
                 </a>
               </div>
               {/* Wishlist and Cart Buttons */}
-              <div className="flex items-center gap-2">
+              <div className="flex flex-row items-center gap-2 md:flex-row md:items-center md:gap-2">
                 <button
                   className={`flex items-center gap-1 rounded-lg border px-3 py-1 text-sm font-semibold ${isInWishlist(productMain.id) ? "border-black bg-black text-white" : "border-[#ddd] bg-white text-black hover:border-black hover:bg-black hover:text-white"}`}
                   onClick={handleAddToWishlist}
@@ -558,13 +558,13 @@ export default function ProductDetails({
                   />
                   {isInWishlist(productMain.id)
                     ? "Wishlisted"
-                    : "Add to Wishlist"}
+                    : "Wishlist"}
                 </button>
                 <button
                   className="flex items-center gap-1 rounded-lg border border-black bg-white px-3 py-1 text-sm font-semibold text-black hover:bg-black hover:text-white"
                   onClick={handleAddToCart}
                 >
-                  <Plus size={18} /> Add to Cart
+                  <Plus size={18} /> Cart
                 </button>
               </div>
             </div>
