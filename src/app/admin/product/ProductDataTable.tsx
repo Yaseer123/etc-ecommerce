@@ -9,7 +9,7 @@ import { columns, type ProductColumns } from "./Columns";
 
 export default function ProductDataTable() {
   const [page, setPage] = React.useState(1);
-  const [limit, setLimit] = React.useState(10);
+  const [limit, setLimit] = React.useState(50);
 
   const [productsWithCategory] = api.product.getAll.useSuspenseQuery({
     page,
