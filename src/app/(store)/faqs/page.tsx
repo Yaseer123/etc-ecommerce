@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import { api } from "@/trpc/react";
 import { CaretRight } from "@phosphor-icons/react/dist/ssr";
 import { HomeIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
 
 const breadcrumbItems = [
   { label: <HomeIcon size={16} />, href: "/" },
@@ -88,7 +88,7 @@ const Faqs = () => {
               ) : (
                 <div className="menu-tab flex flex-col gap-5">
                   {faqCategories && faqCategories.length > 0 ? (
-                    faqCategories.map((category) => (
+                    faqCategories.map((category: { id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
                       <div
                         key={category.id}
                         className={`tab-item heading6 has-line-before text-secondary2 inline-block w-fit cursor-pointer duration-300 ${
@@ -117,7 +117,7 @@ const Faqs = () => {
                   className={`tab-question flex flex-col gap-5 ${activeTab ? "active" : ""}`}
                 >
                   {faqItems && faqItems.length > 0 ? (
-                    faqItems.map((faq) => (
+                    faqItems.map((faq: { id: Key | null | undefined; question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; answer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
                       <div
                         key={faq.id}
                         className={`question-item cursor-pointer overflow-hidden rounded-[20px] border border-[#ddd] px-7 py-5 focus:border-[#ddd] ${

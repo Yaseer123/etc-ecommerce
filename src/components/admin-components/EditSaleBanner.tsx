@@ -13,7 +13,7 @@ import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const EditSaleBanner = () => {
@@ -395,7 +395,7 @@ export const EditSaleBanner = () => {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {banners?.map((banner) => (
+        {banners?.map((banner: SetStateAction<{ id?: string; title: string; subtitle: string; description: string; imageUrl: string; imageId: string; link: string; startDate: Date; endDate: Date; isActive: boolean; } | null>) => (
           <div
             key={banner.id}
             className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"

@@ -45,7 +45,7 @@ function ActionCell({ product }: { product: ProductColumns }) {
       });
       void utils.product.getAll.invalidate();
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error("Error", {
         description: `Failed to delete product: ${error.message}`,
       });
@@ -316,7 +316,7 @@ export const columns: ColumnDef<ProductColumns>[] = [
   {
     accessorKey: "category",
     header: () => <span className="min-w-[140px]">Category</span>,
-    accessorFn: (row) =>
+    accessorFn: (row: { category: { name?: string; } | null; }) =>
       typeof row.category === "object" &&
       row.category !== null &&
       "name" in row.category

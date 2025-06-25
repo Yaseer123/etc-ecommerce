@@ -8,6 +8,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import Link from "next/link";
+import { ReactElement, JSXElementConstructor, ReactNode, AwaitedReactNode, Key, ReactPortal } from "react";
 
 export default function Dashboard({ activeTab }: { activeTab?: string }) {
   const { data: order } = api.order.getLatestOrder.useQuery();
@@ -22,7 +23,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           <div className="counter">
             <span className="">Awaiting Pickup</span>
             <h5 className="heading5 mt-1">
-              {orders?.filter((order) => order.status === "SHIPPED").length}
+              {orders?.filter((order: { status: string; }) => order.status === "SHIPPED").length}
             </h5>
           </div>
           <HourglassMedium className="text-4xl" />
@@ -31,7 +32,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
           <div className="counter">
             <span className="">Cancelled Orders</span>
             <h5 className="heading5 mt-1">
-              {orders?.filter((order) => order.status === "CANCELLED").length}
+              {orders?.filter((order: { status: string; }) => order.status === "CANCELLED").length}
             </h5>
           </div>
           <ReceiptX className="text-4xl" />
@@ -77,7 +78,7 @@ export default function Dashboard({ activeTab }: { activeTab?: string }) {
               </tr>
             </thead>
             <tbody>
-              {order?.items?.map((item) => (
+              {order?.items?.map((item: { id: boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | Key | null | undefined; product: { slug: any; id: any; images: any[]; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; brand: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }; price: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
                 <tr key={item.id} className="item duration-300">
                   <th scope="row" className="py-3 text-left">
                     <strong className="text-title">{item.id}</strong>

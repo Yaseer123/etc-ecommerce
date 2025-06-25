@@ -57,7 +57,7 @@ const ContactUs = () => {
       toast.success("Message sent successfully!");
       setFormData({ name: "", email: "", message: "" });
     },
-    onError: (error) => {
+    onError: (error: { message: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | (() => React.ReactNode) | null | undefined; }) => {
       toast.error(error.message);
     },
   });

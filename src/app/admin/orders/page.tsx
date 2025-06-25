@@ -4,10 +4,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
 import { ORDER_STATUS_COLORS } from "@/utils/constants";
-import type { OrderStatus } from "@prisma/client";
+import type { $Enums, OrderStatus } from "@prisma/client";
 import { format } from "date-fns";
 import Link from "next/link";
-import { useState } from "react";
+import { Key, AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from "react";
 
 const statusOptions = [
   "PENDING",
@@ -91,9 +91,9 @@ export default function AdminOrdersPage() {
             <tbody>
               {(statusFilter === "ALL"
                 ? orders
-                : orders.filter((order) => order.status === statusFilter)
+                : orders.filter((order: { status: string; }) => order.status === statusFilter)
               )
-                .filter((order) => {
+                .filter((order: { user: { name: string; email: string; }; id: string; items: any[]; }) => {
                   if (!searchTerm) return true;
                   const term = searchTerm.toLowerCase();
                   const userName = order.user?.name?.toLowerCase() ?? "";
@@ -101,7 +101,7 @@ export default function AdminOrdersPage() {
                   const orderId = order.id?.toLowerCase() ?? "";
                   const skus =
                     order.items
-                      ?.map((item) => item.sku?.toLowerCase() ?? "")
+                      ?.map((item: { sku: string; }) => item.sku?.toLowerCase() ?? "")
                       .join(" ") ?? "";
                   return (
                     orderId.includes(term) ||
@@ -110,7 +110,7 @@ export default function AdminOrdersPage() {
                     skus.includes(term)
                   );
                 })
-                .map((order) => (
+                .map((order: { id: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | ((prevState: string | null) => string | null) | null | undefined; user: { id: any; name: any; email: any; }; address: { street: any; city: any; state: any; zipCode: any; phone: any; }; items: any[]; status: string | ((prevState: $Enums.OrderStatus | null) => $Enums.OrderStatus | null) | null; total: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; createdAt: string | number | Date; }) => (
                   <tr key={order.id} className="border-b">
                     <td className="border p-2 font-mono">{order.id}</td>
                     <td className="border p-2">
@@ -133,7 +133,7 @@ export default function AdminOrdersPage() {
                     <td className="border p-2">
                       {order.items && order.items.length > 0 ? (
                         <div className="flex flex-col gap-1">
-                          {order.items.map((item) => (
+                          {order.items.map((item: { id: Key | null | undefined; sku: any; }) => (
                             <span key={item.id} className="font-mono text-xs">
                               {item.sku ?? "-"}
                             </span>
@@ -146,7 +146,7 @@ export default function AdminOrdersPage() {
                     <td className="border p-2">
                       {order.items && order.items.length > 0 ? (
                         <div className="flex flex-col gap-1">
-                          {order.items.map((item) => {
+                          {order.items.map((item: { id: any; deliveryMethod?: string | undefined; }) => {
                             const deliveryMethod = (
                               item as { deliveryMethod?: string; id: string }
                             ).deliveryMethod;

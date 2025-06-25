@@ -244,7 +244,7 @@ export default function ProductDetails({
       // **Optimistic UI Update: Remove item immediately**
       utils.wishList.getWishList.setData(
         undefined,
-        (old) => old?.filter((item) => item.productId !== productMain.id) ?? [],
+        (old: any[]) => old?.filter((item: { productId: string; }) => item.productId !== productMain.id) ?? [],
       );
 
       removeFromWishlistMutation.mutate(
@@ -258,7 +258,7 @@ export default function ProductDetails({
       );
     } else {
       // **Optimistic UI Update: Add item immediately**
-      utils.wishList.getWishList.setData(undefined, (old) => [
+      utils.wishList.getWishList.setData(undefined, (old: any) => [
         ...(old ?? []),
         {
           id: uuid(), // Temporary ID for optimistic update
@@ -1016,7 +1016,7 @@ export default function ProductDetails({
                         </div>
                       ) : questions && questions.length > 0 ? (
                         <div className="mb-10 space-y-7">
-                          {questions.map((q) => (
+                          {questions.map((q: { id: React.Key | null | undefined; user: { name: string; }; createdAt: string | number | Date; question: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; answer: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }) => (
                             <div
                               key={q.id}
                               className="flex flex-col gap-2 rounded-xl border border-gray-200 bg-white p-6 shadow-sm"

@@ -15,7 +15,7 @@ import type { OrderStatus } from "@prisma/client";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import { toast } from "sonner";
 
 export default function OrderHistory({ activeTab }: { activeTab?: string }) {
@@ -46,7 +46,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
       toast.success("Order canceled successfully.");
       setCancelOrderId(null); // Close the modal
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error(error.message || "Failed to cancel the order.");
     },
   });
@@ -97,7 +97,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
         ) : orders?.length === 0 ? (
           <div className="mt-5 text-center">No orders found.</div>
         ) : (
-          orders?.map((order) => (
+          orders?.map((order: { id: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | ((prevState: string | null) => string | null) | null | undefined; status: string; items: any[]; }) => (
             <div
               key={order.id}
               className="order_item box-shadow-xs mt-5 rounded-lg border border-[#ddd] focus:border-[#ddd]"
@@ -120,7 +120,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
                 </div>
               </div>
               <div className="list_prd px-5">
-                {order.items.map((item) => (
+                {order.items.map((item: { id: Key | null | undefined; product: { slug: any; id: any; images: any[]; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; price: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }; quantity: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
                   <div
                     key={item.id}
                     className="prd_item flex flex-wrap items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"

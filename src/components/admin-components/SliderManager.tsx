@@ -327,7 +327,7 @@ export const SliderManager = () => {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {sliders?.map((slider) => {
+        {sliders?.map((slider: { id: any; title: any; subtitle: any; description: any; imageUrl: any; imageId: any; link: any; autoSlideTime: number; }) => {
           const safeSlider: Slider = {
             id: slider.id,
             title: slider.title ?? "",

@@ -78,7 +78,7 @@ export function StockStatusModal({
       onClose();
       void utils.product.getAll.invalidate();
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error("Error", {
         description: error.message,
       });

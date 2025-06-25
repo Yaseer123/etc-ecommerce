@@ -45,7 +45,7 @@ export function FeaturedProductModal({
       void utils.product.getAll.invalidate();
       void utils.product.getFeaturedProducts.invalidate();
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error("Error", {
         description: error.message,
       });

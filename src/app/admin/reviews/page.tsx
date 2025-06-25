@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api } from "@/trpc/react";
 import { Star } from "@phosphor-icons/react";
-import { useState } from "react";
+import { Key, useState } from "react";
 
 export default function AdminReviewsPage() {
   const [search, setSearch] = useState("");
@@ -22,7 +22,7 @@ export default function AdminReviewsPage() {
   });
 
   // Filter and search logic
-  const filteredReviews = reviews.filter((review) => {
+  const filteredReviews = reviews.filter((review: { visible: any; user: { name: any; }; product: { title: any; }; comment: any; }) => {
     if (filter === "visible" && !review.visible) return false;
     if (filter === "hidden" && review.visible) return false;
     if (search) {
@@ -79,7 +79,7 @@ export default function AdminReviewsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredReviews.map((review) => (
+              {filteredReviews.map((review: { id: Key | null | undefined; product: { title: any; }; user: { name: any; }; rating: number; comment: any; createdAt: string | number | Date; visible: any; }) => (
                 <tr key={review.id} className="border-t">
                   <td className="px-4 py-2">{review.product?.title ?? "-"}</td>
                   <td className="px-4 py-2">

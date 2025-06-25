@@ -305,7 +305,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       selectedCategoriesRef.current = [];
       router.push("/admin/product");
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error(error.message || "Failed to update product");
     },
     onSettled: () => {

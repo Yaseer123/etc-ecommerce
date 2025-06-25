@@ -57,7 +57,7 @@ import {
   Plus,
   Trash,
 } from "lucide-react";
-import { useState } from "react";
+import { Key, AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import { toast } from "sonner"; // Updated: Using sonner for toast
 
 export default function AdminFAQsPage() {
@@ -118,7 +118,7 @@ export default function AdminFAQsPage() {
           setNewCategory("");
           setCategoryDialogOpen(false);
         },
-        onError: (error) => {
+        onError: (error: { message: any; }) => {
           // Updated: Using sonner toast
           toast.error("Error", {
             description: error.message || "Failed to create category",
@@ -149,7 +149,7 @@ export default function AdminFAQsPage() {
           setEditingCategory(null);
           setCategoryDialogOpen(false);
         },
-        onError: (error) => {
+        onError: (error: { message: any; }) => {
           // Updated: Using sonner toast
           toast.error("Error", {
             description: error.message || "Failed to update category",
@@ -175,7 +175,7 @@ export default function AdminFAQsPage() {
               description: "Category deleted successfully",
             });
           },
-          onError: (error) => {
+          onError: (error: { message: any; }) => {
             // Updated: Using sonner toast
             toast.error("Error", {
               description: error.message || "Failed to delete category",
@@ -213,7 +213,7 @@ export default function AdminFAQsPage() {
         });
         setFaqItemDialogOpen(false);
       },
-      onError: (error) => {
+      onError: (error: { message: any; }) => {
         // Updated: Using sonner toast
         toast.error("Error", {
           description: error.message || "Failed to create FAQ item",
@@ -253,7 +253,7 @@ export default function AdminFAQsPage() {
           setEditingFaqItem(null);
           setFaqItemDialogOpen(false);
         },
-        onError: (error) => {
+        onError: (error: { message: any; }) => {
           // Updated: Using sonner toast
           toast.error("Error", {
             description: error.message || "Failed to update FAQ item",
@@ -275,7 +275,7 @@ export default function AdminFAQsPage() {
               description: "FAQ item deleted successfully",
             });
           },
-          onError: (error) => {
+          onError: (error: { message: any; }) => {
             // Updated: Using sonner toast
             toast.error("Error", {
               description: error.message || "Failed to delete FAQ item",
@@ -314,7 +314,7 @@ export default function AdminFAQsPage() {
 
   // Calculate total FAQs count
   const totalFaqCount =
-    allFaqs?.reduce((sum, category) => sum + category.faqItems.length, 0) ?? 0;
+    allFaqs?.reduce((sum: any, category: { faqItems: string | any[]; }) => sum + category.faqItems.length, 0) ?? 0;
 
   if (isLoading) {
     return (
@@ -417,7 +417,7 @@ export default function AdminFAQsPage() {
               </Alert>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {allFaqs?.map((category) => (
+                {allFaqs?.map((category: { id: any; title: any; faqItems?: any; }) => (
                   <Card
                     key={category.id}
                     className="overflow-hidden border transition-all hover:border-black hover:shadow-md"
@@ -476,7 +476,7 @@ export default function AdminFAQsPage() {
                       {category.faqItems.length > 0 ? (
                         <ScrollArea className="h-32 pr-2">
                           <ul className="space-y-2">
-                            {category.faqItems.slice(0, 5).map((faq) => (
+                            {category.faqItems.slice(0, 5).map((faq: { id: Key | null | undefined; question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
                               <li
                                 key={faq.id}
                                 className="group flex items-start gap-1.5 rounded-sm border-l-2 border-l-gray-300 bg-gray-50 px-3 py-2 text-sm transition-colors hover:border-l-black hover:bg-gray-100"
@@ -528,7 +528,7 @@ export default function AdminFAQsPage() {
             ) : (
               <div className="space-y-6">
                 {allFaqs?.map(
-                  (category) =>
+                  (category: { faqItems: any[]; id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) =>
                     category.faqItems.length > 0 && (
                       <Card key={category.id} className="overflow-hidden">
                         <CardHeader className="border-b bg-gray-50 pb-2">
@@ -549,7 +549,7 @@ export default function AdminFAQsPage() {
                             collapsible
                             className="w-full"
                           >
-                            {category.faqItems.map((faq) => (
+                            {category.faqItems.map((faq: { id: any; question: any; answer: any; categoryId?: string; }) => (
                               <AccordionItem
                                 key={faq.id}
                                 value={faq.id}
@@ -593,7 +593,7 @@ export default function AdminFAQsPage() {
                                   <div className="prose prose-sm max-w-none rounded-md border bg-white p-4 shadow-sm dark:prose-invert sm:p-5">
                                     {faq.answer
                                       .split("\n")
-                                      .map((paragraph, idx) => (
+                                      .map((paragraph: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, idx: Key | null | undefined) => (
                                         <p
                                           key={idx}
                                           className="mb-2 text-sm last:mb-0 sm:text-base"
@@ -719,7 +719,7 @@ export default function AdminFAQsPage() {
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {allFaqs?.map((category) => (
+                  {allFaqs?.map((category: { id: Key | null | undefined; title: any; }) => (
                     <SelectItem key={category.id} value={category.id}>
                       {category.title}
                     </SelectItem>

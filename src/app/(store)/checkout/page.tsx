@@ -10,7 +10,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
 
 type OrderWithRelations = Order & {
   address?: {
@@ -163,7 +163,7 @@ const Checkout = () => {
     api.address.createGuestAddress.useMutation();
 
   const placeGuestOrder = api.order.placeGuestOrder.useMutation({
-    onSuccess: (data) => {
+    onSuccess: (data: SetStateAction<OrderSuccessType>) => {
       setOrderSuccess(data);
       setOrderError("");
       useCartStore.getState().clearCart();
@@ -171,7 +171,7 @@ const Checkout = () => {
         window.sessionStorage.removeItem("buyNowProduct");
       }
     },
-    onError: (err) => {
+    onError: (err: { message: any; }) => {
       setOrderError(err.message ?? "Order failed. Please try again.");
     },
   });
@@ -470,7 +470,7 @@ const Checkout = () => {
         window.sessionStorage.removeItem("buyNowProduct");
       }
     },
-    onError: (err) => {
+    onError: (err: { message: any; }) => {
       setOrderError(err.message ?? "Order failed. Please try again.");
     },
   });

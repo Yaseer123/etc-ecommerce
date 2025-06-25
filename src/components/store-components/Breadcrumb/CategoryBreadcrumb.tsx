@@ -52,7 +52,7 @@ const CategoryBreadcrumb: React.FC<Props> = ({ categoryId, pageTitle }) => {
                   Error loading category
                 </div>
               ) : (
-                categoryHierarchy?.map((cat, index) => (
+                categoryHierarchy?.map((cat: { id: React.Key | null | undefined; name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | Promise<React.AwaitedReactNode> | null | undefined; }, index: number) => (
                   <React.Fragment key={cat.id}>
                     {index < categoryHierarchy.length - 1 ? (
                       <>

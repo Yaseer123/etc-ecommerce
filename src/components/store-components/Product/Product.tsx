@@ -53,7 +53,7 @@ export default function Product({ data }: ProductProps) {
 
       return { previousWishlist };
     },
-    onError: (err: unknown, variables, context) => {
+    onError: (err: unknown, variables: any, context: { previousWishlist: any; }) => {
       // If mutation fails, revert back to the previous state
       if (context?.previousWishlist) {
         utils.wishList.getWishList.setData(undefined, context.previousWishlist);
@@ -76,14 +76,14 @@ export default function Product({ data }: ProductProps) {
         const previousWishlist = utils.wishList.getWishList.getData();
 
         // Optimistically update the wishlist by removing the item
-        utils.wishList.getWishList.setData(undefined, (old) => {
+        utils.wishList.getWishList.setData(undefined, (old: any[]) => {
           if (!old) return [];
-          return old.filter((item) => item.id !== _productId);
+          return old.filter((item: { id: any; }) => item.id !== _productId);
         });
 
         return { previousWishlist };
       },
-      onError: (err: unknown, variables, context) => {
+      onError: (err: unknown, variables: any, context: { previousWishlist: any; }) => {
         if (context?.previousWishlist) {
           utils.wishList.getWishList.setData(
             undefined,
@@ -103,7 +103,7 @@ export default function Product({ data }: ProductProps) {
   const isInWishlist = (itemId: string): boolean => {
     // Make sure we're checking against the correct property based on wishlist structure
     return wishlist.some(
-      (item) => item.id === itemId || item.product?.id === itemId,
+      (item: { id: string; product: { id: string; }; }) => item.id === itemId || item.product?.id === itemId,
     );
   };
 
@@ -150,7 +150,7 @@ export default function Product({ data }: ProductProps) {
       removeFromWishlistMutation.mutate({ productId: data.id });
     } else {
       // Check for duplicates before adding
-      if (!wishlist.some((item) => item.id === data.id)) {
+      if (!wishlist.some((item: { id: string; }) => item.id === data.id)) {
         addToWishlistMutation.mutate({ productId: data.id });
       }
     }

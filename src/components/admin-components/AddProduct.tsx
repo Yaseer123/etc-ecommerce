@@ -15,7 +15,7 @@ import { generateSKU } from "@/lib/utils";
 import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
 import { productSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
-import type { Variant } from "@/types/ProductType";
+import type { JsonValue, Variant } from "@/types/ProductType";
 import {
   closestCenter,
   DndContext,
@@ -38,6 +38,7 @@ import { GripVertical } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
+    Key,
   useEffect,
   useRef,
   useState,
@@ -55,6 +56,7 @@ import DndImageGallery from "../rich-editor/DndImageGallery";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 // Sortable item component for specifications
 function SortableSpecificationItem({
@@ -115,7 +117,7 @@ function hexToIColor(hex: string): IColor {
   };
 }
 
-export default function AddProductForm() {
+export default function AddProductForm(p0: string | number | boolean | { [x: string]: JsonValue; } | JsonValue[]) {
   const router = useRouter();
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
 
@@ -394,7 +396,7 @@ export default function AddProductForm() {
       // Navigate after clearing
       router.push("/admin/product");
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error(error.message || "Failed to add product");
     },
     onSettled: () => {
@@ -747,7 +749,7 @@ export default function AddProductForm() {
                   {/* Show variant images */}
                   {variant.images && variant.images.length > 0 && (
                     <div className="flex flex-wrap gap-2">
-                      {variant.images.map((img, i) => (
+                      {variant.images.map((img: string | StaticImport, i: Key | null | undefined) => (
                         <Image
                           key={i}
                           src={img}

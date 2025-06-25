@@ -1,8 +1,10 @@
 "use client";
 
 import { api } from "@/trpc/react";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Key, ReactElement, JSXElementConstructor, ReactNode, AwaitedReactNode } from "react";
 
 export const SaleBanner = () => {
   const router = useRouter();
@@ -13,7 +15,7 @@ export const SaleBanner = () => {
   };
 
   const activeBanners = banners?.filter(
-    (banner) =>
+    (banner: { isActive: any; startDate: string | number | Date; endDate: string | number | Date; }) =>
       banner.isActive &&
       new Date(banner.startDate) <= new Date() &&
       new Date(banner.endDate) >= new Date(),
@@ -24,7 +26,7 @@ export const SaleBanner = () => {
   return (
     <div className="banner-ads-block w-full max-lg:mt-4 lg:w-1/3 shadow-lg bg-transparent">
       <div className="grid h-full w-full grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-1 lg:gap-5">
-        {activeBanners.slice(0, 2).map((banner) => (
+        {activeBanners.slice(0, 2).map((banner: { id: Key | null | undefined; link: string | null; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; subtitle: any; description: any; imageUrl: string | StaticImport; }) => (
           <div
             key={banner.id}
             className="banner-ads-item bg-linear relative h-full min-h-[160px] cursor-pointer overflow-hidden"

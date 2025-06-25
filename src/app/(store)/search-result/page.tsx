@@ -3,6 +3,7 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
 import { api } from "@/trpc/react";
+import { ProductType, ProductWithCategory } from "@/types/ProductType";
 import { HomeIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -114,7 +115,7 @@ export default function Page() {
                   <div
                     className={`list-product hide-product-sold mt-5 grid grid-cols-2 gap-[20px] sm:grid-cols-3 sm:gap-[30px] lg:grid-cols-4`}
                   >
-                    {currentProducts.map((item) => (
+                    {currentProducts.map((item: ProductType | ProductWithCategory) => (
                       <Product key={item.id} data={item} />
                     ))}
                   </div>

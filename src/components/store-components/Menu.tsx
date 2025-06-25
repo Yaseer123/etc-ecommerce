@@ -19,7 +19,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Key, useEffect, useRef, useState } from "react";
 import CategoryDropdown from "./Category/CategoryDropdown";
 import MobileMenu from "./MobileMenu";
 import TopNav from "./TopNav";
@@ -381,7 +381,7 @@ export default function Menu({
           <div className="flex h-full items-center justify-between">
             {/* Category navigation menu - left side */}
             <div className="left flex h-full items-center">
-              {categories?.map((category) => (
+              {categories?.map((category: { id: Key | null | undefined; name: string; subcategories: any[]; }) => (
                 <div key={category.id} className="group relative h-full">
                   <Link
                     href={`/products?category=${category.id}`}
@@ -400,7 +400,7 @@ export default function Menu({
                     <div className="submenu absolute left-0 top-[calc(100%-1px)] z-50 hidden min-w-[240px] rounded-b-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-opacity duration-300 group-hover:block group-hover:opacity-100">
                       {/* Add invisible bridge element to prevent hover gap issues */}
                       <div className="absolute -top-2 left-0 h-2 w-full"></div>
-                      {category.subcategories.map((subcat) => (
+                      {category.subcategories.map((subcat: { id: Key | null | undefined; name: string; subcategories: any[]; }) => (
                         <div key={subcat.id} className="group/sub relative">
                           <Link
                             href={`/products?category=${subcat.id}`}
@@ -414,7 +414,7 @@ export default function Menu({
 
                           {subcat.subcategories?.length > 0 && (
                             <div className="nested-submenu absolute left-full top-0 z-50 hidden min-w-[220px] rounded-md border border-gray-100 bg-white py-2 opacity-0 shadow-lg transition-all duration-200 group-hover/sub:block group-hover/sub:opacity-100">
-                              {subcat.subcategories.map((childCat) => (
+                              {subcat.subcategories.map((childCat: { id: Key | null | undefined; name: string; }) => (
                                 <Link
                                   key={childCat.id}
                                   href={`/products?category=${childCat.id}`}

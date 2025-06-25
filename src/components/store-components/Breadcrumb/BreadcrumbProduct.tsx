@@ -51,7 +51,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 <HomeIcon size={16} />
               </Link>
               <CaretRight size={12} className="text-secondary2" />
-              {categoryHierarchy?.map((cat, index) => (
+              {categoryHierarchy?.map((cat: { id: React.Key | null | undefined; name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; }, index: number) => (
                 <React.Fragment key={cat.id}>
                   <Link
                     href={`/products?category=${cat.id}`}

@@ -81,7 +81,7 @@ export const columns: ColumnDef<User>[] = [
               <AlertDialogTrigger disabled={user.role === "ADMIN"} asChild>
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onSelect={(e) => e.preventDefault()}
+                  onSelect={(e: { preventDefault: () => any; }) => e.preventDefault()}
                 >
                   Make Admin
                 </DropdownMenuItem>
@@ -108,7 +108,7 @@ export const columns: ColumnDef<User>[] = [
               <AlertDialogTrigger disabled={user.role !== "ADMIN"} asChild>
                 <DropdownMenuItem
                   className="cursor-pointer text-destructive"
-                  onSelect={(e) => e.preventDefault()}
+                  onSelect={(e: { preventDefault: () => any; }) => e.preventDefault()}
                 >
                   Remove Admin
                 </DropdownMenuItem>

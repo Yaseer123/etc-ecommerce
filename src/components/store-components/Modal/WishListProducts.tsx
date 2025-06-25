@@ -3,6 +3,7 @@
 import { api } from "@/trpc/react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { Key, ReactElement, JSXElementConstructor, ReactNode, AwaitedReactNode } from "react";
 
 export default function WishListProducts() {
   const { data: session } = useSession(); // Check if the user is logged in
@@ -50,7 +51,7 @@ export default function WishListProducts() {
 
   return (
     <div className="list-product px-6">
-      {wishList?.map((item) => (
+      {wishList?.map((item: { id: Key | null | undefined; product: { images: any[]; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; discountedPrice: number; price: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<AwaitedReactNode> | null | undefined; id: any; }; }) => (
         <div
           key={item.id}
           className="item flex items-center justify-between gap-3 border-b border-[#ddd] py-5 focus:border-[#ddd]"

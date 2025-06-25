@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
-import { useState } from "react";
+import { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from "react";
 import { toast } from "sonner";
 
 export default function AdminQuestionsPage() {
@@ -77,7 +77,7 @@ export default function AdminQuestionsPage() {
               </tr>
             </thead>
             <tbody>
-              {questions.map((q) => (
+              {questions.map((q: { id: string | number | bigint | ((prevState: string | null) => string | null) | null | undefined; product: { title: any; }; productId: any; user: { name: any; }; question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; answer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; createdAt: string | number | Date; }) => (
                 <tr key={q.id} className="border-t">
                   {" "}
                   <td className="px-4 py-2">

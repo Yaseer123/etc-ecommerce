@@ -21,7 +21,7 @@ export default function CategoryAccordionManager() {
       await utils.category.getAll.invalidate();
       toast.success("Category deleted successfully");
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error(`Error: ${error.message}`);
     },
   });
@@ -35,7 +35,7 @@ export default function CategoryAccordionManager() {
       }
       setIsReordering(false);
     },
-    onError: (error) => {
+    onError: (error: { message: any; }) => {
       toast.error(`Error: ${error.message}`);
       setIsReordering(false);
     },
