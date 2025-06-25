@@ -60,6 +60,11 @@ const Checkout = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  // Autofill: fetch user address if logged in
+  const { data: fetchedAddress } = api.address.getAddress.useQuery(undefined, {
+    enabled: !!session,
+  });
+
   const searchParams = useSearchParams();
   const discount = searchParams?.get("discount") ?? "0";
   const ship = searchParams?.get("ship") ?? "0";
@@ -127,6 +132,25 @@ const Checkout = () => {
     mobile: "",
     address: "",
   });
+
+  // Autofill effect: only if user is logged in, fetchedAddress exists, and form is empty
+  useEffect(() => {
+    if (
+      session &&
+      fetchedAddress &&
+      !newAddress.name &&
+      !newAddress.email &&
+      !newAddress.mobile &&
+      !newAddress.address
+    ) {
+      setNewAddress({
+        name: fetchedAddress.name || "",
+        email: fetchedAddress.email || "",
+        mobile: fetchedAddress.phone || "",
+        address: fetchedAddress.street || "",
+      });
+    }
+  }, [session, fetchedAddress]);
 
   const createAddressMutation = api.address.createAddress.useMutation();
   const createGuestAddressMutation =
