@@ -23,7 +23,7 @@ export default function MobileSearch() {
       {
         enabled: debouncedSearchTerm.length > 1,
       },
-    ) as { data: ProductType[]; isLoading: boolean };
+    );
 
   // Show search container when user starts typing
   useEffect(() => {

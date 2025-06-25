@@ -69,14 +69,13 @@ export default function Menu({
   };
 
   // Use trpc to fetch search results with loading state
-  const { data: searchResults = [], isLoading: isSearchLoading } = (
-    api.product.search as any
-  ).useQuery(
-    { query: debouncedSearchTerm },
-    {
-      enabled: debouncedSearchTerm.length > 1,
-    },
-  ) as { data: ProductType[]; isLoading: boolean };
+  const { data: searchResults = [], isLoading: isSearchLoading } =
+    api.product.search.useQuery(
+      { query: debouncedSearchTerm },
+      {
+        enabled: debouncedSearchTerm.length > 1,
+      },
+    );
 
   // Show search container when user starts typing
   useEffect(() => {
@@ -221,7 +220,8 @@ export default function Menu({
                             className="animate-spin text-black"
                           />
                         </div>
-                      ) : searchResults && searchResults.length > 0 ? (
+                      ) : Array.isArray(searchResults) &&
+                        searchResults.length > 0 ? (
                         <>
                           <div className="max-h-[350px] overflow-y-auto">
                             {searchResults.map((product: ProductType) => (
@@ -491,7 +491,7 @@ export default function Menu({
                 <div className="flex h-24 w-full items-center justify-center">
                   <SpinnerGap size={24} className="animate-spin text-black" />
                 </div>
-              ) : searchResults && searchResults.length > 0 ? (
+              ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
                 <>
                   <div className="max-h-[350px] overflow-y-auto">
                     {searchResults.map((product: ProductType) => (

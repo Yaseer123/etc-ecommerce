@@ -8,24 +8,16 @@ import {
   publicProcedure,
   type createTRPCContext,
 } from "@/server/api/trpc";
+import type {
+  JsonValue,
+  ProductWithCategory,
+  Variant,
+} from "@/types/ProductType";
 import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
-import type { Prisma } from "@prisma/client";
-import { Product, StockStatus } from "@prisma/client";
+import type { Category, Prisma, Product } from "@prisma/client";
+import { StockStatus } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
-interface Variant {
-  [key: string]: unknown;
-  colorName?: string;
-  colorHex?: string;
-  size?: string;
-  images?: string[];
-  price?: number;
-  discountedPrice?: number;
-  stock?: number;
-  imageId?: string;
-  sku?: string;
-}
 
 // Helper to ensure variants are an array of objects
 function normalizeVariants(variants: unknown): Variant[] {
@@ -42,10 +34,12 @@ function normalizeVariants(variants: unknown): Variant[] {
           (v): v is Variant => v && typeof v === "object" && !Array.isArray(v),
         );
       }
+      return [];
     } catch {
       return [];
     }
   }
+  // Explicitly return [] for all other types to avoid returning any
   return [];
 }
 
@@ -59,13 +53,44 @@ async function getRootCategoryName(
   let currentId = categoryId;
   let lastName = "XX";
   while (currentId) {
-    const cat = await ctx.db.category.findUnique({ where: { id: currentId } });
+    const cat: Category | null = await ctx.db.category.findUnique({
+      where: { id: currentId },
+    });
     if (!cat) break;
     lastName = cat.name;
     if (!cat.parentId) break;
     currentId = cat.parentId;
   }
   return lastName;
+}
+
+// Helper to convert a Prisma product result to ProductWithCategory
+function toProductWithCategory(product: unknown): ProductWithCategory {
+  if (!product || typeof product !== "object" || !("category" in product)) {
+    throw new Error("Invalid product object");
+  }
+  const prod = product as Product & { category: Category | null };
+  let variants: Variant[] | string | null = null;
+  if (Array.isArray(prod.variants)) {
+    variants = normalizeVariants(prod.variants);
+  } else if (typeof prod.variants === "string") {
+    try {
+      const parsed = JSON.parse(prod.variants);
+      if (Array.isArray(parsed)) {
+        variants = normalizeVariants(parsed);
+      } else {
+        variants = prod.variants;
+      }
+    } catch {
+      variants = prod.variants;
+    }
+  } else if (prod.variants === null) {
+    variants = null;
+  }
+  return {
+    ...prod,
+    variants: variants as JsonValue,
+  };
 }
 
 export const productRouter = createTRPCRouter({
@@ -75,7 +100,7 @@ export const productRouter = createTRPCRouter({
         id: z.string().cuid(),
       }),
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }): Promise<ProductWithCategory | null> => {
       const product = await ctx.db.product.findUnique({
         where: { id: input.id },
         include: { category: true },
@@ -83,12 +108,8 @@ export const productRouter = createTRPCRouter({
 
       if (!product) return null;
 
-      // Normalize variants before returning
-      return {
-        ...product,
-        variants: normalizeVariants(product.variants),
-      } as Product & { variants: Variant[] };
-    }) as unknown as Product & { variants: Variant[] },
+      return toProductWithCategory(product);
+    }),
 
   getAll: publicProcedure
     .input(
@@ -145,7 +166,7 @@ export const productRouter = createTRPCRouter({
       if (sort === "priceAsc") orderBy = { price: "asc" };
       if (sort === "priceDesc") orderBy = { price: "desc" };
 
-      const [products] = await Promise.all([
+      const [productsRaw] = await Promise.all([
         ctx.db.product.findMany({
           where,
           include: { category: true },
@@ -154,7 +175,13 @@ export const productRouter = createTRPCRouter({
           take: limit,
         }),
       ]);
-
+      const products: (Product & { category: Category | null })[] =
+        Array.isArray(productsRaw)
+          ? productsRaw.filter(
+              (p): p is Product & { category: Category | null } =>
+                !!p && typeof p === "object" && "category" in p,
+            )
+          : [];
       // Filter out soft-deleted products
       const filteredProducts = products.filter((p) => p.deletedAt === null);
       const filteredTotal = filteredProducts.length;
@@ -175,12 +202,18 @@ export const productRouter = createTRPCRouter({
         categoryId: z.string().optional(),
       }),
     )
-    .query(async ({ ctx, input }) => {
-      let products;
+    .query(async ({ ctx, input }): Promise<ProductWithCategory[]> => {
+      let products: (Product & { category: Category | null })[] = [];
       if (!input.categoryId) {
-        products = await ctx.db.product.findMany({
+        const result = await ctx.db.product.findMany({
           include: { category: true },
         });
+        if (Array.isArray(result)) {
+          products = result.filter(
+            (p): p is Product & { category: Category | null } =>
+              !!p && typeof p === "object" && "category" in p,
+          );
+        }
       } else {
         const getChildCategoryIds = async (
           parentId: string,
@@ -207,13 +240,10 @@ export const productRouter = createTRPCRouter({
         });
       }
 
-      const productsWithNormalizedVariants = products.map((product) => ({
-        ...product,
-        variants: normalizeVariants(product.variants),
-      })) as (Product & { variants: Variant[] })[];
-
-      return productsWithNormalizedVariants.filter((p) => p.deletedAt === null);
-    }) as unknown as (Product & { variants: Variant[] })[],
+      return products
+        .map(toProductWithCategory)
+        .filter((p) => p.deletedAt === null);
+    }),
 
   getProductById: publicProcedure
     .input(
@@ -542,8 +572,8 @@ export const productRouter = createTRPCRouter({
         sku: generateSKU({
           categoryName,
           productId: createdProduct.id,
-          color: v.colorName ?? "UNNAMED",
-          size: v.size,
+          color: typeof v.colorName === "string" ? v.colorName : "UNNAMED",
+          size: typeof v.size === "string" ? v.size : undefined,
         }),
       }),
     );
@@ -551,13 +581,17 @@ export const productRouter = createTRPCRouter({
     const realSKU = generateSKU({
       categoryName,
       productId: createdProduct.id,
-      color: input.defaultColor ?? "UNNAMED",
-      size: input.defaultSize,
+      color:
+        typeof input.defaultColor === "string" ? input.defaultColor : "UNNAMED",
+      size:
+        typeof input.defaultSize === "string" ? input.defaultSize : undefined,
     });
     const allSkus = [
       realSKU,
-      ...updatedVariants.map((v) => v.sku).filter(Boolean),
-    ];
+      ...updatedVariants.map((v) =>
+        typeof v.sku === "string" ? v.sku : undefined,
+      ),
+    ].filter((sku): sku is string => typeof sku === "string");
     const product = await ctx.db.product.update({
       where: { id: createdProduct.id },
       data: { sku: realSKU, variants: updatedVariants, allSkus },
@@ -649,8 +683,18 @@ export const productRouter = createTRPCRouter({
       const newSKU = generateSKU({
         categoryName: newCategoryName,
         productId: id,
-        color: input.defaultColor ?? existingProduct?.defaultColor ?? "UNNAMED",
-        size: input.defaultSize ?? existingProduct?.defaultSize ?? undefined,
+        color:
+          typeof input.defaultColor === "string"
+            ? input.defaultColor
+            : typeof existingProduct?.defaultColor === "string"
+              ? existingProduct?.defaultColor
+              : "UNNAMED",
+        size:
+          typeof input.defaultSize === "string"
+            ? input.defaultSize
+            : typeof existingProduct?.defaultSize === "string"
+              ? existingProduct?.defaultSize
+              : undefined,
       });
 
       // Debug log for SKU update
@@ -664,8 +708,8 @@ export const productRouter = createTRPCRouter({
             sku: generateSKU({
               categoryName: newCategoryName,
               productId: id,
-              color: v.colorName ?? "UNNAMED",
-              size: v.size,
+              color: typeof v.colorName === "string" ? v.colorName : "UNNAMED",
+              size: typeof v.size === "string" ? v.size : undefined,
             }),
           };
         },
@@ -674,8 +718,10 @@ export const productRouter = createTRPCRouter({
       // Build the update data object field-by-field to avoid linter errors
       const allSkus = [
         newSKU,
-        ...updatedVariantsFromInput.map((v) => v.sku).filter(Boolean),
-      ];
+        ...updatedVariantsFromInput.map((v) =>
+          typeof v.sku === "string" ? v.sku : undefined,
+        ),
+      ].filter((sku): sku is string => typeof sku === "string");
       const product = await ctx.db.product.update({
         where: { id },
         data: {
@@ -688,8 +734,14 @@ export const productRouter = createTRPCRouter({
           discountedPrice: updateData.discountedPrice,
           stock: updateData.stock,
           brand: updateData.brand,
-          defaultColor: input.defaultColor,
-          defaultSize: input.defaultSize,
+          defaultColor:
+            typeof input.defaultColor === "string"
+              ? input.defaultColor
+              : undefined,
+          defaultSize:
+            typeof input.defaultSize === "string"
+              ? input.defaultSize
+              : undefined,
           images: updateData.images,
           descriptionImageId: updateData.descriptionImageId,
           attributes: updateData.attributes,

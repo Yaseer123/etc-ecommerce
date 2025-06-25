@@ -13,8 +13,13 @@ const ModalNewsletter = () => {
   const router = useRouter();
   const { openQuickView } = useModalQuickViewStore();
 
-  const [productData]: [{ products: ProductWithCategory[] }] =
-    api.product.getAll.useSuspenseQuery();
+  const productDataResult = api.product.getAll.useSuspenseQuery();
+  const productData =
+    Array.isArray(productDataResult) &&
+    productDataResult[0] &&
+    Array.isArray(productDataResult[0].products)
+      ? productDataResult[0]
+      : { products: [] };
 
   const handleDetailProduct = (productId: string) => {
     // redirect to shop with category selected
@@ -66,50 +71,80 @@ const ModalNewsletter = () => {
               </div>
               <div className="heading5 pb-5">You May Also Like</div>
               <div className="list flex flex-col gap-5 overflow-x-auto sm:pr-6">
-                {productData.products
-                  .slice(11, 16)
-                  .map((item: ProductWithCategory) => (
-                    <div
-                      className="product-item item flex items-center justify-between gap-3 border-b border-[#ddd] pb-5 focus:border-[#ddd]"
-                      key={item.id}
-                    >
-                      <div
-                        className="infor flex cursor-pointer items-center gap-5"
-                        onClick={() => handleDetailProduct(item.id)}
-                      >
-                        <div className="bg-img flex-shrink-0">
-                          <Image
-                            width={5000}
-                            height={5000}
-                            src={
-                              item.images[0] ?? "/images/product/1000x1000.png"
-                            }
-                            alt={item.title}
-                            className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
-                          />
-                        </div>
-                        <div className="">
-                          <div className="name text-button">{item.title}</div>
-                          <div className="mt-2 flex items-center gap-2">
-                            <div className="product-price text-title">
-                              ৳{item.discountedPrice ?? item.price}.00
-                            </div>
-                            {item.discountedPrice && (
-                              <div className="product-origin-price text-title text-secondary2">
-                                <del>৳{item.price}.00</del>
+                {Array.isArray(productData.products)
+                  ? productData.products
+                      .filter((item): item is ProductWithCategory => {
+                        if (!item || typeof item !== "object") return false;
+                        if (
+                          !(
+                            "id" in item &&
+                            "title" in item &&
+                            "images" in item &&
+                            "price" in item &&
+                            "discountedPrice" in item &&
+                            "variants" in item
+                          )
+                        )
+                          return false;
+                        const variants = (item as { variants: unknown })
+                          .variants;
+                        return (
+                          Array.isArray(variants) ||
+                          typeof variants === "string" ||
+                          variants === null
+                        );
+                      })
+                      .slice(11, 16)
+                      .map((item) => {
+                        const product = item as ProductWithCategory;
+                        return (
+                          <div
+                            className="product-item item flex items-center justify-between gap-3 border-b border-[#ddd] pb-5 focus:border-[#ddd]"
+                            key={product.id}
+                          >
+                            <div
+                              className="infor flex cursor-pointer items-center gap-5"
+                              onClick={() => handleDetailProduct(product.id)}
+                            >
+                              <div className="bg-img flex-shrink-0">
+                                <Image
+                                  width={5000}
+                                  height={5000}
+                                  src={
+                                    product.images[0] ??
+                                    "/images/product/1000x1000.png"
+                                  }
+                                  alt={product.title}
+                                  className="aspect-square w-[100px] flex-shrink-0 rounded-lg"
+                                />
                               </div>
-                            )}
+                              <div className="">
+                                <div className="name text-button">
+                                  {product.title}
+                                </div>
+                                <div className="mt-2 flex items-center gap-2">
+                                  <div className="product-price text-title">
+                                    ৳{product.discountedPrice ?? product.price}
+                                    .00
+                                  </div>
+                                  {product.discountedPrice && (
+                                    <div className="product-origin-price text-title text-secondary2">
+                                      <del>৳{product.price}.00</del>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <button
+                              className="quick-view-btn button-main hover:bg-green whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-black/75 sm:px-5 sm:py-3"
+                              onClick={() => openQuickView(product)}
+                            >
+                              QUICK VIEW
+                            </button>
                           </div>
-                        </div>
-                      </div>
-                      <button
-                        className="quick-view-btn button-main hover:bg-green whitespace-nowrap rounded-full bg-black px-4 py-2 text-white hover:bg-black/75 sm:px-5 sm:py-3"
-                        onClick={() => openQuickView(item)}
-                      >
-                        QUICK VIEW
-                      </button>
-                    </div>
-                  ))}
+                        );
+                      })
+                  : null}
               </div>
             </div>
           </div>

@@ -9,7 +9,7 @@ export default function FeaturedProducts() {
     api.product.getFeaturedProducts.useQuery(
       { limit: 9999999 },
       { refetchOnWindowFocus: false },
-    ) as { data: ProductType[]; isLoading: boolean };
+    );
 
   if (featuredProducts.length === 0) {
     return null;

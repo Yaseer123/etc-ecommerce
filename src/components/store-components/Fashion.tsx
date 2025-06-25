@@ -22,7 +22,7 @@ const RecentlyAdded = () => {
       {
         enabled: !!categoryId, // Only fetch products if a category is selected
       },
-    ) as { data: ProductType[]; isLoading: boolean; isError: boolean };
+    );
   }
 
   const {

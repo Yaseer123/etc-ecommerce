@@ -5,7 +5,11 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalQuickViewStore } from "@/context/store-context/ModalQuickViewContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import { api } from "@/trpc/react";
-import type { ProductType, ProductWithCategory } from "@/types/ProductType";
+import type {
+  JsonValue,
+  ProductType,
+  ProductWithCategory,
+} from "@/types/ProductType";
 import { StockStatus } from "@/types/ProductType";
 import { Eye, Heart, ShoppingBagOpen } from "@phosphor-icons/react/dist/ssr";
 import type { Product } from "@prisma/client";
@@ -190,7 +194,7 @@ export default function Product({ data }: ProductProps) {
     };
     const productForQuickView: Product = {
       ...data,
-      id: data.id!,
+      id: typeof data.id === "string" ? data.id : "",
       title: getString("title"),
       new: getBoolean("new"),
       sale: getBoolean("sale"),
@@ -212,7 +216,7 @@ export default function Product({ data }: ProductProps) {
       defaultColor:
         typeof data.defaultColor === "string" ? data.defaultColor : null,
       defaultColorHex:
-        typeof data.defaultColorHex === "string" ? data.defaultColorHex : null,
+        typeof data.defaultColorHex === "string" ? data.defaultColorHex! : null,
       defaultSize:
         typeof data.defaultSize === "string" ? data.defaultSize : null,
       estimatedDeliveryTime:
@@ -228,8 +232,11 @@ export default function Product({ data }: ProductProps) {
           ? data.descriptionImageId
           : null,
       allSkus:
-        "allSkus" in data && Array.isArray((data as any).allSkus)
-          ? (data as any).allSkus
+        "allSkus" in data &&
+        Array.isArray((data as { allSkus?: unknown }).allSkus)
+          ? (data as { allSkus: unknown[] }).allSkus.filter(
+              (sku): sku is string => typeof sku === "string",
+            )
           : [],
       categoryAttributes: data.categoryAttributes ?? {},
       position: typeof data.position === "number" ? data.position : 0,
@@ -238,8 +245,10 @@ export default function Product({ data }: ProductProps) {
           ? (data.deletedAt ?? null)
           : null,
       variants:
-        "variants" in data && typeof (data as any).variants !== "undefined"
-          ? ((data as any).variants ?? null)
+        "variants" in data &&
+        (Array.isArray((data as { variants?: unknown }).variants) ||
+          typeof (data as { variants?: unknown }).variants === "string")
+          ? ((data as { variants?: JsonValue }).variants ?? null)
           : null,
       sku: typeof data.sku === "string" ? data.sku : "",
     };

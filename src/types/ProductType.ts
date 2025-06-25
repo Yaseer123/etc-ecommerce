@@ -1,7 +1,7 @@
 /// <reference types="./glodbal.d.ts" />
 import type { Category, Product } from "@prisma/client";
 
-type JsonValue =
+export type JsonValue =
   | string
   | number
   | boolean
@@ -10,16 +10,15 @@ type JsonValue =
   | null;
 
 export interface Variant {
-  [key: string]: unknown;
-  colorName?: string;
-  colorHex?: string;
-  size?: string;
-  images?: string[];
-  price?: number;
-  discountedPrice?: number;
-  stock?: number;
-  imageId?: string;
-  sku?: string;
+  colorName?: JsonValue;
+  colorHex?: JsonValue;
+  size?: JsonValue;
+  images?: JsonValue;
+  price?: JsonValue;
+  discountedPrice?: JsonValue;
+  stock?: JsonValue;
+  imageId?: JsonValue;
+  sku?: JsonValue;
 }
 
 export const StockStatus = {
@@ -58,7 +57,7 @@ export interface ProductType {
   action: string;
   slug: string;
   attributes: Record<string, string>;
-  variants?: Variant[] | string | null;
+  variants?: JsonValue;
   sku?: string;
   imageId?: string;
   createdAt?: Date;
@@ -77,5 +76,5 @@ export type ProductWithCategory = Product & {
   defaultColor?: string | null;
   defaultColorHex?: string | null;
   defaultSize?: string | null;
-  variants?: Variant[] | string | null;
+  variants?: JsonValue;
 };
