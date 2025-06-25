@@ -42,11 +42,11 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
     <>
       <div>
         <div className="bg-surface bg-white bg-no-repeat pb-8 pt-12">
-          <div className="mx-auto flex w-full !max-w-[1322px] flex-wrap items-center justify-between gap-3 px-4">
-            <div className="left flex items-center gap-1">
+          <div className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mx-auto flex w-full !max-w-[1322px] flex-nowrap items-center justify-between gap-3 overflow-x-auto whitespace-nowrap px-4">
+            <div className="left flex min-w-0 items-center gap-1">
               <Link
                 href={"/"}
-                className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
+                className="text-secondary2 truncate text-base font-normal leading-6 hover:underline md:text-base"
               >
                 <HomeIcon size={16} />
               </Link>
@@ -55,7 +55,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 <React.Fragment key={cat.id}>
                   <Link
                     href={`/products?category=${cat.id}`}
-                    className="text-base font-normal leading-6 text-secondary2 hover:underline md:text-base"
+                    className="text-secondary2 truncate text-base font-normal leading-6 hover:underline md:text-base"
                   >
                     {cat.name}
                   </Link>
@@ -65,7 +65,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 </React.Fragment>
               ))}
               <CaretRight size={12} className="text-secondary2" />
-              <div className="text-base font-normal capitalize leading-6 md:text-base">
+              <div className="truncate text-base font-normal capitalize leading-6 md:text-base">
                 {data.title}
               </div>
             </div>
