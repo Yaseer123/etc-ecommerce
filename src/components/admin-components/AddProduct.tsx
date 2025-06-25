@@ -356,12 +356,8 @@ export default function AddProductForm() {
   useEffect(() => {
     const initialValues: Record<string, string | number | boolean> = {};
     attributes.forEach((attr) => {
-      // Set default values based on type
-      if (attr.type === "select" && attr.options && attr.options.length > 0) {
-        initialValues[attr.name] = attr.options[0] ?? "";
-      } else {
-        initialValues[attr.name] = "";
-      }
+      // Set default values to empty string (optional)
+      initialValues[attr.name] = "";
     });
     setAttributeValues(initialValues);
   }, [attributes]);
@@ -988,15 +984,23 @@ export default function AddProductForm() {
                   </Label>
                   {attr.type === "select" && attr.options && (
                     <Select
-                      value={attributeValues[attr.name]?.toString() ?? ""}
+                      value={
+                        attributeValues[attr.name]?.toString() === ""
+                          ? "__none__"
+                          : attributeValues[attr.name]?.toString()
+                      }
                       onValueChange={(value) =>
-                        handleAttributeChange(attr.name, value)
+                        handleAttributeChange(
+                          attr.name,
+                          value === "__none__" ? "" : value,
+                        )
                       }
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder={`Select ${attr.name}`} />
                       </SelectTrigger>
                       <SelectContent>
+                        <SelectItem value="__none__">None</SelectItem>
                         {attr.options.filter(Boolean).map((option) => (
                           <SelectItem
                             key={option}
