@@ -295,6 +295,7 @@ model Slider {
     imageUrl    String
     imageId     String
     link        String?
+    autoSlideTime Int? // Auto slide time in milliseconds
     createdAt   DateTime @default(now())
     updatedAt   DateTime @default(now())
 }

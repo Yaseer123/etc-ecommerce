@@ -24,6 +24,7 @@ export const SliderManager = () => {
     imageUrl: string;
     imageId: string;
     link: string;
+    autoSlideTime: number;
   } | null>(null);
   const [uploading, setUploading] = useState(false);
   const [selectedImageName, setSelectedImageName] = useState<string>("");
@@ -86,6 +87,7 @@ export const SliderManager = () => {
           imageUrl: editingSlider.imageUrl,
           imageId: editingSlider.imageId,
           link: editingSlider.link,
+          autoSlideTime: editingSlider.autoSlideTime,
         });
         toast.success("Slider updated successfully");
       } else {
@@ -96,6 +98,7 @@ export const SliderManager = () => {
           imageUrl: editingSlider.imageUrl,
           imageId: editingSlider.imageId,
           link: editingSlider.link,
+          autoSlideTime: editingSlider.autoSlideTime,
         });
         toast.success("Slider created successfully");
       }
@@ -106,7 +109,16 @@ export const SliderManager = () => {
     }
   };
 
-  const handleDelete = async (slider: typeof editingSlider) => {
+  const handleDelete = async (slider: {
+    id?: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    imageUrl: string;
+    imageId: string;
+    link: string;
+    autoSlideTime: number;
+  }) => {
     if (!slider?.id || !slider.imageId) return;
 
     if (!confirm("Are you sure you want to delete this slider?")) return;
@@ -132,6 +144,7 @@ export const SliderManager = () => {
               imageId: "",
               imageUrl: "",
               link: "",
+              autoSlideTime: 4000,
             })
           }
           className="rounded-lg bg-black px-6 py-2.5 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
@@ -261,6 +274,25 @@ export const SliderManager = () => {
                 className="w-full rounded-lg border border-gray-200 p-3 transition-colors duration-200 focus:border-black focus:ring-black"
               />
             </div>
+            <div>
+              <label className="mb-2 block text-sm font-medium text-gray-700">
+                Auto Slide Time (ms)
+              </label>
+              <input
+                type="number"
+                min={1000}
+                step={100}
+                value={editingSlider.autoSlideTime}
+                onChange={(e) =>
+                  setEditingSlider({
+                    ...editingSlider,
+                    autoSlideTime: Number(e.target.value),
+                  })
+                }
+                className="w-full rounded-lg border border-gray-200 p-3 transition-colors duration-200 focus:border-black focus:ring-black"
+                placeholder="Enter auto slide time in ms (e.g. 4000)"
+              />
+            </div>
             <div className="flex gap-3">
               <button
                 onClick={handleSave}
@@ -283,61 +315,61 @@ export const SliderManager = () => {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {sliders?.map((slider) => (
-          <div
-            key={slider.id}
-            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md"
-          >
-            <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-lg">
-              <Image
-                src={slider.imageUrl}
-                alt={slider.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <h3 className="mb-2 text-xl font-semibold text-gray-900">
-              {slider.title}
-            </h3>
-            <p className="mb-4 text-gray-600">{slider.subtitle}</p>
-            <a
-              href={slider.link}
-              target="_blank"
-              className="mb-4 block truncate text-gray-900 transition-colors duration-200 hover:text-gray-600"
+        {sliders?.map((slider) => {
+          const safeSlider = {
+            id: slider.id,
+            title: slider.title ?? "",
+            subtitle: slider.subtitle ?? "",
+            description: slider.description ?? "",
+            imageUrl: slider.imageUrl ?? "",
+            imageId: slider.imageId ?? "",
+            link: slider.link ?? "",
+            autoSlideTime:
+              typeof (slider as any).autoSlideTime === "number"
+                ? (slider as any).autoSlideTime
+                : 4000,
+          };
+          return (
+            <div
+              key={safeSlider.id}
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md"
             >
-              {slider.link}
-            </a>
-            <div className="flex gap-3">
-              <button
-                onClick={() =>
-                  setEditingSlider({
-                    id: slider.id,
-                    title: slider.title,
-                    subtitle: slider.subtitle,
-                    description: slider.description,
-                    imageUrl: slider.imageUrl,
-                    imageId: slider.imageId,
-                    link: slider.link,
-                  })
-                }
-                className="rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
+              <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-lg">
+                <Image
+                  src={safeSlider.imageUrl}
+                  alt={safeSlider.title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                {safeSlider.title}
+              </h3>
+              <p className="mb-4 text-gray-600">{safeSlider.subtitle}</p>
+              <a
+                href={safeSlider.link}
+                target="_blank"
+                className="mb-4 block truncate text-gray-900 transition-colors duration-200 hover:text-gray-600"
               >
-                Edit
-              </button>
-              <button
-                onClick={async () =>
-                  await handleDelete({
-                    ...slider,
-                    imageId: slider.imageId,
-                  })
-                }
-                className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
-              >
-                Delete
-              </button>
+                {safeSlider.link}
+              </a>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setEditingSlider({ ...safeSlider })}
+                  className="rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={async () => await handleDelete({ ...safeSlider })}
+                  className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

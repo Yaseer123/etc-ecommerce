@@ -12,6 +12,7 @@ const sliderSchema = z.object({
   imageUrl: z.string().url("Valid image URL is required"),
   imageId: z.string().min(1, "Cloudinary ID is required"),
   link: z.string().optional(),
+  autoSlideTime: z.number().int().optional(),
 });
 
 export const sliderRouter = createTRPCRouter({
