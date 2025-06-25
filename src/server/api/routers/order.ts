@@ -381,6 +381,8 @@ export const orderRouter = createTRPCRouter({
             <h2 style="margin: 0; color: #007b55;">New Order Placed</h2>
             <p style="font-size: 16px;">A new order has been placed on Rinors Ecommerce Admin.</p>
             <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
+            <div style="margin-bottom: 8px;"><strong>Subtotal:</strong> ৳${productTotal}</div>
+            <div style="margin-bottom: 8px;"><strong>Shipping:</strong> ৳${shippingCost}</div>
             <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
             ${productsTable}
             ${addressBlock}
@@ -413,6 +415,8 @@ export const orderRouter = createTRPCRouter({
                 <p>Hi${user.name ? ` ${user.name}` : ""},</p>
                 <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
                 <p><strong>Order ID:</strong> ${order.id}</p>
+                <p><strong>Subtotal:</strong> ৳${productTotal}</p>
+                <p><strong>Shipping:</strong> ৳${shippingCost}</p>
                 <p><strong>Total:</strong> ৳${order.total}</p>
                 ${productsTable}
                 ${addressBlock}
@@ -833,6 +837,8 @@ export const orderRouter = createTRPCRouter({
             <h2 style="margin: 0; color: #007b55;">New Guest Order Placed</h2>
             <p style="font-size: 16px;">A new guest order has been placed on Rinors Ecommerce Admin.</p>
             <div style="margin-bottom: 16px;"><strong>Order ID:</strong> ${order.id}</div>
+            <div style="margin-bottom: 8px;"><strong>Subtotal:</strong> ৳${productTotal}</div>
+            <div style="margin-bottom: 8px;"><strong>Shipping:</strong> ৳${shippingCost}</div>
             <div style="margin-bottom: 16px;"><strong>Total:</strong> ৳${order.total}</div>
             ${guestProductsTable}
             ${addressBlock}
@@ -862,6 +868,8 @@ export const orderRouter = createTRPCRouter({
               <p>Hi${address.name ? ` ${address.name}` : ""},</p>
               <p>Thank you for your order. Your order has been <b>confirmed</b> and is being processed.</p>
               <p><strong>Order ID:</strong> ${order.id}</p>
+              <p><strong>Subtotal:</strong> ৳${productTotal}</p>
+              <p><strong>Shipping:</strong> ৳${shippingCost}</p>
               <p><strong>Total:</strong> ৳${order.total}</p>
               ${guestProductsTable}
               ${addressBlock}
