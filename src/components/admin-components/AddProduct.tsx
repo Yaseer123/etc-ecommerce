@@ -609,160 +609,168 @@ export default function AddProductForm() {
       pending={pending}
       submitButtonText="Add Product"
     >
+      {/* Default Product Color/Size */}
+      <div className="flex w-full flex-col space-y-2">
+        <Label className="text-base">Default Product Color (optional)</Label>
+        <Input
+          type="text"
+          placeholder="Color Name (e.g. Red, Sky Blue)"
+          value={defaultColorName}
+          onChange={(e) => setDefaultColorName(e.target.value)}
+          style={{ width: "100%" }}
+        />
+        <div className="mt-2 flex items-center gap-2">
+          <ColorPicker
+            color={defaultColorHex}
+            onChange={setDefaultColorHex}
+            hideInput={["rgb", "hsv"]}
+          />
+          <span
+            style={{
+              display: "inline-block",
+              width: 32,
+              height: 32,
+              backgroundColor: defaultColorHex.hex,
+              borderRadius: "50%",
+              border: "1px solid #ccc",
+            }}
+            aria-label={defaultColorName}
+            title={defaultColorName}
+          />
+          <span>
+            {defaultColorName} ({defaultColorHex.hex})
+          </span>
+        </div>
+      </div>
+      {/* Variants Toggle */}
+      <div className="flex items-center gap-2">
+        <Switch checked={enableVariants} onCheckedChange={setEnableVariants} />
+        <Label className="text-base">Enable color/size/image variants</Label>
+      </div>
+
       <div className="grid grid-cols-1 gap-x-3 gap-y-4 p-2 md:p-0">
-        {/* Default Product Color/Size */}
-        <div className="flex w-full flex-col space-y-2">
-          <Label className="text-base">Default Product Color (optional)</Label>
-          <Input
-            type="text"
-            placeholder="Color Name (e.g. Red, Sky Blue)"
-            value={defaultColorName}
-            onChange={(e) => setDefaultColorName(e.target.value)}
-            style={{ width: "100%" }}
-          />
-          <div className="mt-2 flex items-center gap-2">
-            <ColorPicker
-              color={defaultColorHex}
-              onChange={setDefaultColorHex}
-              hideInput={["rgb", "hsv"]}
-            />
-            <span
-              style={{
-                display: "inline-block",
-                width: 32,
-                height: 32,
-                backgroundColor: defaultColorHex.hex,
-                borderRadius: "50%",
-                border: "1px solid #ccc",
-              }}
-              aria-label={defaultColorName}
-              title={defaultColorName}
-            />
-            <span>
-              {defaultColorName} ({defaultColorHex.hex})
-            </span>
-          </div>
-        </div>
-        {/* Variants Toggle */}
-        <div className="flex items-center gap-2">
-          <Switch
-            checked={enableVariants}
-            onCheckedChange={setEnableVariants}
-          />
-          <Label className="text-base">Enable color/size/image variants</Label>
-        </div>
         {/* Variants UI */}
         {enableVariants && (
           <div className="flex flex-col gap-4 rounded-md border bg-gray-50 p-3">
             <Label className="text-base">Product Variants</Label>
-            {variants.map((variant, idx) => (
-              <div
-                key={idx}
-                className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row"
-              >
-                <Input
-                  type="text"
-                  placeholder="Color Name (optional)"
-                  value={variant.colorName}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "colorName", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <ColorPicker
-                  color={{
-                    hex: variant.colorHex ?? "#ffffff",
-                    rgb: { r: 255, g: 255, b: 255, a: 1 },
-                    hsv: { h: 0, s: 0, v: 100, a: 1 },
-                  }}
-                  onChange={(color) =>
-                    handleVariantChange(idx, "colorHex", color.hex)
-                  }
-                  hideInput={["rgb", "hsv"]}
-                />
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: 24,
-                    height: 24,
-                    backgroundColor: variant.colorHex ?? "#ffffff",
-                    borderRadius: "50%",
-                    border: "1px solid #ccc",
-                  }}
-                  aria-label={variant.colorName}
-                  title={variant.colorName}
-                />
-                <span>
-                  {variant.colorName} ({variant.colorHex})
-                </span>
-                <Input
-                  type="text"
-                  placeholder="Size (optional)"
-                  value={variant.size}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "size", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="number"
-                  placeholder="Price (optional)"
-                  value={variant.price ?? ""}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "price", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="number"
-                  placeholder="Discounted Price (optional)"
-                  value={variant.discountedPrice ?? ""}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "discountedPrice", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Input
-                  type="number"
-                  placeholder="Stock (optional)"
-                  value={variant.stock ?? ""}
-                  onChange={(e) =>
-                    handleVariantChange(idx, "stock", e.target.value)
-                  }
-                  className="w-32"
-                />
-                <Button
-                  type="button"
-                  onClick={() => handleVariantImageGallery(idx)}
-                  className="w-40"
+            <div className="w-full overflow-x-auto">
+              {variants.map((variant, idx) => (
+                <div
+                  key={idx}
+                  className="mb-2 flex flex-col gap-2 border-b pb-2"
+                  style={{ rowGap: 16, columnGap: 8 }}
                 >
-                  Add Images
-                </Button>
-                {/* Show variant images */}
-                {variant.images && variant.images.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {variant.images.map((img, i) => (
-                      <Image
-                        key={i}
-                        src={img}
-                        alt="variant-img"
-                        width={48}
-                        height={48}
-                        className="h-16 w-16 rounded object-cover"
-                      />
-                    ))}
+                  <Input
+                    type="text"
+                    placeholder="Color Name (optional)"
+                    value={variant.colorName}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "colorName", e.target.value)
+                    }
+                    className="w-full min-w-[120px] max-w-xs flex-1"
+                  />
+                  <div className="w-full min-w-[180px] max-w-full">
+                    <ColorPicker
+                      color={{
+                        hex: variant.colorHex ?? "#ffffff",
+                        rgb: { r: 255, g: 255, b: 255, a: 1 },
+                        hsv: { h: 0, s: 0, v: 100, a: 1 },
+                      }}
+                      onChange={(color) =>
+                        handleVariantChange(idx, "colorHex", color.hex)
+                      }
+                      hideInput={["rgb", "hsv"]}
+                    />
                   </div>
-                )}
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={() => handleRemoveVariant(idx)}
-                >
-                  Remove
-                </Button>
-              </div>
-            ))}
-            <Button type="button" onClick={handleAddVariant} className="w-40">
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: 24,
+                      height: 24,
+                      backgroundColor: variant.colorHex ?? "#ffffff",
+                      borderRadius: "50%",
+                      border: "1px solid #ccc",
+                    }}
+                    aria-label={variant.colorName}
+                    title={variant.colorName}
+                  />
+                  <span>
+                    {variant.colorName} ({variant.colorHex})
+                  </span>
+                  <Input
+                    type="text"
+                    placeholder="Size (optional)"
+                    value={variant.size}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "size", e.target.value)
+                    }
+                    className="w-full min-w-[100px] max-w-xs flex-1"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Price (optional)"
+                    value={variant.price ?? ""}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "price", e.target.value)
+                    }
+                    className="w-full min-w-[100px] max-w-xs flex-1"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Discounted Price (optional)"
+                    value={variant.discountedPrice ?? ""}
+                    onChange={(e) =>
+                      handleVariantChange(
+                        idx,
+                        "discountedPrice",
+                        e.target.value,
+                      )
+                    }
+                    className="w-full min-w-[100px] max-w-xs flex-1"
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Stock (optional)"
+                    value={variant.stock ?? ""}
+                    onChange={(e) =>
+                      handleVariantChange(idx, "stock", e.target.value)
+                    }
+                    className="w-full min-w-[100px] max-w-xs flex-1"
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => handleVariantImageGallery(idx)}
+                    className="w-full"
+                  >
+                    Add Images
+                  </Button>
+                  {/* Show variant images */}
+                  {variant.images && variant.images.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {variant.images.map((img, i) => (
+                        <Image
+                          key={i}
+                          src={img}
+                          alt="variant-img"
+                          width={48}
+                          height={48}
+                          className="h-16 w-16 rounded object-cover"
+                        />
+                      ))}
+                    </div>
+                  )}
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    onClick={() => handleRemoveVariant(idx)}
+                    className="w-full"
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+            </div>
+            <Button type="button" onClick={handleAddVariant} className="w-full">
               Add Variant
             </Button>
           </div>
@@ -780,7 +788,7 @@ export default function AddProductForm() {
               }
             />
           )}
-        {/* Product Title */}
+        {/* Product Title - moved here to be after variants */}
         <div className="flex w-full flex-col space-y-2">
           <Label className="text-base">Product Title</Label>
           <Input
