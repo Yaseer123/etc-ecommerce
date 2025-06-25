@@ -6,7 +6,7 @@ import Product from "./Product/Product";
 export default function FeaturedProducts() {
   const { data: featuredProducts = [], isLoading } =
     api.product.getFeaturedProducts.useQuery(
-      { limit: 4 },
+      { limit: 9999999},
       { refetchOnWindowFocus: false },
     );
 
