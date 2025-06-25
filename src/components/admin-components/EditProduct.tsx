@@ -1145,6 +1145,9 @@ function VariantImageGalleryModal({
             drop
           </p>
           <p className="text-xs text-gray-500">Image file</p>
+          <div className="mt-1 text-xs text-gray-400">
+            Recommended size: 1000x1000px or larger, square image
+          </div>
           <input
             id="variant-image-upload"
             type="file"

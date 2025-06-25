@@ -81,6 +81,10 @@ const ImageGallery: FC<ImageGalleryProps> = ({
                 <p className="text-xs text-gray-500 dark:text-gray-400">
                   Image file
                 </p>
+                <div className="mt-1 text-xs text-gray-400">
+                  Recommended size: 1200x900px or larger, 4:3 or 16:9 aspect
+                  ratio
+                </div>
               </div>
             </label>
           </div>

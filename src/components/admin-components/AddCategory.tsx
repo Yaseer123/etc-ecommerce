@@ -123,6 +123,9 @@ export default function AddCategoryForm() {
           }}
           placeholder="Select category image"
         />
+        <div className="mt-1 text-xs text-gray-400">
+          Recommended size: 220x220px or larger, square image
+        </div>
         {imagePreview && (
           <div className="mt-2">
             <Image

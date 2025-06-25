@@ -213,6 +213,9 @@ export const SliderManager = () => {
                 className="w-full cursor-pointer rounded-lg border border-gray-200 p-3"
                 disabled={uploading}
               />
+              <div className="mt-1 text-xs text-gray-400">
+                Recommended size: 1920x1080px or larger, 16:9 aspect ratio
+              </div>
               {selectedImageName ? (
                 <div className="mt-1 text-sm text-gray-500">
                   Selected: {selectedImageName}

@@ -317,6 +317,9 @@ export const EditSaleBanner = () => {
                 className="w-full cursor-pointer rounded-lg border border-gray-200 p-3"
                 disabled={uploading}
               />
+              <div className="mt-1 text-xs text-gray-400">
+                Recommended size: 1200x520px or larger, 21:9 aspect ratio
+              </div>
             </div>
             {selectedImageName ? (
               <div className="mt-1 text-sm text-gray-500">
