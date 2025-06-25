@@ -162,6 +162,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
   // Load category attributes when component mounts or category changes
   const [categories] = api.category.getAll.useSuspenseQuery();
 
+  const [isCustomBrand, setIsCustomBrand] = useState(false);
+  const [customBrand, setCustomBrand] = useState("");
+
   useEffect(() => {
     if (categoryId) {
       // Find the category in the tree structure
@@ -229,12 +232,6 @@ export default function EditProductForm({ productId }: { productId: string }) {
       // Check if we already have a value for this attribute from the product
       if (attributeValues[attr.name] !== undefined) {
         initialValues[attr.name] = attributeValues[attr.name] ?? "";
-      } else if (
-        attr.type === "select" &&
-        attr.options &&
-        attr.options.length > 0
-      ) {
-        initialValues[attr.name] = attr.options[0] ?? "";
       } else {
         initialValues[attr.name] = "";
       }
@@ -679,6 +676,18 @@ export default function EditProductForm({ productId }: { productId: string }) {
   // Add state for the specification rich editor
   const [specRichContent, setSpecRichContent] = useState("");
 
+  const { data: brands = [], isLoading: brandsLoading } =
+    api.product.getBrandsByCategory.useQuery({});
+  useEffect(() => {
+    if (brand && brands.length > 0 && !brands.includes(brand)) {
+      setIsCustomBrand(true);
+      setCustomBrand(brand);
+    } else {
+      setIsCustomBrand(false);
+      setCustomBrand("");
+    }
+  }, [brand, brands]);
+
   if (!product) return null;
 
   return (
@@ -772,77 +781,57 @@ export default function EditProductForm({ productId }: { productId: string }) {
         </div>
         <div>
           <Label>Brand</Label>
-          {/* Brand Selector (copied/adapted from AddProduct) */}
-          {(() => {
-            // Fetch all brands (no categoryId = all brands)
-            const { data: brands = [], isLoading: brandsLoading } =
-              api.product.getBrandsByCategory.useQuery({});
-            const [isCustomBrand, setIsCustomBrand] = useState(false);
-            const [customBrand, setCustomBrand] = useState("");
-            // Sync isCustomBrand with brand value
-            useEffect(() => {
-              if (brand && brands.length > 0 && !brands.includes(brand)) {
-                setIsCustomBrand(true);
-                setCustomBrand(brand);
-              } else {
-                setIsCustomBrand(false);
-                setCustomBrand("");
-              }
-            }, [brand, brands]);
-            return brandsLoading ? (
-              <div className="text-sm text-gray-500">Loading brands...</div>
-            ) : (
-              <>
-                <Select
-                  value={isCustomBrand ? "__custom__" : brand}
-                  onValueChange={(value) => {
-                    if (value === "__custom__") {
-                      setIsCustomBrand(true);
-                      setBrand("");
-                    } else {
-                      setIsCustomBrand(false);
-                      setBrand(value);
-                    }
-                  }}
-                >
-                  <SelectTrigger
-                    className={errors.brand ? "border-red-500" : ""}
-                  >
-                    <SelectValue placeholder="Select a brand or add new" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {brands.filter(Boolean).map((b: string) => (
-                      <SelectItem key={b} value={b} className="w-full">
-                        {b}
-                      </SelectItem>
-                    ))}
-                    <SelectItem
-                      value="__custom__"
-                      className="w-full text-blue-600"
-                    >
-                      Other / New Brand...
+          {brandsLoading ? (
+            <div className="text-sm text-gray-500">Loading brands...</div>
+          ) : (
+            <>
+              <Select
+                value={isCustomBrand ? "__custom__" : brand}
+                onValueChange={(value) => {
+                  if (value === "__custom__") {
+                    setIsCustomBrand(true);
+                    setBrand("");
+                  } else {
+                    setIsCustomBrand(false);
+                    setBrand(value);
+                  }
+                }}
+              >
+                <SelectTrigger className={errors.brand ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select a brand or add new" />
+                </SelectTrigger>
+                <SelectContent>
+                  {brands.filter(Boolean).map((b: string) => (
+                    <SelectItem key={b} value={b} className="w-full">
+                      {b}
                     </SelectItem>
-                  </SelectContent>
-                </Select>
-                {isCustomBrand && (
-                  <Input
-                    type="text"
-                    placeholder="Enter new brand name"
-                    value={customBrand}
-                    onChange={(e) => {
-                      setCustomBrand(e.target.value);
-                      setBrand(e.target.value);
-                      setErrors((prev) => ({
-                        ...prev,
-                        brand: validateField("brand", e.target.value),
-                      }));
-                    }}
-                    className={errors.brand ? "border-red-500" : ""}
-                  />
-                )}
-              </>
-            );
-          })()}
+                  ))}
+                  <SelectItem
+                    value="__custom__"
+                    className="w-full text-blue-600"
+                  >
+                    Other / New Brand...
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+              {isCustomBrand && (
+                <Input
+                  type="text"
+                  placeholder="Enter new brand name"
+                  value={customBrand}
+                  onChange={(e) => {
+                    setCustomBrand(e.target.value);
+                    setBrand(e.target.value);
+                    setErrors((prev) => ({
+                      ...prev,
+                      brand: validateField("brand", e.target.value),
+                    }));
+                  }}
+                  className={errors.brand ? "border-red-500" : ""}
+                />
+              )}
+            </>
+          )}
           {errors.brand && (
             <p className="mt-1 text-sm text-red-500">{errors.brand}</p>
           )}
@@ -893,15 +882,21 @@ export default function EditProductForm({ productId }: { productId: string }) {
                     attr.options &&
                     attr.options.length > 0 && (
                       <Select
-                        value={attributeValues[attr.name]?.toString() ?? ""}
+                        value={
+                          attributeValues[attr.name]?.toString() ?? "__none__"
+                        }
                         onValueChange={(value) =>
-                          handleAttributeChange(attr.name, value)
+                          handleAttributeChange(
+                            attr.name,
+                            value === "__none__" ? "" : value,
+                          )
                         }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder={`Select ${attr.name}`} />
                         </SelectTrigger>
                         <SelectContent>
+                          <SelectItem value="__none__">None</SelectItem>
                           {attr.options.filter(Boolean).map((option) => (
                             <SelectItem key={option} value={option}>
                               {option}
