@@ -236,6 +236,7 @@ model Order {
     userId     String?
     status     OrderStatus @default(PENDING)
     total      Float
+    shippingCost Float     @default(0) // <-- Added field for shipping cost
     couponId   String?
     couponUsed Boolean     @default(false)
     createdAt  DateTime    @default(now())

@@ -559,6 +559,7 @@ const Checkout = () => {
         })),
         addressId,
         notes: note,
+        shippingCost,
       });
     } else {
       placeGuestOrder.mutate({
@@ -572,6 +573,7 @@ const Checkout = () => {
         })),
         addressId,
         notes: note,
+        shippingCost,
       });
       // Auto-register guest user after order
       await fetch("/api/auth/auto-register", {

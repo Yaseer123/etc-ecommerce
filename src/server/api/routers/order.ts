@@ -187,6 +187,7 @@ export const orderRouter = createTRPCRouter({
         ),
         addressId: z.string().optional(),
         notes: z.string().optional(),
+        shippingCost: z.number().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -223,12 +224,14 @@ export const orderRouter = createTRPCRouter({
         products.map((product) => [product.id, product.discountedPrice]),
       );
 
-      // Calculate total price using product prices
-      const total = input.cartItems.reduce(
+      // Calculate product total
+      const productTotal = input.cartItems.reduce(
         (acc, item) =>
           acc + item.quantity * (productPriceMap.get(item.productId) ?? 0),
         0,
       );
+      const shippingCost = input.shippingCost ?? 0;
+      const total = productTotal + shippingCost;
 
       // Start transaction (DB only)
       const order = await ctx.db.$transaction(async (tx) => {
@@ -248,6 +251,7 @@ export const orderRouter = createTRPCRouter({
         const orderData = {
           userId,
           total,
+          shippingCost,
           addressId: input.addressId,
           notes: input.notes,
           items: {
@@ -654,6 +658,7 @@ export const orderRouter = createTRPCRouter({
         ),
         addressId: z.string().optional(),
         notes: z.string().optional(),
+        shippingCost: z.number().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -682,12 +687,14 @@ export const orderRouter = createTRPCRouter({
         products.map((product) => [product.id, product.discountedPrice]),
       );
 
-      // Calculate total price using product prices
-      const total = input.cartItems.reduce(
+      // Calculate product total
+      const productTotal = input.cartItems.reduce(
         (acc, item) =>
           acc + item.quantity * (productPriceMap.get(item.productId) ?? 0),
         0,
       );
+      const shippingCost = input.shippingCost ?? 0;
+      const total = productTotal + shippingCost;
 
       // Start transaction (DB only)
       const order = await ctx.db.$transaction(async (tx) => {
@@ -701,6 +708,7 @@ export const orderRouter = createTRPCRouter({
           data: {
             userId: null,
             total,
+            shippingCost,
             ...(input.addressId ? { addressId: input.addressId } : {}),
             notes: input.notes,
             items: {
