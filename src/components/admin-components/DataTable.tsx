@@ -89,7 +89,7 @@ function DraggableTableRow<TData>({
   };
   return (
     <TableRow ref={setNodeRef} style={style}>
-      {row.getVisibleCells().map((cell: { id: React.Key | null | undefined; column: { columnDef: { cell: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | React.ComponentType<any> | null | undefined; }; }; getContext: () => any; }, idx: number) => (
+      {row.getVisibleCells().map((cell, idx) => (
         <TableCell
           key={cell.id}
           className="border-r"
@@ -173,9 +173,9 @@ export function DataTable<TData>({
       <div className="rounded-md border">
         <Table>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup: { id: React.Key | null | undefined; headers: any[]; }) => (
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header: { id: React.Key | null | undefined; isPlaceholder: any; column: { columnDef: { header: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | React.ComponentType<any> | null | undefined; }; }; getContext: () => any; }) => {
+                {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id} className="border-r">
                       {header.isPlaceholder
@@ -203,26 +203,28 @@ export function DataTable<TData>({
                   }}
                 >
                   <SortableContext
-                    items={data.map((item) => String(item[rowIdKey]))}
+                    items={data.map((item) =>
+                      String(item[rowIdKey as keyof TData]),
+                    )}
                     strategy={verticalListSortingStrategy}
                   >
-                    {table.getRowModel().rows.map((row: unknown) => (
+                    {table.getRowModel().rows.map((row) => (
                       <DraggableTableRow<TData>
                         key={row.id}
                         row={row}
-                        rowId={String(row.original[rowIdKey])}
+                        rowId={String(row.original[rowIdKey as keyof TData])}
                         dragHandleCellIndex={dragHandleCellIndex}
                       />
                     ))}
                   </SortableContext>
                 </DndContext>
               ) : (
-                table.getRowModel().rows.map((row: { id: React.Key | null | undefined; getIsSelected: () => any; getVisibleCells: () => any[]; }) => (
+                table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                   >
-                    {row.getVisibleCells().map((cell: { id: React.Key | null | undefined; column: { columnDef: { cell: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | React.ComponentType<any> | null | undefined; }; }; getContext: () => any; }) => (
+                    {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id} className="border-r">
                         {flexRender(
                           cell.column.columnDef.cell,

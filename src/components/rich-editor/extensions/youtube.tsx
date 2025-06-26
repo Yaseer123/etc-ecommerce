@@ -88,7 +88,7 @@ export const Youtube = Node.create<YoutubeOptions>({
     return [
       {
         tag: "div[data-youtube-video] iframe",
-        getAttrs: (node: { getAttribute: (arg0: string) => any; }) => {
+        getAttrs: (node: { getAttribute: (arg0: string) => string | null }) => {
           if (typeof node === "string" || !(node instanceof HTMLElement)) {
             return {};
           }
@@ -98,7 +98,7 @@ export const Youtube = Node.create<YoutubeOptions>({
       },
       {
         tag: 'iframe[src*="youtube.com"]',
-        getAttrs: (node: { getAttribute: (arg0: string) => any; }) => {
+        getAttrs: (node: { getAttribute: (arg0: string) => string | null }) => {
           if (typeof node === "string" || !(node instanceof HTMLElement)) {
             return {};
           }
@@ -107,7 +107,7 @@ export const Youtube = Node.create<YoutubeOptions>({
       },
       {
         tag: 'iframe[src*="youtu.be"]',
-        getAttrs: (node: { getAttribute: (arg0: string) => any; }) => {
+        getAttrs: (node: { getAttribute: (arg0: string) => string | null }) => {
           if (typeof node === "string" || !(node instanceof HTMLElement)) {
             return {};
           }
@@ -297,7 +297,11 @@ export const Youtube = Node.create<YoutubeOptions>({
 
       return {
         dom,
-        update: (node: { attrs: { src: string; }; }) => {
+        update: (
+          node: { attrs: { src?: string } },
+          _decorations: readonly unknown[],
+          _innerDecorations: unknown,
+        ) => {
           iframe.src = getEmbedUrl(
             typeof node.attrs.src === "string" ? node.attrs.src : "",
           );

@@ -327,61 +327,79 @@ export const SliderManager = () => {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {sliders?.map((slider: { id: any; title: any; subtitle: any; description: any; imageUrl: any; imageId: any; link: any; autoSlideTime: number; }) => {
-          const safeSlider: Slider = {
-            id: slider.id,
-            title: slider.title ?? "",
-            subtitle: slider.subtitle ?? "",
-            description: slider.description ?? "",
-            imageUrl: slider.imageUrl ?? "",
-            imageId: slider.imageId ?? "",
-            link: slider.link ?? "",
-            autoSlideTime:
-              typeof slider.autoSlideTime === "number"
-                ? slider.autoSlideTime
-                : 4000,
-          };
-          return (
-            <div
-              key={safeSlider.id}
-              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md"
-            >
-              <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-lg">
-                <Image
-                  src={safeSlider.imageUrl}
-                  alt={safeSlider.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <h3 className="mb-2 text-xl font-semibold text-gray-900">
-                {safeSlider.title}
-              </h3>
-              <p className="mb-4 text-gray-600">{safeSlider.subtitle}</p>
-              <a
-                href={safeSlider.link}
-                target="_blank"
-                className="mb-4 block truncate text-gray-900 transition-colors duration-200 hover:text-gray-600"
+        {sliders?.map(
+          (slider: {
+            link: string | null;
+            id: string;
+            title: string | null;
+            imageId: string;
+            createdAt: Date;
+            updatedAt: Date;
+            description: string | null;
+            imageUrl: string;
+            subtitle: string | null;
+            autoSlideTime: number | null;
+          }) => {
+            const safeSlider: Slider = {
+              id: slider.id,
+              title: typeof slider.title === "string" ? slider.title : "",
+              subtitle:
+                typeof slider.subtitle === "string" ? slider.subtitle : "",
+              description:
+                typeof slider.description === "string"
+                  ? slider.description
+                  : "",
+              imageUrl:
+                typeof slider.imageUrl === "string" ? slider.imageUrl : "",
+              imageId: typeof slider.imageId === "string" ? slider.imageId : "",
+              link: typeof slider.link === "string" ? slider.link : "",
+              autoSlideTime:
+                typeof slider.autoSlideTime === "number"
+                  ? slider.autoSlideTime
+                  : 4000,
+            };
+            return (
+              <div
+                key={safeSlider.id}
+                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md"
               >
-                {safeSlider.link}
-              </a>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setEditingSlider({ ...safeSlider })}
-                  className="rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
+                <div className="relative mb-4 aspect-video w-full overflow-hidden rounded-lg">
+                  <Image
+                    src={safeSlider.imageUrl}
+                    alt={safeSlider.title}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                  {safeSlider.title}
+                </h3>
+                <p className="mb-4 text-gray-600">{safeSlider.subtitle}</p>
+                <a
+                  href={safeSlider.link}
+                  target="_blank"
+                  className="mb-4 block truncate text-gray-900 transition-colors duration-200 hover:text-gray-600"
                 >
-                  Edit
-                </button>
-                <button
-                  onClick={async () => await handleDelete({ ...safeSlider })}
-                  className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
-                >
-                  Delete
-                </button>
+                  {safeSlider.link}
+                </a>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEditingSlider({ ...safeSlider })}
+                    className="rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={async () => await handleDelete({ ...safeSlider })}
+                    className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          },
+        )}
       </div>
     </>
   );

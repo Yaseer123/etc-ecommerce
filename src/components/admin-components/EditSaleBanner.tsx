@@ -13,7 +13,7 @@ import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 export const EditSaleBanner = () => {
@@ -395,71 +395,96 @@ export const EditSaleBanner = () => {
       )}
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {banners?.map((banner: SetStateAction<{ id?: string; title: string; subtitle: string; description: string; imageUrl: string; imageId: string; link: string; startDate: Date; endDate: Date; isActive: boolean; } | null>) => (
-          <div
-            key={banner.id}
-            className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
-          >
-            <div className="relative mb-4 aspect-[21/9] w-full overflow-hidden rounded-lg">
-              <Image
-                src={banner.imageUrl}
-                alt={banner.title}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <h3 className="mb-2 text-xl font-semibold text-gray-900">
-              {banner.title}
-            </h3>
-            <p className="mb-2 text-gray-600">{banner.subtitle}</p>
-            <div className="mb-4 text-sm text-gray-500">
-              <p>
-                Active:{" "}
-                <span
-                  className={
-                    banner.isActive ? "text-green-600" : "text-red-600"
+        {banners?.map((banner) => {
+          const title = typeof banner.title === "string" ? banner.title : "";
+          const subtitle =
+            typeof banner.subtitle === "string" ? banner.subtitle : "";
+          const description =
+            typeof banner.description === "string" ? banner.description : "";
+          const imageUrl =
+            typeof banner.imageUrl === "string" ? banner.imageUrl : "";
+          const imageId =
+            typeof banner.imageId === "string" ? banner.imageId : "";
+          const link = typeof banner.link === "string" ? banner.link : "";
+          const startDate =
+            banner.startDate instanceof Date
+              ? banner.startDate
+              : new Date(banner.startDate);
+          const endDate =
+            banner.endDate instanceof Date
+              ? banner.endDate
+              : new Date(banner.endDate);
+          const isActive =
+            typeof banner.isActive === "boolean" ? banner.isActive : false;
+
+          return (
+            <div
+              key={banner.id}
+              className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
+            >
+              <div className="relative mb-4 aspect-[21/9] w-full overflow-hidden rounded-lg">
+                <Image
+                  src={imageUrl}
+                  alt={title}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                {title}
+              </h3>
+              <p className="mb-2 text-gray-600">{subtitle}</p>
+              <div className="mb-4 text-sm text-gray-500">
+                <p>
+                  Active:{" "}
+                  <span
+                    className={isActive ? "text-green-600" : "text-red-600"}
+                  >
+                    {isActive ? "Yes" : "No"}
+                  </span>
+                </p>
+                <p>
+                  Duration: {startDate.toLocaleDateString()} -{" "}
+                  {endDate.toLocaleDateString()}
+                </p>
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() =>
+                    setEditingBanner({
+                      ...banner,
+                      title: title ?? "",
+                      subtitle: subtitle ?? "",
+                      description: description ?? "",
+                      link: link ?? "",
+                      startDate: startDate,
+                      endDate: endDate,
+                    })
                   }
+                  className="rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
                 >
-                  {banner.isActive ? "Yes" : "No"}
-                </span>
-              </p>
-              <p>
-                Duration: {new Date(banner.startDate).toLocaleDateString()} -{" "}
-                {new Date(banner.endDate).toLocaleDateString()}
-              </p>
+                  Edit
+                </button>
+                <button
+                  onClick={() =>
+                    handleDelete({
+                      ...banner,
+                      title: title ?? "",
+                      subtitle: subtitle ?? "",
+                      description: description ?? "",
+                      link: link ?? "",
+                      startDate: startDate,
+                      endDate: endDate,
+                    })
+                  }
+                  className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
+                >
+                  Delete
+                </button>
+              </div>
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() =>
-                  setEditingBanner({
-                    ...banner,
-                    subtitle: banner.subtitle ?? "",
-                    description: banner.description ?? "",
-                    link: banner.link ?? "",
-                    startDate: new Date(banner.startDate),
-                    endDate: new Date(banner.endDate),
-                  })
-                }
-                className="rounded-lg bg-gray-100 px-4 py-2 text-gray-700 transition-colors duration-200 hover:bg-gray-200"
-              >
-                Edit
-              </button>
-              <button
-                onClick={() =>
-                  handleDelete({
-                    ...banner,
-                    subtitle: banner.subtitle ?? "",
-                    description: banner.description ?? "",
-                    link: banner.link ?? "",
-                  })
-                }
-                className="rounded-lg bg-black px-4 py-2 text-white transition-colors duration-200 hover:bg-black/75 hover:bg-gray-800"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </>
   );

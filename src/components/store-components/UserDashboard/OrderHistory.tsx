@@ -46,7 +46,7 @@ export default function OrderHistory({ activeTab }: { activeTab?: string }) {
       toast.success("Order canceled successfully.");
       setCancelOrderId(null); // Close the modal
     },
-    onError: (error: { message: any }) => {
+    onError: (error: { message: string }) => {
       toast.error(error.message || "Failed to cancel the order.");
     },
   });

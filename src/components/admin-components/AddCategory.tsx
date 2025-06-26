@@ -53,7 +53,7 @@ export default function AddCategoryForm() {
       reset();
       selectedCategoriesRef.current = [];
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(error.message || "Failed to add category");
     },
     onSettled: () => {

@@ -78,7 +78,7 @@ export function StockStatusModal({
       onClose();
       void utils.product.getAll.invalidate();
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error("Error", {
         description: error.message,
       });
@@ -127,7 +127,7 @@ export function StockStatusModal({
                         {option.label}
                       </h3>
                       {selectedStatus === option.value && (
-                        <CheckCircle className="text-green-600 ml-2 h-5 w-5" />
+                        <CheckCircle className="ml-2 h-5 w-5 text-green-600" />
                       )}
                     </div>
                     <p className="mt-1 text-sm text-gray-500">

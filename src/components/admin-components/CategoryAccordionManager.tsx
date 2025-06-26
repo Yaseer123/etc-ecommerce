@@ -1,9 +1,9 @@
 "use client";
 
-import { CategoryAccordion } from "./CategoryAccordion";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
 import { useState } from "react";
+import { toast } from "sonner";
+import { CategoryAccordion } from "./CategoryAccordion";
 
 export default function CategoryAccordionManager() {
   const { data: categories, error, isLoading } = api.category.getAll.useQuery();
@@ -21,7 +21,7 @@ export default function CategoryAccordionManager() {
       await utils.category.getAll.invalidate();
       toast.success("Category deleted successfully");
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(`Error: ${error.message}`);
     },
   });
@@ -35,7 +35,7 @@ export default function CategoryAccordionManager() {
       }
       setIsReordering(false);
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(`Error: ${error.message}`);
       setIsReordering(false);
     },

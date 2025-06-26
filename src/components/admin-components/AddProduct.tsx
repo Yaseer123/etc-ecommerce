@@ -35,10 +35,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
-    Key,
+  Key,
   useEffect,
   useRef,
   useState,
@@ -56,7 +57,6 @@ import DndImageGallery from "../rich-editor/DndImageGallery";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 // Sortable item component for specifications
 function SortableSpecificationItem({
@@ -117,7 +117,9 @@ function hexToIColor(hex: string): IColor {
   };
 }
 
-export default function AddProductForm(p0: string | number | boolean | { [x: string]: JsonValue; } | JsonValue[]) {
+export default function AddProductForm(
+  p0: string | number | boolean | { [x: string]: JsonValue } | JsonValue[],
+) {
   const router = useRouter();
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
 
@@ -396,7 +398,7 @@ export default function AddProductForm(p0: string | number | boolean | { [x: str
       // Navigate after clearing
       router.push("/admin/product");
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(error.message || "Failed to add product");
     },
     onSettled: () => {
@@ -749,16 +751,21 @@ export default function AddProductForm(p0: string | number | boolean | { [x: str
                   {/* Show variant images */}
                   {variant.images && variant.images.length > 0 && (
                     <div className="flex flex-wrap gap-2">
-                      {variant.images.map((img: string | StaticImport, i: Key | null | undefined) => (
-                        <Image
-                          key={i}
-                          src={img}
-                          alt="variant-img"
-                          width={48}
-                          height={48}
-                          className="h-16 w-16 rounded object-cover"
-                        />
-                      ))}
+                      {variant.images.map(
+                        (
+                          img: string | StaticImport,
+                          i: Key | null | undefined,
+                        ) => (
+                          <Image
+                            key={i}
+                            src={img}
+                            alt="variant-img"
+                            width={48}
+                            height={48}
+                            className="h-16 w-16 rounded object-cover"
+                          />
+                        ),
+                      )}
                     </div>
                   )}
                   <Button

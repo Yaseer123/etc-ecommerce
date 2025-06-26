@@ -305,7 +305,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
       selectedCategoriesRef.current = [];
       router.push("/admin/product");
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(error.message || "Failed to update product");
     },
     onSettled: () => {
@@ -1071,7 +1071,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
             <VariantImageGalleryModal
               variantIndex={variantGalleryIdx}
               images={variants[variantGalleryIdx]?.images ?? []}
-              onClose={() => setVariantGalleryOpen(false)}
+              onClose={() => {
+                setVariantGalleryOpen(false);
+              }}
               onImagesChange={(imgs: string[]) =>
                 handleVariantImagesUpdate(variantGalleryIdx, imgs)
               }
@@ -1213,12 +1215,21 @@ function VariantRow({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant.colorHex]);
 
+  const safeImages = Array.isArray(variant.images)
+    ? variant.images.filter((img): img is string => typeof img === "string")
+    : [];
+  const safeColorName =
+    typeof variant.colorName === "string" ? variant.colorName : "";
+  const safeColorHex =
+    typeof variant.colorHex === "string" ? variant.colorHex : "";
+  const safeSize = typeof variant.size === "string" ? variant.size : "";
+
   return (
     <div className="mb-2 flex flex-col items-center gap-2 border-b pb-2 md:flex-row md:flex-wrap md:items-center md:gap-4 md:overflow-x-auto">
       <Input
         type="text"
         placeholder="Color Name (optional)"
-        value={variant.colorName}
+        value={safeColorName}
         onChange={(e) => handleVariantChange(idx, "colorName", e.target.value)}
         className="w-32"
       />
@@ -1235,20 +1246,20 @@ function VariantRow({
           display: "inline-block",
           width: 24,
           height: 24,
-          backgroundColor: variant.colorHex ?? "#ffffff",
+          backgroundColor: safeColorHex,
           borderRadius: "50%",
           border: "1px solid #ccc",
         }}
-        aria-label={variant.colorName}
-        title={variant.colorName}
+        aria-label={safeColorName}
+        title={safeColorName}
       />
       <span>
-        {variant.colorName} ({variant.colorHex})
+        {safeColorName} ({safeColorHex})
       </span>
       <Input
         type="text"
         placeholder="Size (optional)"
-        value={variant.size}
+        value={safeSize}
         onChange={(e) => handleVariantChange(idx, "size", e.target.value)}
         className="w-32"
       />
@@ -1292,9 +1303,9 @@ function VariantRow({
         </Button>
       </div>
       {/* Show variant images */}
-      {variant.images && variant.images.length > 0 && (
+      {safeImages && safeImages.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {variant.images.map((img: string, i: number) => (
+          {safeImages.map((img: string, i: number) => (
             <Image
               key={i}
               src={img}

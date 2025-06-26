@@ -219,7 +219,7 @@ function CategoryItem({
       await utils.category.getAll.invalidate();
       toast.success("Category updated successfully");
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(`Error updating category: ${error.message}`);
     },
   });

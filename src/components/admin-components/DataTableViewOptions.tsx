@@ -12,7 +12,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Key } from "react";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -39,16 +38,16 @@ export function DataTableViewOptions<TData>({
         {table
           .getAllColumns()
           .filter(
-            (column: { accessorFn: any; getCanHide: () => any; }) =>
+            (column) =>
               typeof column.accessorFn !== "undefined" && column.getCanHide(),
           )
-          .map((column: { id: Key | null | undefined; getIsVisible: () => any; toggleVisibility: (arg0: boolean) => any; }) => {
+          .map((column) => {
             return (
               <DropdownMenuCheckboxItem
                 key={column.id}
                 className="capitalize"
                 checked={column.getIsVisible()}
-                onCheckedChange={(value: any) => column.toggleVisibility(!!value)}
+                onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
                 {column.id}
               </DropdownMenuCheckboxItem>

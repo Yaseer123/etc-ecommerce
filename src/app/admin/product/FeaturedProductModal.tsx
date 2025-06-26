@@ -1,17 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { api } from "@/trpc/react";
-import { toast } from "sonner";
 import { CheckCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface FeaturedProductModalProps {
   isOpen: boolean;
@@ -45,7 +45,7 @@ export function FeaturedProductModal({
       void utils.product.getAll.invalidate();
       void utils.product.getFeaturedProducts.invalidate();
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error("Error", {
         description: error.message,
       });

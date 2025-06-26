@@ -75,7 +75,7 @@ function toProductWithCategory(product: unknown): ProductWithCategory {
     variants = normalizeVariants(prod.variants);
   } else if (typeof prod.variants === "string") {
     try {
-      const parsed = JSON.parse(prod.variants);
+      const parsed: unknown = JSON.parse(prod.variants);
       if (Array.isArray(parsed)) {
         variants = normalizeVariants(parsed);
       } else {
@@ -188,7 +188,7 @@ export const productRouter = createTRPCRouter({
       const totalPages = Math.ceil(filteredTotal / limit);
 
       return {
-        products: filteredProducts,
+        products: filteredProducts.map(toProductWithCategory),
         total: filteredTotal,
         page,
         limit,

@@ -94,7 +94,7 @@ export default function CategoryAttributesManager({
       onSuccess: () => {
         toast.success("Category attributes have been updated successfully.");
       },
-      onError: (error: { message: any; }) => {
+      onError: (error: { message: string }) => {
         toast.error(error.message || "Failed to update attributes");
       },
     });
@@ -104,7 +104,7 @@ export default function CategoryAttributesManager({
       onSuccess: () => {
         toast.success("Category details have been updated successfully.");
       },
-      onError: (error: { message: any; }) => {
+      onError: (error: { message: string }) => {
         toast.error(error.message || "Failed to update category details");
       },
     });
@@ -117,7 +117,7 @@ export default function CategoryAttributesManager({
         attributesForm.reset({ attributes: [] });
         setIsDeleteDialogOpen(false);
       },
-      onError: (error: { message: any; }) => {
+      onError: (error: { message: string }) => {
         toast.error(error.message || "Failed to remove attributes");
       },
     });
@@ -127,7 +127,16 @@ export default function CategoryAttributesManager({
     mutate: removeSingleAttribute,
     isPending: isRemovingSingleAttribute,
   } = api.category.removeAttribute.useMutation({
-    onSuccess: (data: { attributes: string | { options: string[]; type: "select"; name: string; required: boolean; }[]; }) => {
+    onSuccess: (data: {
+      attributes:
+        | string
+        | {
+            options: string[];
+            type: "select";
+            name: string;
+            required: boolean;
+          }[];
+    }) => {
       toast.success("Attribute has been removed successfully.");
 
       // Update the form with the returned attributes
@@ -148,7 +157,7 @@ export default function CategoryAttributesManager({
         console.error("Failed to parse updated attributes:", error);
       }
     },
-    onError: (error: { message: any; }) => {
+    onError: (error: { message: string }) => {
       toast.error(error.message || "Failed to remove attribute");
     },
   });

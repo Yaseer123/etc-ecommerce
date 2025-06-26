@@ -105,9 +105,9 @@ export const readAllImages = async (filter: string) => {
 
     if (!Contents) return [];
 
-    return Contents.sort((a: { Key: any; }, b: { Key: any; }) =>
+    return Contents.sort((a: { Key: any }, b: { Key: any }) =>
       (a.Key ?? "").localeCompare(b.Key ?? ""),
-    ).map((item: { Key: any; }) => ({
+    ).map((item: { Key: any }) => ({
       public_id: item.Key ?? "",
       secure_url: `https://${bucketName}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${item.Key}`,
     }));
@@ -148,7 +148,7 @@ export const removeImageByPrefix = async (prefix: string) => {
   const deleteCommand = new DeleteObjectsCommand({
     Bucket: bucketName,
     Delete: {
-      Objects: Contents.map((item: { Key: any; }) => ({ Key: item.Key })),
+      Objects: Contents.map((item: { Key: any }) => ({ Key: item.Key })),
       Quiet: false,
     },
   });

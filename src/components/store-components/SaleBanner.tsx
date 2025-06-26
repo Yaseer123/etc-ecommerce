@@ -1,10 +1,9 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import type { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { Key } from "react";
 
 export const SaleBanner = () => {
   const router = useRouter();
@@ -34,11 +33,11 @@ export const SaleBanner = () => {
           .slice(0, 2)
           .map(
             (banner: {
-              id: Key | null | undefined;
+              id: string | number;
               link: string | null;
-              title: string;
-              subtitle: string;
-              description: string;
+              title: string | null;
+              subtitle: string | null;
+              description: string | null;
               imageUrl: string | StaticImport;
             }) => (
               <div
@@ -48,7 +47,7 @@ export const SaleBanner = () => {
               >
                 <div className="text-content relative z-[1] p-4 sm:p-6 md:py-6 md:pl-7 lg:py-8 lg:pl-8">
                   <div className="inline-block rounded-sm bg-red-500 px-2 py-0.5 text-xs font-semibold uppercase leading-4 text-white sm:text-sm sm:leading-5 md:text-xs md:leading-4">
-                    {banner.title}
+                    {banner.title ?? ""}
                   </div>
                   <div className="heading6 mt-1 text-sm sm:mt-2 sm:text-base">
                     {banner.subtitle ?? ""}
@@ -61,7 +60,7 @@ export const SaleBanner = () => {
                   src={banner.imageUrl}
                   width={400}
                   height={100}
-                  alt={banner.title}
+                  alt={banner.title ?? ""}
                   priority={true}
                   className="absolute right-0 top-0 h-full w-full object-cover object-right-top sm:max-w-none"
                 />

@@ -22,18 +22,31 @@ export default function AdminReviewsPage() {
   });
 
   // Filter and search logic
-  const filteredReviews = reviews.filter((review: { visible: any; user: { name: any; }; product: { title: any; }; comment: any; }) => {
-    if (filter === "visible" && !review.visible) return false;
-    if (filter === "hidden" && review.visible) return false;
-    if (search) {
-      const s = search.toLowerCase();      // Using ?? for null checks and || for boolean conditions since we want to keep the boolean OR logic here
-      const hasUserNameMatch = (review.user?.name ?? "").toLowerCase().includes(s);
-      const hasProductTitleMatch = (review.product?.title ?? "").toLowerCase().includes(s);
-      const hasCommentMatch = (review.comment ?? "").toLowerCase().includes(s);
-      return hasUserNameMatch || hasProductTitleMatch || hasCommentMatch;
-    }
-    return true;
-  });
+  const filteredReviews = reviews.filter(
+    (review: {
+      visible: any;
+      user: { name: any };
+      product: { title: any };
+      comment: any;
+    }) => {
+      if (filter === "visible" && !review.visible) return false;
+      if (filter === "hidden" && review.visible) return false;
+      if (search) {
+        const s = search.toLowerCase(); // Using ?? for null checks and || for boolean conditions since we want to keep the boolean OR logic here
+        const hasUserNameMatch = (review.user?.name ?? "")
+          .toLowerCase()
+          .includes(s);
+        const hasProductTitleMatch = (review.product?.title ?? "")
+          .toLowerCase()
+          .includes(s);
+        const hasCommentMatch = (review.comment ?? "")
+          .toLowerCase()
+          .includes(s);
+        return hasUserNameMatch || hasProductTitleMatch || hasCommentMatch;
+      }
+      return true;
+    },
+  );
 
   return (
     <div className="p-8">
@@ -79,61 +92,73 @@ export default function AdminReviewsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredReviews.map((review: { id: Key | null | undefined; product: { title: any; }; user: { name: any; }; rating: number; comment: any; createdAt: string | number | Date; visible: any; }) => (
-                <tr key={review.id} className="border-t">
-                  <td className="px-4 py-2">{review.product?.title ?? "-"}</td>
-                  <td className="px-4 py-2">
-                    {review.user?.name ?? "Anonymous"}
-                  </td>
-                  <td className="px-4 py-2">
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Star
-                          key={star}
-                          size={14}
-                          weight={star <= review.rating ? "fill" : "regular"}
-                          className="text-yellow-500"
-                        />
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-2">{review.comment ?? "-"}</td>
-                  <td className="px-4 py-2 text-xs">
-                    {new Date(review.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2">
-                    <span
-                      className={`rounded px-2 py-1 text-xs font-semibold ${review.visible ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-700"}`}
-                    >
-                      {review.visible ? "Visible" : "Hidden"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2">
-                    <Button
-                      size="sm"
-                      variant={review.visible ? "secondary" : "outline"}
-                      disabled={setReviewVisibility.isPending}
-                      onClick={() =>
-                        setReviewVisibility.mutate({
-                          reviewId: review.id,
-                          visible: !review.visible,
-                        })
-                      }
-                    >
-                      {review.visible ? "Hide" : "Approve"}
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="ml-2"
-                      disabled={deleteReview.isPending}
-                      onClick={() => deleteReview.mutate(review.id)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {filteredReviews.map(
+                (review: {
+                  id: Key | null | undefined;
+                  product: { title: any };
+                  user: { name: any };
+                  rating: number;
+                  comment: any;
+                  createdAt: string | number | Date;
+                  visible: any;
+                }) => (
+                  <tr key={review.id} className="border-t">
+                    <td className="px-4 py-2">
+                      {review.product?.title ?? "-"}
+                    </td>
+                    <td className="px-4 py-2">
+                      {review.user?.name ?? "Anonymous"}
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={14}
+                            weight={star <= review.rating ? "fill" : "regular"}
+                            className="text-yellow-500"
+                          />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-4 py-2">{review.comment ?? "-"}</td>
+                    <td className="px-4 py-2 text-xs">
+                      {new Date(review.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span
+                        className={`rounded px-2 py-1 text-xs font-semibold ${review.visible ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-700"}`}
+                      >
+                        {review.visible ? "Visible" : "Hidden"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2">
+                      <Button
+                        size="sm"
+                        variant={review.visible ? "secondary" : "outline"}
+                        disabled={setReviewVisibility.isPending}
+                        onClick={() =>
+                          setReviewVisibility.mutate({
+                            reviewId: review.id,
+                            visible: !review.visible,
+                          })
+                        }
+                      >
+                        {review.visible ? "Hide" : "Approve"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="ml-2"
+                        disabled={deleteReview.isPending}
+                        onClick={() => deleteReview.mutate(review.id)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ),
+              )}
             </tbody>
           </table>
         </div>

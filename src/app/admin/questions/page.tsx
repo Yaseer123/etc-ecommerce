@@ -3,7 +3,14 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
-import { AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import {
+  AwaitedReactNode,
+  JSXElementConstructor,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 import { toast } from "sonner";
 
 export default function AdminQuestionsPage() {
@@ -77,72 +84,108 @@ export default function AdminQuestionsPage() {
               </tr>
             </thead>
             <tbody>
-              {questions.map((q: { id: string | number | bigint | ((prevState: string | null) => string | null) | null | undefined; product: { title: any; }; productId: any; user: { name: any; }; question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; answer: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; createdAt: string | number | Date; }) => (
-                <tr key={q.id} className="border-t">
-                  {" "}
-                  <td className="px-4 py-2">
-                    {q.product?.title ?? q.productId}
-                  </td>
-                  <td className="px-4 py-2">{q.user?.name ?? "User"}</td>
-                  <td className="max-w-xs break-words px-4 py-2">
-                    {q.question}
-                  </td>
-                  <td className="px-4 py-2">
-                    {q.answer ? (
-                      <div className="text-green-700">{q.answer}</div>
-                    ) : answering === q.id ? (
-                      <div className="flex flex-col gap-2">
-                        <Textarea
-                          value={answerText[q.id] ?? ""}
-                          onChange={(e) =>
-                            setAnswerText((prev) => ({
-                              ...prev,
-                              [q.id]: e.target.value,
-                            }))
-                          }
-                          rows={2}
-                          placeholder="Type your answer..."
-                        />
-                        <div className="flex gap-2">
-                          <Button
-                            size="sm"
-                            onClick={() => handleAnswer(q.id)}
-                            disabled={answerMutation.isPending}
-                          >
-                            {answerMutation.isPending
-                              ? "Submitting..."
-                              : "Submit"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setAnswering(null)}
-                          >
-                            Cancel
-                          </Button>
+              {questions.map(
+                (q: {
+                  id:
+                    | string
+                    | number
+                    | bigint
+                    | ((prevState: string | null) => string | null)
+                    | null
+                    | undefined;
+                  product: { title: any };
+                  productId: any;
+                  user: { name: any };
+                  question:
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | ReactElement<any, string | JSXElementConstructor<any>>
+                    | Iterable<ReactNode>
+                    | ReactPortal
+                    | Promise<AwaitedReactNode>
+                    | null
+                    | undefined;
+                  answer:
+                    | string
+                    | number
+                    | bigint
+                    | boolean
+                    | ReactElement<any, string | JSXElementConstructor<any>>
+                    | Iterable<ReactNode>
+                    | ReactPortal
+                    | Promise<AwaitedReactNode>
+                    | null
+                    | undefined;
+                  createdAt: string | number | Date;
+                }) => (
+                  <tr key={q.id} className="border-t">
+                    {" "}
+                    <td className="px-4 py-2">
+                      {q.product?.title ?? q.productId}
+                    </td>
+                    <td className="px-4 py-2">{q.user?.name ?? "User"}</td>
+                    <td className="max-w-xs break-words px-4 py-2">
+                      {q.question}
+                    </td>
+                    <td className="px-4 py-2">
+                      {q.answer ? (
+                        <div className="text-green-700">{q.answer}</div>
+                      ) : answering === q.id ? (
+                        <div className="flex flex-col gap-2">
+                          <Textarea
+                            value={answerText[q.id] ?? ""}
+                            onChange={(e) =>
+                              setAnswerText((prev) => ({
+                                ...prev,
+                                [q.id]: e.target.value,
+                              }))
+                            }
+                            rows={2}
+                            placeholder="Type your answer..."
+                          />
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => handleAnswer(q.id)}
+                              disabled={answerMutation.isPending}
+                            >
+                              {answerMutation.isPending
+                                ? "Submitting..."
+                                : "Submit"}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setAnswering(null)}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <Button size="sm" onClick={() => setAnswering(q.id)}>
-                        Reply
+                      ) : (
+                        <Button size="sm" onClick={() => setAnswering(q.id)}>
+                          Reply
+                        </Button>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-xs text-gray-500">
+                      {new Date(q.createdAt).toLocaleString()}
+                    </td>
+                    <td className="px-4 py-2">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => handleDelete(q.id)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        Delete
                       </Button>
-                    )}
-                  </td>
-                  <td className="px-4 py-2 text-xs text-gray-500">
-                    {new Date(q.createdAt).toLocaleString()}
-                  </td>
-                  <td className="px-4 py-2">
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleDelete(q.id)}
-                      disabled={deleteMutation.isPending}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ),
+              )}
             </tbody>
           </table>
         </div>

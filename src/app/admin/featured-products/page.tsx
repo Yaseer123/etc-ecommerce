@@ -162,7 +162,7 @@ export default function FeaturedProductsPage() {
     const base = dragItems ?? featuredProducts;
     if (!search.trim()) return base;
     return base.filter(
-      (product: { title: string; brand: string; }) =>
+      (product: { title: string; brand: string }) =>
         product.title.toLowerCase().includes(search.toLowerCase()) ||
         product.brand.toLowerCase().includes(search.toLowerCase()),
     );
@@ -194,10 +194,10 @@ export default function FeaturedProductsPage() {
 
     if (active.id !== over.id) {
       const oldIndex = featuredProducts.findIndex(
-        (item: { id: UniqueIdentifier; }) => item.id === active.id,
+        (item: { id: UniqueIdentifier }) => item.id === active.id,
       );
       const newIndex = featuredProducts.findIndex(
-        (item: { id: UniqueIdentifier; }) => item.id === over.id,
+        (item: { id: UniqueIdentifier }) => item.id === over.id,
       );
 
       if (oldIndex === -1 || newIndex === -1) return;
@@ -287,7 +287,7 @@ export default function FeaturedProductsPage() {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  items={filteredProducts.map((item: { id: any; }) => item.id)}
+                  items={filteredProducts.map((item: { id: any }) => item.id)}
                   strategy={verticalListSortingStrategy}
                 >
                   <Table>
@@ -302,13 +302,62 @@ export default function FeaturedProductsPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredProducts.map((product: { category: { order: number; name: string; id: string; imageId: string | null; createdAt: Date; updatedAt: Date; image: string | null; attributes: JsonValue; parentId: string | null; } | null; } & { id: string; title: string; slug: string; shortDescription: string; imageId: string; published: boolean; createdAt: Date; updatedAt: Date; new: boolean; sale: boolean; featured: boolean; description: string | null; price: number; discountedPrice: number | null; stock: number; stockStatus: $Enums.StockStatus; brand: string; defaultColor: string | null; defaultColorHex: string | null; defaultSize: string | null; sold: number; estimatedDeliveryTime: number | null; categoryId: string | null; images: string[]; descriptionImageId: string | null; attributes: JsonValue; categoryAttributes: JsonValue; position: number; deletedAt: Date | null; variants: JsonValue | null; sku: string | null; allSkus: string[]; }) => (
-                        <SortableRow
-                          key={product.id}
-                          product={product}
-                          onRemove={handleRemoveFromFeatured}
-                        />
-                      ))}
+                      {filteredProducts.map(
+                        (
+                          product: {
+                            category: {
+                              order: number;
+                              name: string;
+                              id: string;
+                              imageId: string | null;
+                              createdAt: Date;
+                              updatedAt: Date;
+                              image: string | null;
+                              attributes: JsonValue;
+                              parentId: string | null;
+                            } | null;
+                          } & {
+                            id: string;
+                            title: string;
+                            slug: string;
+                            shortDescription: string;
+                            imageId: string;
+                            published: boolean;
+                            createdAt: Date;
+                            updatedAt: Date;
+                            new: boolean;
+                            sale: boolean;
+                            featured: boolean;
+                            description: string | null;
+                            price: number;
+                            discountedPrice: number | null;
+                            stock: number;
+                            stockStatus: $Enums.StockStatus;
+                            brand: string;
+                            defaultColor: string | null;
+                            defaultColorHex: string | null;
+                            defaultSize: string | null;
+                            sold: number;
+                            estimatedDeliveryTime: number | null;
+                            categoryId: string | null;
+                            images: string[];
+                            descriptionImageId: string | null;
+                            attributes: JsonValue;
+                            categoryAttributes: JsonValue;
+                            position: number;
+                            deletedAt: Date | null;
+                            variants: JsonValue | null;
+                            sku: string | null;
+                            allSkus: string[];
+                          },
+                        ) => (
+                          <SortableRow
+                            key={product.id}
+                            product={product}
+                            onRemove={handleRemoveFromFeatured}
+                          />
+                        ),
+                      )}
                     </TableBody>
                   </Table>
                 </SortableContext>

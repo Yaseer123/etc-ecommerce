@@ -113,7 +113,7 @@ export default function ProductsPage() {
       enabled: true,
       staleTime: Infinity,
       gcTime: Infinity,
-      placeholderData: (previousData: unknown) => previousData,
+      placeholderData: (previousData: string[] | undefined) => previousData,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
     },
@@ -136,7 +136,7 @@ export default function ProductsPage() {
     categoryAttributes,
   )
     ? categoryAttributes.filter(
-        (attr): attr is CategoryAttribute =>
+        (attr): boolean =>
           attr &&
           typeof attr === "object" &&
           "name" in attr &&
@@ -1183,11 +1183,7 @@ export default function ProductsPage() {
             {safeCategoryAttributes.map(
               (attr: CategoryAttribute, index: number) => {
                 // Skip if no available options
-                const options =
-                  attr.options ||
-                  ((attr as any).availableValues?.length
-                    ? (attr as any).availableValues
-                    : []);
+                const options = attr.options;
                 if (options.length === 0) {
                   return null;
                 }

@@ -171,7 +171,7 @@ const Checkout = () => {
         window.sessionStorage.removeItem("buyNowProduct");
       }
     },
-    onError: (err: { message: any; }) => {
+    onError: (err: { message: string }) => {
       setOrderError(err.message ?? "Order failed. Please try again.");
     },
   });
@@ -470,7 +470,7 @@ const Checkout = () => {
         window.sessionStorage.removeItem("buyNowProduct");
       }
     },
-    onError: (err: { message: any; }) => {
+    onError: (err: { message: string }) => {
       setOrderError(err.message ?? "Order failed. Please try again.");
     },
   });
