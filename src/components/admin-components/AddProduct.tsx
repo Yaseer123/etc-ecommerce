@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useProductImageStore } from "@/context/admin-context/ProductImageProvider";
-import { generateSKU } from "@/lib/utils";
 import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
 import { productSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
@@ -108,7 +107,7 @@ function SortableSpecificationItem({
 }
 
 // Helper to convert hex to IColor
-function hexToIColor(hex: string): IColor {
+export function hexToIColor(hex: string): IColor {
   return {
     hex,
     rgb: { r: 255, g: 255, b: 255, a: 1 },
@@ -504,18 +503,75 @@ export default function AddProductForm(_unused?: unknown) {
   ) => {
     setVariants((prev) => {
       const updated = [...prev];
-      // Type guards for each field
+      const prevVariant: UIVariant = updated[index] ?? {
+        colorName: "",
+        colorHex: "#ffffff",
+        size: "",
+        price: 0,
+        discountedPrice: 0,
+        stock: 0,
+        images: [],
+        imageId: uuid(),
+      };
       if (
         field === "price" ||
         field === "discountedPrice" ||
         field === "stock"
       ) {
         updated[index] = {
-          ...updated[index],
-          [field]: value === undefined || value === "" ? 0 : Number(value),
+          colorName: prevVariant.colorName,
+          colorHex: prevVariant.colorHex,
+          size: prevVariant.size,
+          price:
+            field === "price"
+              ? value === undefined || value === ""
+                ? 0
+                : Number(value)
+              : prevVariant.price,
+          discountedPrice:
+            field === "discountedPrice"
+              ? value === undefined || value === ""
+                ? 0
+                : Number(value)
+              : prevVariant.discountedPrice,
+          stock:
+            field === "stock"
+              ? value === undefined || value === ""
+                ? 0
+                : Number(value)
+              : prevVariant.stock,
+          images: prevVariant.images,
+          imageId: prevVariant.imageId,
         };
       } else {
-        updated[index] = { ...updated[index], [field]: value ?? "" };
+        updated[index] = {
+          colorName:
+            field === "colorName"
+              ? typeof value === "string"
+                ? value
+                : ""
+              : prevVariant.colorName,
+          colorHex:
+            field === "colorHex"
+              ? typeof value === "string"
+                ? value
+                : ""
+              : prevVariant.colorHex,
+          size:
+            field === "size"
+              ? typeof value === "string"
+                ? value
+                : ""
+              : prevVariant.size,
+          price: prevVariant.price,
+          discountedPrice: prevVariant.discountedPrice,
+          stock: prevVariant.stock,
+          images:
+            field === "images" && Array.isArray(value)
+              ? value
+              : prevVariant.images,
+          imageId: prevVariant.imageId,
+        };
       }
       return updated;
     });
@@ -617,30 +673,25 @@ export default function AddProductForm(_unused?: unknown) {
       estimatedDeliveryTime: estimatedDeliveryTime,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v) => ({
-              colorName: v.colorName,
-              colorHex: v.colorHex,
-              images: Array.isArray(v.images) ? v.images : [],
+          ? variants.map<UIVariant>((v) => ({
+              colorName: typeof v.colorName === "string" ? v.colorName : "",
+              colorHex: typeof v.colorHex === "string" ? v.colorHex : "",
+              images: Array.isArray(v.images)
+                ? v.images.filter(
+                    (img): img is string => typeof img === "string",
+                  )
+                : [],
               imageId: typeof v.imageId === "string" ? v.imageId : uuid(),
               price:
-                v.price !== undefined && v.price !== null
-                  ? Number(v.price)
-                  : undefined,
+                typeof v.price === "number" && !isNaN(v.price) ? v.price : 0,
               discountedPrice:
-                v.discountedPrice !== undefined && v.discountedPrice !== null
-                  ? Number(v.discountedPrice)
-                  : undefined,
+                typeof v.discountedPrice === "number" &&
+                !isNaN(v.discountedPrice)
+                  ? v.discountedPrice
+                  : 0,
               stock:
-                v.stock !== undefined && v.stock !== null
-                  ? Number(v.stock)
-                  : undefined,
-              size: v.size,
-              sku: generateSKU({
-                categoryName: "XX", // TODO: Replace with actual category name variable if available
-                productId: "TEMPID", // Will be replaced in backend if needed
-                color: v.colorName ?? "UNNAMED",
-                size: v.size,
-              }),
+                typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 0,
+              size: typeof v.size === "string" ? v.size : "",
             }))
           : undefined,
     });
@@ -711,7 +762,7 @@ export default function AddProductForm(_unused?: unknown) {
                 const safeImages = Array.isArray(variant.images)
                   ? variant.images
                   : [];
-                const safeImageId =
+                const _safeImageId =
                   typeof variant.imageId === "string"
                     ? variant.imageId
                     : uuid();
@@ -724,7 +775,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="text"
                       placeholder="Color Name (optional)"
-                      value={variant.colorName ?? ""}
+                      value={variant.colorName}
                       onChange={(e) =>
                         handleVariantChange(idx, "colorName", e.target.value)
                       }
@@ -733,7 +784,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <div className="w-full min-w-[180px] max-w-full">
                       <ColorPicker
                         color={{
-                          hex: variant.colorHex ?? "#ffffff",
+                          hex: variant.colorHex,
                           rgb: { r: 255, g: 255, b: 255, a: 1 },
                           hsv: { h: 0, s: 0, v: 100, a: 1 },
                         }}
@@ -748,7 +799,7 @@ export default function AddProductForm(_unused?: unknown) {
                         display: "inline-block",
                         width: 24,
                         height: 24,
-                        backgroundColor: variant.colorHex ?? "#ffffff",
+                        backgroundColor: variant.colorHex,
                         borderRadius: "50%",
                         border: "1px solid #ccc",
                       }}
@@ -761,7 +812,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="text"
                       placeholder="Size (optional)"
-                      value={variant.size ?? ""}
+                      value={variant.size}
                       onChange={(e) =>
                         handleVariantChange(idx, "size", e.target.value)
                       }
@@ -770,7 +821,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Price (optional)"
-                      value={variant.price ?? ""}
+                      value={variant.price}
                       onChange={(e) =>
                         handleVariantChange(idx, "price", e.target.value)
                       }
@@ -779,7 +830,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Discounted Price (optional)"
-                      value={variant.discountedPrice ?? ""}
+                      value={variant.discountedPrice}
                       onChange={(e) =>
                         handleVariantChange(
                           idx,
@@ -792,7 +843,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Stock (optional)"
-                      value={variant.stock ?? ""}
+                      value={variant.stock}
                       onChange={(e) =>
                         handleVariantChange(idx, "stock", e.target.value)
                       }

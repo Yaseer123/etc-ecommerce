@@ -5,7 +5,7 @@ export const newCategorySchema = z.object({
   name: z.string().min(2, "Category name must be at least 2 characters"),
   parentId: z.string().nullable(),
   image: z.instanceof(File).optional(),
-  description: z.string().optional(),
+  description: z.string().nullable(),
 });
 
 export const categoryAttributeSchema = z.object({
@@ -25,7 +25,7 @@ export const categorySchema = z.object({
   image: z.string().nullable(),
   order: z.number().default(0),
   attributes: z.array(categoryAttributeSchema).default([]),
-  description: z.string().optional(),
+  description: z.string().nullable(),
   createdAt: z.date(),
   updatedAt: z.date(),
 });

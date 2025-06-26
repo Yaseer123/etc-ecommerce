@@ -52,6 +52,7 @@ import { Input } from "../ui/input";
 interface CategoryTree extends Category {
   subcategories: CategoryTree[];
   order: number;
+  description: string | null;
 }
 
 interface CategoryAccordionProps {

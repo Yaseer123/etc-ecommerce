@@ -10,15 +10,16 @@ export type JsonValue =
   | null;
 
 export interface Variant {
-  colorName?: JsonValue;
-  colorHex?: JsonValue;
-  size?: JsonValue;
-  images?: JsonValue;
-  price?: JsonValue;
-  discountedPrice?: JsonValue;
-  stock?: JsonValue;
-  imageId?: JsonValue;
-  sku?: JsonValue;
+  [key: string]: string | number | string[] | undefined;
+  colorName?: string;
+  colorHex?: string;
+  size?: string;
+  images?: string[];
+  price?: number;
+  discountedPrice?: number;
+  stock?: number;
+  imageId?: string;
+  sku?: string;
 }
 
 export const StockStatus = {
@@ -53,11 +54,11 @@ export interface ProductType {
   quantityPurchase: number;
   sizes: Array<string>;
   images: Array<string>;
-  description: string;
+  description: string | null;
   action: string;
   slug: string;
   attributes: Record<string, string>;
-  variants?: JsonValue;
+  variants?: Variant[] | null;
   sku?: string;
   imageId?: string;
   createdAt?: Date;
@@ -76,5 +77,5 @@ export type ProductWithCategory = Product & {
   defaultColor?: string | null;
   defaultColorHex?: string | null;
   defaultSize?: string | null;
-  variants?: JsonValue;
+  variants?: Variant[] | null;
 };

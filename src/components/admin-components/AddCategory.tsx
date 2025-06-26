@@ -82,7 +82,7 @@ export default function AddCategoryForm() {
       parentId: data.parentId,
       imageId: formData.get("imageId") as string | undefined,
       imageUrl: formData.get("imageUrl") as string | undefined,
-      description: data.description,
+      description: data.description ?? undefined,
     });
   };
 

@@ -33,7 +33,18 @@ export default function AdminReviewsPage() {
   });
 
   // Filter and search logic
-  const filteredReviews = (reviews as ReviewAdmin[]).filter((review) => {
+  const filteredReviews = (
+    Array.isArray(reviews)
+      ? reviews.map((review) => ({
+          ...review,
+          createdAt:
+            review.createdAt instanceof Date
+              ? review.createdAt.toISOString()
+              : review.createdAt,
+        }))
+      : []
+  ) as ReviewAdmin[];
+  const searchedReviews = filteredReviews.filter((review) => {
     if (filter === "visible" && !review.visible) return false;
     if (filter === "hidden" && review.visible) return false;
     if (search) {
@@ -81,7 +92,7 @@ export default function AdminReviewsPage() {
       </div>
       {isLoading ? (
         <div>Loading reviews...</div>
-      ) : filteredReviews.length === 0 ? (
+      ) : searchedReviews.length === 0 ? (
         <div>No reviews found.</div>
       ) : (
         <div className="overflow-x-auto">
@@ -98,7 +109,7 @@ export default function AdminReviewsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredReviews.map((review) => (
+              {searchedReviews.map((review) => (
                 <tr key={review.id} className="border-t">
                   <td className="px-4 py-2">{review.product?.title ?? "-"}</td>
                   <td className="px-4 py-2">

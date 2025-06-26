@@ -8,11 +8,7 @@ import {
   publicProcedure,
   type createTRPCContext,
 } from "@/server/api/trpc";
-import type {
-  JsonValue,
-  ProductWithCategory,
-  Variant,
-} from "@/types/ProductType";
+import type { ProductWithCategory, Variant } from "@/types/ProductType";
 import { validateCategoryAttributes } from "@/utils/validateCategoryAttributes";
 import type { Category, Prisma, Product } from "@prisma/client";
 import { StockStatus } from "@prisma/client";
@@ -72,7 +68,7 @@ function toProductWithCategory(product: unknown): ProductWithCategory {
     throw new Error("Invalid product object");
   }
   const prod = product as Product & { category: Category | null };
-  let variants: Variant[] | string | null = null;
+  let variants: Variant[] | null = null;
   if (Array.isArray(prod.variants)) {
     variants = normalizeVariants(prod.variants);
   } else if (typeof prod.variants === "string") {
@@ -81,17 +77,19 @@ function toProductWithCategory(product: unknown): ProductWithCategory {
       if (Array.isArray(parsed)) {
         variants = normalizeVariants(parsed);
       } else {
-        variants = prod.variants;
+        variants = [];
       }
     } catch {
-      variants = prod.variants;
+      variants = [];
     }
   } else if (prod.variants === null) {
     variants = null;
+  } else {
+    variants = [];
   }
   return {
     ...prod,
-    variants: variants as JsonValue,
+    variants: variants,
   };
 }
 

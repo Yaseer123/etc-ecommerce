@@ -48,7 +48,7 @@ const Slider = () => {
   if (
     Array.isArray(sliderData) &&
     sliderData.length > 0 &&
-    typeof sliderData[0].autoSlideTime === "number"
+    typeof sliderData[0]?.autoSlideTime === "number"
   ) {
     autoSlideTime = sliderData[0].autoSlideTime;
   }

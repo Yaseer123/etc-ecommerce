@@ -49,7 +49,7 @@ import DndImageGallery from "../rich-editor/DndImageGallery";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
-import hexToIColor from "./AddProduct";
+import { hexToIColor } from "./AddProduct";
 import PreSelectedCategory from "./PreSelectedCategory";
 
 // Sortable item component for specifications
@@ -638,11 +638,15 @@ export default function EditProductForm({ productId }: { productId: string }) {
       defaultSize,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v, _idx) => ({
-              colorName: v.colorName,
-              colorHex: v.colorHex,
-              size: v.size,
-              images: v.images ?? [],
+          ? variants.map((v) => ({
+              colorName: typeof v.colorName === "string" ? v.colorName : "",
+              colorHex: typeof v.colorHex === "string" ? v.colorHex : "",
+              size: typeof v.size === "string" ? v.size : "",
+              images: Array.isArray(v.images)
+                ? v.images.filter(
+                    (img): img is string => typeof img === "string",
+                  )
+                : [],
               price:
                 v.price !== undefined && v.price !== null
                   ? Number(v.price)
@@ -658,8 +662,9 @@ export default function EditProductForm({ productId }: { productId: string }) {
               sku: generateSKU({
                 categoryName: "XX", // TODO: Replace with actual category name variable if available
                 productId: productId,
-                color: v.colorName ?? "UNNAMED",
-                size: v.size,
+                color:
+                  typeof v.colorName === "string" ? v.colorName : "UNNAMED",
+                size: typeof v.size === "string" ? v.size : undefined,
               }),
             }))
           : undefined,
@@ -1210,7 +1215,8 @@ function VariantRow({
   );
   useEffect(() => {
     if (variant.colorHex !== variantColor.hex) {
-      setVariantColor(hexToIColor(variant.colorHex ?? "#ffffff"));
+      const color = hexToIColor(variant.colorHex ?? "#ffffff");
+      setVariantColor(color);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [variant.colorHex]);

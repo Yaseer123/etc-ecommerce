@@ -53,6 +53,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Prisma } from "@prisma/client";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import RichEditor from "../rich-editor";
@@ -127,32 +128,22 @@ export default function CategoryAttributesManager({
     mutate: removeSingleAttribute,
     isPending: isRemovingSingleAttribute,
   } = api.category.removeAttribute.useMutation({
-    onSuccess: (data: {
-      attributes:
-        | string
-        | {
-            options: string[];
-            type: "select";
-            name: string;
-            required: boolean;
-          }[];
-    }) => {
+    onSuccess: (
+      data: { id: string; attributes: Prisma.JsonValue },
+      variables,
+    ) => {
       toast.success("Attribute has been removed successfully.");
-
       // Update the form with the returned attributes
       try {
+        let attrs: AttributeFormType["attributes"] = [];
         if (typeof data.attributes === "string") {
-          const attrs = JSON.parse(
+          attrs = JSON.parse(
             data.attributes,
           ) as AttributeFormType["attributes"];
-          if (Array.isArray(attrs)) {
-            attributesForm.reset({ attributes: attrs });
-          }
         } else if (Array.isArray(data.attributes)) {
-          attributesForm.reset({
-            attributes: data.attributes as AttributeFormType["attributes"],
-          });
+          attrs = data.attributes as AttributeFormType["attributes"];
         }
+        attributesForm.reset({ attributes: attrs });
       } catch (error) {
         console.error("Failed to parse updated attributes:", error);
       }
