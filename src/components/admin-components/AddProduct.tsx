@@ -15,7 +15,6 @@ import { generateSKU } from "@/lib/utils";
 import type { CategoryAttribute, CategoryTree } from "@/schemas/categorySchema";
 import { productSchema } from "@/schemas/productSchema";
 import { api } from "@/trpc/react";
-import type { JsonValue, Variant } from "@/types/ProductType";
 import {
   closestCenter,
   DndContext,
@@ -117,9 +116,20 @@ function hexToIColor(hex: string): IColor {
   };
 }
 
-export default function AddProductForm(
-  p0: string | number | boolean | { [x: string]: JsonValue } | JsonValue[],
-) {
+// Fix: Use a stricter Variant type for this file
+// (If the global Variant type is too loose, override here for UI safety)
+type UIVariant = {
+  colorName: string;
+  colorHex: string;
+  size: string;
+  price: number;
+  discountedPrice: number;
+  stock: number;
+  images: string[];
+  imageId: string;
+};
+
+export default function AddProductForm(_unused?: unknown) {
   const router = useRouter();
   const selectedCategoriesRef = useRef<(string | null)[]>([]);
 
@@ -175,13 +185,14 @@ export default function AddProductForm(
 
   // Variants state
   const [enableVariants, setEnableVariants] = useState(false);
-  const [variants, setVariants] = useState<Variant[]>([
+  const [variants, setVariants] = useState<UIVariant[]>([
     {
       colorName: "",
       colorHex: "#ffffff",
-      price: undefined,
-      discountedPrice: undefined,
-      stock: undefined,
+      size: "",
+      price: 0,
+      discountedPrice: 0,
+      stock: 0,
       images: [],
       imageId: uuid(),
     },
@@ -488,12 +499,24 @@ export default function AddProductForm(
   // Variant handlers
   const handleVariantChange = (
     index: number,
-    field: string,
+    field: keyof UIVariant,
     value: string | number | undefined,
   ) => {
     setVariants((prev) => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], [field]: value };
+      // Type guards for each field
+      if (
+        field === "price" ||
+        field === "discountedPrice" ||
+        field === "stock"
+      ) {
+        updated[index] = {
+          ...updated[index],
+          [field]: value === undefined || value === "" ? 0 : Number(value),
+        };
+      } else {
+        updated[index] = { ...updated[index], [field]: value ?? "" };
+      }
       return updated;
     });
   };
@@ -507,9 +530,10 @@ export default function AddProductForm(
       {
         colorName: "",
         colorHex: "#ffffff",
-        price: undefined,
-        discountedPrice: undefined,
-        stock: undefined,
+        size: "",
+        price: 0,
+        discountedPrice: 0,
+        stock: 0,
         images: [],
         imageId: uuid(),
       },
@@ -521,7 +545,30 @@ export default function AddProductForm(
   const handleVariantImagesUpdate = (index: number, newImages: string[]) => {
     setVariants((prev) => {
       const updated = [...prev];
-      updated[index] = { ...updated[index], images: newImages };
+      if (!updated[index]) {
+        updated[index] = {
+          colorName: "",
+          colorHex: "#ffffff",
+          size: "",
+          price: 0,
+          discountedPrice: 0,
+          stock: 0,
+          images: Array.isArray(newImages) ? newImages : [],
+          imageId: uuid(),
+        };
+      } else {
+        const v = updated[index];
+        updated[index] = {
+          colorName: v.colorName ?? "",
+          colorHex: v.colorHex ?? "#ffffff",
+          size: v.size ?? "",
+          price: v.price ?? 0,
+          discountedPrice: v.discountedPrice ?? 0,
+          stock: v.stock ?? 0,
+          images: Array.isArray(newImages) ? newImages : [],
+          imageId: v.imageId ?? uuid(),
+        };
+      }
       return updated;
     });
   };
@@ -570,10 +617,11 @@ export default function AddProductForm(
       estimatedDeliveryTime: estimatedDeliveryTime,
       variants:
         enableVariants && variants.length > 0
-          ? variants.map((v, _idx) => ({
+          ? variants.map((v) => ({
               colorName: v.colorName,
               colorHex: v.colorHex,
-              images: v.images ?? [],
+              images: Array.isArray(v.images) ? v.images : [],
+              imageId: typeof v.imageId === "string" ? v.imageId : uuid(),
               price:
                 v.price !== undefined && v.price !== null
                   ? Number(v.price)
@@ -586,6 +634,7 @@ export default function AddProductForm(
                 v.stock !== undefined && v.stock !== null
                   ? Number(v.stock)
                   : undefined,
+              size: v.size,
               sku: generateSKU({
                 categoryName: "XX", // TODO: Replace with actual category name variable if available
                 productId: "TEMPID", // Will be replaced in backend if needed
@@ -658,126 +707,135 @@ export default function AddProductForm(
           <div className="flex flex-col gap-4 rounded-md border bg-gray-50 p-3">
             <Label className="text-base">Product Variants</Label>
             <div className="w-full overflow-x-auto">
-              {variants.map((variant, idx) => (
-                <div
-                  key={idx}
-                  className="mb-2 flex flex-col gap-2 border-b pb-2"
-                  style={{ rowGap: 16, columnGap: 8 }}
-                >
-                  <Input
-                    type="text"
-                    placeholder="Color Name (optional)"
-                    value={variant.colorName}
-                    onChange={(e) =>
-                      handleVariantChange(idx, "colorName", e.target.value)
-                    }
-                    className="w-full min-w-[120px] max-w-xs flex-1"
-                  />
-                  <div className="w-full min-w-[180px] max-w-full">
-                    <ColorPicker
-                      color={{
-                        hex: variant.colorHex ?? "#ffffff",
-                        rgb: { r: 255, g: 255, b: 255, a: 1 },
-                        hsv: { h: 0, s: 0, v: 100, a: 1 },
-                      }}
-                      onChange={(color) =>
-                        handleVariantChange(idx, "colorHex", color.hex)
+              {variants.map((variant, idx) => {
+                const safeImages = Array.isArray(variant.images)
+                  ? variant.images
+                  : [];
+                const safeImageId =
+                  typeof variant.imageId === "string"
+                    ? variant.imageId
+                    : uuid();
+                return (
+                  <div
+                    key={idx}
+                    className="mb-2 flex flex-col gap-2 border-b pb-2"
+                    style={{ rowGap: 16, columnGap: 8 }}
+                  >
+                    <Input
+                      type="text"
+                      placeholder="Color Name (optional)"
+                      value={variant.colorName ?? ""}
+                      onChange={(e) =>
+                        handleVariantChange(idx, "colorName", e.target.value)
                       }
-                      hideInput={["rgb", "hsv"]}
+                      className="w-full min-w-[120px] max-w-xs flex-1"
                     />
-                  </div>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: 24,
-                      height: 24,
-                      backgroundColor: variant.colorHex ?? "#ffffff",
-                      borderRadius: "50%",
-                      border: "1px solid #ccc",
-                    }}
-                    aria-label={variant.colorName}
-                    title={variant.colorName}
-                  />
-                  <span>
-                    {variant.colorName} ({variant.colorHex})
-                  </span>
-                  <Input
-                    type="text"
-                    placeholder="Size (optional)"
-                    value={variant.size}
-                    onChange={(e) =>
-                      handleVariantChange(idx, "size", e.target.value)
-                    }
-                    className="w-full min-w-[100px] max-w-xs flex-1"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Price (optional)"
-                    value={variant.price ?? ""}
-                    onChange={(e) =>
-                      handleVariantChange(idx, "price", e.target.value)
-                    }
-                    className="w-full min-w-[100px] max-w-xs flex-1"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Discounted Price (optional)"
-                    value={variant.discountedPrice ?? ""}
-                    onChange={(e) =>
-                      handleVariantChange(
-                        idx,
-                        "discountedPrice",
-                        e.target.value,
-                      )
-                    }
-                    className="w-full min-w-[100px] max-w-xs flex-1"
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Stock (optional)"
-                    value={variant.stock ?? ""}
-                    onChange={(e) =>
-                      handleVariantChange(idx, "stock", e.target.value)
-                    }
-                    className="w-full min-w-[100px] max-w-xs flex-1"
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => handleVariantImageGallery(idx)}
-                    className="w-full"
-                  >
-                    Add Images
-                  </Button>
-                  {/* Show variant images */}
-                  {variant.images && variant.images.length > 0 && (
-                    <div className="flex flex-wrap gap-2">
-                      {variant.images.map(
-                        (
-                          img: string | StaticImport,
-                          i: Key | null | undefined,
-                        ) => (
-                          <Image
-                            key={i}
-                            src={img}
-                            alt="variant-img"
-                            width={48}
-                            height={48}
-                            className="h-16 w-16 rounded object-cover"
-                          />
-                        ),
-                      )}
+                    <div className="w-full min-w-[180px] max-w-full">
+                      <ColorPicker
+                        color={{
+                          hex: variant.colorHex ?? "#ffffff",
+                          rgb: { r: 255, g: 255, b: 255, a: 1 },
+                          hsv: { h: 0, s: 0, v: 100, a: 1 },
+                        }}
+                        onChange={(color) =>
+                          handleVariantChange(idx, "colorHex", color.hex)
+                        }
+                        hideInput={["rgb", "hsv"]}
+                      />
                     </div>
-                  )}
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    onClick={() => handleRemoveVariant(idx)}
-                    className="w-full"
-                  >
-                    Remove
-                  </Button>
-                </div>
-              ))}
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: 24,
+                        height: 24,
+                        backgroundColor: variant.colorHex ?? "#ffffff",
+                        borderRadius: "50%",
+                        border: "1px solid #ccc",
+                      }}
+                      aria-label={variant.colorName}
+                      title={variant.colorName}
+                    />
+                    <span>
+                      {variant.colorName} ({variant.colorHex})
+                    </span>
+                    <Input
+                      type="text"
+                      placeholder="Size (optional)"
+                      value={variant.size ?? ""}
+                      onChange={(e) =>
+                        handleVariantChange(idx, "size", e.target.value)
+                      }
+                      className="w-full min-w-[100px] max-w-xs flex-1"
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Price (optional)"
+                      value={variant.price ?? ""}
+                      onChange={(e) =>
+                        handleVariantChange(idx, "price", e.target.value)
+                      }
+                      className="w-full min-w-[100px] max-w-xs flex-1"
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Discounted Price (optional)"
+                      value={variant.discountedPrice ?? ""}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          idx,
+                          "discountedPrice",
+                          e.target.value,
+                        )
+                      }
+                      className="w-full min-w-[100px] max-w-xs flex-1"
+                    />
+                    <Input
+                      type="number"
+                      placeholder="Stock (optional)"
+                      value={variant.stock ?? ""}
+                      onChange={(e) =>
+                        handleVariantChange(idx, "stock", e.target.value)
+                      }
+                      className="w-full min-w-[100px] max-w-xs flex-1"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => handleVariantImageGallery(idx)}
+                      className="w-full"
+                    >
+                      Add Images
+                    </Button>
+                    {/* Show variant images */}
+                    {safeImages.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {safeImages.map(
+                          (
+                            img: string | StaticImport,
+                            i: Key | null | undefined,
+                          ) => (
+                            <Image
+                              key={i}
+                              src={img}
+                              alt="variant-img"
+                              width={48}
+                              height={48}
+                              className="h-16 w-16 rounded object-cover"
+                            />
+                          ),
+                        )}
+                      </div>
+                    )}
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      onClick={() => handleRemoveVariant(idx)}
+                      className="w-full"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                );
+              })}
             </div>
             <Button type="button" onClick={handleAddVariant} className="w-full">
               Add Variant
@@ -790,7 +848,11 @@ export default function AddProductForm(
           variants[variantGalleryIdx] !== undefined && (
             <VariantImageGalleryModal
               variantIndex={variantGalleryIdx}
-              images={variants[variantGalleryIdx]?.images ?? []}
+              images={
+                Array.isArray(variants[variantGalleryIdx]?.images)
+                  ? variants[variantGalleryIdx]?.images
+                  : []
+              }
               onClose={() => setVariantGalleryOpen(false)}
               onImagesChange={(imgs: string[]) =>
                 handleVariantImagesUpdate(variantGalleryIdx, imgs)

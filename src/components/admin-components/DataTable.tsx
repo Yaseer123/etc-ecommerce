@@ -203,16 +203,14 @@ export function DataTable<TData>({
                   }}
                 >
                   <SortableContext
-                    items={data.map((item) =>
-                      String(item[rowIdKey as keyof TData]),
-                    )}
+                    items={data.map((item) => String(item[rowIdKey]))}
                     strategy={verticalListSortingStrategy}
                   >
                     {table.getRowModel().rows.map((row) => (
                       <DraggableTableRow<TData>
                         key={row.id}
                         row={row}
-                        rowId={String(row.original[rowIdKey as keyof TData])}
+                        rowId={String(row.original[rowIdKey])}
                         dragHandleCellIndex={dragHandleCellIndex}
                       />
                     ))}

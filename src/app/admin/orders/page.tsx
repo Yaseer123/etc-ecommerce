@@ -2,20 +2,12 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { api } from "@/trpc/react";
+import { api, RouterOutputs } from "@/trpc/react";
 import { ORDER_STATUS_COLORS } from "@/utils/constants";
-import type { $Enums, OrderStatus } from "@prisma/client";
+import type { OrderStatus } from "@prisma/client";
 import { format } from "date-fns";
 import Link from "next/link";
-import {
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-  useState,
-} from "react";
+import { useState } from "react";
 
 const statusOptions = [
   "PENDING",
@@ -24,6 +16,11 @@ const statusOptions = [
   "DELIVERED",
   "CANCELLED",
 ];
+
+// Type for a single order as returned by getAllOrders
+// This will be used to type all order-related variables and map functions
+
+type OrderType = RouterOutputs["order"]["getAllOrders"][number];
 
 export default function AdminOrdersPage() {
   const {
@@ -100,217 +97,141 @@ export default function AdminOrdersPage() {
               {(statusFilter === "ALL"
                 ? orders
                 : orders.filter(
-                    (order: { status: string }) =>
-                      order.status === statusFilter,
+                    (order: OrderType) => order.status === statusFilter,
                   )
               )
-                .filter(
-                  (order: {
-                    user: { name: string; email: string };
-                    id: string;
-                    items: any[];
-                  }) => {
-                    if (!searchTerm) return true;
-                    const term = searchTerm.toLowerCase();
-                    const userName = order.user?.name?.toLowerCase() ?? "";
-                    const userEmail = order.user?.email?.toLowerCase() ?? "";
-                    const orderId = order.id?.toLowerCase() ?? "";
-                    const skus =
-                      order.items
-                        ?.map(
-                          (item: { sku: string }) =>
-                            item.sku?.toLowerCase() ?? "",
-                        )
-                        .join(" ") ?? "";
-                    return (
-                      orderId.includes(term) ||
-                      userName.includes(term) ||
-                      userEmail.includes(term) ||
-                      skus.includes(term)
-                    );
-                  },
-                )
-                .map(
-                  (order: {
-                    id:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | Promise<AwaitedReactNode>
-                      | ((prevState: string | null) => string | null)
-                      | null
-                      | undefined;
-                    user: { id: any; name: any; email: any };
-                    address: {
-                      street: any;
-                      city: any;
-                      state: any;
-                      zipCode: any;
-                      phone: any;
-                    };
-                    items: any[];
-                    status:
-                      | string
-                      | ((
-                          prevState: $Enums.OrderStatus | null,
-                        ) => $Enums.OrderStatus | null)
-                      | null;
-                    total:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    createdAt: string | number | Date;
-                  }) => (
-                    <tr key={order.id} className="border-b">
-                      <td className="border p-2 font-mono">{order.id}</td>
-                      <td className="border p-2">
-                        {order.user ? (
-                          <Link
-                            href={`/admin/user/${order.user.id}/account`}
-                            className="text-blue-600 underline hover:text-blue-800"
-                          >
-                            {order.user.name ?? order.user.email}
-                          </Link>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                      <td className="whitespace-pre-line border p-2">
-                        {order.address
-                          ? `${order.address.street}, ${order.address.city}, ${order.address.state} ${order.address.zipCode}\n${order.address.phone}`
-                          : "-"}
-                      </td>
-                      <td className="border p-2">
-                        {order.items && order.items.length > 0 ? (
-                          <div className="flex flex-col gap-1">
-                            {order.items.map(
-                              (item: {
-                                id: Key | null | undefined;
-                                sku: any;
-                              }) => (
-                                <span
-                                  key={item.id}
-                                  className="font-mono text-xs"
-                                >
-                                  {item.sku ?? "-"}
-                                </span>
-                              ),
-                            )}
-                          </div>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                      <td className="border p-2">
-                        {order.items && order.items.length > 0 ? (
-                          <div className="flex flex-col gap-1">
-                            {order.items.map(
-                              (item: {
-                                id: any;
-                                deliveryMethod?: string | undefined;
-                              }) => {
-                                const deliveryMethod = (
-                                  item as {
-                                    deliveryMethod?: string;
-                                    id: string;
-                                  }
-                                ).deliveryMethod;
-                                console.log(
-                                  "ADMIN PANEL: OrderItem deliveryMethod:",
-                                  deliveryMethod,
-                                );
-                                return (
-                                  <span key={item.id} className="text-xs">
-                                    {deliveryMethod ?? "-"}
-                                  </span>
-                                );
-                              },
-                            )}
-                          </div>
-                        ) : (
-                          "-"
-                        )}
-                      </td>
-                      <td className="border p-2">
-                        {updatingId === order.id ? (
-                          <select
-                            value={newStatus ?? order.status}
-                            onChange={(e) =>
-                              setNewStatus(e.target.value as OrderStatus)
-                            }
-                            className="rounded border px-2 py-1"
-                          >
-                            {statusOptions.map((status) => (
-                              <option key={status} value={status}>
-                                {status}
-                              </option>
-                            ))}
-                          </select>
-                        ) : (
-                          <Badge
-                            variant={undefined}
-                            className={ORDER_STATUS_COLORS[order.status]?.color}
-                          >
-                            {ORDER_STATUS_COLORS[order.status]?.label ??
-                              order.status}
-                          </Badge>
-                        )}
-                      </td>
-                      <td className="border p-2">৳{order.total}</td>
-                      <td className="border p-2">
-                        {format(new Date(order.createdAt), "yyyy-MM-dd HH:mm")}
-                      </td>
-                      <td className="border p-2">
-                        {updatingId === order.id ? (
-                          <>
-                            <Button
-                              size="sm"
-                              onClick={() => {
-                                if (newStatus && newStatus !== order.status) {
-                                  updateStatus.mutate({
-                                    orderId: order.id,
-                                    status: newStatus,
-                                  });
-                                }
-                                setUpdatingId(null);
-                              }}
-                              disabled={updateStatus.isPending}
-                            >
-                              Save
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="secondary"
-                              onClick={() => setUpdatingId(null)}
-                            >
-                              Cancel
-                            </Button>
-                          </>
-                        ) : (
+                .filter((order: OrderType) => {
+                  if (!searchTerm) return true;
+                  const term = searchTerm.toLowerCase();
+                  const userName = order.user?.name?.toLowerCase() ?? "";
+                  const userEmail = order.user?.email?.toLowerCase() ?? "";
+                  const orderId = order.id?.toLowerCase() ?? "";
+                  const skus =
+                    order.items
+                      ?.map((item) => item.sku?.toLowerCase() ?? "")
+                      .join(" ") ?? "";
+                  return (
+                    orderId.includes(term) ||
+                    userName.includes(term) ||
+                    userEmail.includes(term) ||
+                    skus.includes(term)
+                  );
+                })
+                .map((order: OrderType) => (
+                  <tr key={order.id} className="border-b">
+                    <td className="border p-2 font-mono">{order.id}</td>
+                    <td className="border p-2">
+                      {order.user ? (
+                        <Link
+                          href={`/admin/user/${order.user.id}/account`}
+                          className="text-blue-600 underline hover:text-blue-800"
+                        >
+                          {order.user.name ?? order.user.email}
+                        </Link>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td className="whitespace-pre-line border p-2">
+                      {order.address
+                        ? `${order.address.street}, ${order.address.city}, ${order.address.state} ${order.address.zipCode}\n${order.address.phone}`
+                        : "-"}
+                    </td>
+                    <td className="border p-2">
+                      {order.items && order.items.length > 0 ? (
+                        <div className="flex flex-col gap-1">
+                          {order.items.map((item) => (
+                            <span key={item.id} className="font-mono text-xs">
+                              {item.sku ?? "-"}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td className="border p-2">
+                      {order.items && order.items.length > 0 ? (
+                        <div className="flex flex-col gap-1">
+                          {order.items.map((item) => (
+                            <span key={item.id} className="text-xs">
+                              {item.deliveryMethod ?? "-"}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        "-"
+                      )}
+                    </td>
+                    <td className="border p-2">
+                      {updatingId === order.id ? (
+                        <select
+                          value={newStatus ?? order.status}
+                          onChange={(e) =>
+                            setNewStatus(e.target.value as OrderStatus)
+                          }
+                          className="rounded border px-2 py-1"
+                        >
+                          {statusOptions.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <Badge
+                          variant={undefined}
+                          className={ORDER_STATUS_COLORS[order.status]?.color}
+                        >
+                          {ORDER_STATUS_COLORS[order.status]?.label ??
+                            order.status}
+                        </Badge>
+                      )}
+                    </td>
+                    <td className="border p-2">৳{order.total}</td>
+                    <td className="border p-2">
+                      {format(new Date(order.createdAt), "yyyy-MM-dd HH:mm")}
+                    </td>
+                    <td className="border p-2">
+                      {updatingId === order.id ? (
+                        <>
                           <Button
                             size="sm"
                             onClick={() => {
-                              setUpdatingId(order.id);
-                              setNewStatus(order.status);
+                              if (newStatus && newStatus !== order.status) {
+                                updateStatus.mutate({
+                                  orderId: order.id,
+                                  status: newStatus,
+                                });
+                              }
+                              setUpdatingId(null);
                             }}
+                            disabled={updateStatus.isPending}
                           >
-                            Update Status
+                            Save
                           </Button>
-                        )}
-                      </td>
-                    </tr>
-                  ),
-                )}
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => setUpdatingId(null)}
+                          >
+                            Cancel
+                          </Button>
+                        </>
+                      ) : (
+                        <Button
+                          size="sm"
+                          onClick={() => {
+                            setUpdatingId(order.id);
+                            setNewStatus(order.status);
+                          }}
+                        >
+                          Update Status
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

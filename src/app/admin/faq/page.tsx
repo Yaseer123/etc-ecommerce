@@ -657,9 +657,9 @@ export default function AdminFAQsPage() {
                                               | bigint
                                               | boolean
                                               | ReactElement<
-                                                  any,
+                                                  unknown,
                                                   | string
-                                                  | JSXElementConstructor<any>
+                                                  | JSXElementConstructor<unknown>
                                                 >
                                               | Iterable<ReactNode>
                                               | ReactPortal

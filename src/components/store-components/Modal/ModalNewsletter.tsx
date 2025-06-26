@@ -95,8 +95,7 @@ const ModalNewsletter = () => {
                         );
                       })
                       .slice(11, 16)
-                      .map((item) => {
-                        const product = item as ProductWithCategory;
+                      .map((product) => {
                         return (
                           <div
                             className="product-item item flex items-center justify-between gap-3 border-b border-[#ddd] pb-5 focus:border-[#ddd]"

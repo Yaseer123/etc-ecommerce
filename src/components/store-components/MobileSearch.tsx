@@ -1,12 +1,24 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import type { ProductType } from "@/types/ProductType";
+import { ProductWithCategory } from "@/types/ProductType";
 import { MagnifyingGlass, SpinnerGap, X } from "@phosphor-icons/react/dist/ssr";
 import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+function isProductWithCategory(val: unknown): val is ProductWithCategory {
+  if (!val || typeof val !== "object") return false;
+  return "id" in val &&
+    "title" in val &&
+    "images" in val &&
+    "price" in val &&
+    "discountedPrice" in val &&
+    "category" in val
+    ? true
+    : false;
+}
 
 export default function MobileSearch() {
   const [searchKeyword, setSearchKeyword] = useState("");
@@ -84,56 +96,63 @@ export default function MobileSearch() {
             ) : searchResults && searchResults.length > 0 ? (
               <>
                 <div className="max-h-[50vh] overflow-y-auto">
-                  {searchResults.map((product: ProductType) => (
-                    <div
-                      key={product.id}
-                      className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
-                      onClick={() => {
-                        router.push(`/product/${product.slug}`);
-                        setShowSearchResults(false);
-                        setSearchKeyword("");
-                      }}
-                    >
-                      <div className="flex items-center gap-3">
-                        {product.images[0] && (
-                          <div className="h-12 w-12 flex-shrink-0">
-                            <Image
-                              src={product.images[0]}
-                              alt={product.title}
-                              width={48}
-                              height={48}
-                              className="h-full w-full object-cover"
-                            />
+                  {searchResults
+                    .filter(isProductWithCategory)
+                    .map((product) => {
+                      if (isProductWithCategory(product)) {
+                        return (
+                          <div
+                            key={product.id}
+                            className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
+                            onClick={() => {
+                              router.push(`/product/${product.slug}`);
+                              setShowSearchResults(false);
+                              setSearchKeyword("");
+                            }}
+                          >
+                            <div className="flex items-center gap-3">
+                              {product.images[0] && (
+                                <div className="h-12 w-12 flex-shrink-0">
+                                  <Image
+                                    src={product.images[0]}
+                                    alt={product.title}
+                                    width={48}
+                                    height={48}
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <div className="flex-1">
+                                <div className="line-clamp-1 text-sm font-medium text-gray-900">
+                                  {product.title}
+                                </div>
+                                <div className="line-clamp-1 text-xs text-gray-500">
+                                  {product.shortDescription}
+                                </div>
+                                <div className="mt-0.5 text-sm font-medium">
+                                  {product.discountedPrice != null &&
+                                  product.discountedPrice < product.price ? (
+                                    <>
+                                      <span className="discounted-price">
+                                        ৳{product.discountedPrice.toFixed(2)}
+                                      </span>
+                                      <span className="ml-2 text-gray-400 line-through">
+                                        ৳{product.price.toFixed(2)}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="discounted-price">
+                                      ৳{product.price.toFixed(2)}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                        )}
-                        <div className="flex-1">
-                          <div className="line-clamp-1 text-sm font-medium text-gray-900">
-                            {product.title}
-                          </div>
-                          <div className="line-clamp-1 text-xs text-gray-500">
-                            {product.shortDescription}
-                          </div>
-                          <div className="mt-0.5 text-sm font-medium">
-                            {product.discountedPrice != null &&
-                            product.discountedPrice < product.price ? (
-                              <>
-                                <span className="discounted-price">
-                                  ৳{product.discountedPrice.toFixed(2)}
-                                </span>
-                                <span className="ml-2 text-gray-400 line-through">
-                                  ৳{product.price.toFixed(2)}
-                                </span>
-                              </>
-                            ) : (
-                              <span className="discounted-price">
-                                ৳{product.price.toFixed(2)}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                        );
+                      }
+                      return null;
+                    })}
                 </div>
                 <div
                   className="cursor-pointer bg-gray-50 p-2 text-center text-sm font-medium text-black hover:bg-gray-100"

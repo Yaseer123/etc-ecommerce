@@ -226,12 +226,12 @@ export default function Product({ data }: ProductProps) {
       stockStatus: ["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].includes(
         data.stockStatus ?? "IN_STOCK",
       )
-        ? (data.stockStatus as StockStatus)
+        ? (data.stockStatus! as StockStatus)
         : StockStatus.IN_STOCK,
       defaultColor:
         typeof data.defaultColor === "string" ? data.defaultColor : null,
       defaultColorHex:
-        typeof data.defaultColorHex === "string" ? data.defaultColorHex! : null,
+        typeof data.defaultColorHex === "string" ? data.defaultColorHex : null,
       defaultSize:
         typeof data.defaultSize === "string" ? data.defaultSize : null,
       estimatedDeliveryTime:

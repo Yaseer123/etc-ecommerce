@@ -1,11 +1,23 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import type { ProductType } from "@/types/ProductType";
+import { ProductWithCategory } from "@/types/ProductType";
 import type { Category } from "@prisma/client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Product from "./Product/Product";
+
+function isProductWithCategory(val: unknown): val is ProductWithCategory {
+  if (!val || typeof val !== "object") return false;
+  return "id" in val &&
+    "title" in val &&
+    "images" in val &&
+    "price" in val &&
+    "discountedPrice" in val &&
+    "category" in val
+    ? true
+    : false;
+}
 
 const RecentlyAdded = () => {
   const {
@@ -129,9 +141,12 @@ const RecentlyAdded = () => {
             <div className="list-product hide-product-sold mt-6 grid grid-cols-1 gap-[20px] sm:grid-cols-2 sm:gap-[30px] md:mt-10 lg:grid-cols-4">
               {products
                 ?.slice(0, 12)
-                .map((prd: ProductType, index: number) => (
-                  <Product key={index} data={prd} style="style-1" />
-                ))}
+                .filter(isProductWithCategory)
+                .map((prd, index: number) =>
+                  isProductWithCategory(prd) ? (
+                    <Product key={index} data={prd} style="style-1" />
+                  ) : null,
+                )}
             </div>
           )}
         </div>

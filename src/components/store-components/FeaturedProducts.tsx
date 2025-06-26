@@ -1,8 +1,20 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import type { ProductType } from "@/types/ProductType";
+import { ProductWithCategory } from "@/types/ProductType";
 import Product from "./Product/Product";
+
+function isProductWithCategory(val: unknown): val is ProductWithCategory {
+  if (!val || typeof val !== "object") return false;
+  return (
+    "id" in val &&
+    "title" in val &&
+    "images" in val &&
+    "price" in val &&
+    "discountedPrice" in val &&
+    "category" in val
+  );
+}
 
 export default function FeaturedProducts() {
   const { data: featuredProducts = [], isLoading } =
@@ -32,9 +44,12 @@ export default function FeaturedProducts() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-5 lg:grid-cols-4">
-          {featuredProducts.map((product: ProductType) => (
-            <Product key={product.id} data={product} />
-          ))}
+          {featuredProducts.filter(isProductWithCategory).map((product) => {
+            if (isProductWithCategory(product)) {
+              return <Product key={product.id} data={product} />;
+            }
+            return null;
+          })}
         </div>
       )}
     </div>

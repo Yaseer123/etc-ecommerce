@@ -4,7 +4,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { api } from "@/trpc/react";
 import { Star } from "@phosphor-icons/react";
-import { Key, useState } from "react";
+import { useState } from "react";
+
+// Type for review object as returned by getAllReviews
+interface ReviewAdmin {
+  id: string;
+  product: { title: string; id: string };
+  user: { name: string | null; image: string | null };
+  rating: number;
+  comment: string | null;
+  createdAt: string;
+  visible: boolean;
+}
 
 export default function AdminReviewsPage() {
   const [search, setSearch] = useState("");
@@ -22,47 +33,26 @@ export default function AdminReviewsPage() {
   });
 
   // Filter and search logic
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-  const filteredReviews = reviews.filter(
-    (review: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      visible: any;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      user: { name: any };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      product: { title: any };
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      comment: any;
-    }) => {
-      if (filter === "visible" && !review.visible) return false;
-      if (filter === "hidden" && review.visible) return false;
-      if (search) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const name = review.user.name;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (name && name.toLowerCase().includes(search.toLowerCase())) {
-          return true;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const productTitle = review.product.title;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (
-          productTitle &&
-          productTitle.toLowerCase().includes(search.toLowerCase())
-        ) {
-          return true;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-        const comment = review.comment;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (comment && comment.toLowerCase().includes(search.toLowerCase())) {
-          return true;
-        }
-        return false;
+  const filteredReviews = (reviews as ReviewAdmin[]).filter((review) => {
+    if (filter === "visible" && !review.visible) return false;
+    if (filter === "hidden" && review.visible) return false;
+    if (search) {
+      const name = review.user?.name ?? "";
+      if (name.toLowerCase().includes(search.toLowerCase())) {
+        return true;
       }
-      return true;
-    },
-  );
+      const productTitle = review.product?.title ?? "";
+      if (productTitle.toLowerCase().includes(search.toLowerCase())) {
+        return true;
+      }
+      const comment = review.comment ?? "";
+      if (comment.toLowerCase().includes(search.toLowerCase())) {
+        return true;
+      }
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="p-8">
@@ -108,77 +98,61 @@ export default function AdminReviewsPage() {
               </tr>
             </thead>
             <tbody>
-              {filteredReviews.map(
-                (review: {
-                  id: Key | null | undefined;
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  product: { title: any };
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  user: { name: any };
-                  rating: number;
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  comment: any;
-                  createdAt: string | number | Date;
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  visible: any;
-                }) => (
-                  <tr key={review.id} className="border-t">
-                    <td className="px-4 py-2">
-                      {review.product?.title ?? "-"}
-                    </td>
-                    <td className="px-4 py-2">
-                      {review.user?.name ?? "Anonymous"}
-                    </td>
-                    <td className="px-4 py-2">
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            size={14}
-                            weight={star <= review.rating ? "fill" : "regular"}
-                            className="text-yellow-500"
-                          />
-                        ))}
-                      </div>
-                    </td>
-                    <td className="px-4 py-2">{review.comment ?? "-"}</td>
-                    <td className="px-4 py-2 text-xs">
-                      {new Date(review.createdAt).toLocaleString()}
-                    </td>
-                    <td className="px-4 py-2">
-                      <span
-                        className={`rounded px-2 py-1 text-xs font-semibold ${review.visible ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-700"}`}
-                      >
-                        {review.visible ? "Visible" : "Hidden"}
-                      </span>
-                    </td>
-                    <td className="px-4 py-2">
-                      <Button
-                        size="sm"
-                        variant={review.visible ? "secondary" : "outline"}
-                        disabled={setReviewVisibility.isPending}
-                        onClick={() =>
-                          setReviewVisibility.mutate({
-                            reviewId: review.id,
-                            visible: !review.visible,
-                          })
-                        }
-                      >
-                        {review.visible ? "Hide" : "Approve"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="ml-2"
-                        disabled={deleteReview.isPending}
-                        onClick={() => deleteReview.mutate(review.id)}
-                      >
-                        Delete
-                      </Button>
-                    </td>
-                  </tr>
-                ),
-              )}
+              {filteredReviews.map((review) => (
+                <tr key={review.id} className="border-t">
+                  <td className="px-4 py-2">{review.product?.title ?? "-"}</td>
+                  <td className="px-4 py-2">
+                    {review.user?.name ?? "Anonymous"}
+                  </td>
+                  <td className="px-4 py-2">
+                    <div className="flex items-center gap-1">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          size={14}
+                          weight={star <= review.rating ? "fill" : "regular"}
+                          className="text-yellow-500"
+                        />
+                      ))}
+                    </div>
+                  </td>
+                  <td className="px-4 py-2">{review.comment ?? "-"}</td>
+                  <td className="px-4 py-2 text-xs">
+                    {new Date(review.createdAt).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2">
+                    <span
+                      className={`rounded px-2 py-1 text-xs font-semibold ${review.visible ? "bg-green-100 text-green-700" : "bg-gray-200 text-gray-700"}`}
+                    >
+                      {review.visible ? "Visible" : "Hidden"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2">
+                    <Button
+                      size="sm"
+                      variant={review.visible ? "secondary" : "outline"}
+                      disabled={setReviewVisibility.isPending}
+                      onClick={() =>
+                        setReviewVisibility.mutate({
+                          reviewId: review.id,
+                          visible: !review.visible,
+                        })
+                      }
+                    >
+                      {review.visible ? "Hide" : "Approve"}
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="ml-2"
+                      disabled={deleteReview.isPending}
+                      onClick={() => deleteReview.mutate(review.id)}
+                    >
+                      Delete
+                    </Button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

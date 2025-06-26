@@ -94,11 +94,11 @@ const Faqs = () => {
                         title: string;
                       }) => (
                         <div
-                          key={category.id}
+                          key={category.id ?? ""}
                           className={`tab-item heading6 has-line-before text-secondary2 inline-block w-fit cursor-pointer duration-300 ${
-                            activeTab === category.id ? "active" : ""
+                            activeTab === String(category.id) ? "active" : ""
                           }`}
-                          onClick={() => handleActiveTab(category.id)}
+                          onClick={() => handleActiveTab(String(category.id))}
                         >
                           {category.title}
                         </div>
@@ -129,22 +129,24 @@ const Faqs = () => {
                         answer: string;
                       }) => (
                         <div
-                          key={faq.id}
+                          key={faq.id ?? ""}
                           className={`question-item cursor-pointer overflow-hidden rounded-[20px] border border-[#ddd] px-7 py-5 focus:border-[#ddd] ${
-                            activeQuestion === faq.id ? "open" : ""
+                            activeQuestion === String(faq.id) ? "open" : ""
                           }`}
-                          onClick={() => handleActiveQuestion(faq.id)}
+                          onClick={() => handleActiveQuestion(String(faq.id))}
                         >
                           <div className="heading flex items-center justify-between gap-6">
                             <div className="heading6">{faq.question}</div>
                             <CaretRight
                               size={24}
                               className={`transition-transform duration-300 ${
-                                activeQuestion === faq.id ? "rotate-90" : ""
+                                activeQuestion === String(faq.id)
+                                  ? "rotate-90"
+                                  : ""
                               }`}
                             />
                           </div>
-                          {activeQuestion === faq.id && (
+                          {activeQuestion === String(faq.id) && (
                             <div
                               className="content body1 mt-4 text-secondary"
                               style={{ whiteSpace: "pre-line" }}

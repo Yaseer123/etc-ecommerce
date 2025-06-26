@@ -4,8 +4,10 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   ListObjectsV2Command,
+  ListObjectsV2CommandOutput,
   PutObjectCommand,
   S3Client,
+  _Object as S3Object,
 } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 
@@ -101,23 +103,21 @@ export const readAllImages = async (filter: string) => {
       Prefix: filter,
     });
 
-    // @ts-expect-error Suppress type errors for build
-    const { Contents } = await s3Client.send(command);
+    const { Contents }: ListObjectsV2CommandOutput =
+      await s3Client.send(command);
 
-    if (!Contents) return [];
+    const safeContents: S3Object[] = Array.isArray(Contents)
+      ? Contents.filter(
+          (item): item is S3Object => !!item && typeof item.Key === "string",
+        )
+      : [];
 
-    // @ts-expect-error Suppress type errors for build
-    return Contents.sort(
-      // @ts-expect-error Suppress type errors for build
-      (a: { Key: any }, b: { Key: any }) =>
-        (a.Key ?? "").localeCompare(b.Key ?? ""),
-    ).map(
-      // @ts-expect-error Suppress type errors for build
-      (item: { Key: any }) => ({
+    return safeContents
+      .sort((a, b) => (a.Key ?? "").localeCompare(b.Key ?? ""))
+      .map((item) => ({
         public_id: item.Key ?? "",
         secure_url: `https://${bucketName}.s3.${process.env.BUCKET_REGION}.amazonaws.com/${item.Key}`,
-      }),
-    );
+      }));
   } catch (error) {
     console.log(error);
     return [];
@@ -147,17 +147,22 @@ export const removeImageByPrefix = async (prefix: string) => {
     MaxKeys: 100,
   });
 
-  // @ts-expect-error Suppress type errors for build
-  const { Contents } = await s3Client.send(listCommand);
+  const { Contents }: ListObjectsV2CommandOutput =
+    await s3Client.send(listCommand);
 
-  if (!Contents || Contents.length === 0) return;
+  const safeContents: S3Object[] = Array.isArray(Contents)
+    ? Contents.filter(
+        (item): item is S3Object => !!item && typeof item.Key === "string",
+      )
+    : [];
+
+  if (safeContents.length === 0) return;
 
   // Delete objects in batch
   const deleteCommand = new DeleteObjectsCommand({
     Bucket: bucketName,
     Delete: {
-      // @ts-expect-error Suppress type errors for build
-      Objects: Contents.map((item: { Key: any }) => ({ Key: item.Key })),
+      Objects: safeContents.map((item) => ({ Key: item.Key })),
       Quiet: false,
     },
   });

@@ -27,7 +27,6 @@ import {
   closestCenter,
   DndContext,
   PointerSensor,
-  UniqueIdentifier,
   useSensor,
   useSensors,
   type DragEndEvent,
@@ -160,7 +159,7 @@ export default function FeaturedProductsPage() {
     const base = dragItems ?? featuredProducts;
     if (!search.trim()) return base;
     return base.filter(
-      (product: { title: string; brand: string }) =>
+      (product: FeaturedProduct) =>
         product.title.toLowerCase().includes(search.toLowerCase()) ||
         product.brand.toLowerCase().includes(search.toLowerCase()),
     );
@@ -192,10 +191,10 @@ export default function FeaturedProductsPage() {
 
     if (active.id !== over.id) {
       const oldIndex = featuredProducts.findIndex(
-        (item: { id: UniqueIdentifier }) => item.id === active.id,
+        (item: FeaturedProduct) => item.id === active.id,
       );
       const newIndex = featuredProducts.findIndex(
-        (item: { id: UniqueIdentifier }) => item.id === over.id,
+        (item: FeaturedProduct) => item.id === over.id,
       );
 
       if (oldIndex === -1 || newIndex === -1) return;
@@ -285,9 +284,9 @@ export default function FeaturedProductsPage() {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-                  items={filteredProducts.map((item: { id: any }) => item.id)}
+                  items={filteredProducts.map(
+                    (item: FeaturedProduct) => item.id,
+                  )}
                   strategy={verticalListSortingStrategy}
                 >
                   <Table>
@@ -302,19 +301,13 @@ export default function FeaturedProductsPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredProducts.map(
-                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        (
-                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-                          product: any,
-                        ) => (
-                          <SortableRow
-                            key={product.id}
-                            product={product}
-                            onRemove={handleRemoveFromFeatured}
-                          />
-                        ),
-                      )}
+                      {filteredProducts.map((product: FeaturedProduct) => (
+                        <SortableRow
+                          key={product.id}
+                          product={product}
+                          onRemove={handleRemoveFromFeatured}
+                        />
+                      ))}
                     </TableBody>
                   </Table>
                 </SortableContext>

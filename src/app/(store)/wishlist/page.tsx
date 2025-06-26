@@ -4,11 +4,24 @@ import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
 import HandlePagination from "@/components/store-components/HandlePagination";
 import Product from "@/components/store-components/Product/Product";
 import { api } from "@/trpc/react";
+import { ProductWithCategory } from "@/types/ProductType";
 import { CaretDown } from "@phosphor-icons/react/dist/ssr";
 import { HomeIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+
+function isProductWithCategory(val: unknown): val is ProductWithCategory {
+  if (!val || typeof val !== "object") return false;
+  return (
+    "id" in val &&
+    "title" in val &&
+    "images" in val &&
+    "price" in val &&
+    "discountedPrice" in val &&
+    "category" in val
+  );
+}
 
 export default function WishlistPage() {
   const { data: session } = useSession(); // Check if the user is logged in
@@ -277,15 +290,21 @@ export default function WishlistPage() {
               </div>
             ) : (
               <div className={getGridClasses() + " list-product mt-7"}>
-                {currentProducts.map((item) =>
-                  item.id === "no-data" ? (
-                    <div key={item.id} className="no-data-product">
-                      No products match the selected criteria.
-                    </div>
-                  ) : (
-                    <Product key={item.id} data={item.product} style="" />
-                  ),
-                )}
+                {currentProducts.map((item) => {
+                  if (item.id === "no-data") {
+                    return (
+                      <div key={item.id} className="no-data-product">
+                        No products match the selected criteria.
+                      </div>
+                    );
+                  }
+                  if (item.product && isProductWithCategory(item.product)) {
+                    return (
+                      <Product key={item.id} data={item.product} style="" />
+                    );
+                  }
+                  return null;
+                })}
               </div>
             )}
 

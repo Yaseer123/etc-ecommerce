@@ -20,19 +20,21 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 // Helper to ensure variants are an array of objects
+function isVariant(v: unknown): v is Variant {
+  return (
+    typeof v === "object" && v !== null && !Array.isArray(v) && "sku" in v // 'sku' is a property of Variant
+  );
+}
+
 function normalizeVariants(variants: unknown): Variant[] {
   if (Array.isArray(variants)) {
-    return variants.filter(
-      (v): v is Variant => v && typeof v === "object" && !Array.isArray(v),
-    );
+    return variants.filter(isVariant);
   }
   if (typeof variants === "string") {
     try {
       const parsed: unknown = JSON.parse(variants);
       if (Array.isArray(parsed)) {
-        return parsed.filter(
-          (v): v is Variant => v && typeof v === "object" && !Array.isArray(v),
-        );
+        return parsed.filter(isVariant);
       }
       return [];
     } catch {
