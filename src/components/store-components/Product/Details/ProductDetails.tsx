@@ -26,7 +26,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaPinterestP, FaWhatsapp } from "react-icons/fa6";
 import { toast } from "sonner";
 import SwiperCore from "swiper/core";
@@ -528,6 +528,18 @@ export default function ProductDetails({
     });
   }
 
+  const [shouldScrollToQuestion, setShouldScrollToQuestion] = useState(false);
+
+  useEffect(() => {
+    if (activeTab === "questions" && shouldScrollToQuestion) {
+      const el = document.getElementById("ask-question-form");
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        setShouldScrollToQuestion(false);
+      }
+    }
+  }, [activeTab, shouldScrollToQuestion]);
+
   return (
     <>
       <div className="product-detail sale mb-5">
@@ -853,16 +865,7 @@ export default function ProductDetails({
                       className="flex items-center gap-1"
                       onClick={() => {
                         setActiveTab("questions");
-                        setTimeout(() => {
-                          const el =
-                            document.getElementById("ask-question-form");
-                          if (el) {
-                            el.scrollIntoView({
-                              behavior: "smooth",
-                              block: "start",
-                            });
-                          }
-                        }, 100); // Delay to allow tab content to render
+                        setShouldScrollToQuestion(true);
                       }}
                     >
                       <Question className="body1" />
