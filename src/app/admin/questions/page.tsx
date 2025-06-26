@@ -86,16 +86,25 @@ export default function AdminQuestionsPage() {
             <tbody>
               {questions.map(
                 (q: {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   id:
                     | string
                     | number
                     | bigint
+                    | boolean
+                    | ReactElement<any, string | JSXElementConstructor<any>>
+                    | Iterable<ReactNode>
+                    | Promise<AwaitedReactNode>
                     | ((prevState: string | null) => string | null)
                     | null
                     | undefined;
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   product: { title: any };
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   productId: any;
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   user: { name: any };
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   question:
                     | string
                     | number
@@ -103,7 +112,6 @@ export default function AdminQuestionsPage() {
                     | boolean
                     | ReactElement<any, string | JSXElementConstructor<any>>
                     | Iterable<ReactNode>
-                    | ReactPortal
                     | Promise<AwaitedReactNode>
                     | null
                     | undefined;

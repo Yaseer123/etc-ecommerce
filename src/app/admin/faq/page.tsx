@@ -57,7 +57,15 @@ import {
   Plus,
   Trash,
 } from "lucide-react";
-import { Key, AwaitedReactNode, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import {
+  AwaitedReactNode,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 import { toast } from "sonner"; // Updated: Using sonner for toast
 
 export default function AdminFAQsPage() {
@@ -118,7 +126,7 @@ export default function AdminFAQsPage() {
           setNewCategory("");
           setCategoryDialogOpen(false);
         },
-        onError: (error: { message: any; }) => {
+        onError: (error: { message: string }) => {
           // Updated: Using sonner toast
           toast.error("Error", {
             description: error.message || "Failed to create category",
@@ -149,7 +157,7 @@ export default function AdminFAQsPage() {
           setEditingCategory(null);
           setCategoryDialogOpen(false);
         },
-        onError: (error: { message: any; }) => {
+        onError: (error: { message: string }) => {
           // Updated: Using sonner toast
           toast.error("Error", {
             description: error.message || "Failed to update category",
@@ -175,7 +183,7 @@ export default function AdminFAQsPage() {
               description: "Category deleted successfully",
             });
           },
-          onError: (error: { message: any; }) => {
+          onError: (error: { message: string }) => {
             // Updated: Using sonner toast
             toast.error("Error", {
               description: error.message || "Failed to delete category",
@@ -213,7 +221,7 @@ export default function AdminFAQsPage() {
         });
         setFaqItemDialogOpen(false);
       },
-      onError: (error: { message: any; }) => {
+      onError: (error: { message: string }) => {
         // Updated: Using sonner toast
         toast.error("Error", {
           description: error.message || "Failed to create FAQ item",
@@ -253,7 +261,7 @@ export default function AdminFAQsPage() {
           setEditingFaqItem(null);
           setFaqItemDialogOpen(false);
         },
-        onError: (error: { message: any; }) => {
+        onError: (error: { message: string }) => {
           // Updated: Using sonner toast
           toast.error("Error", {
             description: error.message || "Failed to update FAQ item",
@@ -275,7 +283,7 @@ export default function AdminFAQsPage() {
               description: "FAQ item deleted successfully",
             });
           },
-          onError: (error: { message: any; }) => {
+          onError: (error: { message: string }) => {
             // Updated: Using sonner toast
             toast.error("Error", {
               description: error.message || "Failed to delete FAQ item",
@@ -312,9 +320,22 @@ export default function AdminFAQsPage() {
     setFaqItemDialogOpen(true);
   };
 
-  // Calculate total FAQs count
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const totalFaqCount =
-    allFaqs?.reduce((sum: any, category: { faqItems: string | any[]; }) => sum + category.faqItems.length, 0) ?? 0;
+    allFaqs?.reduce(
+      (
+        sum: number,
+        category: {
+          faqItems: {
+            id: string;
+            question: string;
+            answer: string;
+            categoryId: string;
+          }[];
+        },
+      ) => sum + category.faqItems.length,
+      0,
+    ) ?? 0;
 
   if (isLoading) {
     return (
@@ -417,100 +438,117 @@ export default function AdminFAQsPage() {
               </Alert>
             ) : (
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {allFaqs?.map((category: { id: any; title: any; faqItems?: any; }) => (
-                  <Card
-                    key={category.id}
-                    className="overflow-hidden border transition-all hover:border-black hover:shadow-md"
-                  >
-                    <CardHeader className="pb-2">
-                      <div className="flex items-start justify-between">
-                        <CardTitle className="line-clamp-2">
-                          {category.title}
-                        </CardTitle>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 rounded-full hover:bg-black hover:bg-black/75 hover:text-white"
-                            >
-                              <MoreVertical className="h-4 w-4" />
-                              <span className="sr-only">Actions</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => openEditCategoryDialog(category)}
-                            >
-                              <Edit className="mr-2 h-4 w-4" /> Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleDeleteCategory(
-                                  category.id,
-                                  category.title,
-                                )
-                              }
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash className="mr-2 h-4 w-4" /> Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                      <CardDescription className="mt-1 flex items-center gap-1">
-                        <Badge
-                          variant="outline"
-                          className="rounded-sm px-1.5 py-0.5 text-xs font-normal"
-                        >
-                          {category.faqItems.length}
-                        </Badge>
-                        <span className="text-xs">
-                          {category.faqItems.length === 1 ? "FAQ" : "FAQs"}
-                        </span>
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pb-3">
-                      {category.faqItems.length > 0 ? (
-                        <ScrollArea className="h-32 pr-2">
-                          <ul className="space-y-2">
-                            {category.faqItems.slice(0, 5).map((faq: { id: Key | null | undefined; question: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) => (
-                              <li
-                                key={faq.id}
-                                className="group flex items-start gap-1.5 rounded-sm border-l-2 border-l-gray-300 bg-gray-50 px-3 py-2 text-sm transition-colors hover:border-l-black hover:bg-gray-100"
+                {allFaqs?.map(
+                  (category: {
+                    id: string;
+                    title: string;
+                    faqItems: {
+                      id: string;
+                      question: string;
+                      answer: string;
+                      categoryId: string;
+                    }[];
+                  }) => (
+                    <Card
+                      key={category.id}
+                      className="overflow-hidden border transition-all hover:border-black hover:shadow-md"
+                    >
+                      <CardHeader className="pb-2">
+                        <div className="flex items-start justify-between">
+                          <CardTitle className="line-clamp-2">
+                            {category.title}
+                          </CardTitle>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 rounded-full hover:bg-black hover:bg-black/75 hover:text-white"
                               >
-                                <span className="min-w-0 flex-1 truncate">
-                                  {faq.question}
-                                </span>
-                              </li>
-                            ))}
-                            {category.faqItems.length > 5 && (
-                              <li className="pt-1 text-center text-xs text-gray-500">
-                                + {category.faqItems.length - 5} more
-                              </li>
-                            )}
-                          </ul>
-                        </ScrollArea>
-                      ) : (
-                        <div className="flex h-32 items-center justify-center rounded-md border border-dashed border-gray-300 text-center text-sm">
-                          <p>No FAQs in this category yet</p>
+                                <MoreVertical className="h-4 w-4" />
+                                <span className="sr-only">Actions</span>
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                onClick={() => openEditCategoryDialog(category)}
+                              >
+                                <Edit className="mr-2 h-4 w-4" /> Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  handleDeleteCategory(
+                                    category.id,
+                                    category.title,
+                                  )
+                                }
+                                className="text-destructive focus:text-destructive"
+                              >
+                                <Trash className="mr-2 h-4 w-4" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </div>
-                      )}
-                    </CardContent>
-                    <CardFooter className="border-t pt-3">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="w-full border border-gray-300 bg-white hover:bg-gray-100"
-                        onClick={() => openCreateFaqItemDialog(category.id)}
-                      >
-                        <Plus className="mr-2 h-4 w-4" /> Add FAQ
-                      </Button>
-                    </CardFooter>
-                  </Card>
-                ))}
+                        <CardDescription className="mt-1 flex items-center gap-1">
+                          <Badge
+                            variant="outline"
+                            className="rounded-sm px-1.5 py-0.5 text-xs font-normal"
+                          >
+                            {category.faqItems.length}
+                          </Badge>
+                          <span className="text-xs">
+                            {category.faqItems.length === 1 ? "FAQ" : "FAQs"}
+                          </span>
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent className="pb-3">
+                        {category.faqItems.length > 0 ? (
+                          <ScrollArea className="h-32 pr-2">
+                            <ul className="space-y-2">
+                              {category.faqItems
+                                .slice(0, 5)
+                                .map(
+                                  (faq: { id: string; question: string }) => (
+                                    <li
+                                      key={faq.id}
+                                      className="group flex items-start gap-1.5 rounded-sm border-l-2 border-l-gray-300 bg-gray-50 px-3 py-2 text-sm transition-colors hover:border-l-black hover:bg-gray-100"
+                                    >
+                                      <span className="min-w-0 flex-1 truncate">
+                                        {faq.question}
+                                      </span>
+                                    </li>
+                                  ),
+                                )}
+                              {category.faqItems.length > 5 && (
+                                <li className="pt-1 text-center text-xs text-gray-500">
+                                  + {category.faqItems.length - 5} more
+                                </li>
+                              )}
+                            </ul>
+                          </ScrollArea>
+                        ) : (
+                          <div className="flex h-32 items-center justify-center rounded-md border border-dashed border-gray-300 text-center text-sm">
+                            <p>No FAQs in this category yet</p>
+                          </div>
+                        )}
+                      </CardContent>
+                      <CardFooter className="border-t pt-3">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="w-full border border-gray-300 bg-white hover:bg-gray-100"
+                          onClick={() =>
+                            openCreateFaqItemDialog(String(category.id))
+                          }
+                        >
+                          <Plus className="mr-2 h-4 w-4" /> Add FAQ
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ),
+                )}
               </div>
             )}
           </TabsContent>
@@ -528,7 +566,16 @@ export default function AdminFAQsPage() {
             ) : (
               <div className="space-y-6">
                 {allFaqs?.map(
-                  (category: { faqItems: any[]; id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; }) =>
+                  (category: {
+                    faqItems: {
+                      id: string;
+                      question: string;
+                      answer: string;
+                      categoryId: string;
+                    }[];
+                    id: string;
+                    title: string;
+                  }) =>
                     category.faqItems.length > 0 && (
                       <Card key={category.id} className="overflow-hidden">
                         <CardHeader className="border-b bg-gray-50 pb-2">
@@ -549,69 +596,100 @@ export default function AdminFAQsPage() {
                             collapsible
                             className="w-full"
                           >
-                            {category.faqItems.map((faq: { id: any; question: any; answer: any; categoryId?: string; }) => (
-                              <AccordionItem
-                                key={faq.id}
-                                value={faq.id}
-                                className="border-b px-4 hover:bg-gray-50 sm:px-0"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <AccordionTrigger className="py-4 text-sm font-medium sm:text-base">
-                                    {faq.question}
-                                  </AccordionTrigger>
-                                  <div className="flex gap-1 sm:mr-6 sm:gap-2">
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-7 w-7 rounded-full hover:bg-black hover:bg-black/75 hover:text-white sm:h-8 sm:w-8"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        openEditFaqItemDialog(faq);
-                                      }}
-                                    >
-                                      <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                      <span className="sr-only">Edit</span>
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-7 w-7 rounded-full hover:bg-red-500 hover:text-white sm:h-8 sm:w-8"
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleDeleteFaqItem(
-                                          faq.id,
-                                          faq.question,
-                                        );
-                                      }}
-                                    >
-                                      <Trash className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-                                      <span className="sr-only">Delete</span>
-                                    </Button>
+                            {category.faqItems.map(
+                              (faq: {
+                                id: string;
+                                question: string;
+                                answer: string;
+                                categoryId?: string;
+                              }) => (
+                                <AccordionItem
+                                  key={faq.id}
+                                  value={faq.id}
+                                  className="border-b px-4 hover:bg-gray-50 sm:px-0"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <AccordionTrigger className="py-4 text-sm font-medium sm:text-base">
+                                      {faq.question}
+                                    </AccordionTrigger>
+                                    <div className="flex gap-1 sm:mr-6 sm:gap-2">
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-7 w-7 rounded-full hover:bg-black hover:bg-black/75 hover:text-white sm:h-8 sm:w-8"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          openEditFaqItemDialog({
+                                            ...faq,
+                                            categoryId: faq.categoryId ?? "",
+                                          });
+                                        }}
+                                      >
+                                        <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                        <span className="sr-only">Edit</span>
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-7 w-7 rounded-full hover:bg-red-500 hover:text-white sm:h-8 sm:w-8"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleDeleteFaqItem(
+                                            faq.id,
+                                            faq.question,
+                                          );
+                                        }}
+                                      >
+                                        <Trash className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                                        <span className="sr-only">Delete</span>
+                                      </Button>
+                                    </div>
                                   </div>
-                                </div>
-                                <AccordionContent className="pb-4 pt-2">
-                                  <div className="prose prose-sm max-w-none rounded-md border bg-white p-4 shadow-sm dark:prose-invert sm:p-5">
-                                    {faq.answer
-                                      .split("\n")
-                                      .map((paragraph: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined, idx: Key | null | undefined) => (
-                                        <p
-                                          key={idx}
-                                          className="mb-2 text-sm last:mb-0 sm:text-base"
-                                        >
-                                          {paragraph}
-                                        </p>
-                                      ))}
-                                  </div>
-                                </AccordionContent>
-                              </AccordionItem>
-                            ))}
+                                  <AccordionContent className="pb-4 pt-2">
+                                    <div className="prose prose-sm max-w-none rounded-md border bg-white p-4 shadow-sm dark:prose-invert sm:p-5">
+                                      {faq.answer
+                                        .split("\n")
+                                        .map(
+                                          (
+                                            paragraph:
+                                              | string
+                                              | number
+                                              | bigint
+                                              | boolean
+                                              | ReactElement<
+                                                  any,
+                                                  | string
+                                                  | JSXElementConstructor<any>
+                                                >
+                                              | Iterable<ReactNode>
+                                              | ReactPortal
+                                              | Promise<AwaitedReactNode>
+                                              | null
+                                              | undefined,
+                                            idx: Key | null | undefined,
+                                          ) => (
+                                            <p
+                                              key={idx}
+                                              className="mb-2 text-sm last:mb-0 sm:text-base"
+                                            >
+                                              {paragraph}
+                                            </p>
+                                          ),
+                                        )}
+                                    </div>
+                                  </AccordionContent>
+                                </AccordionItem>
+                              ),
+                            )}
                           </Accordion>
                         </CardContent>
                         <CardFooter className="flex justify-center border-t bg-gray-50 p-4">
                           <Button
                             variant="outline"
                             className="gap-2 border border-gray-300 bg-white hover:bg-gray-100"
-                            onClick={() => openCreateFaqItemDialog(category.id)}
+                            onClick={() =>
+                              openCreateFaqItemDialog(String(category.id))
+                            }
                           >
                             <Plus className="h-4 w-4" /> Add FAQ to this
                             category
@@ -719,8 +797,8 @@ export default function AdminFAQsPage() {
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {allFaqs?.map((category: { id: Key | null | undefined; title: any; }) => (
-                    <SelectItem key={category.id} value={category.id}>
+                  {allFaqs?.map((category: { id: string; title: string }) => (
+                    <SelectItem key={category.id} value={String(category.id)}>
                       {category.title}
                     </SelectItem>
                   ))}

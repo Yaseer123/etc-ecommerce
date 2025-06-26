@@ -39,8 +39,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { $Enums } from "@prisma/client";
-import { JsonValue } from "@prisma/client/runtime/library";
 import { ArrowLeft, Loader2, MoreHorizontal, Plus, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -287,6 +285,8 @@ export default function FeaturedProductsPage() {
                 onDragEnd={handleDragEnd}
               >
                 <SortableContext
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
                   items={filteredProducts.map((item: { id: any }) => item.id)}
                   strategy={verticalListSortingStrategy}
                 >
@@ -303,53 +303,10 @@ export default function FeaturedProductsPage() {
                     </TableHeader>
                     <TableBody>
                       {filteredProducts.map(
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                         (
-                          product: {
-                            category: {
-                              order: number;
-                              name: string;
-                              id: string;
-                              imageId: string | null;
-                              createdAt: Date;
-                              updatedAt: Date;
-                              image: string | null;
-                              attributes: JsonValue;
-                              parentId: string | null;
-                            } | null;
-                          } & {
-                            id: string;
-                            title: string;
-                            slug: string;
-                            shortDescription: string;
-                            imageId: string;
-                            published: boolean;
-                            createdAt: Date;
-                            updatedAt: Date;
-                            new: boolean;
-                            sale: boolean;
-                            featured: boolean;
-                            description: string | null;
-                            price: number;
-                            discountedPrice: number | null;
-                            stock: number;
-                            stockStatus: $Enums.StockStatus;
-                            brand: string;
-                            defaultColor: string | null;
-                            defaultColorHex: string | null;
-                            defaultSize: string | null;
-                            sold: number;
-                            estimatedDeliveryTime: number | null;
-                            categoryId: string | null;
-                            images: string[];
-                            descriptionImageId: string | null;
-                            attributes: JsonValue;
-                            categoryAttributes: JsonValue;
-                            position: number;
-                            deletedAt: Date | null;
-                            variants: JsonValue | null;
-                            sku: string | null;
-                            allSkus: string[];
-                          },
+                          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                          product: any,
                         ) => (
                           <SortableRow
                             key={product.id}
