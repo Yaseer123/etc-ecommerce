@@ -342,15 +342,19 @@ export default function Menu({
                           Login
                         </Link>
                       )}
-                      <div className="mt-3 pb-4 text-center text-secondary">
-                        Don&apos;t have an account?
-                        <Link
-                          href={"/register"}
-                          className="pl-1 text-black hover:underline"
-                        >
-                          Register
-                        </Link>
-                      </div>
+                      {!isAuthenticated ? (
+                        <div className="mt-3 pb-4 text-center text-secondary">
+                          Don&apos;t have an account?
+                          <Link
+                            href={"/register"}
+                            className="pl-1 text-black hover:underline"
+                          >
+                            Register
+                          </Link>
+                        </div>
+                      ) : (
+                        <div className="mt-3"></div>
+                      )}
                       <Link
                         href={"/my-account"}
                         className="button-main w-full border border-black bg-white text-center text-black"
