@@ -800,7 +800,11 @@ export const productRouter = createTRPCRouter({
         });
 
         const uniqueBrands = Array.from(
-          new Set(allProducts.map((product) => product.brand.toLowerCase())),
+          new Set(
+            allProducts
+              .map((product) => product.brand.toLowerCase())
+              .filter((b) => b && b.trim() !== ""),
+          ),
         ).sort();
 
         return uniqueBrands;
@@ -837,7 +841,11 @@ export const productRouter = createTRPCRouter({
 
       // Extract unique brands and sort them
       const uniqueBrands = Array.from(
-        new Set(products.map((product) => product.brand.toLowerCase())),
+        new Set(
+          products
+            .map((product) => product.brand.toLowerCase())
+            .filter((b) => b && b.trim() !== ""),
+        ),
       ).sort();
 
       return uniqueBrands;

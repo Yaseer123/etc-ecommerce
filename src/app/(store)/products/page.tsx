@@ -119,7 +119,9 @@ export default function ProductsPage() {
     },
   );
   const safeCategoryBrands: string[] = Array.isArray(categoryBrands)
-    ? categoryBrands.filter((b): b is string => typeof b === "string")
+    ? categoryBrands.filter(
+        (b): b is string => typeof b === "string" && b.trim() !== "",
+      )
     : [];
 
   // Remove unsafe type assertion and @ts-expect-error for categoryAttributes
