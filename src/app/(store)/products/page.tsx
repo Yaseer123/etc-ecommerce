@@ -270,6 +270,11 @@ export default function ProductsPage() {
     categoryData,
   ]);
 
+  // Add state to track expanded attribute sections
+  const [expandedAttributes, setExpandedAttributes] = useState<
+    Record<string, boolean>
+  >({});
+
   // Initialize attribute filters from URL on category change
   useEffect(() => {
     if (categoryId && safeCategoryAttributes.length > 0) {
@@ -300,21 +305,9 @@ export default function ProductsPage() {
         setAttributeFilters(newFilters);
       }
     } else if (!categoryId && Object.keys(attributeFilters).length > 0) {
-      // Clear attribute filters when category is removed
       setAttributeFilters({});
     }
-  }, [categoryId, safeCategoryAttributes, searchParams, attributeFilters]);
-
-  // Separate effect specifically for clearing filters when category changes
-  useEffect(() => {
-    // When category changes, clear attribute filters
-    if (!categoryId) {
-      // Only clear if there are filters to clear
-      if (Object.keys(attributeFilters).length > 0) {
-        setAttributeFilters({});
-      }
-    }
-  }, [attributeFilters, categoryId]);
+  }, [categoryId, safeCategoryAttributes, searchParams]);
 
   // Toggle mobile filter sidebar
   const toggleMobileFilter = () => {
@@ -598,11 +591,6 @@ export default function ProductsPage() {
     return safeProducts.slice(offset, offset + productsPerPage);
   }, [safeProducts, offset, productsPerPage]);
 
-  // Add state to track expanded attribute sections
-  const [expandedAttributes, setExpandedAttributes] = useState<
-    Record<string, boolean>
-  >({});
-
   // Toggle function for attribute sections
   const toggleAttributeSection = (attrName: string) => {
     setExpandedAttributes((prev) => ({
@@ -610,28 +598,6 @@ export default function ProductsPage() {
       [attrName]: !prev[attrName],
     }));
   };
-
-  // Initialize all attribute sections as expanded
-  useEffect(() => {
-    if (safeCategoryAttributes.length > 0) {
-      const initialExpanded: Record<string, boolean> = {};
-      safeCategoryAttributes.forEach((attr) => {
-        initialExpanded[attr.name] = true; // Start with all expanded
-      });
-      setExpandedAttributes(initialExpanded);
-    }
-  }, [safeCategoryAttributes]);
-
-  // Initialize state for additional collapsible sections
-  useEffect(() => {
-    // Initialize basic collapsible sections (in addition to attributes)
-    setExpandedAttributes((prev) => ({
-      ...prev,
-      categories: true,
-      priceRange: true,
-      brands: true,
-    }));
-  }, []);
 
   // Add effect to update category state with name from categoryData
   useEffect(() => {
