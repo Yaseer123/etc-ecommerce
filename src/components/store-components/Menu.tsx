@@ -1,5 +1,6 @@
 "use client";
 
+import { ModeToggle } from "@/components/ModeToggle";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
@@ -378,6 +379,7 @@ export default function Menu({
                       {cartArray.length}
                     </span>
                   </div>
+                  <ModeToggle />
                 </div>
               </div>
             </div>
