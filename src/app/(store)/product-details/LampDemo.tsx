@@ -1,6 +1,6 @@
 "use client";
 import { LampContainer } from "@/components/ui/lamp";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 export function LampDemo() {
   return (
@@ -18,7 +18,7 @@ export function LampDemo() {
         Build lamps <br /> the right way
       </motion.h1> */}
       <div className="mt-8 flex justify-center">
-        <img
+        <motion.img
           src="/images/test/test-product.png"
           alt="Test Product"
           className="h-auto w-64 drop-shadow-[0_10px_40px_rgba(0,255,255,0.5)]"
@@ -26,6 +26,9 @@ export function LampDemo() {
             filter:
               "brightness(1.15) drop-shadow(0 0 40px rgba(34,211,238,0.5))",
           }}
+          initial={{ opacity: 0, scale: 0.8, y: 40 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
         />
       </div>
     </LampContainer>
