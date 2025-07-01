@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useRef, useState } from "react";
 import {
   AnimatePresence,
   motion,
   useMotionValueEvent,
   useScroll,
 } from "framer-motion";
+import React, { useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 
@@ -170,7 +170,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
           opacity: position.opacity,
         }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        className="absolute z-0 h-8 rounded-full bg-gray-100 dark:bg-neutral-800"
+        className="absolute z-0 h-8 rounded-full bg-gray-300 dark:bg-neutral-800"
       />
     </motion.div>
   );
@@ -256,12 +256,12 @@ export const MobileNavToggle = ({
 }) => {
   return isOpen ? (
     <RxCross2
-      className="text-2xl text-black dark:text-white cursor-pointer"
+      className="cursor-pointer text-2xl text-black dark:text-white"
       onClick={onClick}
     />
   ) : (
     <GiHamburgerMenu
-      className="text-2xl text-black dark:text-white cursor-pointer"
+      className="cursor-pointer text-2xl text-black dark:text-white"
       onClick={onClick}
     />
   );
@@ -279,7 +279,9 @@ export const NavbarLogo = () => {
         width={30}
         height={30}
       />
-      <span className="font-medium text-black dark:text-white">ETC Commerce</span>
+      <span className="font-medium text-black dark:text-white">
+        ETC Commerce
+      </span>
     </a>
   );
 };
