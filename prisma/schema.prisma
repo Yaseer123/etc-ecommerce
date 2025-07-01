@@ -76,7 +76,7 @@ model Product {
     new                   Boolean     @default(true)
     sale                  Boolean     @default(false)
     featured              Boolean     @default(false) // New field for featured products
-    slug                  String
+    slug                  String @unique
     shortDescription      String
     description           String?
     published             Boolean     @default(false)

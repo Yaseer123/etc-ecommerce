@@ -22,6 +22,55 @@ export default {
       },
       colors: {
         ...colors,
+        // Brand colors
+        brand: {
+          primary: "var(--brand-primary)",
+          secondary: "var(--brand-secondary)",
+          accent: "var(--brand-accent)",
+        },
+        // Semantic colors
+        semantic: {
+          success: "var(--semantic-success)",
+          warning: "var(--semantic-warning)",
+          error: "var(--semantic-error)",
+          info: "var(--semantic-info)",
+        },
+        // Neutral colors
+        neutral: {
+          white: "var(--neutral-white)",
+          black: "var(--neutral-black)",
+          gray: {
+            50: "var(--neutral-gray-50)",
+            100: "var(--neutral-gray-100)",
+            200: "var(--neutral-gray-200)",
+            300: "var(--neutral-gray-300)",
+            400: "var(--neutral-gray-400)",
+            500: "var(--neutral-gray-500)",
+            600: "var(--neutral-gray-600)",
+            700: "var(--neutral-gray-700)",
+            800: "var(--neutral-gray-800)",
+            900: "var(--neutral-gray-900)",
+          },
+        },
+        // Surface colors
+        surface: {
+          primary: "var(--surface-primary)",
+          secondary: "var(--surface-secondary)",
+          tertiary: "var(--surface-tertiary)",
+        },
+        // Text colors
+        text: {
+          primary: "var(--text-primary)",
+          secondary: "var(--text-secondary)",
+          tertiary: "var(--text-tertiary)",
+          inverse: "var(--text-inverse)",
+        },
+        // Border colors
+        border: {
+          primary: "var(--border-primary)",
+          secondary: "var(--border-secondary)",
+          border: "hsl(var(--border))",
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -48,7 +97,6 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         chart: {

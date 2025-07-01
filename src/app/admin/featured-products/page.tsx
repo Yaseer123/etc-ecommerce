@@ -43,6 +43,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import { formatPrice } from "../../../utils/format";
 
 type FeaturedProduct = RouterOutputs["product"]["getFeaturedProducts"][number];
 
@@ -92,7 +93,7 @@ const SortableRow = ({
           </div>
         </div>
       </TableCell>
-      <TableCell>৳{product.price.toFixed(2)}</TableCell>
+      <TableCell>{formatPrice(product.price)}</TableCell>
       <TableCell>
         <Badge
           variant={
@@ -127,10 +128,7 @@ const SortableRow = ({
               Remove from featured
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link
-                href={`/products/${product.slug}?id=${product.id}`}
-                target="_blank"
-              >
+              <Link href={`/products/${product.slug}`} target="_blank">
                 View on site
               </Link>
             </DropdownMenuItem>

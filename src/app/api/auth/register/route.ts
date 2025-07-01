@@ -54,13 +54,6 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    const existingUser = await db.user.findFirst({ where: { email } });
-    if (existingUser?.emailVerified) {
-      return NextResponse.json(
-        { error: "A verified account with this email already exists." },
-        { status: 400 },
-      );
-    }
     if (typeof hash !== "function") {
       return NextResponse.json(
         { error: "Hash function is not available." },
@@ -75,20 +68,9 @@ export async function POST(req: Request) {
         name,
       },
     });
-    const { v4: uuidv4 } = await import("uuid");
-    const token = uuidv4();
-    await db.verificationToken.create({
-      data: {
-        identifier: email,
-        token,
-        expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 24 hours
-      },
-    });
-    await sendVerificationEmail(email, token);
     return NextResponse.json(
       {
-        message:
-          "User registered successfully. Please check your email to verify your account.",
+        message: "User registered successfully.",
         user: { id: user.id, email: user.email },
       },
       { status: 201 },

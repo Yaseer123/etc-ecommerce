@@ -4,20 +4,12 @@ import { api } from "@/trpc/server";
 import type { ProductWithCategory, Variant } from "@/types/ProductType";
 
 export async function generateMetadata({
-  searchParams,
+  params,
 }: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  params: Promise<{ slug: string }>;
 }) {
-  const productId = (await searchParams).id as string;
-
-  if (!productId) {
-    return {
-      title: "Product",
-      description: "Explore our latest products.",
-    };
-  }
-
-  const productData = await api.product.getProductById({ id: productId });
+  const { slug } = await params;
+  const productData = await api.product.getProductBySlug({ slug });
 
   if (!productData) {
     return {
@@ -59,14 +51,9 @@ function isString(val: unknown): val is string {
   return typeof val === "string";
 }
 
-const ProductDiscount = async ({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) => {
-  const productId = (await searchParams).id as string;
-
-  const productData = await api.product.getProductById({ id: productId });
+const ProductPage = async ({ params }: { params: Promise<{ slug: string }> }) => {
+  const { slug } = await params;
+  const productData = await api.product.getProductBySlug({ slug });
 
   if (!productData) {
     return <div>Product not found</div>;
@@ -93,4 +80,4 @@ const ProductDiscount = async ({
   );
 };
 
-export default ProductDiscount;
+export default ProductPage;

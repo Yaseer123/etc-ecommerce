@@ -18,6 +18,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useEffect, useMemo, useState } from "react";
+import { formatPrice } from "../../../utils/format";
 
 export default function ProductsPage() {
   const router = useRouter();
@@ -158,10 +159,10 @@ export default function ProductsPage() {
 
   // State for handling custom slider styling
   const [sliderStyle] = useState({
-    trackStyle: { backgroundColor: "#f97316", height: 4 },
+    trackStyle: { backgroundColor: "var(--brand-primary)", height: 4 },
     railStyle: { backgroundColor: "#e5e7eb", height: 4 },
     handleStyle: {
-      borderColor: "#f97316",
+      borderColor: "var(--brand-primary)",
       backgroundColor: "#ffffff",
       opacity: 1,
       boxShadow: "0 0 0 2px rgba(249, 115, 22, 0.2)",
@@ -628,7 +629,7 @@ export default function ProductsPage() {
                 <div className="left has-line flex flex-wrap items-center gap-5">
                   {/* Filter Button - Only show on mobile */}
                   <button
-                    className="tool-btn flex items-center gap-1 rounded-md bg-orange-500 px-3 py-2 text-white md:hidden"
+                    className="tool-btn flex items-center gap-1 rounded-md bg-brand-primary px-3 py-2 text-white md:hidden"
                     id="lc-toggle"
                     onClick={toggleMobileFilter}
                     aria-label="Filter products"
@@ -651,7 +652,7 @@ export default function ProductsPage() {
                     <select
                       id="select-per-page"
                       name="select-per-page"
-                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-orange-500 focus:ring focus:ring-orange-200 md:pr-12"
+                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-brand-primary focus:ring focus:ring-brand-primary md:pr-12"
                       onChange={(e) =>
                         handleProductsPerPageChange(Number(e.target.value))
                       }
@@ -679,7 +680,7 @@ export default function ProductsPage() {
                     <select
                       id="select-filter"
                       name="select-filter"
-                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-orange-500 focus:ring focus:ring-orange-200 md:pr-20"
+                      className="caption1 rounded-lg border border-gray-200 py-2 pl-3 pr-10 transition-colors focus:border-brand-primary focus:ring focus:ring-brand-primary md:pr-20"
                       onChange={(e) => {
                         handleSortChange(e.target.value);
                       }}
@@ -715,7 +716,7 @@ export default function ProductsPage() {
                       <div className="h-4 w-px bg-gray-200"></div>
                       {category && (
                         <div
-                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-orange-700 transition-colors hover:bg-orange-200"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-brand-primary transition-colors hover:bg-orange-200"
                           onClick={() => {
                             setCategory(null);
                             updateUrlParams({ category: null });
@@ -729,7 +730,7 @@ export default function ProductsPage() {
                       {brands.map((brandName: string, index: number) => (
                         <div
                           key={`brand-${index}`}
-                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-orange-700 transition-colors hover:bg-orange-200"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-brand-primary transition-colors hover:bg-orange-200"
                           onClick={() => handleBrand(brandName)}
                         >
                           <X size={16} className="cursor-pointer" />
@@ -740,7 +741,7 @@ export default function ProductsPage() {
                       {stockStatus.map((status: string, index: number) => (
                         <div
                           key={`stockStatus-${index}`}
-                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-brand-primary transition-colors hover:bg-orange-200"
                           onClick={() => handleStockStatus(status)}
                         >
                           <X size={16} className="cursor-pointer" />
@@ -758,7 +759,7 @@ export default function ProductsPage() {
                       {(priceRange.min !== initialPriceRange.min ||
                         priceRange.max !== initialPriceRange.max) && (
                         <div
-                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
+                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-brand-primary transition-colors hover:bg-orange-200"
                           onClick={() => {
                             setPriceRange(initialPriceRange);
                             updateUrlParams({ minPrice: null, maxPrice: null });
@@ -766,7 +767,8 @@ export default function ProductsPage() {
                         >
                           <X size={16} className="cursor-pointer" />
                           <span>
-                            ৳{priceRange.min} - ৳{priceRange.max}
+                            {formatPrice(priceRange.min)} -{" "}
+                            {formatPrice(priceRange.max)}
                           </span>
                         </div>
                       )}
@@ -788,7 +790,7 @@ export default function ProductsPage() {
                           return (
                             <div
                               key={key}
-                              className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-orange-700 transition-colors hover:bg-orange-200"
+                              className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 text-brand-primary transition-colors hover:bg-orange-200"
                               onClick={() => {
                                 // Use the handler directly without modifying state again
                                 handleAttributeChange(key, null);
@@ -823,7 +825,7 @@ export default function ProductsPage() {
               {/* Product list with loading state */}
               {isLoading ? (
                 <div className="flex h-60 items-center justify-center">
-                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-orange-500 border-t-transparent"></div>
+                  <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"></div>
                 </div>
               ) : (
                 <ProductList
@@ -835,12 +837,12 @@ export default function ProductsPage() {
               )}
               {/* Category Description for SEO */}
               {categoryData?.description && (
-                <div className="mt-10 rounded-lg bg-orange-50 p-6 text-gray-700 shadow-sm">
-                  <h2 className="mb-2 text-lg font-semibold text-orange-700">
+                <div className="mt-10 rounded-lg p-6 text-gray-700 shadow-sm">
+                  <h2 className="mb-2 bg-brand-primary p-5 text-lg font-semibold text-white">
                     About this Category
                   </h2>
                   <div
-                    className="prose max-w-none"
+                    className="prose max-w-none bg-white p-5"
                     dangerouslySetInnerHTML={{
                       __html: categoryData.description,
                     }}
@@ -856,7 +858,7 @@ export default function ProductsPage() {
       {/* <div className="fixed bottom-6 right-6 z-50 md:hidden">
         <button
           onClick={toggleMobileFilter}
-          className="flex items-center justify-center rounded-full bg-orange-500 p-4 text-white shadow-xl transition-colors hover:bg-orange-600"
+          className="flex items-center justify-center rounded-full bg-brand-primary p-4 text-white shadow-xl transition-colors hover:bg-brand-primary"
           aria-label="Filter products"
         >
           <Funnel size={24} weight="bold" />
@@ -898,7 +900,7 @@ export default function ProductsPage() {
               </button>
               <button
                 onClick={toggleMobileFilter}
-                className="w-full rounded-lg bg-orange-500 px-4 py-2 text-white transition-colors hover:bg-orange-600"
+                className="w-full rounded-lg bg-brand-primary px-4 py-2 text-white transition-colors hover:bg-brand-primary"
               >
                 Apply Filters
               </button>
@@ -966,7 +968,7 @@ export default function ProductsPage() {
                       newMax !== initialPriceRange.max ? String(newMax) : null;
                     updateUrlParams({ minPrice, maxPrice });
                   }}
-                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-orange-600 outline-none transition-all focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-brand-primary outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary"
                   aria-label="Minimum price"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -997,7 +999,7 @@ export default function ProductsPage() {
                       newMax !== initialPriceRange.max ? String(newMax) : null;
                     updateUrlParams({ minPrice, maxPrice });
                   }}
-                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-orange-600 outline-none transition-all focus:border-orange-500 focus:ring-2 focus:ring-orange-200"
+                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-brand-primary outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary"
                   aria-label="Maximum price"
                   inputMode="numeric"
                   pattern="[0-9]*"
@@ -1029,14 +1031,21 @@ export default function ProductsPage() {
                 {["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].map((status) => (
                   <label
                     key={status}
-                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:bg-orange-50"
+                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:text-brand-primary"
                   >
-                    <input
-                      type="checkbox"
-                      checked={stockStatus.includes(status)}
-                      onChange={() => handleStockStatus(status)}
-                      className="h-5 w-5 accent-orange-500"
-                    />
+                    <div className="block-input relative">
+                      <input
+                        type="checkbox"
+                        checked={stockStatus.includes(status)}
+                        onChange={() => handleStockStatus(status)}
+                        className="h-5 w-5 rounded border-gray-300 accent-brand-primary"
+                      />
+                      <CheckSquare
+                        size={20}
+                        weight="fill"
+                        className="icon-checkbox absolute left-0 top-0 text-brand-primary"
+                      />
+                    </div>
                     <span className="capitalize">
                       {status === "IN_STOCK"
                         ? "In Stock"
@@ -1075,7 +1084,10 @@ export default function ProductsPage() {
           {expandedAttributes.categories !== false && (
             <div className="bg-white p-1">
               <div className="max-h-[300px] min-h-[180px] overflow-y-auto pr-1">
-                <FilterByCategory handleCategory={handleCategory} />
+                <FilterByCategory
+                  handleCategory={handleCategory}
+                  selectedCategoryId={category?.id ?? categoryId}
+                />
               </div>
             </div>
           )}
@@ -1112,7 +1124,7 @@ export default function ProductsPage() {
                     <div className="max-h-[250px] min-h-[120px] space-y-0.5 overflow-y-auto pr-1">
                       {safeCategoryBrands.map((item: string, index: number) => (
                         <div key={index} className="brand-item">
-                          <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:bg-orange-50">
+                          <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:text-brand-primary">
                             <div className="block-input relative">
                               <input
                                 type="checkbox"
@@ -1125,7 +1137,7 @@ export default function ProductsPage() {
                               <CheckSquare
                                 size={20}
                                 weight="fill"
-                                className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                                className="icon-checkbox absolute left-0 top-0 text-brand-primary"
                               />
                             </div>
                             <label
@@ -1220,7 +1232,7 @@ export default function ProductsPage() {
                                     <CheckSquare
                                       size={20}
                                       weight="fill"
-                                      className="icon-checkbox absolute left-0 top-0 text-orange-500"
+                                      className="icon-checkbox absolute left-0 top-0 text-brand-primary"
                                     />
                                   </div>
                                   <label

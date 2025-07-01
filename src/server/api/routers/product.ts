@@ -1078,4 +1078,15 @@ export const productRouter = createTRPCRouter({
       await Promise.all(updates);
       return { success: true };
     }),
+
+  getProductBySlug: publicProcedure
+    .input(z.object({ slug: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const product = await ctx.db.product.findUnique({
+        where: { slug: input.slug },
+        include: { category: true },
+      });
+      if (product?.deletedAt) return null;
+      return product;
+    }),
 });

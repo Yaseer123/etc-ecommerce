@@ -19,6 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Key, useEffect, useRef, useState } from "react";
+import { formatPrice } from "../../utils/format";
 import CategoryDropdown from "./Category/CategoryDropdown";
 import MobileMenu from "./MobileMenu";
 import TopNav from "./TopNav";
@@ -238,9 +239,7 @@ export default function Menu({
                                     key={product.id}
                                     className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
                                     onClick={() => {
-                                      router.push(
-                                        `/products/${product.slug}?id=${product.id}`,
-                                      );
+                                      router.push(`/products/${product.slug}`);
                                       setShowSearchResults(false);
                                       setSearchKeyword("");
                                       setIsSearchOpen(false);
@@ -271,18 +270,17 @@ export default function Menu({
                                             product.price ? (
                                             <>
                                               <span className="discounted-price">
-                                                ৳
-                                                {product.discountedPrice.toFixed(
-                                                  2,
+                                                {formatPrice(
+                                                  product.discountedPrice,
                                                 )}
                                               </span>
                                               <span className="ml-2 text-gray-400 line-through">
-                                                ৳{product.price.toFixed(2)}
+                                                {formatPrice(product.price)}
                                               </span>
                                             </>
                                           ) : (
                                             <span className="text-black">
-                                              ৳{product.price.toFixed(2)}
+                                              {formatPrice(product.price)}
                                             </span>
                                           )}
                                         </div>
@@ -419,15 +417,15 @@ export default function Menu({
                   <div key={category.id} className="group relative h-full">
                     <Link
                       href={`/products?category=${category.id}`}
-                      className="relative flex h-full items-center px-4 text-sm font-medium text-gray-700 transition-colors hover:text-orange-500"
+                      className="relative flex h-full items-center px-4 text-sm font-medium text-gray-700 transition-colors hover:text-brand-primary"
                     >
                       <span className="py-3.5">
                         {toTitleCase(category.name)}
                         {category.subcategories?.length > 0 && (
-                          <CaretDown className="ml-1 inline-block h-3 w-3 transform text-orange-400 transition-transform duration-200 group-hover:rotate-180" />
+                          <CaretDown className="ml-1 inline-block h-3 w-3 transform text-brand-primary transition-transform duration-200 group-hover:rotate-180" />
                         )}
                       </span>
-                      <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 ease-in-out group-hover:w-full"></span>
+                      <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-brand-primary transition-all duration-300 ease-in-out group-hover:w-full"></span>
                     </Link>
                     {/* Category dropdown */}
                     {category.subcategories?.length > 0 && (
@@ -449,11 +447,11 @@ export default function Menu({
                             <div key={subcat.id} className="group/sub relative">
                               <Link
                                 href={`/products?category=${subcat.id}`}
-                                className="flex w-full items-center justify-between whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
+                                className="flex w-full items-center justify-between whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-brand-primary"
                               >
                                 {toTitleCase(subcat.name)}
                                 {subcat.subcategories?.length > 0 && (
-                                  <span className="ml-1 text-orange-400">
+                                  <span className="ml-1 text-brand-primary">
                                     ›
                                   </span>
                                 )}
@@ -472,7 +470,7 @@ export default function Menu({
                                       <Link
                                         key={childCat.id}
                                         href={`/products?category=${childCat.id}`}
-                                        className="block whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-orange-500"
+                                        className="block whitespace-nowrap px-5 py-2.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 hover:text-brand-primary"
                                       >
                                         {toTitleCase(childCat.name)}
                                       </Link>
@@ -493,7 +491,7 @@ export default function Menu({
             {/* Hotline - right side */}
             <div className="right mr-3 flex items-center gap-2 border-l border-gray-100 pl-4">
               <div className="text-sm text-gray-500">Hotline:</div>
-              <div className="text-sm font-semibold transition-colors hover:text-orange-600">
+              <div className="text-sm font-semibold transition-colors hover:text-brand-primary">
                 +8801312223452
               </div>
             </div>
@@ -566,9 +564,7 @@ export default function Menu({
                             key={product.id}
                             className="search-result-item cursor-pointer border-b border-gray-100 px-4 py-2 hover:bg-gray-50"
                             onClick={() => {
-                              router.push(
-                                `/products/${product.slug}?id=${product.id}`,
-                              );
+                              router.push(`/products/${product.slug}`);
                               setShowSearchResults(false);
                               setSearchKeyword("");
                               setIsSearchOpen(false);
@@ -598,15 +594,15 @@ export default function Menu({
                                   product.discountedPrice < product.price ? (
                                     <>
                                       <span className="discounted-price">
-                                        ৳{product.discountedPrice.toFixed(2)}
+                                        {formatPrice(product.discountedPrice)}
                                       </span>
                                       <span className="ml-2 text-gray-400 line-through">
-                                        ৳{product.price.toFixed(2)}
+                                        {formatPrice(product.price)}
                                       </span>
                                     </>
                                   ) : (
                                     <span className="text-black">
-                                      ৳{product.price.toFixed(2)}
+                                      {formatPrice(product.price)}
                                     </span>
                                   )}
                                 </div>

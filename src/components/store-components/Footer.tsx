@@ -212,7 +212,7 @@ const Footer = () => {
                       <SiTiktok className="text-xl text-black" />
                     </Link>
                     <Link
-                      href={"https://www.youtube.com/@rinorsgreenenergy"}
+                      href={"https://www.youtube.com/@rinorsecommerce"}
                       target="_blank"
                     >
                       <div className="icon-youtube text-3xl text-black"></div>

@@ -58,7 +58,7 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
                 ) => (
                   <React.Fragment key={cat.id}>
                     <Link
-                      href={`/products/category/${cat.id}`}
+                      href={`/products?category=${cat.id}`}
                       className="text-secondary2 truncate text-base font-normal capitalize leading-6 hover:underline md:text-base"
                     >
                       {cat.name}

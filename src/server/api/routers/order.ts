@@ -34,7 +34,7 @@ const socialLinks = `
     <a href="https://www.tiktok.com/@rinors_ecommerce" style="margin: 0 6px; text-decoration: none;" target="_blank">
       <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/tiktok.svg" alt="TikTok" width="24" height="24" style="vertical-align:middle;"/>
     </a>
-    <a href="https://www.youtube.com/@rinorsgreenenergy" style="margin: 0 6px; text-decoration: none;" target="_blank">
+    <a href="https://www.youtube.com/@rinorsecommerce" style="margin: 0 6px; text-decoration: none;" target="_blank">
       <img src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/youtube.svg" alt="YouTube" width="24" height="24" style="vertical-align:middle;"/>
     </a>
   </div>
@@ -180,11 +180,6 @@ export const orderRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const user = await ctx.db.user.findUnique({ where: { id: userId } });
-      if (!user?.emailVerified) {
-        throw new Error(
-          "Please verify your email address to place an order. A verification link has been sent to your email.",
-        );
-      }
 
       // Get products for all cart items
       const products = await ctx.db.product.findMany({

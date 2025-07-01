@@ -1,20 +1,8 @@
+@import "variables.css";
+
 /* Main color */
 :root {
-  --green: #d2ef9a;
-  --black: #1f1f1f;
-  --secondary: #696c70;
-  --secondary2: #a0a0a0;
-  --white: #ffffff;
-  --surface: #f7f7f7;
-  --red: #db4444;
-  --purple: #8684d4;
-  --success: #3dab25;
-  --yellow: #ecb018;
-  --pink: #f4407d;
-  --line: #e9e9e9;
-  --outline: rgba(0, 0, 0, 0.15);
-  --surface1: rgba(255, 255, 255, 0.1);
-  --surface2: rgba(255, 255, 255, 0.2);
+  /* All variables are now imported from variables.css */
 }
 
 /* Reset */
@@ -100,11 +88,11 @@ input[type="file"] {
 }
 
 .bg-blue {
-  background-color: #4856da;
+  background-color: var(--semantic-info);
 }
 
 .bg-silver {
-  background-color: #a1a2af;
+  background-color: var(--neutral-gray-400);
 }
 
 .bg-linear {

@@ -7,6 +7,7 @@ import { X } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { formatPrice } from "../../../utils/format";
 
 const ModalNewsletter = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -128,7 +129,7 @@ const ModalNewsletter = () => {
                                   </div>
                                   {product.discountedPrice && (
                                     <div className="product-origin-price text-title text-secondary2">
-                                      <del>৳{product.price}.00</del>
+                                      <del>{formatPrice(product.price)}</del>
                                     </div>
                                   )}
                                 </div>

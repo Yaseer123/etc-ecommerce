@@ -239,7 +239,7 @@ export const SliderManager = () => {
                 disabled={uploading}
               />
               <div className="mt-1 text-xs text-gray-400">
-                Recommended size: 1920x1080px or larger, 16:9 aspect ratio
+                Recommended size: 2000x1333px or larger, 3:2 aspect ratio
               </div>
               {selectedImageName ? (
                 <div className="mt-1 text-sm text-gray-500">

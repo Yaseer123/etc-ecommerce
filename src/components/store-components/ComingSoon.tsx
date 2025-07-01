@@ -82,7 +82,7 @@ export default function ComingSoon() {
                   <input
                     type="email"
                     placeholder="Enter your e-mail"
-                    className="h-full w-full rounded-xl border border-[#ddd] focus:border-[#ddd] pl-4 pr-14 text-base font-normal leading-[22] md:text-[13px] md:leading-5"
+                    className="h-full w-full rounded-xl border border-[#ddd] pl-4 pr-14 text-base font-normal leading-[22] focus:border-[#ddd] md:text-[13px] md:leading-5"
                     required
                   />
                   <button className="absolute bottom-1 right-1 top-1 flex aspect-square items-center justify-center rounded-xl bg-black text-white hover:bg-black/75">
@@ -106,7 +106,7 @@ export default function ComingSoon() {
                   <div className="icon-instagram text-xl"></div>
                 </Link>
                 <Link
-                  href={"https://www.youtube.com/@rinorsgreenenergy"}
+                  href={"https://www.youtube.com/@rinorsecommerce"}
                   target="_blank"
                 >
                   <div className="icon-youtube text-xl"></div>

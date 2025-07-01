@@ -63,18 +63,6 @@ export default auth(async (req) => {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (
-    isLoggedIn &&
-    !req.auth?.user?.emailVerified &&
-    !isVerifyRequiredRoute &&
-    !isVerifyEmailApiRoute &&
-    !isAuthRoutes &&
-    !isContactRoute &&
-    !isVerifyEmailPage
-  ) {
-    return NextResponse.redirect(new URL("/auth/verify-required", nextUrl));
-  }
-
   // Redirect verified users away from verification pages
   if (
     isLoggedIn &&

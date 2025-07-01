@@ -34,6 +34,7 @@ import "swiper/css/bundle";
 import { Navigation, Thumbs } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { v4 as uuid } from "uuid";
+import { formatPrice } from "../../../../utils/format";
 import ParseContent from "../../Blog/ParseContent";
 import Rate from "../../Rate";
 import RelatedProductsSidebar from "../RelatedProductsSidebar";
@@ -803,16 +804,16 @@ export default function ProductDetails({
                   displayDiscountedPrice < displayPrice ? (
                   <>
                     <div className="product-price heading5 discounted-price">
-                      ৳{displayDiscountedPrice.toFixed(2)}
+                      {formatPrice(displayDiscountedPrice)}
                     </div>
                     <div className="bg-line h-4 w-px"></div>
                     <div className="product-origin-price text-secondary2 font-normal">
-                      <del>৳{displayPrice.toFixed(2)}</del>
+                      <del>{formatPrice(displayPrice)}</del>
                     </div>
                   </>
                 ) : (
                   <div className="product-price heading5">
-                    ৳{displayPrice.toFixed(2)}
+                    {formatPrice(displayPrice)}
                   </div>
                 )}
               </div>
@@ -902,7 +903,7 @@ export default function ProductDetails({
                     <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
                     <div className="text-title">Free shipping</div>
                     <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
-                      Free shipping on orders over ৳7500.
+                      Free shipping on orders over {formatPrice(7500)}.
                     </div>
                   </div>
                 </div>

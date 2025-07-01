@@ -2,6 +2,7 @@
 
 import { Trash } from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
+import { formatPrice } from "../../../utils/format";
 
 // The shape of a wishlist item as returned by the API
 export interface WishlistProduct {
@@ -43,13 +44,13 @@ export default function WishProductItem({
             {product.title}
           </div>
           <div className="mt-2 flex items-center gap-2">
-            <div className="product-price text-title">
-              ৳{product.discountedPrice ?? product.price}.00
+            <div className="item-price text-title">
+              {formatPrice(product.discountedPrice ?? product.price)}
             </div>
             {product.discountedPrice &&
               product.discountedPrice < product.price && (
-                <div className="product-origin-price text-title text-secondary2">
-                  <del>৳{product.price}.00</del>
+                <div className="item-origin-price text-secondary2">
+                  <del>{formatPrice(product.price)}</del>
                 </div>
               )}
           </div>

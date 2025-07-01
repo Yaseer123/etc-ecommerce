@@ -55,9 +55,9 @@ const Slider = () => {
 
   return (
     <div className="slider-block style-two w-full">
-      <div className="banner-block mx-auto flex h-full w-full !max-w-[1322px] gap-5 px-4 max-lg:flex-wrap lg:pt-[30px]">
+      <div className="banner-block mx-auto flex h-full w-full max-w-[1322px] gap-5 max-lg:flex-wrap lg:pt-[30px]">
         {/* Slider */}
-        <div className="slider-main min-h-[60vh] w-full shadow-lg max-lg:h-[300px] max-[420px]:h-[340px] lg:w-2/3">
+        <div className="slider-main relative aspect-[3/2] w-full shadow-lg lg:w-2/3">
           <Swiper
             spaceBetween={0}
             slidesPerView={1}
@@ -72,8 +72,18 @@ const Slider = () => {
           >
             {(sliderData ?? []).map((slide) => (
               <SwiperSlide key={slide.id}>
-                <div className="slider-item bg-linear relative flex h-full min-h-[60vh] w-full items-center">
-                  <div className="text-content relative z-[1] basis-1/2 pl-5 md:pl-[60px]">
+                <div className="slider-item bg-linear relative flex h-full w-full items-center">
+                  {/* Background Image */}
+                  <Image
+                    src={slide.imageUrl ?? ""}
+                    alt={slide.title ?? ""}
+                    fill
+                    priority={true}
+                    className="z-0 object-cover object-center"
+                    style={{ position: "absolute" }}
+                  />
+                  {/* Text Content */}
+                  <div className="text-content relative z-10 basis-1/2 pl-5 md:pl-[60px]">
                     <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
                       {slide.subtitle ?? ""}
                     </div>
@@ -90,20 +100,22 @@ const Slider = () => {
                       Shop Now
                     </Link>
                   </div>
-                  <div className="sub-img absolute -right-10 bottom-0 top-0 h-full sm:right-[20px] md:right-[40px] lg:right-[20px] xl:right-[50px]">
-                    <Image
-                      src={slide.imageUrl ?? ""}
-                      width={2000}
-                      height={1936}
-                      alt={slide.title ?? ""}
-                      priority={true}
-                      className="h-full w-full object-cover object-center"
-                    />
-                  </div>
                 </div>
               </SwiperSlide>
             ))}
           </Swiper>
+          {/* Swiper pagination dots positioning */}
+          <style jsx global>{`
+            .swiper-pagination {
+              position: absolute !important;
+              bottom: 12px !important;
+              left: 0;
+              right: 0;
+              margin: 0 auto;
+              z-index: 20;
+              text-align: center;
+            }
+          `}</style>
         </div>
 
         {/* Sale Banner */}

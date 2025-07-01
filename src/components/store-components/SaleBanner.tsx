@@ -42,7 +42,11 @@ export const SaleBanner = () => {
             }) => (
               <div
                 key={banner.id}
-                className="banner-ads-item bg-linear relative h-full min-h-[160px] cursor-pointer overflow-hidden"
+                className="banner-ads-item bg-linear relative cursor-pointer overflow-hidden"
+                style={{
+                  aspectRatio: "3/2",
+                  minHeight: "160px",
+                }}
                 onClick={() => handleClick(banner.link)}
               >
                 <div className="text-content relative z-[1] p-4 sm:p-6 md:py-6 md:pl-7 lg:py-8 lg:pl-8">
@@ -58,8 +62,8 @@ export const SaleBanner = () => {
                 </div>
                 <Image
                   src={banner.imageUrl}
-                  width={400}
-                  height={100}
+                  width={600}
+                  height={400}
                   alt={banner.title ?? ""}
                   priority={true}
                   className="absolute right-0 top-0 h-full w-full object-cover object-right-top sm:max-w-none"

@@ -67,7 +67,7 @@ const TrendingNow = () => {
                   className="trending-item group relative mx-auto block max-w-[150px] cursor-pointer transition-all duration-300 hover:-translate-y-1 md:max-w-[220px]"
                   onClick={() => handleCategoryClick(category.id)}
                 >
-                  <div className="bg-img aspect-square overflow-hidden rounded-full border-4 border-white shadow-lg transition-all duration-300 group-hover:border-orange-100 group-hover:shadow-xl">
+                  <div className="bg-img group-hover:border-brand-primary aspect-square overflow-hidden rounded-full border-4 border-white shadow-lg transition-all duration-300 group-hover:shadow-xl">
                     <Image
                       src={category.image ?? "/images/avatar/1.png"}
                       width={220}
@@ -80,10 +80,10 @@ const TrendingNow = () => {
                   </div>
                   <div className="trending-name mt-4 text-center">
                     <div className="flex flex-col items-center">
-                      <span className="heading5 mb-1 font-medium transition-colors duration-300 group-hover:text-orange-500">
+                      <span className="heading5 group-hover:text-brand-primary mb-1 font-medium transition-colors duration-300">
                         {category.name}
                       </span>
-                      <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-medium text-orange-700">
+                      <span className="text-brand-primary rounded-full bg-orange-50 px-3 py-1 text-sm font-medium">
                         {category.subcategories.length}{" "}
                         {category.subcategories.length === 1
                           ? "Subcategory"

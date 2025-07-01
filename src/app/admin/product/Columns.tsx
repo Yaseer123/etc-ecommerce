@@ -28,6 +28,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { toast } from "sonner";
+import { formatPrice } from "../../../utils/format";
 import { FeaturedProductModal } from "./FeaturedProductModal";
 import { StockStatusModal } from "./StockStatusModal";
 
@@ -307,9 +308,11 @@ export const columns: ColumnDef<ProductColumns>[] = [
       );
     },
     cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price")).toFixed(2);
+      const price = parseFloat(row.getValue("price"));
       return (
-        <div className="min-w-[100px] text-right font-medium">৳{price}</div>
+        <div className="min-w-[100px] text-right font-medium">
+          {formatPrice(price)}
+        </div>
       );
     },
   },

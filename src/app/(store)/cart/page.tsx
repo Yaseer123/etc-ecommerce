@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { formatPrice } from "../../../utils/format";
 
 const Cart = () => {
   const router = useRouter();
@@ -41,12 +42,12 @@ const Cart = () => {
         {/* <Breadcrumb pageTitle="Shopping cart" subHeading="Shopping cart" /> */}
       </div>
       <div className="py-10 md:py-20">
-        <div className="mx-auto w-full !max-w-[1322px] px-4">
-          <div className="flex justify-between gap-y-8 max-xl:flex-col">
+        <div className="mx-auto w-full !max-w-[1322px] px-2 sm:px-4">
+          <div className="flex flex-col justify-between gap-y-8 xl:flex-row xl:gap-x-8">
             <div className="w-full xl:w-2/3 xl:pr-3">
-              <div className="mt-5 w-full sm:mt-7 sm:overflow-x-auto">
-                <div className="w-full">
-                  <div className="heading bg-surface pb-4 pt-4">
+              <div className="mt-5 w-full overflow-x-auto sm:mt-7">
+                <div className="w-full min-w-[340px]">
+                  <div className="heading bg-surface hidden pb-4 pt-4 md:block">
                     <div className="flex">
                       <div className="w-1/2">
                         <div className="text-center text-base font-semibold capitalize leading-[26px]">
@@ -78,39 +79,48 @@ const Cart = () => {
                     ) : (
                       cartArray.map((product) => (
                         <div
-                          className="mt-5 flex w-full border-b border-[#ddd] pb-5 focus:border-[#ddd] md:mt-7 md:pb-7"
+                          className="mt-5 flex w-full flex-col gap-4 border-b border-[#ddd] pb-5 focus:border-[#ddd] md:mt-7 md:flex-row md:gap-0 md:pb-7"
                           key={product.id}
                         >
-                          <div className="w-1/2">
-                            <div className="flex items-center gap-6">
-                              <div className="bg-img aspect-square w-20 md:w-[100px]">
-                                <Image
-                                  src={
-                                    product.coverImage ??
-                                    "/images/product/1000x1000.png"
-                                  }
-                                  width={100}
-                                  height={100}
-                                  sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 100px"
-                                  alt={product.name}
-                                  className="h-full w-full rounded-lg object-contain"
-                                />
+                          {/* Product Image & Name */}
+                          <div className="flex w-full items-center gap-4 md:w-1/2 md:gap-6">
+                            <div className="bg-img aspect-square w-20 flex-shrink-0 md:w-[100px]">
+                              <Image
+                                src={
+                                  product.coverImage ??
+                                  "/images/product/1000x1000.png"
+                                }
+                                width={100}
+                                height={100}
+                                sizes="(max-width: 640px) 80px, (max-width: 1024px) 100px, 100px"
+                                alt={product.name}
+                                className="h-full w-full rounded-lg object-contain"
+                              />
+                            </div>
+                            <div>
+                              <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
+                                {product.name}
                               </div>
-                              <div>
-                                <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                                  {product.name}
-                                </div>
-                                <div className="list-select mt-3"></div>
-                              </div>
+                              <div className="list-select mt-3"></div>
                             </div>
                           </div>
-                          <div className="flex w-1/12 items-center justify-center">
+                          {/* Price (mobile: label above) */}
+                          <div className="flex w-full items-center justify-between md:w-1/12 md:justify-center">
+                            <span className="block text-xs text-gray-500 md:hidden">
+                              Price
+                            </span>
                             <div className="discounted-price text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                              ৳{product.discountedPrice ?? product.price}.00
+                              {formatPrice(
+                                product.discountedPrice ?? product.price,
+                              )}
                             </div>
                           </div>
-                          <div className="flex w-1/6 items-center justify-center">
-                            <div className="quantity-block bg-surface flex w-20 flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] p-2 focus:border-[#ddd] md:w-[100px] md:p-3">
+                          {/* Quantity (mobile: label above) */}
+                          <div className="mt-2 flex w-full items-center justify-between md:mt-0 md:w-1/6 md:justify-center">
+                            <span className="block text-xs text-gray-500 md:hidden">
+                              Quantity
+                            </span>
+                            <div className="quantity-block bg-surface flex w-24 flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] p-2 focus:border-[#ddd] md:w-20 md:p-3">
                               <Minus
                                 onClick={() => {
                                   if (product.quantity > 1) {
@@ -136,15 +146,20 @@ const Cart = () => {
                               />
                             </div>
                           </div>
-                          <div className="total-price flex w-1/6 items-center justify-center">
+                          {/* Total Price (mobile: label above) */}
+                          <div className="total-price mt-2 flex w-full items-center justify-between md:mt-0 md:w-1/6 md:justify-center">
+                            <span className="block text-xs text-gray-500 md:hidden">
+                              Total
+                            </span>
                             <div className="text-center text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                              ৳
-                              {product.quantity *
-                                (product.discountedPrice ?? product.price)}
-                              .00
+                              {formatPrice(
+                                product.quantity *
+                                  (product.discountedPrice ?? product.price),
+                              )}
                             </div>
                           </div>
-                          <div className="flex w-1/12 items-center justify-center">
+                          {/* Remove button (mobile: right-aligned) */}
+                          <div className="mt-2 flex w-full items-center justify-end md:mt-0 md:w-1/12 md:justify-center">
                             <XCircle
                               className="cursor-pointer text-xl text-red-500 duration-500 max-md:text-base"
                               onClick={() => {
@@ -220,8 +235,7 @@ const Cart = () => {
                     Subtotal
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    ৳<span>{totalCart}</span>
-                    <span>.00</span>
+                    {formatPrice(totalCart)}
                   </div>
                 </div>
 
@@ -230,13 +244,7 @@ const Cart = () => {
                     Total
                   </div>
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                    ৳
-                    <span className="total-cart text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                      {totalCart - discountCart + shipCart}
-                    </span>
-                    <span className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                      .00
-                    </span>
+                    {formatPrice(totalCart - discountCart + shipCart)}
                   </div>
                 </div>
                 <div className="block-button mt-5 flex flex-col items-center gap-y-4">

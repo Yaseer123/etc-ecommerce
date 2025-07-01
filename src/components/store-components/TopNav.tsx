@@ -80,7 +80,7 @@ export default function TopNav({ props }: Props) {
                 <FaInstagram />
               </Link>
               <Link
-                href={"https://www.youtube.com/@rinorsgreenenergy"}
+                href={"https://www.youtube.com/@rinorsecommerce"}
                 target="_blank"
               >
                 <FaYoutube />

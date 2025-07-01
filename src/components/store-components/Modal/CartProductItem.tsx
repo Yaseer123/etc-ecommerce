@@ -2,6 +2,7 @@
 
 import { useCartStore } from "@/context/store-context/CartContext";
 import Image from "next/image";
+import { formatPrice } from "../../../utils/format";
 
 interface CartItemProp {
   price: number;
@@ -42,13 +43,9 @@ export default function CartProductItem({ item }: CartProductItemProps) {
             Remove
           </div>
         </div>
-        {/* <div className="mt-3 flex w-full items-center justify-between gap-2">
-          <div className="flex items-center capitalize text-secondary2">
-            {item.selectedSize || item.sizes[0]}/
-            {item.selectedColor || item.variation[0].color}
-          </div>
-          <div className="item-price text-title">৳{item.discountedPrice ?? item.price}.00</div>
-        </div> */}
+        <div className="item-price text-title">
+          {formatPrice(item.discountedPrice ?? item.price)}
+        </div>
       </div>
     </div>
   );

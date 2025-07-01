@@ -21,10 +21,11 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import type { Product } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { formatPrice } from "../../../utils/format";
 import Rate from "../Rate";
-import Link from "next/link";
 
 const ModalQuickView = () => {
   const { selectedProduct, closeQuickView } = useModalQuickViewStore() as {
@@ -251,10 +252,10 @@ const ModalQuickView = () => {
                   ) : (
                     <>
                       <div className="product-price heading5 discounted-price">
-                        ৳
-                        {selectedProduct.discountedPrice ??
-                          selectedProduct.price}
-                        .00
+                        {formatPrice(
+                          selectedProduct.discountedPrice ??
+                            selectedProduct.price,
+                        )}
                       </div>
                       {selectedProduct.discountedPrice &&
                         selectedProduct.discountedPrice <
@@ -262,7 +263,7 @@ const ModalQuickView = () => {
                           <>
                             <div className="bg-line h-4 w-px"></div>
                             <div className="product-origin-price text-secondary2 font-normal">
-                              <del>৳{selectedProduct.price}.00</del>
+                              <del>{formatPrice(selectedProduct.price)}</del>
                             </div>
                             <div className="product-sale caption2 bg-green inline-block rounded-full px-3 py-0.5 font-semibold">
                               -{percentSale}%

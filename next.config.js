@@ -18,11 +18,11 @@ const config = {
       { protocol: "https", hostname: "lh3.googleusercontent.com" },
     ],
   },
-  // experimental: {
-  //   serverActions: {
-  //     bodySizeLimit: "5mb",
-  //   },
-  // },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "100mb",
+    },
+  },
   // typescript: {
   //   ignoreBuildErrors: true,
   // },

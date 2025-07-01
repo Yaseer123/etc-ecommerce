@@ -7,6 +7,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { formatPrice } from "../../utils/format";
 
 function isProductWithCategory(val: unknown): val is ProductWithCategory {
   if (!val || typeof val !== "object") return false;
@@ -134,15 +135,15 @@ export default function MobileSearch() {
                                   product.discountedPrice < product.price ? (
                                     <>
                                       <span className="discounted-price">
-                                        ৳{product.discountedPrice.toFixed(2)}
+                                        {formatPrice(product.discountedPrice)}
                                       </span>
                                       <span className="ml-2 text-gray-400 line-through">
-                                        ৳{product.price.toFixed(2)}
+                                        {formatPrice(product.price)}
                                       </span>
                                     </>
                                   ) : (
                                     <span className="discounted-price">
-                                      ৳{product.price.toFixed(2)}
+                                      {formatPrice(product.price)}
                                     </span>
                                   )}
                                 </div>

@@ -99,7 +99,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                               e.stopPropagation();
                               handleMenuMobile();
                             }}
-                            className="block py-1 text-base text-gray-700 hover:text-orange-600"
+                            className="hover:text-brand-primary block py-1 text-base text-gray-700"
                           >
                             {cat.name}
                           </Link>
@@ -178,7 +178,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                       <SiTiktok className="text-xl text-black" />
                     </Link>
                     <Link
-                      href={"https://www.youtube.com/@rinorsgreenenergy"}
+                      href={"https://www.youtube.com/@rinorsecommerce"}
                       target="_blank"
                     >
                       <div className="icon-youtube text-3xl text-black"></div>

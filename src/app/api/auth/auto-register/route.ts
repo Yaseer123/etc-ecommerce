@@ -19,12 +19,7 @@ export async function POST(req: Request) {
         { status: 400 },
       );
     }
-    // Check if user already exists
-    const existingUser = await db.user.findUnique({ where: { email } });
-    if (existingUser) {
-      // Optionally, send a 'you already have an account' email here
-      return NextResponse.json({ message: "User already exists." });
-    }
+    // Always create a new user, allow duplicate emails
     // Generate password and hash
     const password = generateRandomPassword();
     const hashedPassword = await hash(password, 10);

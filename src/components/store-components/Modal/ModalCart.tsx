@@ -5,6 +5,7 @@ import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { Minus, Plus, Trash, X } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { useState } from "react";
+import { formatPrice } from "../../../utils/format";
 import CartProductItem from "./CartProductItem";
 
 const ModalCart = () => {
@@ -108,11 +109,10 @@ const ModalCart = () => {
                               </span>
                             </div>
                             <span className="font-medium text-black">
-                              ৳
-                              {(
+                              {formatPrice(
                                 (item.discountedPrice ?? item.price) *
-                                item.quantity
-                              ).toFixed(2)}
+                                  item.quantity,
+                              )}
                             </span>
                           </div>
                         </div>
@@ -126,12 +126,12 @@ const ModalCart = () => {
               <div className="flex flex-col gap-2 px-6 pt-0">
                 <div className="flex items-center justify-between text-gray-600">
                   <span>Items ({cartState.length})</span>
-                  <span>৳{totalCart.toFixed(2)}</span>
+                  <span>{formatPrice(totalCart)}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="heading5">Total</div>
                   <div className="heading5 text-xl">
-                    ৳{totalCart.toFixed(2)}
+                    {formatPrice(totalCart)}
                   </div>
                 </div>
               </div>

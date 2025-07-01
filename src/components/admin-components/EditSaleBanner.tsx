@@ -318,7 +318,7 @@ export const EditSaleBanner = () => {
                 disabled={uploading}
               />
               <div className="mt-1 text-xs text-gray-400">
-                Recommended size: 1200x520px or larger, 21:9 aspect ratio
+                Recommended size: 600x400px, 3:2 aspect ratio
               </div>
             </div>
             {selectedImageName ? (

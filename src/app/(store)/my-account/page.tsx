@@ -61,7 +61,11 @@ const MyAccount = () => {
                   <Link
                     href={"#!"}
                     scroll={false}
-                    className={`item flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "dashboard" ? "active" : ""}`}
+                    className={`item flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-gray-100 hover:text-primary ${
+                      activeTab === "dashboard"
+                        ? "border-l-4 border-primary bg-primary/10 font-semibold text-primary"
+                        : ""
+                    }`}
                     onClick={() => setActiveTab("dashboard")}
                   >
                     <HouseLine size={20} />
@@ -70,7 +74,11 @@ const MyAccount = () => {
                   <Link
                     href={"#!"}
                     scroll={false}
-                    className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "orders" ? "active" : ""}`}
+                    className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-gray-100 hover:text-primary ${
+                      activeTab === "orders"
+                        ? "border-l-4 border-primary bg-primary/10 font-semibold text-primary"
+                        : ""
+                    }`}
                     onClick={() => setActiveTab("orders")}
                   >
                     <Package size={20} />
@@ -79,7 +87,11 @@ const MyAccount = () => {
                   <Link
                     href={"#!"}
                     scroll={false}
-                    className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white ${activeTab === "address" ? "active" : ""}`}
+                    className={`item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-gray-100 hover:text-primary ${
+                      activeTab === "address"
+                        ? "border-l-4 border-primary bg-primary/10 font-semibold text-primary"
+                        : ""
+                    }`}
                     onClick={() => setActiveTab("address")}
                   >
                     <Tag size={20} />
@@ -87,7 +99,7 @@ const MyAccount = () => {
                   </Link>
                   <Link
                     href={"/signout"}
-                    className="item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-white"
+                    className="item mt-1.5 flex w-full cursor-pointer items-center gap-3 rounded-lg px-5 py-4 duration-300 hover:bg-gray-100 hover:text-primary"
                   >
                     <SignOut size={20} />
                     <strong className="heading6">Logout</strong>

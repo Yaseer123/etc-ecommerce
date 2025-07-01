@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { SetStateAction, useEffect, useMemo, useRef, useState } from "react";
+import { formatPrice } from "../../../utils/format";
 
 type OrderWithRelations = Order & {
   address?: {
@@ -714,8 +715,9 @@ const Checkout = () => {
                               {product.name}
                             </div>
                             <div className="hidden text-right text-base font-medium capitalize leading-6 md:block md:text-base md:leading-5">
-                              ৳{product.discountedPrice ?? product.price}
-                              .00
+                              {formatPrice(
+                                product.discountedPrice ?? product.price,
+                              )}
                             </div>
                           </div>
 
@@ -736,7 +738,9 @@ const Checkout = () => {
                           )}
 
                           <div className="mt-2 text-base font-medium capitalize leading-6 md:hidden md:text-base md:leading-5">
-                            ৳{product.discountedPrice ?? product.price}.00
+                            {formatPrice(
+                              product.discountedPrice ?? product.price,
+                            )}
                           </div>
 
                           <div className="mt-2 flex items-center">
@@ -776,8 +780,7 @@ const Checkout = () => {
                     Discounts
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    -৳<span className="discount">{discountValue}</span>
-                    <span>.00</span>
+                    -{formatPrice(discountValue)}
                   </div>
                 </div>
                 <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
@@ -785,7 +788,7 @@ const Checkout = () => {
                     Shipping
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
-                    {shippingCost === 0 ? "Free" : `৳${shippingCost}.00`}
+                    {shippingCost === 0 ? "Free" : formatPrice(shippingCost)}
                   </div>
                 </div>
                 <div className="flex justify-between pt-5">
@@ -793,7 +796,7 @@ const Checkout = () => {
                     Total
                   </div>
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
-                    ৳{totalCart - discountValue + shippingCost}.00
+                    {formatPrice(totalCart - discountValue + shippingCost)}
                   </div>
                 </div>
               </div>

@@ -163,17 +163,12 @@ export const authConfig = {
       if (account?.provider && account.provider !== "credentials") {
         const emailToCheck = user?.email;
         if (!emailToCheck) return false;
+        // Remove emailVerified checks, allow sign in regardless
         const existingUser = await db.user.findUnique({
           where: { email: emailToCheck },
         });
         if (existingUser) {
-          if (existingUser.emailVerified) {
-            // Allow sign in, verified user exists
-            return true;
-          } else {
-            // Block sign in, unverified user exists
-            return "/auth/verify-required"; // Or return false to block
-          }
+          return true;
         } else {
           // No user exists, create and mark as verified
           await db.user.create({

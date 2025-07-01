@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import { formatPrice } from "../../../utils/format";
 
 interface ProductProps {
   data: ProductType | ProductWithCategory;
@@ -303,7 +304,7 @@ export default function Product({ data }: ProductProps) {
             <span
               className="mark"
               style={{
-                background: "#F97316",
+                background: "var(--brand-primary)",
                 color: "#fff",
                 borderTopRightRadius: "10px",
                 borderBottomRightRadius: "10px",
@@ -313,12 +314,13 @@ export default function Product({ data }: ProductProps) {
                 display: "inline-block",
               }}
             >
-              Save: {amountSaved.toLocaleString()}৳ (-{discountPercentage}%)
+              Save: {formatPrice(amountSaved, "৳", false)} (-
+              {discountPercentage}%)
             </span>
           </div>
         )}
 
-        <Link href={`/products/${data.slug}?id=${data.id}`}>
+        <Link href={`/products/${data.slug}`}>
           <div className="relative overflow-hidden rounded-lg">
             <Image
               className="aspect-square w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
@@ -396,10 +398,7 @@ export default function Product({ data }: ProductProps) {
         </div>
       </div>
       <div className="product-info mt-4 flex flex-col">
-        <Link
-          href={`/products/${data.slug}?id=${data.id}`}
-          className="flex-grow"
-        >
+        <Link href={`/products/${data.slug}`} className="flex-grow">
           <h3 className="text-title line-clamp-3 min-h-[4.5rem] cursor-pointer text-base font-medium hover:underline">
             {"title" in data && typeof data.title === "string"
               ? data.title
@@ -415,15 +414,15 @@ export default function Product({ data }: ProductProps) {
           ) : data.discountedPrice != null ? (
             <div className="flex items-center gap-2">
               <span className="text-title discounted-price font-bold">
-                ৳{data.discountedPrice.toFixed(2)}
+                {formatPrice(data.discountedPrice)}
               </span>
               <span className="text-sm text-gray-500 line-through">
-                ৳{data.price.toFixed(2)}
+                {formatPrice(data.price)}
               </span>
             </div>
           ) : (
             <span className="text-title font-bold">
-              ৳{data.price.toFixed(2)}
+              {formatPrice(data.price)}
             </span>
           )}
         </div>
