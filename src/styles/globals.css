@@ -1,4 +1,11 @@
-/* YouTube video embed responsive styling */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+  /* YouTube video embed responsive styling */
 .video-container {
   position: relative;
   padding-bottom: 56.25%; /* 16:9 Aspect Ratio */

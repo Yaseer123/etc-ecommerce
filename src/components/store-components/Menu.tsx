@@ -1,6 +1,6 @@
 "use client";
 
-import { ModeToggle } from "@/components/ModeToggle";
+import { ModeToggle } from "@/components/ThemeToggle";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";

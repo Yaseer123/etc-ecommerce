@@ -1,8 +1,14 @@
 import React from 'react'
+import SlideNavbar from '@/components/shared/SlideNavbar'
 
 const page = () => {
   return (
-    <div>page</div>
+    <div className='bg-white'>
+
+  <SlideNavbar>
+    <p>Home</p>
+  </SlideNavbar>
+    </div>
   )
 }
 
