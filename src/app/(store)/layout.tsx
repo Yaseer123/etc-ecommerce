@@ -18,7 +18,9 @@ export default async function layout({
   return (
     <HydrateClient>
       <SlideNavbar>
-        <AuroraBackground>{children}</AuroraBackground>
+        <AuroraBackground>
+            {children}
+            </AuroraBackground>
       </SlideNavbar>
       <WhatsAppWidget />
       <Footer />
