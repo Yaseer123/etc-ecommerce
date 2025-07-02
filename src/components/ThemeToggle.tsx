@@ -16,16 +16,20 @@ export { ThemeProvider } from "next-themes";
 export function ThemeToggle() {
   const { setTheme } = useTheme();
 
-return (
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground">
-          <SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full bg-background hover:bg-accent hover:text-accent-foreground"
+        >
+          <SunIcon className="size-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <MoonIcon className="absolute size-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-white text-black">
+      <DropdownMenuContent align="end" className="bg-white text-black dark:bg-black dark:text-white">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           Light
         </DropdownMenuItem>
