@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaLocationDot, FaXTwitter } from "react-icons/fa6";
 import { SiTiktok } from "react-icons/si";
-import Newsletter from "./Newsletter";
 
 const Footer = () => {
   return (
@@ -10,7 +9,7 @@ const Footer = () => {
       <div id="footer" className="footer mt-5 bg-white">
         <div className="footer-main bg-surface">
           <div className="container">
-            <div className="content-footer flex flex-wrap justify-between gap-y-8 py-[60px]">
+            <div className="content-footer flex flex-wrap justify-between gap-y-8 pt-[60px]">
               <div className="company-infor basis-1/4 pr-7 max-lg:basis-full">
                 <Link href={"/"} className="logo">
                   <Image
@@ -37,6 +36,103 @@ const Footer = () => {
                   </div>
                 </div>
               </div>
+              <div className="list-nav flex basis-2/4 justify-between gap-4 max-lg:basis-full">
+                <div className="item flex basis-1/3 flex-col">
+                  <div className="text-button-uppercase pb-3">Infomation</div>
+                  <Link
+                    className="caption1 has-line-before w-fit duration-300"
+                    href={"/contact"}
+                  >
+                    Contact us
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/contact"}
+                  >
+                    Career
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/my-account"}
+                  >
+                    My Account
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/order-tracking"}
+                  >
+                    Order Tracking
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/faqs"}
+                  >
+                    FAQs
+                  </Link>
+                </div>
+                <div className="item flex basis-1/3 flex-col">
+                  <div className="text-button-uppercase pb-3">Quick Shop</div>
+                  <Link
+                    className="caption1 has-line-before w-fit duration-300"
+                    href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"}
+                  >
+                    Home Electricals
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"}
+                  >
+                    Energy Solutions
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"}
+                  >
+                    Smart Gadget
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"}
+                  >
+                    Health and Fitness
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"}
+                  >
+                    Smart Appliances
+                  </Link>
+                </div>
+                <div className="item flex basis-1/3 flex-col">
+                  <div className="text-button-uppercase pb-3">
+                    Customer Services
+                  </div>
+                  <Link
+                    className="caption1 has-line-before w-fit duration-300"
+                    href={"/faqs"}
+                  >
+                    Orders FAQs
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/pages/faqs"}
+                  >
+                    Shipping
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/privacy-policy"}
+                  >
+                    Privacy Policy
+                  </Link>
+                  <Link
+                    className="caption1 has-line-before w-fit pt-2 duration-300"
+                    href={"/order-tracking"}
+                  >
+                    Return & Refund
+                  </Link>
+                </div>
+              </div>
               <div className="support-block mb-8 flex basis-1/4 flex-col pr-12 max-lg:basis-full">
                 <div>
                   <h4 className="mb-4 text-lg font-semibold">Support</h4>
@@ -55,7 +151,6 @@ const Footer = () => {
                     </div>
                   </Link>
                 </div>
-
                 <a
                   href="https://g.co/kgs/MX7BqyL"
                   target="_blank"
@@ -73,217 +168,42 @@ const Footer = () => {
                   </div>
                 </a>
               </div>
-
-              <div className="right-content flex basis-3/4 flex-wrap gap-y-8 max-lg:basis-full">
-                <div className="list-nav flex basis-2/3 justify-between gap-4 max-md:basis-full">
-                  <div className="item flex basis-1/3 flex-col">
-                    <div className="text-button-uppercase pb-3">Infomation</div>
-                    <Link
-                      className="caption1 has-line-before w-fit duration-300"
-                      href={"/contact"}
-                    >
-                      Contact us
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/contact"}
-                    >
-                      Career
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/my-account"}
-                    >
-                      My Account
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/order-tracking"}
-                    >
-                      Order Tracking
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/faqs"}
-                    >
-                      FAQs
-                    </Link>
-                  </div>
-                  <div className="item flex basis-1/3 flex-col">
-                    <div className="text-button-uppercase pb-3">Quick Shop</div>
-                    <Link
-                      className="caption1 has-line-before w-fit duration-300"
-                      href={
-                        "/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"
-                      }
-                    >
-                      Home Electricals
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"
-                      }
-                    >
-                      Energy Solutions
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"
-                      }
-                    >
-                      Smart Gadget
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"
-                      }
-                    >
-                      Health and Fitness
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={
-                        "/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"
-                      }
-                    >
-                      Smart Appliances
-                    </Link>
-                  </div>
-                  <div className="item flex basis-1/3 flex-col">
-                    <div className="text-button-uppercase pb-3">
-                      Customer Services
-                    </div>
-                    <Link
-                      className="caption1 has-line-before w-fit duration-300"
-                      href={"/faqs"}
-                    >
-                      Orders FAQs
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/pages/faqs"}
-                    >
-                      Shipping
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/privacy-policy"}
-                    >
-                      Privacy Policy
-                    </Link>
-                    <Link
-                      className="caption1 has-line-before w-fit pt-2 duration-300"
-                      href={"/order-tracking"}
-                    >
-                      Return & Refund
-                    </Link>
-                  </div>
-                </div>
-
-                <div className="newsletter basis-1/3 pl-7 max-md:basis-full max-md:pl-0">
-                  <Newsletter variant="footer" />
-                  <div className="list-social mt-4 flex items-center gap-6">
-                    <Link
-                      href={
-                        "https://www.facebook.com/profile.php?id=61572946813700"
-                      }
-                      target="_blank"
-                    >
-                      <div className="icon-facebook text-2xl text-black"></div>
-                    </Link>
-                    <Link
-                      href={
-                        "https://www.instagram.com/rinors_electronic_store/"
-                      }
-                      target="_blank"
-                    >
-                      <div className="icon-instagram text-2xl text-black"></div>
-                    </Link>
-                    <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
-                      <FaXTwitter className="text-xl text-black" />
-                    </Link>
-                    <Link
-                      href={"https://www.tiktok.com/@rinors_ecommerce"}
-                      target="_blank"
-                    >
-                      <SiTiktok className="text-xl text-black" />
-                    </Link>
-                    <Link
-                      href={"https://www.youtube.com/@rinorsecommerce"}
-                      target="_blank"
-                    >
-                      <div className="icon-youtube text-3xl text-black"></div>
-                    </Link>
-                  </div>
-                </div>
-              </div>
             </div>
             <div className="footer-bottom flex items-center justify-between gap-5 border-t border-[#ddd] py-3 focus:border-[#ddd] max-lg:flex-col max-lg:justify-center">
-              <div className="left flex items-center gap-8">
-                <div className="copyright caption1 text-secondary">
-                  ©{new Date().getFullYear()} Rinors Corporation. All Rights
-                  Reserved.
-                </div>
+              <div className="copyright caption1 text-secondary">
+                ©{new Date().getFullYear()} Rinors Corporation. All Rights
+                Reserved.
               </div>
-              <div className="right flex items-center gap-2">
-                <div className="caption1 text-secondary">Payment:</div>
-                <div className="payment-img">
-                  <Image
-                    src={"/images/payment/Frame-0.png"}
-                    width={500}
-                    height={500}
-                    alt={"payment"}
-                    className="w-9"
-                  />
-                </div>
-                <div className="payment-img">
-                  <Image
-                    src={"/images/payment/Frame-1.png"}
-                    width={500}
-                    height={500}
-                    alt={"payment"}
-                    className="w-9"
-                  />
-                </div>
-                <div className="payment-img">
-                  <Image
-                    src={"/images/payment/Frame-2.png"}
-                    width={500}
-                    height={500}
-                    alt={"payment"}
-                    className="w-9"
-                  />
-                </div>
-                <div className="payment-img">
-                  <Image
-                    src={"/images/payment/Frame-3.png"}
-                    width={500}
-                    height={500}
-                    alt={"payment"}
-                    className="w-9"
-                  />
-                </div>
-                <div className="payment-img">
-                  <Image
-                    src={"/images/payment/Frame-4.png"}
-                    width={500}
-                    height={500}
-                    alt={"payment"}
-                    className="w-9"
-                  />
-                </div>
-                <div className="payment-img">
-                  <Image
-                    src={"/images/payment/Frame-5.png"}
-                    width={500}
-                    height={500}
-                    alt={"payment"}
-                    className="w-9"
-                  />
-                </div>
+              <div className="list-social flex items-center gap-4">
+                <Link
+                  href={
+                    "https://www.facebook.com/profile.php?id=61572946813700"
+                  }
+                  target="_blank"
+                >
+                  <div className="icon-facebook text-2xl text-black transition hover:text-[#1877f3]"></div>
+                </Link>
+                <Link
+                  href={"https://www.instagram.com/rinors_electronic_store/"}
+                  target="_blank"
+                >
+                  <div className="icon-instagram text-2xl text-black transition hover:text-[#e4405f]"></div>
+                </Link>
+                <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
+                  <FaXTwitter className="text-xl text-black transition hover:text-[#1da1f2]" />
+                </Link>
+                <Link
+                  href={"https://www.tiktok.com/@rinors_ecommerce"}
+                  target="_blank"
+                >
+                  <SiTiktok className="text-xl text-black transition hover:text-[#010101]" />
+                </Link>
+                <Link
+                  href={"https://www.youtube.com/@rinorsecommerce"}
+                  target="_blank"
+                >
+                  <div className="icon-youtube text-3xl text-black transition hover:text-[#ff0000]"></div>
+                </Link>
               </div>
             </div>
           </div>
