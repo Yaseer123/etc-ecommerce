@@ -22,7 +22,8 @@
     "start": "next start",
     "typecheck": "tsc --noEmit",
     "postbuild": "next-sitemap",
-    "prepare": "husky"
+    "prepare": "husky",
+    "tsc:watch": "tsc --w"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx,mdx}": [
