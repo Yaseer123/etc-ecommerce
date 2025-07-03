@@ -3,6 +3,7 @@
 import Globe from "@/components/globe/Globe";
 import FeaturedProducts from "@/components/store-components/FeaturedProducts";
 import Slider from "@/components/store-components/Slider";
+import TrendingNow from "@/components/store-components/TrendingNow";
 import { Button } from "@/components/ui/moving-border";
 import { motion } from "motion/react";
 
@@ -22,6 +23,7 @@ const page = () => {
         <div id="header" className="relative w-full">
           <Slider />
         </div>
+        <TrendingNow />
         <div className="mt-40 text-center text-3xl font-bold dark:text-white md:text-7xl">
           Background lights are cool you know.
         </div>
