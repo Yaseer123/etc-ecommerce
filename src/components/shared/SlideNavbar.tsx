@@ -28,6 +28,7 @@ import { Handbag, Heart, User } from "@phosphor-icons/react/dist/ssr";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import CategoryNav from "./CategoryNav";
+import SearchBar from "./SearchBar";
 
 export type CategoryType = {
   id: string | number;
@@ -74,6 +75,9 @@ export default function SlideNavbar({
       >
         <NavBody>
           <NavbarLogo />
+          <div className="mx-4 hidden max-w-xl flex-1 lg:block">
+            <SearchBar />
+          </div>
 
           <NavigationMenu>
             <NavigationMenuList className="gap-4">
