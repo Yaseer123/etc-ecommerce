@@ -7,6 +7,7 @@ import { auth } from "@/server/auth";
 import "@/styles/styles.scss";
 import { HydrateClient } from "@/trpc/server";
 import React from "react";
+import NextTopLoader from "nextjs-toploader";
 
 export default async function layout({
   children,
@@ -17,10 +18,13 @@ export default async function layout({
   return (
     <HydrateClient>
       <SlideNavbar isAuthenticated={!!session?.user} />
-      <AuroraBackground>{children}</AuroraBackground>
-      <WhatsAppWidget />
-      <Footer />
-      <ModalWrapper />
+      <body>
+        <NextTopLoader />
+        <AuroraBackground>{children}</AuroraBackground>
+        <WhatsAppWidget />
+        <Footer />
+        <ModalWrapper />
+      </body>
     </HydrateClient>
   );
 }
