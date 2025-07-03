@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
 import dynamic from "next/dynamic";
 
 // Dynamically import modals
@@ -11,10 +11,11 @@ const ModalQuickView = dynamic(() => import("./ModalQuickView"), {
 });
 
 const ModalWrapper = () => {
+  const { isModalOpen } = useModalWishlistStore();
   return (
     <>
       <ModalCart />
-      <ModalWishlist />
+      {isModalOpen && <ModalWishlist />}
       <ModalQuickView />
     </>
   );
