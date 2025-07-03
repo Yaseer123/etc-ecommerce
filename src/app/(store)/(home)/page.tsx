@@ -2,6 +2,7 @@
 
 import Globe from "@/components/globe/Globe";
 import FeaturedProducts from "@/components/store-components/FeaturedProducts";
+import Slider from "@/components/store-components/Slider";
 import { Button } from "@/components/ui/moving-border";
 import { motion } from "motion/react";
 
@@ -18,6 +19,9 @@ const page = () => {
         }}
         className="relative flex flex-col items-center justify-center gap-4 px-4"
       >
+        <div id="header" className="relative w-full">
+          <Slider />
+        </div>
         <div className="mt-40 text-center text-3xl font-bold dark:text-white md:text-7xl">
           Background lights are cool you know.
         </div>
