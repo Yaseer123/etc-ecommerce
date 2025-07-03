@@ -1,6 +1,7 @@
 "use client";
 
 import Globe from "@/components/globe/Globe";
+import FeaturedProducts from "@/components/store-components/FeaturedProducts";
 import { Button } from "@/components/ui/moving-border";
 import { motion } from "motion/react";
 
@@ -30,6 +31,8 @@ const page = () => {
         >
           Debug now
         </Button>
+
+        <FeaturedProducts />
 
         <motion.div
           initial={{
