@@ -14,10 +14,9 @@ export default async function layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-
   return (
     <HydrateClient>
-      <SlideNavbar />
+      <SlideNavbar isAuthenticated={!!session?.user} />
       <AuroraBackground>{children}</AuroraBackground>
       <WhatsAppWidget />
       <Footer />
