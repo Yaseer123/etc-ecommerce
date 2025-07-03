@@ -42,7 +42,11 @@ function toTitleCase(str: string) {
   );
 }
 
-export default function SlideNavbar() {
+export default function SlideNavbar({
+  isAuthenticated,
+}: {
+  isAuthenticated: boolean;
+}) {
   const { data: categories, isLoading } = api.category.getAll.useQuery();
   const [isSticky, setIsSticky] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -50,8 +54,6 @@ export default function SlideNavbar() {
   const { openModalCart } = useModalCartStore();
   const { cartArray } = useCartStore();
   const { openModalWishlist } = useModalWishlistStore();
-  // TODO: Replace with real authentication logic
-  const isAuthenticated = false;
 
   useEffect(() => {
     const handleScroll = () => setIsSticky(window.scrollY > 120);
