@@ -18,13 +18,13 @@ export default async function layout({
   return (
     <HydrateClient>
       <SlideNavbar isAuthenticated={!!session?.user} />
-      <body>
-        <NextTopLoader />
-        <AuroraBackground>{children}</AuroraBackground>
-        <WhatsAppWidget />
-        <Footer />
-        <ModalWrapper />
-      </body>
+      {/* <body> */}
+      <NextTopLoader />
+      <AuroraBackground>{children}</AuroraBackground>
+      <WhatsAppWidget />
+      <Footer />
+      <ModalWrapper />
+      {/* </body> */}
     </HydrateClient>
   );
 }
