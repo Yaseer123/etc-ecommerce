@@ -3,7 +3,6 @@
 import Globe from "@/components/globe/Globe";
 import FeaturedProducts from "@/components/store-components/FeaturedProducts";
 import TrendingNow from "@/components/store-components/TrendingNow";
-import { Button } from "@/components/ui/moving-border";
 import { motion } from "motion/react";
 import React from "react";
 import Benefit from "./Benefit";
@@ -28,20 +27,6 @@ const HomeAnimatedContent: React.FC<HomeAnimatedContentProps> = ({
       className="relative flex flex-col items-center justify-center gap-4 px-4"
     >
       <TrendingNow />
-      <div className="mt-40 text-center text-3xl font-bold dark:text-white md:text-7xl">
-        Background lights are cool you know.
-      </div>
-      <div className="py-4 text-base font-extralight dark:text-neutral-200 md:text-4xl">
-        And this, is chemical burn.
-      </div>
-
-      <Button
-        borderRadius="1.75rem"
-        className="border-neutral-200 bg-white text-black dark:border-slate-800 dark:bg-slate-900 dark:text-white"
-      >
-        Debug now
-      </Button>
-
       <FeaturedProducts />
       <RecentlyAdded />
       <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" />

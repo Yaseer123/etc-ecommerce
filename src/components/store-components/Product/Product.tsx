@@ -282,48 +282,19 @@ export default function Product({ data }: ProductProps) {
     data.discountedPrice != null ? data.price - data.discountedPrice : 0;
 
   return (
-    <div className="product-item style-marketplace h-full min-h-[300px] rounded-[.25rem] border border-[#ddd] bg-white p-4 pt-5 transition-all duration-300 hover:shadow-md focus:border-[#ddd]">
+    <div className="product-item style-marketplace min-h-[300px] rounded-lg border border-gray-200 bg-white p-4 pt-5 transition-all duration-500 ease-in-out hover:-translate-y-1 hover:shadow-xl dark:border-gray-700 dark:bg-gray-900 lg:h-full">
       <div className="bg-img relative w-full pt-6">
-        {/* Save badge with amount and percentage */}
         {discountPercentage > 0 && amountSaved > 0 && (
-          <div
-            className="marks"
-            style={{
-              fontFamily: '"Trebuchet MS", sans-serif',
-              lineHeight: 1.15,
-              fontSize: 14,
-              position: "absolute",
-              top: -12,
-              left: -18,
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "flex-start",
-            }}
-          >
-            <span
-              className="mark"
-              style={{
-                background: "var(--brand-primary)",
-                color: "#fff",
-                borderTopRightRadius: "10px",
-                borderBottomRightRadius: "10px",
-                padding: "0px 8px",
-                fontWeight: 700,
-                marginBottom: 2,
-                display: "inline-block",
-              }}
-            >
-              Save: {formatPrice(amountSaved, "৳", false)} (-
-              {discountPercentage}%)
-            </span>
+          <div className="absolute left-2 top-2 z-10 rounded-r-md bg-[#f27115] px-2 py-0.5 text-sm font-bold text-white shadow-md transition-all duration-300">
+            Save: {formatPrice(amountSaved, "৳", false)} (-{discountPercentage}
+            %)
           </div>
         )}
 
         <Link href={`/products/${data.slug}`}>
-          <div className="relative overflow-hidden rounded-lg">
+          <div className="relative overflow-hidden rounded-xl">
             <Image
-              className="aspect-square w-full cursor-pointer object-cover transition-transform duration-300 hover:scale-105"
+              className="aspect-square w-full cursor-pointer object-cover transition-transform duration-500 ease-in-out hover:scale-105"
               width={5000}
               height={5000}
               src={
@@ -345,61 +316,57 @@ export default function Product({ data }: ProductProps) {
             />
           </div>
         </Link>
-        <div className="list-action absolute right-1 top-1 flex flex-col gap-2">
-          <button
-            className={`add-wishlistState-btn box-shadow-sm flex h-9 w-9 items-center justify-center rounded-full bg-white transition-all duration-300 hover:bg-gray-100 ${
-              isInWishlist(data.id) ? "active bg-pink-50" : ""
-            }`}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleAddToWishlist();
-            }}
-          >
-            {isInWishlist(data.id) ? (
-              <Heart
-                size={18}
-                weight="fill"
-                className="cursor-pointer text-red-500"
-              />
-            ) : (
-              <Heart size={18} className="cursor-pointer" />
-            )}
-            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/75 group-hover:visible group-hover:opacity-100">
-              {isInWishlist(data.id)
-                ? "Remove from Wishlist"
-                : "Add to Wishlist"}
-            </div>
-          </button>
 
-          <button
-            className="quick-view-btn box-shadow-sm flex h-9 w-9 items-center justify-center rounded-full bg-white transition-all duration-300 hover:bg-gray-100"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleQuickViewOpen();
-            }}
-          >
-            <Eye size={18} />
-            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/75 group-hover:visible group-hover:opacity-100">
-              Quick View
+        <div className="absolute right-2 top-2 z-10 flex flex-col gap-2">
+          {[
+            {
+              Icon: Heart,
+              isActive: isInWishlist(data.id),
+              action: handleAddToWishlist,
+              tooltip: isInWishlist(data.id)
+                ? "Remove from Wishlist"
+                : "Add to Wishlist",
+            },
+            {
+              Icon: Eye,
+              action: handleQuickViewOpen,
+              tooltip: "Quick View",
+            },
+            {
+              Icon: ShoppingBagOpen,
+              action: handleAddToCart,
+              tooltip: "Add To Cart",
+            },
+          ].map(({ Icon, action, isActive = false, tooltip }, idx) => (
+            <div key={idx} className="group relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  action();
+                }}
+                className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-700 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 dark:border-gray-600 dark:bg-white dark:text-black ${
+                  isActive ? "bg-pink-100 dark:bg-pink-200" : ""
+                }`}
+              >
+                <Icon
+                  size={18}
+                  weight={isActive ? "fill" : "regular"}
+                  className={isActive ? "text-red-500" : ""}
+                />
+              </button>
+
+              {/* Tooltip */}
+              <div className="absolute right-full top-1/2 mr-3 -translate-y-1/2 scale-90 transform rounded-md bg-gray-900 px-2 py-1 text-xs text-white opacity-0 shadow-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 dark:bg-white dark:text-black">
+                {tooltip}
+              </div>
             </div>
-          </button>
-          <button
-            className="add-cart-btn box-shadow-sm flex h-9 w-9 items-center justify-center rounded-full bg-white transition-all duration-300 hover:bg-gray-100"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleAddToCart();
-            }}
-          >
-            <ShoppingBagOpen size={18} />
-            <div className="tag-action caption2 invisible absolute right-full mr-2 whitespace-nowrap rounded-sm bg-black px-1.5 py-0.5 text-white opacity-0 transition-opacity duration-300 hover:bg-black/75 group-hover:visible group-hover:opacity-100">
-              Add To Cart
-            </div>
-          </button>
+          ))}
         </div>
       </div>
+
       <div className="product-info mt-4 flex flex-col">
         <Link href={`/products/${data.slug}`} className="flex-grow">
-          <h3 className="text-title line-clamp-3 min-h-[4.5rem] cursor-pointer text-base font-medium hover:underline">
+          <h3 className="line-clamp-3 min-h-[4.5rem] cursor-pointer text-base font-medium text-gray-900 transition-colors duration-300 hover:underline dark:text-white">
             {"title" in data && typeof data.title === "string"
               ? data.title
               : "name" in data && typeof data.name === "string"
@@ -413,28 +380,26 @@ export default function Product({ data }: ProductProps) {
             <span className="font-bold text-red-500">Out Of Stock</span>
           ) : data.discountedPrice != null ? (
             <div className="flex items-center gap-2">
-              <span className="text-title discounted-price font-bold">
+              <span className="font-bold text-gray-900 dark:text-white">
                 {formatPrice(data.discountedPrice)}
               </span>
-              <span className="text-sm text-gray-500 line-through">
+              <span className="text-sm text-gray-500 line-through dark:text-gray-400">
                 {formatPrice(data.price)}
               </span>
             </div>
           ) : (
-            <span className="text-title font-bold">
+            <span className="font-bold text-gray-900 dark:text-white">
               {formatPrice(data.price)}
             </span>
           )}
         </div>
-        {/* Buy Now Button at the bottom */}
+
         {(!("stockStatus" in data) || data.stockStatus !== "OUT_OF_STOCK") && (
           <button
-            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-[#f5f7ff] px-4 py-2 font-semibold text-[#2952e3] shadow-none transition-colors duration-200 hover:bg-[#e6eaff] focus:outline-none focus:ring-2 focus:ring-[#2952e3]/30 focus:ring-offset-2"
-            onClick={() => {
-              handleAddToCart();
-            }}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-100 px-4 py-2 font-semibold text-blue-700 shadow-sm transition-all duration-300 ease-in-out hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-blue-400/50 focus:ring-offset-2 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-800"
+            onClick={() => handleAddToCart()}
           >
-            <ShoppingBagOpen size={20} className="text-[#2952e3]" />
+            <ShoppingBagOpen size={20} />
             Buy Now
           </button>
         )}
