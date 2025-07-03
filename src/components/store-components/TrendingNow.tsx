@@ -16,11 +16,12 @@ const TrendingNow = () => {
   };
 
   return (
-    <div className="trending-block style-six py-10 md:py-20">
-      <div className="container mx-auto max-w-7xl px-4">
-        <div className="heading3 mb-8 text-center md:mb-12">
+    <div className="trending-block style-six w-full bg-transparent py-10 transition-colors md:py-20">
+      <div className="w-full px-4">
+        <div className="heading3 mb-8 text-center text-4xl font-semibold text-gray-900 dark:text-white md:mb-12">
           Trending Right Now
         </div>
+
         <div className="list-trending section-swiper-navigation style-small-border style-outline">
           <Swiper
             spaceBetween={6}
@@ -30,11 +31,7 @@ const TrendingNow = () => {
             centeredSlides={true}
             modules={[Navigation, Autoplay]}
             breakpoints={{
-              400: {
-                slidesPerView: 2,
-                spaceBetween: 8,
-                centeredSlides: true,
-              },
+              400: { slidesPerView: 2, spaceBetween: 8, centeredSlides: true },
               576: {
                 slidesPerView: 3,
                 spaceBetween: 10,
@@ -64,10 +61,10 @@ const TrendingNow = () => {
                 className="flex justify-center py-2"
               >
                 <div
-                  className="trending-item group relative mx-auto block max-w-[150px] cursor-pointer transition-all duration-300 hover:-translate-y-1 md:max-w-[220px]"
                   onClick={() => handleCategoryClick(category.id)}
+                  className="trending-item group relative mx-auto block max-w-[150px] cursor-pointer transition-all duration-300 hover:-translate-y-1 md:max-w-[220px]"
                 >
-                  <div className="bg-img group-hover:border-brand-primary aspect-square overflow-hidden rounded-full border-4 border-white shadow-lg transition-all duration-300 group-hover:shadow-xl">
+                  <div className="aspect-square overflow-hidden rounded-full border-4 border-white bg-white shadow-lg transition-all duration-300 group-hover:border-brand-primary group-hover:shadow-xl dark:border-slate-700 dark:bg-slate-800">
                     <Image
                       src={category.image ?? "/images/avatar/1.png"}
                       width={220}
@@ -80,10 +77,10 @@ const TrendingNow = () => {
                   </div>
                   <div className="trending-name mt-4 text-center">
                     <div className="flex flex-col items-center">
-                      <span className="heading5 group-hover:text-brand-primary mb-1 font-medium transition-colors duration-300">
+                      <span className="heading5 mb-1 font-medium text-gray-800 transition-colors duration-300 group-hover:text-brand-primary dark:text-white">
                         {category.name}
                       </span>
-                      <span className="text-brand-primary rounded-full bg-orange-50 px-3 py-1 text-sm font-medium">
+                      <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-medium text-brand-primary dark:bg-slate-700 dark:text-orange-300">
                         {category.subcategories.length}{" "}
                         {category.subcategories.length === 1
                           ? "Subcategory"
