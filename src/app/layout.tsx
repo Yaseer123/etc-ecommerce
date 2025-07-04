@@ -6,6 +6,7 @@ import { GeistSans } from "geist/font/sans";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 import Script from "next/script";
+import NextTopLoader from "nextjs-toploader";
 
 export default function RootLayout({
   children,
@@ -41,6 +42,7 @@ export default function RootLayout({
       />
       {/* End Google Tag Manager */}
       <body className="bg-[#F2F4F7]">
+        <NextTopLoader />
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe

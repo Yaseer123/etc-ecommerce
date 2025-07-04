@@ -101,6 +101,7 @@
     "next-cloudinary": "^6.16.0",
     "next-sitemap": "^4.2.3",
     "next-themes": "^0.4.4",
+    "nextjs-toploader": "^3.8.16",
     "novel": "^0.5.0",
     "prosemirror-state": "^1.4.3",
     "rc-slider": "^11.1.8",
