@@ -54,7 +54,7 @@ const Slider = () => {
   }
 
   return (
-    <div className="slider-block style-two w-full">
+    <div className="slider-block style-two mt-24 w-full md:mt-0">
       <div className="banner-block mx-auto flex h-full w-full max-w-[1322px] gap-5 max-lg:flex-wrap lg:pt-[30px]">
         {/* Slider */}
         <div className="slider-main relative aspect-[3/2] w-full shadow-lg lg:w-2/3">

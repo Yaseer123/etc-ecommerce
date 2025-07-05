@@ -1,10 +1,10 @@
 export default function Benefit({ props }: { props: string }) {
   return (
     <>
-      <div className="mx-auto w-full !max-w-[1322px] px-4 py-6 sm:py-8 md:py-10">
+      <div className="mx-auto w-[60%] !max-w-[1322px] px-4 py-6 sm:py-8 md:w-full md:py-10">
         <div className={`benefit-block ${props}`}>
           <div className="list-benefit xs:grid-cols-2 grid grid-cols-1 items-start gap-5 sm:gap-6 md:grid-cols-2 md:gap-[20px] lg:grid-cols-4 lg:gap-[30px]">
-            <div className="benefit-item flex flex-col items-center justify-center p-3 sm:p-4 bg-white">
+            <div className="benefit-item flex flex-col items-center justify-center bg-white p-3 sm:p-4">
               <i className="icon-phone-call text-4xl sm:text-5xl lg:text-7xl"></i>
               <div className="heading6 mt-3 text-center text-base sm:mt-4 sm:text-lg lg:mt-5">
                 24/7 Customer Service
@@ -14,7 +14,7 @@ export default function Benefit({ props }: { props: string }) {
                 have, 24/7.
               </div>
             </div>
-            <div className="benefit-item flex flex-col items-center justify-center p-3 sm:p-4 bg-white">
+            <div className="benefit-item flex flex-col items-center justify-center bg-white p-3 sm:p-4">
               <i className="icon-return text-4xl sm:text-5xl lg:text-7xl"></i>
               <div className="heading6 mt-3 text-center text-base sm:mt-4 sm:text-lg lg:mt-5">
                 3-Day Money Back
@@ -24,7 +24,7 @@ export default function Benefit({ props }: { props: string }) {
                 it within 3 days for a refund.
               </div>
             </div>
-            <div className="benefit-item flex flex-col items-center justify-center p-3 sm:p-4 bg-white">
+            <div className="benefit-item flex flex-col items-center justify-center bg-white p-3 sm:p-4">
               <i className="icon-guarantee text-4xl sm:text-5xl lg:text-7xl"></i>
               <div className="heading6 mt-3 text-center text-base sm:mt-4 sm:text-lg lg:mt-5">
                 Our Guarantee
@@ -34,7 +34,7 @@ export default function Benefit({ props }: { props: string }) {
                 satisfaction.
               </div>
             </div>
-            <div className="benefit-item flex flex-col items-center justify-center p-3 sm:p-4 bg-white">
+            <div className="benefit-item flex flex-col items-center justify-center bg-white p-3 sm:p-4">
               <i className="icon-delivery-truck text-4xl sm:text-5xl lg:text-7xl"></i>
               <div className="heading6 mt-3 text-center text-base sm:mt-4 sm:text-lg lg:mt-5">
                 Shipping worldwide

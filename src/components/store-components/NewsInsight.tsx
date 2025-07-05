@@ -18,7 +18,7 @@ export default async function NewsInsight({ start, limit }: Props) {
           <div className="text-center text-2xl font-semibold capitalize leading-tight sm:text-[28px] md:text-[30px] lg:text-[36px] lg:leading-[40px]">
             News insight
           </div>
-          <div className="list-blog mt-4 grid grid-cols-1 gap-5 sm:mt-6 sm:grid-cols-2 sm:gap-6 md:mt-10 md:grid-cols-3 md:gap-[30px]">
+          <div className="list-blog ml-[9rem] mt-4 grid w-[60%] grid-cols-1 gap-5 sm:mt-6 sm:grid-cols-2 sm:gap-6 md:ml-0 md:mt-10 md:w-full md:grid-cols-3 md:gap-[30px]">
             {blogData.slice(start, limit).map((prd, index) => (
               <NewsInsightItem key={index} data={prd} type="style-one" />
             ))}

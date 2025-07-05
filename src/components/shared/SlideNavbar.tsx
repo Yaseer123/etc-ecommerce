@@ -63,7 +63,7 @@ export default function SlideNavbar({
   }, []);
 
   const navItems = [
-    { name: "Features", link: "#features" },
+    { name: "Products", link: "#Products" },
     { name: "Pricing", link: "#pricing" },
     { name: "Contact", link: "#contact" },
   ];
@@ -71,7 +71,7 @@ export default function SlideNavbar({
   return (
     <>
       <Navbar
-        className={`transition-all ${isSticky ? "shadow-md" : ""} bg-white dark:bg-neutral-900`}
+        className={`bg-white transition-all dark:bg-neutral-900 ${isSticky ? "shadow-md" : ""} sticky top-0 z-50 lg:static`}
       >
         <NavBody>
           <NavbarLogo />
@@ -95,7 +95,7 @@ export default function SlideNavbar({
                         >
                           Most Selling
                           <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Generate text automatically
+                            Most Sold products in the store
                           </p>
                         </Link>
                       </NavigationMenuLink>
@@ -108,7 +108,7 @@ export default function SlideNavbar({
                         >
                           Most Rated
                           <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Track your audience behavior
+                            Most Rated products by users
                           </p>
                         </Link>
                       </NavigationMenuLink>
@@ -121,7 +121,7 @@ export default function SlideNavbar({
                         >
                           Best Price
                           <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Edit content with AI suggestions
+                            Products with the best price in the store
                           </p>
                         </Link>
                       </NavigationMenuLink>
@@ -146,11 +146,17 @@ export default function SlideNavbar({
           </NavigationMenu>
 
           <div className="ml-auto flex items-center gap-4">
-            {/* Account Icon (copied from Menu.tsx) */}
+            {/* Account Icon */}
             <div className="user-icon relative flex cursor-pointer items-center justify-center">
-              <User size={24} color="black" onClick={handleLoginPopup} />
+              <User
+                size={24}
+                className="dark:text-white"
+                onClick={handleLoginPopup}
+              />
               <div
-                className={`login-popup box-shadow-sm absolute right-0 top-[40px] w-[320px] rounded-xl bg-white p-7 ${openLoginPopup ? "open" : ""}`}
+                className={`login-popup box-shadow-sm absolute right-0 top-[40px] w-[320px] rounded-xl bg-white p-7 ${
+                  openLoginPopup ? "open" : ""
+                }`}
               >
                 {isAuthenticated ? (
                   <Link
@@ -188,29 +194,33 @@ export default function SlideNavbar({
                 </Link>
               </div>
             </div>
-            {/* Wishlist Icon (only if authenticated) */}
+
+            {/* Wishlist Icon */}
             {isAuthenticated && (
               <div
-                className="wishlist-icon flex cursor-pointer items-center"
+                className="wishlist-icon hidden cursor-pointer items-center lg:flex"
                 onClick={openModalWishlist}
               >
-                <Heart size={24} color="black" />
+                <Heart size={24} className="dark:text-white" />
               </div>
             )}
+
             {/* Cart Icon */}
             <div
-              className="cart-icon relative flex cursor-pointer items-center"
+              className="cart-icon relative hidden cursor-pointer items-center dark:text-white lg:flex"
               onClick={openModalCart}
             >
-              <Handbag size={24} color="black" />
-              <span className="quantity cart-quantity absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white hover:bg-black/75">
+              <Handbag size={24} className="dark:text-white" />
+              <span className="quantity cart-quantity absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white hover:bg-black/75 dark:text-white">
                 {cartArray.length}
               </span>
             </div>
-          </div>
-          <div className="ml-4 mr-4">
-            <div className="rounded-full bg-white text-neutral-800 transition-colors hover:bg-neutral-100 dark:bg-neutral-800 dark:text-white dark:hover:bg-neutral-700">
-              <ThemeToggle />
+
+            {/* Theme Toggle */}
+            <div className="ml-2 mr-2">
+              <div className="rounded-full bg-neutral-100 p-1 transition hover:bg-neutral-200 dark:bg-neutral-300 dark:hover:bg-neutral-200">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </NavBody>
@@ -240,22 +250,46 @@ export default function SlideNavbar({
               </a>
             ))}
 
-            <div className="mt-4 flex flex-col gap-3">
-              <NavbarButton
+            <div className="mt-4 flex items-center justify-around gap-4 border-t border-neutral-300 pt-4 dark:border-neutral-700">
+              <Link
+                href={isAuthenticated ? "/my-account" : "/login"}
+                className="flex flex-col items-center text-sm text-neutral-700 dark:text-white"
                 onClick={() => setIsMobileMenuOpen(false)}
-                variant="secondary"
-                className="w-full text-black dark:text-white"
               >
-                Login
-              </NavbarButton>
-              <NavbarButton
-                onClick={() => setIsMobileMenuOpen(false)}
-                variant="primary"
-                className="w-full text-white"
+                <User size={22} />
+                {isAuthenticated ? "Account" : "Login"}
+              </Link>
+              <button
+                onClick={() => {
+                  openModalCart();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="relative flex flex-col items-center text-sm text-neutral-700 dark:text-white"
               >
-                Book a call
-              </NavbarButton>
+                <Handbag size={22} />
+                <span>Cart</span>
+                {cartArray.length > 0 && (
+                  <span className="absolute -right-2 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-black text-xs text-white">
+                    {cartArray.length}
+                  </span>
+                )}
+              </button>
             </div>
+
+            {isAuthenticated && (
+              <div className="mt-4 flex justify-center">
+                <NavbarButton
+                  variant="secondary"
+                  className="w-full"
+                  onClick={() => {
+                    openModalWishlist();
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  Wishlist
+                </NavbarButton>
+              </div>
+            )}
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
