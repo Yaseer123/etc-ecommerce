@@ -3,11 +3,9 @@
 import { ThemeToggle } from "@/components/ThemeToggle";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import {
   MobileNav,
@@ -63,9 +61,8 @@ export default function SlideNavbar({
   }, []);
 
   const navItems = [
-    { name: "Products", link: "#Products" },
-    { name: "Pricing", link: "#pricing" },
-    { name: "Contact", link: "#contact" },
+    { name: "Products", link: "/products" },
+    { name: "Contact", link: "/contact" },
   ];
 
   return (
@@ -82,52 +79,14 @@ export default function SlideNavbar({
           <NavigationMenu>
             <NavigationMenuList className="gap-4">
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="text-sm font-semibold text-neutral-800 dark:text-neutral-200">
-                  Products
-                </NavigationMenuTrigger>
-                <NavigationMenuContent className="rounded-md bg-white p-4 shadow-lg dark:bg-neutral-900">
-                  <ul className="grid gap-3 md:w-[300px]">
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/products"
-                          className="block rounded-md p-2 text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
-                        >
-                          Most Selling
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Most Sold products in the store
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/product/analytics"
-                          className="block rounded-md p-2 text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
-                        >
-                          Most Rated
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Most Rated products by users
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                    <li>
-                      <NavigationMenuLink asChild>
-                        <Link
-                          href="/product/editor"
-                          className="block rounded-md p-2 text-neutral-800 hover:bg-neutral-100 dark:text-neutral-200 dark:hover:bg-neutral-800"
-                        >
-                          Best Price
-                          <p className="text-xs text-neutral-500 dark:text-neutral-400">
-                            Products with the best price in the store
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/products"
+                    className="text-sm font-semibold text-neutral-800 transition-colors hover:text-primary dark:text-neutral-200"
+                  >
+                    Products
+                  </Link>
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               {navItems.slice(1).map((item, idx) => (
