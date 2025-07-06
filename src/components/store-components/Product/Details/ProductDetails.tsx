@@ -22,17 +22,14 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import type { Product } from "@prisma/client";
 import { addDays, format, formatDistanceToNow } from "date-fns";
+import useEmblaCarousel from "embla-carousel-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaPinterestP, FaWhatsapp } from "react-icons/fa6";
 import { toast } from "sonner";
-import SwiperCore from "swiper/core";
-import "swiper/css/bundle";
-import { Navigation, Thumbs } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { v4 as uuid } from "uuid";
 import { formatPrice } from "../../../../utils/format";
 import ParseContent from "../../Blog/ParseContent";
@@ -80,13 +77,10 @@ export default function ProductDetails({
   productMain: ProductWithCategory;
 }) {
   console.log("Product :", productMain);
-  SwiperCore.use([Navigation, Thumbs]);
-  const swiperRef = useRef<SwiperCore | null>(null);
 
   const { data: session } = useSession();
 
   const [openPopupImg, setOpenPopupImg] = useState(false);
-  const [thumbsSwiper, setThumbsSwiper] = useState<SwiperCore | null>(null);
   const [activeTab, setActiveTab] = useState<string | undefined>(
     "specifications",
   );
@@ -186,20 +180,57 @@ export default function ProductDetails({
     },
   });
 
-  const handleSwiper = (swiper: SwiperCore) => {
-    setThumbsSwiper(swiper);
+  // Embla for main gallery
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
+  // Embla for thumbnails
+  const [thumbEmblaRef, thumbEmblaApi] = useEmblaCarousel({
+    containScroll: "keepSnaps",
+    dragFree: true,
+  });
+  // Embla for popup modal
+  const [modalEmblaRef, modalEmblaApi] = useEmblaCarousel({ loop: true });
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  // Sync main and thumbnail carousels
+  useEffect(() => {
+    if (!emblaApi || !thumbEmblaApi) return;
+    emblaApi.on("select", () => {
+      const idx = emblaApi.selectedScrollSnap();
+      setSelectedIndex(idx);
+      thumbEmblaApi.scrollTo(idx);
+    });
+  }, [emblaApi, thumbEmblaApi]);
+
+  // When thumbnail is clicked
+  const onThumbClick = useCallback(
+    (index: number) => {
+      if (!emblaApi) return;
+      emblaApi.scrollTo(index);
+    },
+    [emblaApi],
+  );
+
+  // When main image is clicked, open modal and set modal carousel to correct index
+  const openModalAt = (index: number) => {
+    setOpenPopupImg(true);
+    setTimeout(() => {
+      modalEmblaApi?.scrollTo(index);
+    }, 0);
   };
 
-  const handleIncreaseQuantity = () => {
-    setProductQuantity(productQuantity + 1);
-  };
-
-  const handleDecreaseQuantity = () => {
-    if (productQuantity > 1) {
-      setProductQuantity(productQuantity - 1);
-      // updateCart(productMain.id, productMain.quantityPurchase - 1);
-    }
-  };
+  // Keyboard navigation for modal
+  useEffect(() => {
+    if (!openPopupImg) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (!modalEmblaApi) return;
+      if (e.key === "ArrowLeft") modalEmblaApi.scrollPrev();
+      if (e.key === "ArrowRight") modalEmblaApi.scrollNext();
+      if (e.key === "Escape") setOpenPopupImg(false);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [openPopupImg, modalEmblaApi]);
 
   // Fetch category hierarchy for primary category name
   const { data: categoryHierarchy } = api.category.getHierarchy.useQuery(
@@ -686,96 +717,80 @@ export default function ProductDetails({
                   )}
                 </div>
               )}
-              {/* Images Swiper */}
-              <Swiper
-                slidesPerView={1}
-                spaceBetween={0}
-                thumbs={{ swiper: thumbsSwiper }}
-                modules={[Thumbs]}
-                className="mySwiper2 overflow-hidden rounded-2xl"
-              >
-                {displayImages.map((item, index) => (
-                  <SwiperSlide
-                    key={index}
-                    onClick={() => {
-                      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-                      swiperRef.current?.slideTo(index);
-                      setOpenPopupImg(true);
-                    }}
-                  >
-                    <Image
-                      src={item}
-                      width={1000}
-                      height={1000}
-                      alt="prd-img"
-                      className="w-full"
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <Swiper
-                onSwiper={handleSwiper}
-                spaceBetween={0}
-                slidesPerView={4}
-                freeMode={true}
-                watchSlidesProgress={true}
-                modules={[Navigation, Thumbs]}
-                className="mySwiper style-rectangle"
-              >
-                {displayImages.map((item, index) => (
-                  <SwiperSlide key={index}>
-                    <Image
-                      src={item}
-                      width={1000}
-                      height={1300}
-                      alt="prd-img"
-                      className="w-full rounded-xl object-contain"
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <div className={`popup-img ${openPopupImg ? "open" : ""}`}>
-                <span
-                  className="close-popup-btn absolute right-4 top-4 z-[2] cursor-pointer"
-                  onClick={() => {
-                    setOpenPopupImg(false);
-                  }}
-                >
-                  <X className="text-3xl text-white" />
-                </span>
-                <Swiper
-                  spaceBetween={0}
-                  slidesPerView={1}
-                  modules={[Navigation, Thumbs]}
-                  navigation={true}
-                  loop={true}
-                  className="popupSwiper"
-                  onSwiper={(swiper) => {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-                    swiperRef.current = swiper;
-                  }}
-                >
+              {/* Main Embla Carousel */}
+              <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
+                <div className="flex">
                   {displayImages.map((item, index) => (
-                    <SwiperSlide
+                    <div
+                      className="min-w-full cursor-pointer"
                       key={index}
-                      onClick={() => {
-                        setOpenPopupImg(false);
-                      }}
+                      onClick={() => openModalAt(index)}
                     >
                       <Image
                         src={item}
                         width={1000}
                         height={1000}
                         alt="prd-img"
-                        className="w-full rounded-xl object-contain"
-                        onClick={(e) => {
-                          e.stopPropagation(); // prevent
-                        }}
+                        className="w-full"
                       />
-                    </SwiperSlide>
+                    </div>
                   ))}
-                </Swiper>
+                </div>
               </div>
+              {/* Thumbnails */}
+              <div className="mt-2 overflow-hidden" ref={thumbEmblaRef}>
+                <div className="flex">
+                  {displayImages.map((item, index) => (
+                    <div
+                      className={`min-w-[25%] cursor-pointer p-1 ${index === selectedIndex ? "border-2 border-blue-500 ring-2 ring-blue-400" : ""}`}
+                      key={index}
+                      onClick={() => onThumbClick(index)}
+                    >
+                      <Image
+                        src={item}
+                        width={1000}
+                        height={1300}
+                        alt="prd-img"
+                        className="w-full rounded-xl object-contain"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Popup Modal */}
+              {openPopupImg && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80">
+                  <span
+                    className="absolute right-4 top-4 z-[2] cursor-pointer text-3xl text-white"
+                    onClick={() => setOpenPopupImg(false)}
+                  >
+                    <X />
+                  </span>
+                  <div
+                    className="mx-auto w-full max-w-2xl overflow-hidden rounded-2xl"
+                    ref={modalEmblaRef}
+                  >
+                    <div className="flex">
+                      {displayImages.map((item, index) => (
+                        <div
+                          className="flex min-w-full items-center justify-center"
+                          key={index}
+                          onClick={() => setOpenPopupImg(false)}
+                        >
+                          <Image
+                            src={item}
+                            width={1000}
+                            height={1000}
+                            alt="prd-img"
+                            className="w-full rounded-xl object-contain"
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="product-infor w-full lg:w-1/2 lg:pl-[15px]">
               <div className="flex justify-between">
@@ -829,13 +844,19 @@ export default function ProductDetails({
                   <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] bg-white focus:border-[#ddd] max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
                     <Minus
                       size={20}
-                      onClick={handleDecreaseQuantity}
+                      onClick={() => {
+                        if (productQuantity > 1) {
+                          setProductQuantity(productQuantity - 1);
+                        }
+                      }}
                       className={`${productQuantity === 1 ? "disabled" : ""} cursor-pointer`}
                     />
                     <div className="body1 font-semibold">{productQuantity}</div>
                     <Plus
                       size={20}
-                      onClick={handleIncreaseQuantity}
+                      onClick={() => {
+                        setProductQuantity(productQuantity + 1);
+                      }}
                       className="cursor-pointer"
                     />
                   </div>
@@ -1376,7 +1397,7 @@ export default function ProductDetails({
                             ></textarea>
                             <div className="col-span-full sm:pt-3">
                               <Button
-                                variant="black"
+                                variant="default"
                                 type="submit"
                                 disabled={addReviewMutation.isPending}
                                 className=""
