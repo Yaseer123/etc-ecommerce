@@ -285,7 +285,7 @@ export default function Product({ data }: ProductProps) {
     <div className="product-item style-marketplace min-h-[300px] rounded-lg border border-gray-200 bg-white p-4 pt-5 transition-all duration-500 ease-in-out hover:-translate-y-1 hover:shadow-xl dark:border-gray-700 dark:bg-gray-900 lg:h-full">
       <div className="bg-img relative w-full pt-6">
         {discountPercentage > 0 && amountSaved > 0 && (
-          <div className="absolute left-2 top-2 z-10 rounded-r-md bg-[#f27115] px-2 py-0.5 text-sm font-bold text-white shadow-md transition-all duration-300">
+          <div className="absolute -left-4 -top-3 z-10 rounded-r-md bg-[#f27115] px-2 py-0.5 text-sm font-bold text-white shadow-md transition-all duration-300">
             Save: {formatPrice(amountSaved, "৳", false)} (-{discountPercentage}
             %)
           </div>
