@@ -43,7 +43,7 @@ export default function FeaturedProducts() {
           <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-t-2 border-black sm:h-10 sm:w-10" />
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="ml-[9.2rem] grid w-[60%] gap-4 sm:grid-cols-1 sm:grid-cols-2 md:ml-0 md:w-full md:grid-cols-3 lg:grid-cols-4">
           {validProducts.map((product) => (
             <Product key={product.id} data={product} />
           ))}

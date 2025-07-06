@@ -1,5 +1,6 @@
 import { AuroraBackground } from "@/components/shared/AuroraBackground";
 import SlideNavbar from "@/components/shared/SlideNavbar";
+import CategoryNav from "@/components/shared/CategoryNav";
 import Footer from "@/components/store-components/Footer";
 import ModalWrapper from "@/components/store-components/Modal/ModalWrapper";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
@@ -17,14 +18,14 @@ export default async function layout({
   const session = await auth();
   return (
     <HydrateClient>
-      <SlideNavbar isAuthenticated={!!session?.user} />
-      {/* <body> */}
+      <div className="fixed top-0 z-50 w-full bg-transparent dark:bg-black md:relative">
+        <SlideNavbar isAuthenticated={!!session?.user} />
+      </div>
       <NextTopLoader />
       <AuroraBackground>{children}</AuroraBackground>
       <WhatsAppWidget />
       <Footer />
       <ModalWrapper />
-      {/* </body> */}
     </HydrateClient>
   );
 }
