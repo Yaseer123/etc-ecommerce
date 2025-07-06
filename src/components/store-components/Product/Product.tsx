@@ -282,10 +282,10 @@ export default function Product({ data }: ProductProps) {
     data.discountedPrice != null ? data.price - data.discountedPrice : 0;
 
   return (
-    <div className="product-item style-marketplace min-h-[300px] rounded-lg border border-gray-200 bg-white p-4 pt-5 transition-all duration-500 ease-in-out hover:-translate-y-1 hover:shadow-xl dark:border-gray-700 dark:bg-gray-900 lg:h-full">
+    <div className="product-item style-marketplace group min-h-[300px] rounded-lg border border-gray-200 bg-white p-4 pt-5 transition-all duration-500 ease-in-out hover:-translate-y-1 hover:shadow-xl dark:border-gray-700 dark:bg-gray-900 lg:h-full">
       <div className="bg-img relative w-full pt-6">
         {discountPercentage > 0 && amountSaved > 0 && (
-          <div className="absolute left-2 top-2 z-10 rounded-r-md bg-[#f27115] px-2 py-0.5 text-sm font-bold text-white shadow-md transition-all duration-300">
+          <div className="absolute -left-4 -top-3 z-10 rounded-r-md bg-[#f27115] px-2 py-0.5 text-sm font-bold text-white shadow-md transition-all duration-300">
             Save: {formatPrice(amountSaved, "৳", false)} (-{discountPercentage}
             %)
           </div>
@@ -318,49 +318,49 @@ export default function Product({ data }: ProductProps) {
         </Link>
 
         <div className="absolute right-2 top-2 z-10 flex flex-col gap-2">
-          {[
-            {
-              Icon: Heart,
-              isActive: isInWishlist(data.id),
-              action: handleAddToWishlist,
-              tooltip: isInWishlist(data.id)
-                ? "Remove from Wishlist"
-                : "Add to Wishlist",
-            },
-            {
-              Icon: Eye,
-              action: handleQuickViewOpen,
-              tooltip: "Quick View",
-            },
-            {
-              Icon: ShoppingBagOpen,
-              action: handleAddToCart,
-              tooltip: "Add To Cart",
-            },
-          ].map(({ Icon, action, isActive = false, tooltip }, idx) => (
-            <div key={idx} className="group relative">
+          {/* Heart icon always visible */}
+          <div className="group relative">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                handleAddToWishlist();
+              }}
+              className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-700 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 dark:border-gray-600 dark:bg-white dark:text-black ${
+                isInWishlist(data.id) ? "bg-pink-100 dark:bg-pink-200" : ""
+              }`}
+            >
+              <Heart
+                size={18}
+                weight={isInWishlist(data.id) ? "fill" : "regular"}
+                className={isInWishlist(data.id) ? "text-red-500" : ""}
+              />
+            </button>
+          </div>
+          {/* Eye and ShoppingBagOpen only on hover, animated from right to left */}
+          <div className="flex flex-col gap-2">
+            <div className="translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  action();
+                  handleQuickViewOpen();
                 }}
-                className={`flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-700 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 dark:border-gray-600 dark:bg-white dark:text-black ${
-                  isActive ? "bg-pink-100 dark:bg-pink-200" : ""
-                }`}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-700 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 dark:border-gray-600 dark:bg-white dark:text-black"
               >
-                <Icon
-                  size={18}
-                  weight={isActive ? "fill" : "regular"}
-                  className={isActive ? "text-red-500" : ""}
-                />
+                <Eye size={18} />
               </button>
-
-              {/* Tooltip */}
-              <div className="absolute right-full top-1/2 mr-3 -translate-y-1/2 scale-90 transform rounded-md bg-gray-900 px-2 py-1 text-xs text-white opacity-0 shadow-md transition-all duration-300 group-hover:scale-100 group-hover:opacity-100 dark:bg-white dark:text-black">
-                {tooltip}
-              </div>
             </div>
-          ))}
+            <div className="translate-x-4 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleAddToCart();
+                }}
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200 bg-white/70 text-gray-700 shadow-sm backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95 dark:border-gray-600 dark:bg-white dark:text-black"
+              >
+                <ShoppingBagOpen size={18} />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
