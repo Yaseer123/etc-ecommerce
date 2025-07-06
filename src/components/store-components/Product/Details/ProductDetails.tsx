@@ -843,7 +843,7 @@ export default function ProductDetails({
               </div>
               <div className="mt-6">
                 <div className="text-title mt-5">Quantity:</div>
-                <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 lg:justify-between">
+                <div className="mt-3 flex flex-row items-center gap-3 lg:justify-between">
                   <div className="flex w-full max-w-[180px] items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2">
                     <Button
                       size="icon"
