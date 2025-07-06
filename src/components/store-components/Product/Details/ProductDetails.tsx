@@ -13,7 +13,6 @@ import {
   DotsThree,
   HandsClapping,
   Heart,
-  Minus,
   Plus,
   Question,
   Star,
@@ -574,11 +573,11 @@ export default function ProductDetails({
 
   return (
     <>
-      <div className="product-detail sale mb-5">
+      <div className="product-detail sale mx-auto mb-5 w-full max-w-screen-xl px-3 sm:px-6 md:px-8 lg:px-0">
         {/* Social Share Row with border, rounded, and shadow */}
-        <div className="mb-4 flex items-center justify-between px-4 pt-4 md:px-4">
+        <div className="mb-4 flex items-center justify-between pt-4">
           <div className="w-full">
-            <div className="flex flex-row items-center justify-between gap-3 rounded-full border bg-white px-6 py-3 shadow md:flex-row md:gap-0 md:px-6 md:py-2">
+            <div className="flex flex-row items-center justify-between gap-3 rounded-full border bg-white px-4 py-3 shadow md:flex-row md:gap-0 md:px-6 md:py-2">
               <div className="flex items-center justify-center gap-2">
                 <span className="font-semibold text-gray-700">Share:</span>
                 {/* Messenger */}
@@ -614,29 +613,31 @@ export default function ProductDetails({
               </div>
               {/* Wishlist and Cart Buttons */}
               <div className="flex flex-row items-center gap-2 md:flex-row md:items-center md:gap-2">
-                <button
+                <Button
                   className={`flex items-center gap-1 rounded-lg border px-3 py-1 text-sm font-semibold ${isInWishlist(productMain.id) ? "border-black bg-black text-white" : "border-[#ddd] bg-white text-black hover:border-black hover:bg-black hover:text-white"}`}
                   onClick={handleAddToWishlist}
+                  variant={isInWishlist(productMain.id) ? "default" : "outline"}
                 >
                   <Heart
                     size={18}
                     weight={isInWishlist(productMain.id) ? "fill" : "regular"}
                   />
                   {isInWishlist(productMain.id) ? "Wishlisted" : "Wishlist"}
-                </button>
-                <button
+                </Button>
+                <Button
                   className="flex items-center gap-1 rounded-lg border border-black bg-white px-3 py-1 text-sm font-semibold text-black hover:bg-black hover:text-white"
                   onClick={handleAddToCart}
+                  variant="outline"
                 >
                   <Plus size={18} /> Cart
-                </button>
+                </Button>
               </div>
             </div>
           </div>
         </div>
-        <div className="featured-product underwear bg-white py-10 md:py-20">
-          <div className="container flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
-            <div className="list-img w-full lg:w-1/2 lg:pr-[45px]">
+        <div className="featured-product underwear bg-white py-8 md:py-16">
+          <div className="flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
+            <div className="w-full lg:w-1/2 lg:pr-10">
               {/* Unified Color Selector */}
               {unifiedColors.length > 0 && (
                 <div className="mb-4 flex flex-col gap-2">
@@ -647,7 +648,7 @@ export default function ProductDetails({
                         key={String(colorObj.colorHex) + idx}
                         className="mx-1 flex flex-col items-center"
                       >
-                        <button
+                        <Button
                           className={`rounded-full border p-0 ${selectedColorHex === colorObj.colorHex ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"}`}
                           style={{
                             width: 28,
@@ -664,6 +665,7 @@ export default function ProductDetails({
                           }}
                           aria-label={colorObj.colorName}
                           title={colorObj.colorName}
+                          variant="outline"
                         >
                           <span
                             style={{
@@ -672,10 +674,9 @@ export default function ProductDetails({
                               height: 20,
                               backgroundColor: colorObj.colorHex,
                               borderRadius: "50%",
-                              // border: "1px solid #ccc",
                             }}
                           />
-                        </button>
+                        </Button>
                         <span
                           className="mt-1 text-center text-xs"
                           style={{ maxWidth: 48, wordBreak: "break-word" }}
@@ -691,10 +692,11 @@ export default function ProductDetails({
                       <span className="font-semibold">Size:</span>
                       {availableSizes.map((size, idx) =>
                         size ? (
-                          <button
+                          <Button
                             key={size + idx}
                             className={`rounded border px-3 py-1 ${selectedSize === size ? "border-2 border-blue-500 bg-black text-white" : "bg-white text-black"} ${size === productMain.defaultSize ? "ring-2 ring-blue-400" : ""}`}
                             onClick={() => setSelectedSize(size)}
+                            variant="outline"
                           >
                             {size}
                             {size === productMain.defaultSize ? (
@@ -702,16 +704,17 @@ export default function ProductDetails({
                                 (default)
                               </span>
                             ) : null}
-                          </button>
+                          </Button>
                         ) : null,
                       )}
                       {productMain.defaultSize && (
-                        <button
+                        <Button
                           className={`rounded border px-3 py-1 ${!selectedSize ? "bg-black text-white" : "bg-white text-black"}`}
                           onClick={() => setSelectedSize(undefined)}
+                          variant="outline"
                         >
                           {productMain.defaultSize}
-                        </button>
+                        </Button>
                       )}
                     </div>
                   )}
@@ -792,7 +795,7 @@ export default function ProductDetails({
                 </div>
               )}
             </div>
-            <div className="product-infor w-full lg:w-1/2 lg:pl-[15px]">
+            <div className="product-infor mt-8 w-full lg:mt-0 lg:w-1/2 lg:pl-6">
               <div className="flex justify-between">
                 <div>
                   <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
@@ -838,117 +841,92 @@ export default function ProductDetails({
               >
                 {productMain.shortDescription}
               </div>
-              <div className="list-action mt-6">
+              <div className="mt-6">
                 <div className="text-title mt-5">Quantity:</div>
-                <div className="choose-quantity mt-3 flex items-center gap-5 gap-y-3 lg:justify-between">
-                  <div className="quantity-block flex w-[120px] flex-shrink-0 items-center justify-between rounded-lg border border-[#ddd] bg-white focus:border-[#ddd] max-md:px-3 max-md:py-1.5 sm:w-[180px] md:p-3">
-                    <Minus
-                      size={20}
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5 lg:justify-between">
+                  <div className="flex w-full max-w-[180px] items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2">
+                    <Button
+                      size="icon"
                       onClick={() => {
                         if (productQuantity > 1) {
                           setProductQuantity(productQuantity - 1);
                         }
                       }}
-                      className={`${productQuantity === 1 ? "disabled" : ""} cursor-pointer`}
-                    />
-                    <div className="body1 font-semibold">{productQuantity}</div>
-                    <Plus
-                      size={20}
-                      onClick={() => {
-                        setProductQuantity(productQuantity + 1);
-                      }}
-                      className="cursor-pointer"
-                    />
+                      className="h-8 w-8 p-0 text-lg disabled:opacity-50"
+                      variant="outline"
+                      disabled={productQuantity === 1}
+                    >
+                      -
+                    </Button>
+                    <div className="min-w-[32px] text-center text-base font-semibold">
+                      {productQuantity}
+                    </div>
+                    <Button
+                      size="icon"
+                      onClick={() => setProductQuantity(productQuantity + 1)}
+                      className="h-8 w-8 p-0 text-lg"
+                      variant="outline"
+                    >
+                      +
+                    </Button>
                   </div>
-                  <div
+                  <Button
                     onClick={handleAddToCart}
-                    className="duration-400 md:text-md inline-block w-full cursor-pointer rounded-[.25rem] border border-black bg-white px-0 py-4 text-center text-sm font-semibold uppercase leading-5 text-black transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                    className="w-full rounded border border-black bg-white py-3 text-center text-sm font-semibold uppercase text-black transition-all hover:bg-black hover:text-white md:rounded-lg md:py-2.5 lg:rounded-xl lg:px-7 lg:py-4"
+                    variant="outline"
                   >
                     Add To Cart
-                  </div>
+                  </Button>
                 </div>
-                <div className="button-block mt-5">
-                  <div
-                    className="duration-400 md:text-md hover:bg-black/75/75 hover:bg-green inline-block w-full cursor-pointer rounded-[.25rem] bg-black px-10 py-4 text-center text-sm font-semibold uppercase leading-5 text-white transition-all ease-in-out hover:bg-black hover:bg-black/75 hover:text-white md:rounded-[8px] md:px-4 md:py-2.5 md:leading-4 lg:rounded-[10px] lg:px-7 lg:py-4"
+                <div className="mt-5">
+                  <Button
                     onClick={handleBuyNow}
+                    className="w-full rounded bg-black py-3 text-center text-sm font-semibold uppercase text-white transition-all hover:bg-black/80 md:rounded-lg md:py-2.5 lg:rounded-xl lg:px-7 lg:py-4"
+                    variant="default"
                   >
                     Buy It Now
-                  </div>
-                </div>
-                <div className="mt-5 flex items-center gap-8 border-b border-[#ddd] pb-6 focus:border-[#ddd] lg:gap-20"></div>
-                <div className="more-infor mt-6">
-                  <div className="flex flex-wrap items-center gap-4">
-                    <Link href={"/faqs"} className="flex items-center gap-1">
-                      <ArrowClockwise className="body1" />
-                      <div className="text-title">Delivery & Return</div>
-                    </Link>
-                    <button
-                      type="button"
-                      className="flex items-center gap-1"
-                      onClick={() => {
-                        setActiveTab("questions");
-                        setShouldScrollToQuestion(true);
-                      }}
-                    >
-                      <Question className="body1" />
-                      <div className="text-title">Ask A Question</div>
-                    </button>
-                  </div>
-                  <div className="mt-3 flex items-center gap-1">
-                    <Timer className="body1" />
-                    <div className="text-title">Estimated Delivery:</div>
-                    <div className="text-secondary">
-                      {calculateEstimatedDeliveryDate()}
-                    </div>
-                  </div>
-
-                  <div className="mt-3 flex items-center gap-1">
-                    <div className="text-title">SKU:</div>
-                    <div className="text-secondary">{displaySKU}</div>
-                  </div>
-                  <div className="mt-3 flex items-center gap-1">
-                    <div className="text-title">Categories:</div>
-                    <Link
-                      href={`/products?category=${productMain.category?.id}`}
-                      className="text-secondary hover:underline"
-                    >
-                      {productMain.category?.name}
-                    </Link>
-                  </div>
+                  </Button>
                 </div>
               </div>
-
-              <div className="get-it mt-6 flex flex-col gap-4 sm:flex-row">
-                <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
-                  <div>
-                    <div className="icon-delivery-truck text-3xl sm:text-4xl"></div>
-                    <div className="text-title">Free shipping</div>
-                    <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
-                      Free shipping on orders over {formatPrice(7500)}.
-                    </div>
+              <div className="mt-5 flex items-center gap-8 border-b border-[#ddd] pb-6 focus:border-[#ddd] lg:gap-20"></div>
+              <div className="more-infor mt-6">
+                <div className="flex flex-wrap items-center gap-4">
+                  <Link href={"/faqs"} className="flex items-center gap-1">
+                    <ArrowClockwise className="body1" />
+                    <div className="text-title">Delivery & Return</div>
+                  </Link>
+                  <button
+                    type="button"
+                    className="flex items-center gap-1"
+                    onClick={() => {
+                      setActiveTab("questions");
+                      setShouldScrollToQuestion(true);
+                    }}
+                  >
+                    <Question className="body1" />
+                    <div className="text-title">Ask A Question</div>
+                  </button>
+                </div>
+                <div className="mt-3 flex items-center gap-1">
+                  <Timer className="body1" />
+                  <div className="text-title">Estimated Delivery:</div>
+                  <div className="text-secondary">
+                    {calculateEstimatedDeliveryDate()}
                   </div>
                 </div>
 
-                <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
-                  <div>
-                    <div className="icon-phone-call text-3xl sm:text-4xl"></div>
-                    <div className="text-title">Support everyday</div>
-                    <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
-                      Support from 8:30 AM to 10:00 PM everyday
-                    </div>
-                  </div>
+                <div className="mt-3 flex items-center gap-1">
+                  <div className="text-title">SKU:</div>
+                  <div className="text-secondary">{displaySKU}</div>
                 </div>
-
-                <div className="item mt-4 flex flex-col items-start gap-2 bg-white px-3 py-1 sm:flex-row sm:items-center sm:gap-3">
-                  <div>
-                    <div className="icon-return text-3xl sm:text-4xl"></div>
-                    <div className="text-title">7 Day Returns</div>
-                    <div className="mt-1 text-sm font-normal leading-5 text-secondary md:text-[13px]">
-                      Not impressed? Get a refund.
-                      <br />
-                      You have 7 days to break our hearts.
-                    </div>
-                  </div>
+                <div className="mt-3 flex items-center gap-1">
+                  <div className="text-title">Categories:</div>
+                  <Link
+                    href={`/products?category=${productMain.category?.id}`}
+                    className="text-secondary hover:underline"
+                  >
+                    {productMain.category?.name}
+                  </Link>
                 </div>
               </div>
             </div>
