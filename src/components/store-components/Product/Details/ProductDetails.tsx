@@ -747,8 +747,8 @@ export default function ProductDetails({
                     <div
                       className={`w-20 cursor-pointer rounded-xl border p-1 ${
                         index === selectedIndex
-                          ? "border-black"
-                          : "border-gray-200"
+                          ? "border-black opacity-100"
+                          : "border-gray-200 opacity-60"
                       }`}
                       key={index}
                       onClick={() => onThumbClick(index)}
