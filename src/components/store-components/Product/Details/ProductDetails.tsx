@@ -635,7 +635,7 @@ export default function ProductDetails({
             </div>
           </div>
         </div>
-        <div className="featured-product underwear bg-white py-8 md:py-16">
+        <div className="featured-product underwear bg-white px-3 pb-2 md:py-2">
           <div className="flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
             <div className="w-full lg:w-1/2 lg:pr-10">
               {/* Unified Color Selector */}
