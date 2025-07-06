@@ -742,10 +742,14 @@ export default function ProductDetails({
               </div>
               {/* Thumbnails */}
               <div className="mt-2 overflow-hidden" ref={thumbEmblaRef}>
-                <div className="flex">
+                <div className="flex gap-2">
                   {displayImages.map((item, index) => (
                     <div
-                      className={`min-w-[25%] cursor-pointer p-1 ${index === selectedIndex ? "border-2 border-blue-500 ring-2 ring-blue-400" : ""}`}
+                      className={`w-20 cursor-pointer rounded-xl border p-1 ${
+                        index === selectedIndex
+                          ? "border-black"
+                          : "border-gray-200"
+                      }`}
                       key={index}
                       onClick={() => onThumbClick(index)}
                     >
