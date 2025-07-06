@@ -745,7 +745,7 @@ export default function ProductDetails({
                 <div className="flex gap-2">
                   {displayImages.map((item, index) => (
                     <div
-                      className={`w-20 cursor-pointer rounded-xl border p-1 ${
+                      className={`w-20 cursor-pointer rounded-xl border p-1 lg:w-28 ${
                         index === selectedIndex
                           ? "border-black opacity-100"
                           : "border-gray-200 opacity-60"
@@ -758,7 +758,7 @@ export default function ProductDetails({
                         width={1000}
                         height={1300}
                         alt="prd-img"
-                        className="w-full rounded-xl object-contain"
+                        className="h-[65px] w-full rounded-xl object-contain lg:h-[90px]"
                       />
                     </div>
                   ))}
