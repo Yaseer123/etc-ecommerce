@@ -33,11 +33,11 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
-  Key,
+  type Key,
   useEffect,
   useRef,
   useState,
@@ -821,7 +821,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Price (optional)"
-                      value={variant.price}
+                      value={variant.price === 0 ? "" : variant.price}
                       onChange={(e) =>
                         handleVariantChange(idx, "price", e.target.value)
                       }
@@ -830,7 +830,11 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Discounted Price (optional)"
-                      value={variant.discountedPrice}
+                      value={
+                        variant.discountedPrice === 0
+                          ? ""
+                          : variant.discountedPrice
+                      }
                       onChange={(e) =>
                         handleVariantChange(
                           idx,
@@ -843,7 +847,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Stock (optional)"
-                      value={variant.stock}
+                      value={variant.stock === 0 ? "" : variant.stock}
                       onChange={(e) =>
                         handleVariantChange(idx, "stock", e.target.value)
                       }
