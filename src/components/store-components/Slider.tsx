@@ -72,35 +72,58 @@ const Slider = () => {
           >
             {(sliderData ?? []).map((slide) => (
               <SwiperSlide key={slide.id}>
-                <div className="slider-item bg-linear relative flex h-full w-full items-center">
-                  {/* Background Image */}
-                  <Image
-                    src={slide.imageUrl ?? ""}
-                    alt={slide.title ?? ""}
-                    fill
-                    priority={true}
-                    className="z-0 object-cover object-center"
-                    style={{ position: "absolute" }}
-                  />
-                  {/* Text Content */}
-                  <div className="text-content relative z-10 basis-1/2 pl-5 md:pl-[60px]">
-                    <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
-                      {slide.subtitle ?? ""}
+                {slide.link ? (
+                  <Link
+                    href={slide.link}
+                    className="slider-item bg-linear relative flex h-full w-full items-center"
+                  >
+                    {/* Background Image */}
+                    <Image
+                      src={slide.imageUrl ?? ""}
+                      alt={slide.title ?? ""}
+                      fill
+                      priority={true}
+                      className="z-0 object-cover object-center"
+                      style={{ position: "absolute" }}
+                    />
+                    {/* Text Content */}
+                    <div className="text-content relative z-10 basis-1/2 pl-5 md:pl-[60px]">
+                      <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                        {slide.subtitle ?? ""}
+                      </div>
+                      <div className="heading2 mt-2 lg:mt-3">
+                        {slide.title ?? ""}
+                      </div>
+                      <div className="body1 mt-3 lg:mt-4">
+                        {slide.description ?? ""}
+                      </div>
                     </div>
-                    <div className="heading2 mt-2 lg:mt-3">
-                      {slide.title ?? ""}
+                  </Link>
+                ) : (
+                  <div className="slider-item bg-linear relative flex h-full w-full items-center">
+                    {/* Background Image */}
+                    <Image
+                      src={slide.imageUrl ?? ""}
+                      alt={slide.title ?? ""}
+                      fill
+                      priority={true}
+                      className="z-0 object-cover object-center"
+                      style={{ position: "absolute" }}
+                    />
+                    {/* Text Content */}
+                    <div className="text-content relative z-10 basis-1/2 pl-5 md:pl-[60px]">
+                      <div className="text-sm font-semibold uppercase leading-5 md:text-xs md:leading-4">
+                        {slide.subtitle ?? ""}
+                      </div>
+                      <div className="heading2 mt-2 lg:mt-3">
+                        {slide.title ?? ""}
+                      </div>
+                      <div className="body1 mt-3 lg:mt-4">
+                        {slide.description ?? ""}
+                      </div>
                     </div>
-                    <div className="body1 mt-3 lg:mt-4">
-                      {slide.description ?? ""}
-                    </div>
-                    <Link
-                      href={slide.link ?? ""}
-                      className="button-main mt-3 lg:mt-8"
-                    >
-                      Shop Now
-                    </Link>
                   </div>
-                </div>
+                )}
               </SwiperSlide>
             ))}
           </Swiper>
