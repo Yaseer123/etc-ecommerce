@@ -57,9 +57,9 @@ const HomeAnimatedContent: React.FC<HomeAnimatedContentProps> = ({
 
       <div className="relative flex min-h-[400px] w-full items-center justify-center py-8 md:min-h-[600px]">
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-40 w-full select-none bg-gradient-to-b from-transparent to-white dark:to-black" />
-        <div className="absolute z-10 h-full w-full">
+        {/* <div className="absolute z-10 h-full w-full">
           <Globe />
-        </div>
+        </div> */}
       </div>
     </motion.div>
   );
