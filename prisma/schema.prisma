@@ -87,6 +87,7 @@ model Product {
     brand                 String
     defaultColor          String?
     defaultColorHex       String?
+    defaultTon            String?
     defaultSize           String?
     sold                  Int         @default(0)
     estimatedDeliveryTime Int? // Changed to Int to represent days

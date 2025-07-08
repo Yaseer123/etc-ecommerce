@@ -556,6 +556,7 @@ export const productRouter = createTRPCRouter({
         discountedPrice: input.discountedPrice,
         brand: input.brand,
         defaultColor: input.defaultColor,
+        defaultTon: input.defaultTon,
         defaultSize: input.defaultSize,
         estimatedDeliveryTime: input.estimatedDeliveryTime,
         attributes: input.attributes, // Store regular specifications
@@ -738,6 +739,8 @@ export const productRouter = createTRPCRouter({
             typeof input.defaultColor === "string"
               ? input.defaultColor
               : undefined,
+          defaultTon:
+            typeof input.defaultTon === "string" ? input.defaultTon : undefined,
           defaultSize:
             typeof input.defaultSize === "string"
               ? input.defaultSize
