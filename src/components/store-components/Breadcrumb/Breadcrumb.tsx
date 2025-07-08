@@ -21,7 +21,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
   children,
 }) => {
   return (
-    <div className="bg-white relative w-full overflow-hidden px-4 py-8 sm:py-10 lg:py-16">
+    <div className="relative w-full overflow-hidden bg-white px-4 py-8 sm:py-10 lg:py-16">
       <div className="container mx-auto max-w-screen-xl">
         <div className="relative z-[1] flex h-full w-full flex-col items-center justify-center">
           <div className="text-content w-full text-center">

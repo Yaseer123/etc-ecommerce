@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import { getUserById } from "@/utils/getUser";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { type UserRole } from "@prisma/client";
 import bcrypt from "bcryptjs";
 

@@ -25,12 +25,6 @@
     "prepare": "husky",
     "tsc:watch": "tsc --w"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,mdx}": [
-      "prettier --write",
-      "next lint --fix"
-    ]
-  },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
@@ -42,6 +36,7 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^4.1.0",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/client": "^6.2.1",
     "@radix-ui/react-accordion": "^1.2.3",
@@ -142,7 +137,6 @@
     "@types/three": "^0.178.0",
     "@typescript-eslint/eslint-plugin": "^8.1.0",
     "@typescript-eslint/parser": "^8.1.0",
-    "dotenv-cli": "^8.0.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.1",
     "husky": "^9.1.7",

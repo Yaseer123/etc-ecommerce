@@ -1,5 +1,5 @@
 // modalCartStore.ts
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface ModalCartState {
   isModalOpen: boolean;
@@ -10,5 +10,5 @@ interface ModalCartState {
 export const useModalCartStore = create<ModalCartState>((set) => ({
   isModalOpen: false,
   openModalCart: () => set({ isModalOpen: true }),
-  closeModalCart: () => set({ isModalOpen: false })
+  closeModalCart: () => set({ isModalOpen: false }),
 }));

@@ -1,5 +1,5 @@
 // modalWishlistStore.ts
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface ModalWishlistState {
   isModalOpen: boolean;
@@ -10,5 +10,5 @@ interface ModalWishlistState {
 export const useModalWishlistStore = create<ModalWishlistState>((set) => ({
   isModalOpen: false,
   openModalWishlist: () => set({ isModalOpen: true }),
-  closeModalWishlist: () => set({ isModalOpen: false })
+  closeModalWishlist: () => set({ isModalOpen: false }),
 }));
