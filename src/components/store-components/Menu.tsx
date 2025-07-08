@@ -1,6 +1,5 @@
 "use client";
 
-import { ModeToggle } from "@/components/ThemeToggle";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { useModalCartStore } from "@/context/store-context/ModalCartContext";
 import { useModalWishlistStore } from "@/context/store-context/ModalWishlistContext";
@@ -19,11 +18,12 @@ import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Key, useEffect, useRef, useState } from "react";
+import { type Key, useEffect, useRef, useState } from "react";
 import { formatPrice } from "../../utils/format";
 import CategoryDropdown from "./Category/CategoryDropdown";
 import MobileMenu from "./MobileMenu";
 import TopNav from "./TopNav";
+import { ThemeToggle } from "../shared/ThemeToggle";
 
 export default function Menu({
   isAuthenticated,
@@ -379,7 +379,7 @@ export default function Menu({
                       {cartArray.length}
                     </span>
                   </div>
-                  <ModeToggle />
+                  <ThemeToggle />
                 </div>
               </div>
             </div>

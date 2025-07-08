@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { api, RouterOutputs } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { ORDER_STATUS_COLORS } from "@/utils/constants";
 import type { OrderStatus } from "@prisma/client";
 import { format } from "date-fns";

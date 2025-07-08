@@ -96,9 +96,26 @@ export const CardBody = ({
 };
 
 // Define a generic type for CardItem props
-type CardItemProps<T extends React.ElementType = "div"> = {
+// Polymorphic pattern: generic over the element type
+
+type AsProp<T extends React.ElementType> = {
   as?: T;
-  children: React.ReactNode;
+};
+
+type PropsToOmit<T extends React.ElementType, P> = keyof (AsProp<T> & P);
+
+type PolymorphicComponentProps<
+  T extends React.ElementType,
+  Props = object,
+> = React.PropsWithChildren<Props & AsProp<T>> &
+  Omit<React.ComponentPropsWithoutRef<T>, PropsToOmit<T, Props>>;
+
+type PolymorphicRef<T extends React.ElementType> =
+  React.ComponentPropsWithRef<T>["ref"];
+
+// CardItem props for div only
+
+type CardItemDivProps = {
   className?: string;
   translateX?: number | string;
   translateY?: number | string;
@@ -106,47 +123,59 @@ type CardItemProps<T extends React.ElementType = "div"> = {
   rotateX?: number | string;
   rotateY?: number | string;
   rotateZ?: number | string;
-} & React.ComponentPropsWithoutRef<T>;
+  children: React.ReactNode;
+} & Omit<React.ComponentPropsWithoutRef<"div">, "className" | "children">;
 
-export const CardItem = <T extends React.ElementType = "div">({
-  as,
-  children,
-  className,
-  translateX = 0,
-  translateY = 0,
-  translateZ = 0,
-  rotateX = 0,
-  rotateY = 0,
-  rotateZ = 0,
-  ...rest
-}: CardItemProps<T>) => {
-  const Tag = as ?? "div";
-  const ref = useRef<HTMLDivElement>(null);
-  const [isMouseEntered] = useMouseEnter();
+const CardItem = React.forwardRef<HTMLDivElement, CardItemDivProps>(
+  (props, ref) => {
+    const {
+      children,
+      className,
+      translateX = 0,
+      translateY = 0,
+      translateZ = 0,
+      rotateX = 0,
+      rotateY = 0,
+      rotateZ = 0,
+      ...rest
+    } = props;
 
-  useEffect(() => {
-    handleAnimations();
-  }, [isMouseEntered]);
+    const localRef = useRef<HTMLDivElement>(null);
+    const [isMouseEntered] = useMouseEnter();
 
-  const handleAnimations = () => {
-    if (!ref.current) return;
-    if (isMouseEntered) {
-      ref.current.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
-    } else {
-      ref.current.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
-    }
-  };
+    React.useImperativeHandle(ref, () => localRef.current!);
 
-  return (
-    <Tag
-      ref={ref}
-      className={cn("w-fit transition duration-200 ease-linear", className)}
-      {...rest}
-    >
-      {children}
-    </Tag>
-  );
-};
+    useEffect(() => {
+      const currentRef = localRef.current;
+      if (!currentRef) return;
+      if (isMouseEntered) {
+        currentRef.style.transform = `translateX(${translateX}px) translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
+      } else {
+        currentRef.style.transform = `translateX(0px) translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg)`;
+      }
+    }, [
+      isMouseEntered,
+      translateX,
+      translateY,
+      translateZ,
+      rotateX,
+      rotateY,
+      rotateZ,
+    ]);
+
+    return (
+      <div
+        ref={localRef}
+        className={cn("w-fit transition duration-200 ease-linear", className)}
+        {...rest}
+      >
+        {children}
+      </div>
+    );
+  },
+);
+
+CardItem.displayName = "CardItem";
 
 // Create a hook to use the context
 export const useMouseEnter = () => {

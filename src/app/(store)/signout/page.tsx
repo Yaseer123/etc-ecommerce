@@ -67,7 +67,7 @@ export default function SignoutPage() {
           account.
         </p>
         <div className="flex w-full flex-col gap-3">
-          <Button asChild variant="black" className="w-full">
+          <Button asChild variant="default" className="w-full">
             <Link href="/login">Sign in again</Link>
           </Button>
           <Button asChild variant="outline" className="w-full">

@@ -4,10 +4,10 @@ import {
   DeleteObjectCommand,
   DeleteObjectsCommand,
   ListObjectsV2Command,
-  ListObjectsV2CommandOutput,
+  type ListObjectsV2CommandOutput,
   PutObjectCommand,
   S3Client,
-  _Object as S3Object,
+  type _Object as S3Object,
 } from "@aws-sdk/client-s3";
 import { randomUUID } from "crypto";
 

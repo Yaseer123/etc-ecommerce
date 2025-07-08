@@ -58,12 +58,12 @@ import {
   Trash,
 } from "lucide-react";
 import {
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
+  type AwaitedReactNode,
+  type JSXElementConstructor,
+  type Key,
+  type ReactElement,
+  type ReactNode,
+  type ReactPortal,
   useState,
 } from "react";
 import { toast } from "sonner"; // Updated: Using sonner for toast
