@@ -40,9 +40,9 @@ const BreadcrumbProduct: React.FC<Props> = ({ data }) => {
 
   return (
     <>
-      <div>
-        <div className="bg-surface bg-white bg-no-repeat pb-8 pt-12">
-          <div className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mx-auto flex w-full !max-w-[1322px] flex-nowrap items-center justify-between gap-3 overflow-x-auto whitespace-nowrap px-4">
+      <div className="mx-auto w-full max-w-screen-xl px-3 sm:px-6 md:px-8 lg:px-0">
+        <div className="bg-surface bg-no-repeat pb-8 pt-12">
+          <div className="scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 flex w-full !max-w-[1322px] flex-nowrap items-center justify-start gap-3 overflow-x-auto whitespace-nowrap">
             <div className="left flex min-w-0 items-center gap-1">
               <Link
                 href={"/"}

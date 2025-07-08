@@ -1,22 +1,24 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { ProductWithCategory } from "@/types/ProductType";
-import type { Category } from "@prisma/client";
+import type { ProductWithCategory } from "@/types/ProductType";
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import Product from "./Product/Product";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 function isProductWithCategory(val: unknown): val is ProductWithCategory {
   if (!val || typeof val !== "object") return false;
-  return "id" in val &&
-    "title" in val &&
-    "images" in val &&
-    "price" in val &&
-    "discountedPrice" in val &&
-    "category" in val
-    ? true
-    : false;
+
+  const obj = val as Record<string, unknown>;
+  return (
+    typeof obj.id === "string" &&
+    typeof obj.title === "string" &&
+    Array.isArray(obj.images) &&
+    typeof obj.price === "number" &&
+    typeof obj.discountedPrice === "number" &&
+    typeof obj.category === "object"
+  );
 }
 
 const RecentlyAdded = () => {
@@ -26,132 +28,106 @@ const RecentlyAdded = () => {
     isError: isCategoriesError,
   } = api.category.getAllParentOrderedByRecentProduct.useQuery();
 
-  const [activeTab, setActiveTab] = useState<string | undefined>(undefined);
-
-  function getAllByCategoryQuery(categoryId: string | undefined) {
-    return api.product.getAllByCategory.useQuery(
-      { categoryId },
-      {
-        enabled: !!categoryId, // Only fetch products if a category is selected
-      },
-    );
-  }
+  const [activeTab, setActiveTab] = useState<string | null>(null);
 
   const {
     data: products = [],
     isLoading: isProductsLoading,
     isError: isProductsError,
-  } = getAllByCategoryQuery(activeTab);
+  } = api.product.getAllByCategory.useQuery(
+    { categoryId: activeTab ?? "" },
+    { enabled: !!activeTab },
+  );
+
+  useEffect(() => {
+    if (categories?.length && activeTab === null) {
+      setActiveTab(categories[0]?.id ?? null);
+    }
+  }, [categories, activeTab]);
 
   const handleTabClick = (categoryId: string) => {
     setActiveTab(categoryId);
   };
-  console.log(products);
-  // Set the default active tab to the first category when categories are loaded
-  useEffect(() => {
-    if (categories?.length && !activeTab && categories[0]) {
-      setActiveTab(categories[0].id);
-    }
-  }, [categories, activeTab]);
 
-  // Scroll active tab into view when changed
-  useEffect(() => {
-    if (activeTab) {
-      const activeElement = document.getElementById(`tab-${activeTab}`);
-      if (activeElement) {
-        // Scroll the element into view with smooth behavior
-        activeElement.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          inline: "center",
-        });
-      }
-    }
-  }, [activeTab]);
+  const visibleProducts = useMemo(() => {
+    return products.slice(0, 12).filter(isProductWithCategory);
+  }, [products]);
 
-  if (isCategoriesLoading) {
-    return (
-      <div className="flex items-center justify-center py-10">
-        <div className="flex animate-pulse space-x-2">
-          <div className="h-3 w-3 rounded-full bg-gray-400"></div>
-          <div className="h-3 w-3 rounded-full bg-gray-400"></div>
-          <div className="h-3 w-3 rounded-full bg-gray-400"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (isCategoriesError) {
-    return (
-      <div className="py-10 text-center text-red-500">
-        Failed to load categories. Please try again later.
-      </div>
-    );
-  }
+  const isLoading = isCategoriesLoading || isProductsLoading;
+  const isError = isCategoriesError || isProductsError;
 
   return (
-    <>
-      <div className="tab-features-block pt-8 md:pt-20">
-        <div className="container">
-          <div className="heading flex flex-col justify-between gap-4 md:flex-row md:items-center md:gap-5">
-            <div className="heading3 mb-2 md:mb-0">Recently Added</div>
-            <div className="relative w-full overflow-hidden md:w-auto">
-              <div className="menu-tab scrollbar-hide bg-surface flex items-center gap-2 overflow-x-auto whitespace-nowrap rounded-2xl p-1">
-                {categories?.map((category: Category) => (
+    <section className="w-[60%] bg-transparent py-6 sm:py-10 md:w-full md:py-16">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <h2 className="text-xl font-semibold text-zinc-800 dark:text-white sm:text-2xl">
+            Recently Added
+          </h2>
+
+          {/* Tabs */}
+          <div className="w-full md:w-auto">
+            <ScrollArea className="w-full whitespace-nowrap rounded-2xl bg-zinc-100 p-1 dark:bg-zinc-800">
+              <div className="flex w-max space-x-2 p-1">
+                {categories?.map((category) => (
                   <div
-                    id={`tab-${category.id}`}
                     key={category.id}
-                    className={`tab-item relative flex-shrink-0 cursor-pointer px-5 py-2 text-secondary duration-500 ${
-                      activeTab === category.id ? "active" : ""
-                    }`}
+                    id={`tab-${category.id}`}
+                    role="tab"
+                    aria-selected={activeTab === category.id}
+                    tabIndex={0}
                     onClick={() => handleTabClick(category.id)}
+                    className={`relative z-10 cursor-pointer rounded-xl px-3 py-1.5 text-sm font-medium transition-colors duration-300 sm:px-4 sm:py-2 ${
+                      activeTab === category.id
+                        ? "text-zinc-900 dark:text-white"
+                        : "text-zinc-500 dark:text-zinc-400"
+                    }`}
                   >
                     {activeTab === category.id && (
                       <motion.div
                         layoutId="active-pill"
-                        className="absolute inset-0 rounded-2xl bg-white"
-                      ></motion.div>
+                        className="absolute inset-0 z-0 rounded-xl bg-white shadow-md dark:bg-zinc-700"
+                      />
                     )}
-                    <span className="text-button-uppercase relative z-[1]">
-                      {category.name}
-                    </span>
+                    <span className="relative z-10">{category.name}</span>
                   </div>
                 ))}
               </div>
-              <div className="from-surface pointer-events-none absolute right-0 top-0 h-full w-6 bg-gradient-to-l to-transparent md:hidden"></div>
-              <div className="from-surface pointer-events-none absolute left-0 top-0 h-full w-6 bg-gradient-to-r to-transparent md:hidden"></div>
-            </div>
+              <ScrollBar orientation="horizontal" className="invisible" />
+            </ScrollArea>
           </div>
+        </div>
 
-          {isProductsLoading ? (
-            <div className="mt-6 grid animate-pulse grid-cols-2 gap-[20px] sm:gap-[30px] md:mt-10 lg:grid-cols-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-[250px] rounded-lg bg-gray-200"></div>
+        {/* Content */}
+        <div className="mt-6 md:mt-12">
+          {isLoading ? (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <div className="h-48 rounded-lg bg-zinc-200 dark:bg-zinc-700"></div>
+                  <div className="h-4 rounded bg-zinc-200 dark:bg-zinc-700"></div>
+                  <div className="h-4 w-3/4 rounded bg-zinc-200 dark:bg-zinc-700"></div>
+                </div>
               ))}
             </div>
-          ) : isProductsError ? (
-            <div className="mt-6 text-center text-red-500">
-              Failed to load products. Please try again later.
+          ) : isError ? (
+            <div className="py-10 text-center text-red-500 dark:text-red-400">
+              Failed to load data. Please try again later.
             </div>
-          ) : products?.length === 0 ? (
-            <div className="mt-6 py-10 text-center">
+          ) : visibleProducts.length === 0 ? (
+            <div className="py-10 text-center text-zinc-500 dark:text-zinc-400">
               No products available in this category.
             </div>
           ) : (
-            <div className="list-product hide-product-sold mt-6 grid grid-cols-1 gap-[20px] sm:grid-cols-2 sm:gap-[30px] md:mt-10 lg:grid-cols-4">
-              {products
-                ?.slice(0, 12)
-                .filter(isProductWithCategory)
-                .map((prd, index: number) =>
-                  isProductWithCategory(prd) ? (
-                    <Product key={index} data={prd} style="style-1" />
-                  ) : null,
-                )}
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {visibleProducts.map((product) => (
+                <Product key={product.id} data={product} style="style-1" />
+              ))}
             </div>
           )}
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

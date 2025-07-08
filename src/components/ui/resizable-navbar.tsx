@@ -274,15 +274,23 @@ export const NavbarLogo = () => {
       href="/"
       className="relative z-20 mr-4 flex items-center space-x-2 px-2 py-1 text-sm font-normal text-black"
     >
+      {/* Light logo (visible in light mode only) */}
       <img
-        src="https://assets.aceternity.com/logo-dark.png"
-        alt="logo"
-        width={30}
-        height={30}
+        src="/light.png"
+        alt="ETC Logo Light"
+        width={80}
+        height={80}
+        className="block dark:hidden"
       />
-      <span className="font-medium text-black dark:text-white">
-        ETC Commerce
-      </span>
+
+      {/* Dark logo (visible in dark mode only) */}
+      <img
+        src="/dark.png"
+        alt="ETC Logo Dark"
+        width={80}
+        height={80}
+        className="hidden dark:block"
+      />
     </Link>
   );
 };
@@ -318,7 +326,7 @@ export const NavbarButton = ({
 
   return (
     <Tag
-      href={href || undefined}
+      href={href ?? undefined}
       className={cn(baseStyles, variantStyles[variant], className)}
       {...props}
     >

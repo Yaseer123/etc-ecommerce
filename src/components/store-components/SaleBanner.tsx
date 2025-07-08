@@ -50,9 +50,11 @@ export const SaleBanner = () => {
                 onClick={() => handleClick(banner.link)}
               >
                 <div className="text-content relative z-[1] p-4 sm:p-6 md:py-6 md:pl-7 lg:py-8 lg:pl-8">
-                  <div className="inline-block rounded-sm bg-red-500 px-2 py-0.5 text-xs font-semibold uppercase leading-4 text-white sm:text-sm sm:leading-5 md:text-xs md:leading-4">
-                    {banner.title ?? ""}
-                  </div>
+                  {banner.title && banner.title.trim() !== "" && (
+                    <div className="inline-block rounded-sm bg-red-500 px-2 py-0.5 text-xs font-semibold uppercase leading-4 text-white sm:text-sm sm:leading-5 md:text-xs md:leading-4">
+                      {banner.title}
+                    </div>
+                  )}
                   <div className="heading6 mt-1 text-sm sm:mt-2 sm:text-base">
                     {banner.subtitle ?? ""}
                   </div>
