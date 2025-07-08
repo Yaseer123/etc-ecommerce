@@ -83,7 +83,7 @@ export default function YoutubeDialog({
                 }
               }}
             />
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+            {error && <p className="text-sm text-red-500">{error}</p>}
             <p className="text-sm text-gray-500">
               Supported formats: youtube.com/watch, youtu.be/ID,
               youtube.com/embed

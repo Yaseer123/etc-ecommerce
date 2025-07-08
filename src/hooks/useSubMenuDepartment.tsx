@@ -1,16 +1,16 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const useSubMenuDepartment = () => {
-    const [openSubMenuDepartment, setOpenSubMenuDepartment] = useState(true)
+  const [openSubMenuDepartment, setOpenSubMenuDepartment] = useState(true);
 
-    const handleSubMenuDepartment = () => {
-        setOpenSubMenuDepartment((toggleOpen) => !toggleOpen)
-    }
-    
-    return {
-        openSubMenuDepartment,
-        handleSubMenuDepartment,
-    }
-}
+  const handleSubMenuDepartment = () => {
+    setOpenSubMenuDepartment((toggleOpen) => !toggleOpen);
+  };
 
-export default useSubMenuDepartment
+  return {
+    openSubMenuDepartment,
+    handleSubMenuDepartment,
+  };
+};
+
+export default useSubMenuDepartment;

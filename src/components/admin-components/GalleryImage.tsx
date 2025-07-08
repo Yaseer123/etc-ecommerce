@@ -19,7 +19,7 @@ const GalleryImage: FC<Props> = ({
       <div className="absolute bottom-0 left-0 right-0 hidden group-hover:flex">
         <button
           onClick={onDeleteClick}
-          className="bg-red-400 flex flex-1 items-center justify-center p-2 text-white"
+          className="flex flex-1 items-center justify-center bg-red-400 p-2 text-white"
         >
           <BiSolidTrash />
         </button>

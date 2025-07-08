@@ -503,13 +503,14 @@ export default function EditProductForm({ productId }: { productId: string }) {
     setErrors((prev) => ({ ...prev, estimatedDeliveryTime: "" })); // Optional
   }
 
-  // Add state for default product color and size
+  // Add state for default product color, ton, and size
   const [defaultColorName, setDefaultColorName] = useState(
     product?.defaultColor ?? "",
   );
   const [defaultColorHex, setDefaultColorHex] = useColor(
     product?.defaultColorHex ?? "#ffffff",
   );
+  const [defaultTon, setDefaultTon] = useState(product?.defaultTon ?? "");
   const [defaultSize, setDefaultSize] = useState(product?.defaultSize ?? "");
 
   // Variants state
@@ -993,46 +994,62 @@ export default function EditProductForm({ productId }: { productId: string }) {
           </div>
         </div>
 
-        {/* Default Product Color/Size */}
-        <div>
-          <Label>Default Product Color (optional)</Label>
-          <Input
-            type="text"
-            placeholder="Color Name (e.g. Red, Sky Blue)"
-            value={defaultColorName}
-            onChange={(e) => setDefaultColorName(e.target.value)}
-          />
-          <div className="mt-2 flex items-center gap-2">
-            <ColorPicker
-              color={defaultColorHex}
-              onChange={setDefaultColorHex}
-              hideInput={["rgb", "hsv"]}
+        {/* Default Product Color/Ton/Size */}
+        <div className="col-span-2 flex flex-col space-y-2 md:flex-row md:items-end md:space-x-4 md:space-y-0">
+          <div className="flex w-full flex-col md:w-1/3">
+            <Label className="text-base">
+              Default Product Color (optional)
+            </Label>
+            <Input
+              type="text"
+              placeholder="Color Name (e.g. Red, Sky Blue)"
+              value={defaultColorName}
+              onChange={(e) => setDefaultColorName(e.target.value)}
+              style={{ width: "100%" }}
             />
-            <span
-              style={{
-                display: "inline-block",
-                width: 32,
-                height: 32,
-                backgroundColor: defaultColorHex.hex,
-                borderRadius: "50%",
-                border: "1px solid #ccc",
-              }}
-              aria-label={defaultColorName}
-              title={defaultColorName}
-            />
-            <span>
-              {defaultColorName} ({defaultColorHex.hex})
-            </span>
+            <div className="mt-2 flex items-center gap-2">
+              <ColorPicker
+                color={defaultColorHex}
+                onChange={setDefaultColorHex}
+                hideInput={["rgb", "hsv"]}
+              />
+              <span
+                style={{
+                  display: "inline-block",
+                  width: 32,
+                  height: 32,
+                  backgroundColor: defaultColorHex.hex,
+                  borderRadius: "50%",
+                  border: "1px solid #ccc",
+                }}
+                aria-label={defaultColorName}
+                title={defaultColorName}
+              />
+              <span>
+                {defaultColorName} ({defaultColorHex.hex})
+              </span>
+            </div>
           </div>
-        </div>
-        <div>
-          <Label>Default Product Size (optional)</Label>
-          <Input
-            type="text"
-            placeholder="Size"
-            value={defaultSize}
-            onChange={(e) => setDefaultSize(e.target.value)}
-          />
+          <div className="flex w-full flex-col md:w-1/3">
+            <Label className="text-base">Default Product Ton (optional)</Label>
+            <Input
+              type="text"
+              placeholder="Ton (e.g. 1 Ton, 1.5 Ton, 2 Ton)"
+              value={defaultTon}
+              onChange={(e) => setDefaultTon(e.target.value)}
+              style={{ width: "100%" }}
+            />
+          </div>
+          <div className="flex w-full flex-col md:w-1/3">
+            <Label className="text-base">Default Product Size (optional)</Label>
+            <Input
+              type="text"
+              placeholder="Size (optional)"
+              value={defaultSize}
+              onChange={(e) => setDefaultSize(e.target.value)}
+              style={{ width: "100%" }}
+            />
+          </div>
         </div>
 
         {/* Variants Toggle */}

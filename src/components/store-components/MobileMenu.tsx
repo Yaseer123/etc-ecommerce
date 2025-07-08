@@ -99,7 +99,7 @@ const MobileMenu = ({ openMenuMobile, handleMenuMobile }: MobileMenuProps) => {
                               e.stopPropagation();
                               handleMenuMobile();
                             }}
-                            className="hover:text-brand-primary block py-1 text-base text-gray-700"
+                            className="block py-1 text-base text-gray-700 hover:text-brand-primary"
                           >
                             {cat.name}
                           </Link>

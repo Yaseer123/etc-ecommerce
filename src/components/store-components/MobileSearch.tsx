@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import { ProductWithCategory } from "@/types/ProductType";
+import { type ProductWithCategory } from "@/types/ProductType";
 import { MagnifyingGlass, SpinnerGap, X } from "@phosphor-icons/react/dist/ssr";
 import { useDebounce } from "@uidotdev/usehooks";
 import Image from "next/image";

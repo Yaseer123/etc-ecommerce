@@ -1,12 +1,12 @@
-import React from 'react'
-import { LampDemo } from './LampDemo'
+import React from "react";
+import { LampDemo } from "./LampDemo";
 
 const page = () => {
   return (
     <div>
-        <LampDemo />
+      <LampDemo />
     </div>
-  )
-}
+  );
+};
 
-export default page
+export default page;

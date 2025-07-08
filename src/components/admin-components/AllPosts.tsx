@@ -9,7 +9,7 @@ export default function AllBlogPosts({ userId }: { userId: string }) {
   return (
     <div className="mx-auto flex min-h-3.5 w-3/4 flex-col gap-y-4">
       {post.length === 0 ? (
-        <div className="text-center text-gray-500 mt-10">
+        <div className="mt-10 text-center text-gray-500">
           No blog posts found. Create one now!
         </div>
       ) : (
