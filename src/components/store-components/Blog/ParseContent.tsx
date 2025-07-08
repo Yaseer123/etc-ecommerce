@@ -2,10 +2,7 @@
 
 import React from "react";
 import DOMPurify from "dompurify";
-import parse, {
-  type HTMLReactParserOptions,
-  Element,
-} from "html-react-parser";
+import parse, { type HTMLReactParserOptions, Element } from "html-react-parser";
 
 interface ParseContentProps {
   content: string | null;
@@ -17,8 +14,7 @@ const ParseContent: React.FC<ParseContentProps> = ({ content }) => {
   const options: HTMLReactParserOptions = {
     replace: (domNode) => {
       if (domNode instanceof Element && domNode.name === "iframe") {
-        const { src, width, height, allow, allowfullscreen } =
-          domNode.attribs;
+        const { src, width, height, allow, allowfullscreen } = domNode.attribs;
 
         return (
           <div className="video-container relative my-4 w-full pt-[56.25%]">

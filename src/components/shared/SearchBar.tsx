@@ -1,7 +1,6 @@
 "use client";
 
 import { api } from "@/trpc/react";
-import type { ProductWithCategory } from "@/types/ProductType";
 import { formatPrice } from "@/utils/format";
 import { SpinnerGap } from "@phosphor-icons/react/dist/ssr";
 import { useDebounce } from "@uidotdev/usehooks";
@@ -100,7 +99,7 @@ const SearchBar = ({
             ) : Array.isArray(searchResults) && searchResults.length > 0 ? (
               <>
                 <div className="max-h-[350px] overflow-y-auto">
-                  {searchResults.map((product: ProductWithCategory) => {
+                  {searchResults.map((product, index) => {
                     if (
                       typeof product === "object" &&
                       product !== null &&

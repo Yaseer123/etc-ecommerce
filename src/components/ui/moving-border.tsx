@@ -9,45 +9,70 @@ import {
 } from "motion/react";
 import React, { useRef } from "react";
 
-export function Button({
-  borderRadius = "1.75rem",
-  children,
-  as: Component = "button",
-  containerClassName,
-  borderClassName,
-  duration,
-  className,
-  ...otherProps
-}: {
+// Polymorphic type helper
+export type PolymorphicComponentProps<
+  T extends React.ElementType,
+  Props = object,
+> = Props & { as?: T } & Omit<
+    React.ComponentPropsWithRef<T>,
+    keyof Props | "as"
+  >;
+
+function safeClassName(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+type ButtonOwnProps = {
   borderRadius?: string;
   children: React.ReactNode;
-  as?: React.ElementType;
   containerClassName?: string;
   borderClassName?: string;
   duration?: number;
   className?: string;
-  [key: string]: unknown;
-}) {
+  as?: React.ElementType;
+};
+
+type ButtonProps = ButtonOwnProps &
+  Omit<React.ComponentPropsWithRef<React.ElementType>, keyof ButtonOwnProps>;
+
+const Button = React.forwardRef<HTMLElement, ButtonProps>(function Button(
+  {
+    as: Component = "button",
+    borderRadius = "1.75rem",
+    children,
+    containerClassName,
+    borderClassName,
+    duration,
+    className,
+    ...otherProps
+  },
+  ref,
+) {
   return (
     <Component
+      ref={ref}
       className={cn(
         "relative h-16 w-40 overflow-hidden bg-transparent p-[1px] text-xl",
-        containerClassName,
+        safeClassName(containerClassName),
       )}
       style={{
-        borderRadius: borderRadius,
+        borderRadius: String(borderRadius),
       }}
       {...otherProps}
     >
       <div
         className="absolute inset-0"
-        style={{ borderRadius: `calc(${borderRadius} * 0.96)` }}
+        style={{ borderRadius: `calc(${String(borderRadius)} * 0.96)` }}
       >
-        <MovingBorder duration={duration} rx="30%" ry="30%">
+        <MovingBorder
+          duration={typeof duration === "number" ? duration : undefined}
+          rx="30%"
+          ry="30%"
+        >
           <div
             className={cn(
               "h-20 w-20 bg-[radial-gradient(#0ea5e9_40%,transparent_60%)] opacity-[0.8]",
-              borderClassName,
+              safeClassName(borderClassName),
             )}
           />
         </MovingBorder>
@@ -56,17 +81,18 @@ export function Button({
       <div
         className={cn(
           "relative flex h-full w-full items-center justify-center border border-slate-800 bg-slate-900/[0.8] text-sm text-white antialiased backdrop-blur-xl",
-          className,
+          safeClassName(className),
         )}
         style={{
-          borderRadius: `calc(${borderRadius} * 0.96)`,
+          borderRadius: `calc(${String(borderRadius)} * 0.96)`,
         }}
       >
         {children}
       </div>
     </Component>
   );
-}
+});
+Button.displayName = "Button";
 
 export const MovingBorder = ({
   children,

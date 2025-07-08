@@ -33,15 +33,15 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import { type StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
-  Key,
   useEffect,
   useRef,
   useState,
   type Dispatch,
+  type Key,
   type SetStateAction,
 } from "react";
 import { ColorPicker, useColor, type IColor } from "react-color-palette";
@@ -120,7 +120,7 @@ export function hexToIColor(hex: string): IColor {
 type UIVariant = {
   colorName: string;
   colorHex: string;
-  size: string;
+  ton: string;
   price: number;
   discountedPrice: number;
   stock: number;
@@ -181,6 +181,8 @@ export default function AddProductForm(_unused?: unknown) {
   // Add state for default product color and size
   const [defaultColorName, setDefaultColorName] = useState<string>("");
   const [defaultColorHex, setDefaultColorHex] = useColor("#ffffff");
+  // Add state for default product ton
+  const [defaultTon, setDefaultTon] = useState<string>("");
 
   // Variants state
   const [enableVariants, setEnableVariants] = useState(false);
@@ -188,7 +190,7 @@ export default function AddProductForm(_unused?: unknown) {
     {
       colorName: "",
       colorHex: "#ffffff",
-      size: "",
+      ton: "",
       price: 0,
       discountedPrice: 0,
       stock: 0,
@@ -405,6 +407,7 @@ export default function AddProductForm(_unused?: unknown) {
       setSpecifications([]);
       setDefaultColorName("");
       setDefaultColorHex(hexToIColor("#ffffff"));
+      setDefaultTon("");
       // Navigate after clearing
       router.push("/admin/product");
     },
@@ -506,7 +509,7 @@ export default function AddProductForm(_unused?: unknown) {
       const prevVariant: UIVariant = updated[index] ?? {
         colorName: "",
         colorHex: "#ffffff",
-        size: "",
+        ton: "",
         price: 0,
         discountedPrice: 0,
         stock: 0,
@@ -521,7 +524,7 @@ export default function AddProductForm(_unused?: unknown) {
         updated[index] = {
           colorName: prevVariant.colorName,
           colorHex: prevVariant.colorHex,
-          size: prevVariant.size,
+          ton: prevVariant.ton,
           price:
             field === "price"
               ? value === undefined || value === ""
@@ -557,12 +560,12 @@ export default function AddProductForm(_unused?: unknown) {
                 ? value
                 : ""
               : prevVariant.colorHex,
-          size:
-            field === "size"
+          ton:
+            field === "ton"
               ? typeof value === "string"
                 ? value
                 : ""
-              : prevVariant.size,
+              : prevVariant.ton,
           price: prevVariant.price,
           discountedPrice: prevVariant.discountedPrice,
           stock: prevVariant.stock,
@@ -586,7 +589,7 @@ export default function AddProductForm(_unused?: unknown) {
       {
         colorName: "",
         colorHex: "#ffffff",
-        size: "",
+        ton: "",
         price: 0,
         discountedPrice: 0,
         stock: 0,
@@ -605,7 +608,7 @@ export default function AddProductForm(_unused?: unknown) {
         updated[index] = {
           colorName: "",
           colorHex: "#ffffff",
-          size: "",
+          ton: "",
           price: 0,
           discountedPrice: 0,
           stock: 0,
@@ -617,7 +620,7 @@ export default function AddProductForm(_unused?: unknown) {
         updated[index] = {
           colorName: v.colorName ?? "",
           colorHex: v.colorHex ?? "#ffffff",
-          size: v.size ?? "",
+          ton: v.ton ?? "",
           price: v.price ?? 0,
           discountedPrice: v.discountedPrice ?? 0,
           stock: v.stock ?? 0,
@@ -665,6 +668,7 @@ export default function AddProductForm(_unused?: unknown) {
       stock,
       brand,
       defaultColorHex: defaultColorHex.hex,
+      defaultTon: defaultTon,
       slug,
       categoryId: categoryId,
       description: content,
@@ -691,7 +695,7 @@ export default function AddProductForm(_unused?: unknown) {
                   : 0,
               stock:
                 typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 0,
-              size: typeof v.size === "string" ? v.size : "",
+              ton: typeof v.ton === "string" ? v.ton : "",
             }))
           : undefined,
     });
@@ -713,43 +717,55 @@ export default function AddProductForm(_unused?: unknown) {
       pending={pending}
       submitButtonText="Add Product"
     >
-      {/* Default Product Color/Size */}
-      <div className="flex w-full flex-col space-y-2">
-        <Label className="text-base">Default Product Color (optional)</Label>
-        <Input
-          type="text"
-          placeholder="Color Name (e.g. Red, Sky Blue)"
-          value={defaultColorName}
-          onChange={(e) => setDefaultColorName(e.target.value)}
-          style={{ width: "100%" }}
-        />
-        <div className="mt-2 flex items-center gap-2">
-          <ColorPicker
-            color={defaultColorHex}
-            onChange={setDefaultColorHex}
-            hideInput={["rgb", "hsv"]}
+      {/* Default Product Color/Ton */}
+      <div className="flex w-full flex-col space-y-2 md:flex-row md:items-end md:space-x-4 md:space-y-0">
+        <div className="flex w-full flex-col md:w-1/2">
+          <Label className="text-base">Default Product Color (optional)</Label>
+          <Input
+            type="text"
+            placeholder="Color Name (e.g. Red, Sky Blue)"
+            value={defaultColorName}
+            onChange={(e) => setDefaultColorName(e.target.value)}
+            style={{ width: "100%" }}
           />
-          <span
-            style={{
-              display: "inline-block",
-              width: 32,
-              height: 32,
-              backgroundColor: defaultColorHex.hex,
-              borderRadius: "50%",
-              border: "1px solid #ccc",
-            }}
-            aria-label={defaultColorName}
-            title={defaultColorName}
+          <div className="mt-2 flex items-center gap-2">
+            <ColorPicker
+              color={defaultColorHex}
+              onChange={setDefaultColorHex}
+              hideInput={["rgb", "hsv"]}
+            />
+            <span
+              style={{
+                display: "inline-block",
+                width: 32,
+                height: 32,
+                backgroundColor: defaultColorHex.hex,
+                borderRadius: "50%",
+                border: "1px solid #ccc",
+              }}
+              aria-label={defaultColorName}
+              title={defaultColorName}
+            />
+            <span>
+              {defaultColorName} ({defaultColorHex.hex})
+            </span>
+          </div>
+        </div>
+        <div className="flex w-full flex-col md:w-1/2">
+          <Label className="text-base">Default Product Ton (optional)</Label>
+          <Input
+            type="text"
+            placeholder="Ton (e.g. 1 Ton, 1.5 Ton, 2 Ton)"
+            value={defaultTon}
+            onChange={(e) => setDefaultTon(e.target.value)}
+            style={{ width: "100%" }}
           />
-          <span>
-            {defaultColorName} ({defaultColorHex.hex})
-          </span>
         </div>
       </div>
       {/* Variants Toggle */}
       <div className="flex items-center gap-2">
         <Switch checked={enableVariants} onCheckedChange={setEnableVariants} />
-        <Label className="text-base">Enable color/size/image variants</Label>
+        <Label className="text-base">Enable color/ton/image variants</Label>
       </div>
 
       <div className="grid grid-cols-1 gap-x-3 gap-y-4 p-2 md:p-0">
@@ -811,17 +827,17 @@ export default function AddProductForm(_unused?: unknown) {
                     </span>
                     <Input
                       type="text"
-                      placeholder="Size (optional)"
-                      value={variant.size}
+                      placeholder="Ton (optional)"
+                      value={variant.ton}
                       onChange={(e) =>
-                        handleVariantChange(idx, "size", e.target.value)
+                        handleVariantChange(idx, "ton", e.target.value)
                       }
                       className="w-full min-w-[100px] max-w-xs flex-1"
                     />
                     <Input
                       type="number"
                       placeholder="Price (optional)"
-                      value={variant.price}
+                      value={variant.price === 0 ? "" : variant.price}
                       onChange={(e) =>
                         handleVariantChange(idx, "price", e.target.value)
                       }
@@ -830,7 +846,11 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Discounted Price (optional)"
-                      value={variant.discountedPrice}
+                      value={
+                        variant.discountedPrice === 0
+                          ? ""
+                          : variant.discountedPrice
+                      }
                       onChange={(e) =>
                         handleVariantChange(
                           idx,
@@ -843,7 +863,7 @@ export default function AddProductForm(_unused?: unknown) {
                     <Input
                       type="number"
                       placeholder="Stock (optional)"
-                      value={variant.stock}
+                      value={variant.stock === 0 ? "" : variant.stock}
                       onChange={(e) =>
                         handleVariantChange(idx, "stock", e.target.value)
                       }

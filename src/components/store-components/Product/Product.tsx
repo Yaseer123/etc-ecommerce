@@ -267,6 +267,7 @@ export default function Product({ data }: ProductProps) {
           ? ((data as { variants?: JsonValue }).variants ?? null)
           : null,
       sku: typeof data.sku === "string" ? data.sku : "",
+      defaultTon: null,
     };
     openQuickView(productForQuickView);
   };

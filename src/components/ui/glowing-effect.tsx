@@ -45,18 +45,39 @@ const GlowingEffect = memo(
           const element = containerRef.current;
           if (!element) return;
 
-          const { left, top, width, height } = element.getBoundingClientRect();
-          const mouseX = e?.x ?? lastPosition.current.x;
-          const mouseY = e?.y ?? lastPosition.current.y;
+          const rect = element.getBoundingClientRect();
+          const left = Number(rect.left) || 0;
+          const top = Number(rect.top) || 0;
+          const width = Number(rect.width) || 0;
+          const height = Number(rect.height) || 0;
+          const mouseX =
+            typeof e?.x === "number"
+              ? e.x
+              : typeof lastPosition.current.x === "number"
+                ? lastPosition.current.x
+                : 0;
+          const mouseY =
+            typeof e?.y === "number"
+              ? e.y
+              : typeof lastPosition.current.y === "number"
+                ? lastPosition.current.y
+                : 0;
 
           if (e) {
             lastPosition.current = { x: mouseX, y: mouseY };
           }
 
-          const center = [left + width * 0.5, top + height * 0.5];
+          const center: [number, number] = [
+            left + width * 0.5,
+            top + height * 0.5,
+          ];
+          const safeMouseX = typeof mouseX === "number" ? mouseX : 0;
+          const safeMouseY = typeof mouseY === "number" ? mouseY : 0;
+          const safeCenter0 = typeof center[0] === "number" ? center[0] : 0;
+          const safeCenter1 = typeof center[1] === "number" ? center[1] : 0;
           const distanceFromCenter = Math.hypot(
-            mouseX - center[0],
-            mouseY - center[1],
+            safeMouseX - safeCenter0,
+            safeMouseY - safeCenter1,
           );
           const inactiveRadius = 0.5 * Math.min(width, height) * inactiveZone;
 
@@ -78,7 +99,8 @@ const GlowingEffect = memo(
           const currentAngle =
             parseFloat(element.style.getPropertyValue("--start")) || 0;
           const targetAngle =
-            (180 * Math.atan2(mouseY - center[1], mouseX - center[0])) /
+            (180 *
+              Math.atan2(safeMouseY - safeCenter1, safeMouseX - safeCenter0)) /
               Math.PI +
             90;
 

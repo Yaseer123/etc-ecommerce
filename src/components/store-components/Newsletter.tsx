@@ -61,7 +61,7 @@ export default function Newsletter({ variant = "default" }: NewsletterProps) {
                   disabled={newsletterMutation.isPending}
                 />
                 <Button
-                  variant="black"
+                  variant="default"
                   className="absolute right-1 top-1 flex h-[44px] w-[100px] items-center justify-center rounded-xl bg-black !text-white"
                   type="submit"
                   disabled={newsletterMutation.isPending}

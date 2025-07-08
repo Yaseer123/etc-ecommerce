@@ -53,7 +53,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Prisma } from "@prisma/client";
+import { type Prisma } from "@prisma/client";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
 import RichEditor from "../rich-editor";

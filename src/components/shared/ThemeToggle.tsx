@@ -16,10 +16,14 @@ export { ThemeProvider } from "next-themes";
 export function ThemeToggle() {
   const { setTheme } = useTheme();
 
-return (
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon" className="border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground">
+        <Button
+          variant="outline"
+          size="icon"
+          className="border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground"
+        >
           <SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
