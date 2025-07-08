@@ -25,6 +25,12 @@
     "prepare": "husky",
     "tsc:watch": "tsc --w"
   },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,mdx}": [
+      "prettier --write",
+      "next lint --fix"
+    ]
+  },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },
@@ -140,6 +146,7 @@
     "eslint": "^8.57.0",
     "eslint-config-next": "^15.0.1",
     "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
     "postcss": "^8.4.39",
     "prettier": "^3.4.2",
     "prettier-plugin-tailwindcss": "^0.6.5",

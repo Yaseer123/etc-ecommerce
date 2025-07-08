@@ -1,2 +1,1 @@
-npx prettier --write "**/*.{ts,tsx,js,jsx,mdx}"
-npx next lint --fix
+npx lint-staged
