@@ -642,6 +642,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
           ? variants.map((v) => ({
               colorName: typeof v.colorName === "string" ? v.colorName : "",
               colorHex: typeof v.colorHex === "string" ? v.colorHex : "",
+              ton: typeof v.ton === "string" ? v.ton : "",
               size: typeof v.size === "string" ? v.size : "",
               images: Array.isArray(v.images)
                 ? v.images.filter(
@@ -1284,6 +1285,13 @@ function VariantRow({
         placeholder="Size (optional)"
         value={safeSize}
         onChange={(e) => handleVariantChange(idx, "size", e.target.value)}
+        className="w-32"
+      />
+      <Input
+        type="text"
+        placeholder="Ton (optional)"
+        value={typeof variant.ton === "string" ? variant.ton : ""}
+        onChange={(e) => handleVariantChange(idx, "ton", e.target.value)}
         className="w-32"
       />
       <Input
