@@ -12,11 +12,15 @@ export const variantSchema = z.object({
   colorName: z.string().optional(),
   colorHex: z.string().optional(),
   size: z.string().optional(),
+  ton: z.string().optional(), // <-- Add this line
   images: z.array(z.string()).optional(),
   price: z.number().optional(),
   discountedPrice: z.number().optional(),
   stock: z.number().optional(),
   sku: z.string().optional(), // Add SKU for each variant
+  specifications: z
+    .array(z.object({ key: z.string(), value: z.string() }))
+    .optional(), // Optional specifications for each variant
 });
 
 export const productSchema = z.object({

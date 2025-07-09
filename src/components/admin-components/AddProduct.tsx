@@ -126,6 +126,7 @@ type UIVariant = {
   stock: number;
   images: string[];
   imageId: string;
+  specifications?: Array<{ key: string; value: string }>;
 };
 
 export default function AddProductForm(_unused?: unknown) {
@@ -204,6 +205,10 @@ export default function AddProductForm(_unused?: unknown) {
   const [variantGalleryIdx, setVariantGalleryIdx] = useState<number | null>(
     null,
   );
+
+  // In the AddProductForm component, add state for variant specifications modals
+  const [variantSpecsOpen, setVariantSpecsOpen] = useState<number | null>(null);
+  const [variantSpecsText, setVariantSpecsText] = useState<string>("");
 
   // Helper: validate a single field
   function validateField(field: string, value: unknown) {
@@ -696,6 +701,10 @@ export default function AddProductForm(_unused?: unknown) {
               stock:
                 typeof v.stock === "number" && !isNaN(v.stock) ? v.stock : 0,
               ton: typeof v.ton === "string" ? v.ton : "",
+              specifications:
+                v.specifications && v.specifications.length > 0
+                  ? v.specifications
+                  : undefined,
             }))
           : undefined,
     });
@@ -898,6 +907,20 @@ export default function AddProductForm(_unused?: unknown) {
                     )}
                     <Button
                       type="button"
+                      onClick={() => {
+                        setVariantSpecsOpen(idx);
+                        setVariantSpecsText(
+                          (variant.specifications ?? [])
+                            .map((s) => `${s.key}: ${s.value}`)
+                            .join("\n"),
+                        );
+                      }}
+                      className="w-full"
+                    >
+                      Edit Specifications
+                    </Button>
+                    <Button
+                      type="button"
                       variant="destructive"
                       onClick={() => handleRemoveVariant(idx)}
                       className="w-full"
@@ -928,6 +951,39 @@ export default function AddProductForm(_unused?: unknown) {
               onImagesChange={(imgs: string[]) =>
                 handleVariantImagesUpdate(variantGalleryIdx, imgs)
               }
+            />
+          )}
+        {/* Variant Specifications Modal */}
+        {variantSpecsOpen !== null &&
+          variants[variantSpecsOpen] !== undefined && (
+            <VariantSpecificationsModal
+              variantIndex={variantSpecsOpen}
+              specifications={variants[variantSpecsOpen]?.specifications ?? []}
+              onClose={() => setVariantSpecsOpen(null)}
+              onSave={(specs) => {
+                setVariants((prev) => {
+                  const updated = [...prev];
+                  const v = updated[variantSpecsOpen];
+                  if (v) {
+                    updated[variantSpecsOpen] = {
+                      ...v,
+                      colorName: v.colorName ?? "",
+                      colorHex: v.colorHex ?? "#ffffff",
+                      ton: v.ton ?? "",
+                      price: v.price ?? 0,
+                      discountedPrice: v.discountedPrice ?? 0,
+                      stock: v.stock ?? 0,
+                      images: v.images ?? [],
+                      imageId: v.imageId ?? "",
+                      specifications: specs,
+                    };
+                  }
+                  return updated;
+                });
+                setVariantSpecsOpen(null);
+              }}
+              textValue={variantSpecsText}
+              setTextValue={setVariantSpecsText}
             />
           )}
         {/* Product Title - moved here to be after variants */}
@@ -1426,6 +1482,144 @@ function VariantImageGalleryModal({
         )}
         <Button onClick={onClose} className="mt-2 w-full">
           Done
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+// Add the VariantSpecificationsModal component at the end of the file
+function VariantSpecificationsModal({
+  variantIndex,
+  specifications,
+  onClose,
+  onSave,
+  textValue,
+  setTextValue,
+}: {
+  variantIndex: number;
+  specifications: Array<{ key: string; value: string }>;
+  onClose: () => void;
+  onSave: (specs: Array<{ key: string; value: string }>) => void;
+  textValue: string;
+  setTextValue: (v: string) => void;
+}) {
+  const [specs, setSpecs] = useState<Array<{ key: string; value: string }>>(
+    specifications || [],
+  );
+  // Drag-and-drop logic can be reused from SortableSpecificationItem if needed
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+      <div className="relative w-full max-w-lg rounded-md bg-white p-6">
+        <button className="absolute right-4 top-4" onClick={onClose}>
+          <IoMdClose size={24} />
+        </button>
+        <h2 className="mb-4 text-lg font-semibold">
+          Edit Variant Specifications
+        </h2>
+        {/* Textarea for quick paste */}
+        <Textarea
+          placeholder={`Key: Value\nKey2: Value2`}
+          value={textValue}
+          onChange={(e) => setTextValue(e.target.value)}
+          className="min-h-[100px] w-full"
+        />
+        <Button
+          className="mt-2 w-full"
+          type="button"
+          onClick={() => {
+            // Parse textarea content and add to specifications
+            const lines = textValue
+              .split(/\n+/)
+              .map((line) => line.trim())
+              .filter((line) => line.length > 0);
+            const newSpecs = lines
+              .map((line) => {
+                if (line.includes(":")) {
+                  const [key, ...rest] = line.split(":");
+                  if (typeof key === "string") {
+                    return { key: key.trim(), value: rest.join(":").trim() };
+                  }
+                } else {
+                  return { key: line, value: "" };
+                }
+                return null;
+              })
+              .filter(
+                (spec): spec is { key: string; value: string } =>
+                  !!spec &&
+                  typeof spec.key === "string" &&
+                  spec.key.trim().length > 0,
+              );
+            setSpecs(newSpecs);
+          }}
+        >
+          Parse from Textarea
+        </Button>
+        {/* List and edit specs (optional: add drag-and-drop UI) */}
+        <div className="mt-4 space-y-2">
+          {specs.map((spec, idx) => (
+            <div key={idx} className="flex gap-2">
+              <Input
+                type="text"
+                placeholder="Key"
+                value={spec.key}
+                onChange={(e) => {
+                  const updated = [...specs];
+                  if (updated[idx]) {
+                    updated[idx] = {
+                      key: e.target.value,
+                      value: updated[idx].value ?? "",
+                    };
+                  } else {
+                    updated[idx] = { key: e.target.value, value: "" };
+                  }
+                  setSpecs(updated);
+                }}
+              />
+              <Input
+                type="text"
+                placeholder="Value"
+                value={spec.value}
+                onChange={(e) => {
+                  const updated = [...specs];
+                  if (updated[idx]) {
+                    updated[idx] = {
+                      key: updated[idx].key ?? "",
+                      value: e.target.value,
+                    };
+                  } else {
+                    updated[idx] = { key: "", value: e.target.value };
+                  }
+                  setSpecs(updated);
+                }}
+              />
+              <Button
+                variant="destructive"
+                onClick={() => {
+                  setSpecs((prev) => prev.filter((_, i) => i !== idx));
+                }}
+              >
+                Remove
+              </Button>
+            </div>
+          ))}
+          <Button
+            className="mt-2 w-full"
+            type="button"
+            onClick={() =>
+              setSpecs((prev) => [...prev, { key: "", value: "" }])
+            }
+          >
+            Add Specification
+          </Button>
+        </div>
+        <Button
+          className="mt-4 w-full"
+          type="button"
+          onClick={() => onSave(specs)}
+        >
+          Save Specifications
         </Button>
       </div>
     </div>

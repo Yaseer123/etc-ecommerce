@@ -10,16 +10,26 @@ export type JsonValue =
   | null;
 
 export interface Variant {
-  [key: string]: string | number | string[] | undefined;
+  [key: string]:
+    | string
+    | number
+    | string[]
+    | { key: string; value: string }[]
+    | undefined;
   colorName?: string;
   colorHex?: string;
   size?: string;
+  ton?: string;
   images?: string[];
   price?: number;
   discountedPrice?: number;
   stock?: number;
   imageId?: string;
   sku?: string;
+  /**
+   * Optional specifications for this variant. If not provided, use the product's default specifications.
+   */
+  specifications?: Array<{ key: string; value: string }>;
 }
 
 export const StockStatus = {
