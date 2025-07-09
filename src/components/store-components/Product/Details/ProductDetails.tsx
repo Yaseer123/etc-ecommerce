@@ -504,28 +504,90 @@ export default function ProductDetails({
         )
       : variants;
 
-  const availableTons = uniqueTons;
-  const availableColors = filteredVariants
-    ? filteredVariants
-        .map((v) => ({
-          colorHex: v.colorHex ?? v.colorName ?? "#ffffff",
-          colorName: v.colorName ?? v.colorHex ?? "Unnamed",
-        }))
-        .filter((v) => v.colorHex && v.colorName)
-    : [];
+  // --- NEW: Build availableColors for ton, always include defaultColor for defaultTon ---
+  let availableColors = filteredVariants
+    .map((v) => ({
+      colorHex: v.colorHex ?? v.colorName ?? "#ffffff",
+      colorName: v.colorName ?? v.colorHex ?? "Unnamed",
+    }))
+    .filter((v) => v.colorHex && v.colorName);
 
-  const availableSizes = filteredVariants
-    ? [
-        ...new Set(
-          filteredVariants
-            .filter((v) =>
-              selectedColorHex ? v.colorHex === selectedColorHex : true,
-            )
-            .map((v) => v.size)
-            .filter(Boolean),
-        ),
-      ]
-    : [];
+  // If ton is present and selectedTon is defaultTon, prepend defaultColor if not already present
+  if (
+    hasTon &&
+    selectedTon === productMain.defaultTon &&
+    productMain.defaultColorHex &&
+    productMain.defaultColor
+  ) {
+    const alreadyHasDefault = availableColors.some(
+      (c) => c.colorHex === productMain.defaultColorHex,
+    );
+    if (!alreadyHasDefault) {
+      availableColors = [
+        {
+          colorHex: productMain.defaultColorHex,
+          colorName: productMain.defaultColor,
+        },
+        ...availableColors,
+      ];
+    }
+  }
+
+  // --- NEW: Build availableSizes for ton, always include defaultSize for defaultTon ---
+  let availableSizes = [
+    ...new Set(
+      filteredVariants
+        .filter((v) =>
+          selectedColorHex ? v.colorHex === selectedColorHex : true,
+        )
+        .map((v) => v.size)
+        .filter(Boolean),
+    ),
+  ];
+  // If ton is present and selectedTon is defaultTon, prepend defaultSize if not already present
+  if (
+    hasTon &&
+    selectedTon === productMain.defaultTon &&
+    productMain.defaultSize &&
+    !availableSizes.includes(productMain.defaultSize)
+  ) {
+    availableSizes = [productMain.defaultSize, ...availableSizes];
+  }
+
+  // --- Auto-select default color/size for default ton if not already selected ---
+  useEffect(() => {
+    if (hasTon && selectedTon === productMain.defaultTon) {
+      if (
+        productMain.defaultColorHex &&
+        !selectedColorHex &&
+        availableColors.some((c) => c.colorHex === productMain.defaultColorHex)
+      ) {
+        setSelectedColorHex(productMain.defaultColorHex);
+        setSelectedColorName(
+          productMain.defaultColor ?? productMain.defaultColorHex,
+        );
+      }
+      if (
+        productMain.defaultSize &&
+        !selectedSize &&
+        availableSizes.includes(productMain.defaultSize)
+      ) {
+        setSelectedSize(productMain.defaultSize);
+      }
+    }
+  }, [
+    hasTon,
+    selectedTon,
+    productMain.defaultTon,
+    productMain.defaultColorHex,
+    productMain.defaultColor,
+    productMain.defaultSize,
+    selectedColorHex,
+    selectedColorName,
+    selectedSize,
+    availableColors,
+    availableSizes,
+  ]);
 
   // --- Find the most specific variant (by ton, color, size) ---
   let activeVariant: ProductVariant | undefined = undefined;
@@ -671,7 +733,7 @@ export default function ProductDetails({
                 <div className="mb-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold">Ton:</span>
-                    {availableTons.map((ton, idx) => (
+                    {uniqueTons.map((ton: string, idx: number) => (
                       <Button
                         key={`ton-${ton ?? "none"}-${idx}`}
                         className={`rounded border px-3 py-1 ${selectedTon === ton ? "border-2 border-blue-500 bg-black text-white" : "bg-white text-black"}`}
@@ -689,8 +751,9 @@ export default function ProductDetails({
                       </Button>
                     ))}
                   </div>
+
                   {/* Show color selector only if there are multiple colors for the selected ton */}
-                  {availableColors.length > 1 && (
+                  {availableColors.length > 0 && (
                     <div className="mt-2 flex items-center gap-2">
                       <span className="font-semibold">Color:</span>
                       {availableColors.map((colorObj, idx) => (
@@ -853,15 +916,65 @@ export default function ProductDetails({
                   )}
                 </div>
               )}
-              {/* Ton info (displayed if available) */}
-              {(selectedTon ?? productMain.defaultTon) && (
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="font-semibold">Ton:</span>
-                  <span className="text-base text-gray-700">
-                    {selectedTon ?? productMain.defaultTon}
-                  </span>
-                </div>
-              )}
+              {/* if selectedTon is defaultTon, show default color */}
+              {selectedTon === productMain.defaultTon &&
+                productMain.defaultColor && (
+                  <div className="mt-2 flex items-center gap-2">
+                    <span className="font-semibold">Color:</span>
+
+                    <div
+                      key={String(productMain.defaultColorHex)}
+                      className="mx-1 flex flex-col items-center"
+                    >
+                      <Button
+                        className={`rounded-full border p-0 ${selectedColorHex === productMain.defaultColorHex ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"}`}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          backgroundColor: productMain.defaultColorHex,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onClick={() => {
+                          setSelectedColorHex(productMain.defaultColorHex);
+                          setSelectedColorName(productMain.defaultColor);
+                          setSelectedSize(undefined);
+                        }}
+                        aria-label={productMain.defaultColor}
+                        title={productMain.defaultColor}
+                        variant="outline"
+                      >
+                        <span
+                          style={{
+                            display: "inline-block",
+                            width: 20,
+                            height: 20,
+                            backgroundColor: productMain.defaultColorHex,
+                            borderRadius: "50%",
+                          }}
+                        />
+                      </Button>
+                      <span
+                        className="mt-1 text-center text-xs"
+                        style={{ maxWidth: 48, wordBreak: "break-word" }}
+                      >
+                        {productMain.defaultColor}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              {/* if selectedTon is defaultTon, show default size */}
+              {selectedTon === productMain.defaultTon &&
+                productMain.defaultSize && (
+                  <div className="mb-2 flex items-center gap-2">
+                    <span className="font-semibold">Size:</span>
+                    <span className="text-base text-gray-700">
+                      {productMain.defaultSize}
+                    </span>
+                  </div>
+                )}
+
               {/* Main Embla Carousel */}
               <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
                 <div className="flex">
