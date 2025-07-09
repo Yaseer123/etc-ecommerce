@@ -18,6 +18,9 @@ export const variantSchema = z.object({
   discountedPrice: z.number().optional(),
   stock: z.number().optional(),
   sku: z.string().optional(), // Add SKU for each variant
+  specifications: z
+    .array(z.object({ key: z.string(), value: z.string() }))
+    .optional(), // Optional specifications for each variant
 });
 
 export const productSchema = z.object({
