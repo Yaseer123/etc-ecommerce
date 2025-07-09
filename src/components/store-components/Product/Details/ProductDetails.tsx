@@ -927,22 +927,27 @@ export default function ProductDetails({
                       className="mx-1 flex flex-col items-center"
                     >
                       <Button
-                        className={`rounded-full border p-0 ${selectedColorHex === productMain.defaultColorHex ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"}`}
+                        className={`rounded-full border p-0 ${selectedColorHex === (productMain.defaultColorHex ?? undefined) ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"}`}
                         style={{
                           width: 28,
                           height: 28,
-                          backgroundColor: productMain.defaultColorHex,
+                          backgroundColor:
+                            productMain.defaultColorHex ?? undefined,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
                         }}
                         onClick={() => {
-                          setSelectedColorHex(productMain.defaultColorHex);
-                          setSelectedColorName(productMain.defaultColor);
+                          setSelectedColorHex(
+                            productMain.defaultColorHex ?? undefined,
+                          );
+                          setSelectedColorName(
+                            productMain.defaultColor ?? undefined,
+                          );
                           setSelectedSize(undefined);
                         }}
-                        aria-label={productMain.defaultColor}
-                        title={productMain.defaultColor}
+                        aria-label={productMain.defaultColor ?? undefined}
+                        title={productMain.defaultColor ?? undefined}
                         variant="outline"
                       >
                         <span
@@ -950,7 +955,8 @@ export default function ProductDetails({
                             display: "inline-block",
                             width: 20,
                             height: 20,
-                            backgroundColor: productMain.defaultColorHex,
+                            backgroundColor:
+                              productMain.defaultColorHex ?? undefined,
                             borderRadius: "50%",
                           }}
                         />
