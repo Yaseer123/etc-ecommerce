@@ -252,8 +252,6 @@ export default function SlideNavbar({
           </MobileNavMenu>
         </MobileNav>
       </Navbar>
-
-      <CategoryNav />
     </>
   );
 }

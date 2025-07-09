@@ -28,23 +28,26 @@ const CategoryBreadcrumb: React.FC<Props> = ({ categoryId, pageTitle }) => {
   return (
     <>
       <div>
-        <div className="bg-surface bg-white bg-no-repeat pb-6 pt-8 md:pb-8 md:pt-12">
-          <div className="mx-auto w-full !max-w-[1322px] px-3 md:px-4">
+        <div className="bg-surface w-full bg-no-repeat pb-6 pt-8 md:pb-8 md:pt-12">
+          <div className="mx-auto w-full px-3 md:px-4">
             <div className="left flex flex-wrap items-center gap-x-1 gap-y-2">
               <Link
                 href={"/"}
                 className="text-secondary2 text-base font-normal leading-6 hover:underline md:text-base"
               >
-                <HomeIcon size={16} />
+                <HomeIcon size={16} className="text-black dark:text-white" />
               </Link>
-              <CaretRight size={10} className="text-secondary2 md:size-3" />
+              <CaretRight
+                size={10}
+                className="text-black dark:text-white md:size-3"
+              />
 
               {!categoryId ? (
-                <div className="text-base font-normal capitalize leading-6 md:text-base">
+                <div className="text-base font-normal capitalize leading-6 text-black dark:text-white md:text-base">
                   {pageTitle ?? "Products"}
                 </div>
               ) : isLoading ? (
-                <div className="text-secondary2 text-base font-normal leading-6 md:text-base">
+                <div className="text-secondary2 text-base font-normal leading-6 text-black dark:text-white md:text-base">
                   Loading...
                 </div>
               ) : isError ? (

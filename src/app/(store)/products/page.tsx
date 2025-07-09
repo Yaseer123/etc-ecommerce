@@ -50,6 +50,10 @@ export default function ProductsPage() {
   const [brands, setBrands] = useState<string[]>(
     brandParam ? brandParam.split(",") : [],
   );
+
+  const [hiddenAll, setHiddenAll] = useState(false);
+  const [hiddenCatagory, setHiddenCatagory] = useState(false);
+
   const [category, setCategory] = useState<{
     id: string;
     name: string;
@@ -545,13 +549,26 @@ export default function ProductsPage() {
     }
   };
 
+  const [categoryResetKey, setCategoryResetKey] = useState(0);
+
+  useEffect(() => {
+    if (category === null) {
+      updateUrlParams({ category: null });
+    }
+  }, [category]);
+
+  // Block 1
   const handleClearAll = () => {
     setBrands([]);
     setPriceRange(initialPriceRange);
-    setCategory(null);
     setCurrentSortOption("");
     clearStockStatus();
     const attrParams = clearAttributeFilters();
+
+    setCategory(null);
+    setCategoryResetKey((prev) => prev + 1); // <- force re-render
+    setHiddenAll(true);
+
     updateUrlParams({
       category: null,
       brand: null,
@@ -613,8 +630,10 @@ export default function ProductsPage() {
 
   return (
     <>
-      <CategoryBreadcrumb categoryId={category?.id} pageTitle="Shop" />
-      <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
+      <div className="mb-[-3.5%] ml-[35%] flex w-full items-start">
+        <CategoryBreadcrumb categoryId={category?.id} pageTitle="Shop" />
+      </div>
+      <div className="shop-product breadcrumb1 w-[67%] py-10 md:py-14 lg:py-20">
         <div className="container">
           <div className="flex gap-y-8 max-md:flex-col-reverse max-md:flex-wrap">
             {/* Desktop Sidebar - hidden on mobile */}
@@ -706,6 +725,7 @@ export default function ProductsPage() {
                   {totalProducts}
                   <span className="pl-1 text-gray-500">Products Found</span>
                 </div>
+
                 {(category ??
                   brands.length > 0 ??
                   (Object.keys(attributeFilters).length > 0 ||
@@ -714,18 +734,22 @@ export default function ProductsPage() {
                   <>
                     <div className="list flex flex-wrap items-center gap-3">
                       <div className="h-4 w-px bg-gray-200"></div>
+
                       {category && (
                         <div
-                          className="item flex cursor-pointer items-center gap-1 rounded-full bg-orange-100 px-2 py-1 capitalize text-brand-primary transition-colors hover:bg-orange-200"
+                          key={categoryResetKey} // <- force remount
+                          className={`item flex cursor-pointer items-center gap-1 ${hiddenCatagory || hiddenAll ? "hidden" : ""} rounded-full bg-orange-100 px-2 py-1 capitalize text-brand-primary transition-colors hover:bg-orange-200`}
                           onClick={() => {
                             setCategory(null);
                             updateUrlParams({ category: null });
+                            setHiddenCatagory(true);
                           }}
                         >
                           <X size={16} className="cursor-pointer" />
                           <span>{category.name}</span>
                         </div>
                       )}
+
                       {/* Modified to show all selected brands */}
                       {brands.map((brandName: string, index: number) => (
                         <div
@@ -806,7 +830,7 @@ export default function ProductsPage() {
                       )}
                     </div>
                     <div
-                      className="clear-btn hover:bg-red-500-50 border-red flex cursor-pointer items-center gap-1 rounded-full border px-2 py-1 transition-colors"
+                      className={`clear-btn hover:bg-red-500-50 border-red flex cursor-pointer ${hiddenAll ? "hidden" : ""} items-center gap-1 rounded-full border px-2 py-1 transition-colors`}
                       onClick={handleClearAll}
                     >
                       <X
@@ -830,7 +854,7 @@ export default function ProductsPage() {
               ) : (
                 <ProductList
                   data={currentProducts}
-                  layoutCol={4}
+                  layoutCol={3}
                   pageCount={pageCount}
                   handlePageChange={handlePageChange}
                 />
@@ -915,194 +939,173 @@ export default function ProductsPage() {
   function renderFilterContent() {
     return (
       <>
-        {/* Price Range Section - Always visible, not collapsible */}
-        <div className="filter-section mb-3 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-          <div className="bg-gray-50 px-3 py-2">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium text-gray-800">
-                Price Range
-              </h3>
+        <div className="filter-content w-[285px]">
+          {/* Price Range Section - Always visible, not collapsible */}
+          <div className="filter-section mb-3 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+            <div className="bg-gray-50 px-3 py-2">
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-medium text-gray-800">
+                  Price Range
+                </h3>
+              </div>
             </div>
-          </div>
 
-          {/* Price range content - always shown */}
-          <div className="bg-white p-3">
-            <Slider
-              range
-              value={[
-                priceRange.min ?? 0,
-                priceRange.max ?? initialPriceRange.max,
-              ]}
-              min={initialPriceRange.min}
-              max={initialPriceRange.max}
-              onChange={handlePriceChange}
-              className="mb-4 mt-2"
-              trackStyle={sliderStyle.trackStyle}
-              railStyle={sliderStyle.railStyle}
-              handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
-            />
-            {/* Responsive, flexible, and single price-block with editable Min/Max */}
-            <div className="price-block mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min mb-2 flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:mb-0 sm:w-auto">
-                <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
-                  Min:
+            {/* Price range content - always shown */}
+            <div className="bg-white p-3">
+              <Slider
+                range
+                value={[
+                  priceRange.min ?? 0,
+                  priceRange.max ?? initialPriceRange.max,
+                ]}
+                min={initialPriceRange.min}
+                max={initialPriceRange.max}
+                onChange={handlePriceChange}
+                className="mb-4 mt-2"
+                trackStyle={sliderStyle.trackStyle}
+                railStyle={sliderStyle.railStyle}
+                handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
+              />
+              {/* Responsive, flexible, and single price-block with editable Min/Max */}
+              <div className="price-block mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min mb-2 flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:mb-0 sm:w-auto">
+                  <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
+                    Min:
+                  </div>
+                  <input
+                    type="number"
+                    value={priceRange.min ?? ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === "") {
+                        setPriceRange((pr) => ({ ...pr, min: undefined }));
+                        updateUrlParams({ minPrice: null });
+                        return;
+                      }
+                      const newMin = Number(val);
+                      if (isNaN(newMin)) return;
+                      let newMax = priceRange.max ?? newMin;
+                      if (newMin > newMax) newMax = newMin;
+                      setPriceRange({ min: newMin, max: newMax });
+                      const minPrice =
+                        newMin !== initialPriceRange.min
+                          ? String(newMin)
+                          : null;
+                      const maxPrice =
+                        newMax !== initialPriceRange.max
+                          ? String(newMax)
+                          : null;
+                      updateUrlParams({ minPrice, maxPrice });
+                    }}
+                    className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-brand-primary outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary"
+                    aria-label="Minimum price"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                  />
                 </div>
-                <input
-                  type="number"
-                  value={priceRange.min ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === "") {
-                      setPriceRange((pr) => ({ ...pr, min: undefined }));
-                      updateUrlParams({ minPrice: null });
-                      return;
-                    }
-                    const newMin = Number(val);
-                    if (isNaN(newMin)) return;
-                    let newMax = priceRange.max ?? newMin;
-                    if (newMin > newMax) newMax = newMin;
-                    setPriceRange({ min: newMin, max: newMax });
-                    const minPrice =
-                      newMin !== initialPriceRange.min ? String(newMin) : null;
-                    const maxPrice =
-                      newMax !== initialPriceRange.max ? String(newMax) : null;
-                    updateUrlParams({ minPrice, maxPrice });
-                  }}
-                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-brand-primary outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary"
-                  aria-label="Minimum price"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                />
-              </div>
-              <div className="max flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:w-auto">
-                <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
-                  Max:
+                <div className="max flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:w-auto">
+                  <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
+                    Max:
+                  </div>
+                  <input
+                    type="number"
+                    value={priceRange.max ?? ""}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === "") {
+                        setPriceRange((pr) => ({ ...pr, max: undefined }));
+                        updateUrlParams({ maxPrice: null });
+                        return;
+                      }
+                      const newMax = Number(val);
+                      if (isNaN(newMax)) return;
+                      let newMin = priceRange.min ?? newMax;
+                      if (newMax < newMin) newMin = newMax;
+                      setPriceRange({ min: newMin, max: newMax });
+                      const minPrice =
+                        newMin !== initialPriceRange.min
+                          ? String(newMin)
+                          : null;
+                      const maxPrice =
+                        newMax !== initialPriceRange.max
+                          ? String(newMax)
+                          : null;
+                      updateUrlParams({ minPrice, maxPrice });
+                    }}
+                    className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-brand-primary outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary"
+                    aria-label="Maximum price"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                  />
                 </div>
-                <input
-                  type="number"
-                  value={priceRange.max ?? ""}
-                  onChange={(e) => {
-                    const val = e.target.value;
-                    if (val === "") {
-                      setPriceRange((pr) => ({ ...pr, max: undefined }));
-                      updateUrlParams({ maxPrice: null });
-                      return;
-                    }
-                    const newMax = Number(val);
-                    if (isNaN(newMax)) return;
-                    let newMin = priceRange.min ?? newMax;
-                    if (newMax < newMin) newMin = newMax;
-                    setPriceRange({ min: newMin, max: newMax });
-                    const minPrice =
-                      newMin !== initialPriceRange.min ? String(newMin) : null;
-                    const maxPrice =
-                      newMax !== initialPriceRange.max ? String(newMax) : null;
-                    updateUrlParams({ minPrice, maxPrice });
-                  }}
-                  className="w-full min-w-0 max-w-[100px] flex-1 border-none bg-transparent px-1 text-base font-medium text-brand-primary outline-none transition-all focus:border-brand-primary focus:ring-2 focus:ring-brand-primary"
-                  aria-label="Maximum price"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                />
               </div>
             </div>
           </div>
-        </div>
-        {/* Stock Status Section - collapsible with improved styling */}
-        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-          <div
-            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
-            onClick={() => toggleAttributeSection("stockStatus")}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium text-gray-800">
-                Stock Status
-              </h3>
-              {expandedAttributes.stockStatus !== false ? (
-                <CaretUp size={16} className="text-gray-600" />
-              ) : (
-                <CaretDown size={16} className="text-gray-600" />
-              )}
-            </div>
-          </div>
-          {expandedAttributes.stockStatus !== false && (
-            <div className="bg-white p-1">
-              <div className="flex flex-col gap-2">
-                {["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].map((status) => (
-                  <label
-                    key={status}
-                    className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:text-brand-primary"
-                  >
-                    <div className="block-input relative">
-                      <input
-                        type="checkbox"
-                        checked={stockStatus.includes(status)}
-                        onChange={() => handleStockStatus(status)}
-                        className="h-5 w-5 rounded border-gray-300 accent-brand-primary"
-                      />
-                      <CheckSquare
-                        size={20}
-                        weight="fill"
-                        className="icon-checkbox absolute left-0 top-0 text-brand-primary"
-                      />
-                    </div>
-                    <span className="capitalize">
-                      {status === "IN_STOCK"
-                        ? "In Stock"
-                        : status === "OUT_OF_STOCK"
-                          ? "Out of Stock"
-                          : status === "PRE_ORDER"
-                            ? "Pre Order"
-                            : status}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Categories Section - Collapsible with increased min-height and standardized padding */}
-        <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
-          <div
-            className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
-            onClick={() => toggleAttributeSection("categories")}
-          >
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-medium text-gray-800">
-                Categories
-              </h3>
-              {expandedAttributes.categories !== false ? (
-                <CaretUp size={16} className="text-gray-600" />
-              ) : (
-                <CaretDown size={16} className="text-gray-600" />
-              )}
-            </div>
-          </div>
-
-          {/* Categories content - shown when expanded */}
-          {expandedAttributes.categories !== false && (
-            <div className="bg-white p-1">
-              <div className="max-h-[300px] min-h-[180px] overflow-y-auto pr-1">
-                <FilterByCategory
-                  handleCategory={handleCategory}
-                  selectedCategoryId={category?.id ?? categoryId}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Brands Section - Only show when a category is selected */}
-        {category && categoryId && (
+          {/* Stock Status Section - collapsible with improved styling */}
           <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
             <div
               className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
-              onClick={() => toggleAttributeSection("brands")}
+              onClick={() => toggleAttributeSection("stockStatus")}
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-base font-medium text-gray-800">Brands</h3>
-                {expandedAttributes.brands !== false ? (
+                <h3 className="text-base font-medium text-gray-800">
+                  Stock Status
+                </h3>
+                {expandedAttributes.stockStatus !== false ? (
+                  <CaretUp size={16} className="text-gray-600" />
+                ) : (
+                  <CaretDown size={16} className="text-gray-600" />
+                )}
+              </div>
+            </div>
+            {expandedAttributes.stockStatus !== false && (
+              <div className="bg-white p-1">
+                <div className="flex flex-col gap-2">
+                  {["IN_STOCK", "OUT_OF_STOCK", "PRE_ORDER"].map((status) => (
+                    <label
+                      key={status}
+                      className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 hover:text-brand-primary"
+                    >
+                      <div className="block-input relative">
+                        <input
+                          type="checkbox"
+                          checked={stockStatus.includes(status)}
+                          onChange={() => handleStockStatus(status)}
+                          className="h-5 w-5 rounded border-gray-300 accent-brand-primary"
+                        />
+                        <CheckSquare
+                          size={20}
+                          weight="fill"
+                          className="icon-checkbox absolute left-0 top-0 text-brand-primary"
+                        />
+                      </div>
+                      <span className="capitalize">
+                        {status === "IN_STOCK"
+                          ? "In Stock"
+                          : status === "OUT_OF_STOCK"
+                            ? "Out of Stock"
+                            : status === "PRE_ORDER"
+                              ? "Pre Order"
+                              : status}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Categories Section - Collapsible with increased min-height and standardized padding */}
+          <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+            <div
+              className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+              onClick={() => toggleAttributeSection("categories")}
+            >
+              <div className="flex items-center justify-between">
+                <h3 className="text-base font-medium text-gray-800">
+                  Categories
+                </h3>
+                {expandedAttributes.categories !== false ? (
                   <CaretUp size={16} className="text-gray-600" />
                 ) : (
                   <CaretDown size={16} className="text-gray-600" />
@@ -1110,150 +1113,195 @@ export default function ProductsPage() {
               </div>
             </div>
 
-            {/* Brands content - shown when expanded */}
-            {expandedAttributes.brands !== false && (
+            {/* Categories content - shown when expanded */}
+            {expandedAttributes.categories !== false && (
               <div className="bg-white p-1">
-                <div className="list-brand">
-                  {isLoading && !safeCategoryBrands.length ? (
-                    <div className="my-1 text-gray-500">Loading brands...</div>
-                  ) : safeCategoryBrands.length === 0 ? (
-                    <div className="my-1 text-gray-500">
-                      No brands available
-                    </div>
-                  ) : (
-                    <div className="max-h-[250px] min-h-[120px] space-y-0.5 overflow-y-auto pr-1">
-                      {safeCategoryBrands.map((item: string, index: number) => (
-                        <div key={index} className="brand-item">
-                          <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:text-brand-primary">
-                            <div className="block-input relative">
-                              <input
-                                type="checkbox"
-                                name={item}
-                                id={item}
-                                checked={brands.includes(item)}
-                                onChange={() => handleBrand(item)}
-                                className="h-5 w-5 rounded border-gray-300 accent-orange-500"
-                              />
-                              <CheckSquare
-                                size={20}
-                                weight="fill"
-                                className="icon-checkbox absolute left-0 top-0 text-brand-primary"
-                              />
-                            </div>
-                            <label
-                              htmlFor={item}
-                              className="brand-name cursor-pointer pl-3 capitalize"
-                            >
-                              {item}
-                            </label>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <div
+                  className="max-h-[300px] min-h-[180px] overflow-y-auto pr-1"
+                  onClick={() => {
+                    setHiddenAll(false);
+                    setHiddenCatagory(false);
+                  }}
+                >
+                  <FilterByCategory
+                    handleCategory={handleCategory}
+                    selectedCategoryId={category?.id ?? categoryId}
+                  />
                 </div>
               </div>
             )}
           </div>
-        )}
 
-        {/* Specifications Section - collapsible with improved styling */}
-        {category && categoryId && safeCategoryAttributes.length > 0 && (
-          <>
-            {safeCategoryAttributes.map(
-              (attr: CategoryAttribute, index: number) => {
-                // Skip if no available options
-                const options = attr.options;
-                if (options.length === 0) {
-                  return null;
-                }
+          {/* Brands Section - Only show when a category is selected */}
+          {category && categoryId && (
+            <div className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
+              <div
+                className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+                onClick={() => {
+                  toggleAttributeSection("brands");
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <h3 className="text-base font-medium text-gray-800">
+                    Brands
+                  </h3>
+                  {expandedAttributes.brands !== false ? (
+                    <CaretUp size={16} className="text-gray-600" />
+                  ) : (
+                    <CaretDown size={16} className="text-gray-600" />
+                  )}
+                </div>
+              </div>
 
-                // Format attribute name for display
-                const displayName = attr.name
-                  .replace(/_/g, " ")
-                  .replace(/\b\w/g, (c) => c.toUpperCase());
-
-                const isExpanded = expandedAttributes[attr.name] !== false;
-
-                return (
-                  <div
-                    key={index}
-                    className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm"
-                  >
-                    <div
-                      className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
-                      onClick={() => toggleAttributeSection(attr.name)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <h3 className="text-base font-medium text-gray-800">
-                          {displayName}
-                        </h3>
-                        {isExpanded ? (
-                          <CaretUp size={16} className="text-gray-600" />
-                        ) : (
-                          <CaretDown size={16} className="text-gray-600" />
-                        )}
+              {/* Brands content - shown when expanded */}
+              {expandedAttributes.brands !== false && (
+                <div className="bg-white p-1">
+                  <div className="list-brand">
+                    {isLoading && !safeCategoryBrands.length ? (
+                      <div className="my-1 text-gray-500">
+                        Loading brands...
                       </div>
-                    </div>
-
-                    {/* Content area - shown when expanded with increased min-height */}
-                    {isExpanded && (
-                      <div className="bg-white py-1">
-                        <div className="flex max-h-[250px] min-h-[120px] flex-col overflow-y-auto">
-                          {options.map((option: string, idx: number) => {
-                            // Check if this option is selected
-                            const isSelected = Array.isArray(
-                              attributeFilters[attr.name],
-                            )
-                              ? (
-                                  attributeFilters[attr.name] as string[]
-                                )?.includes(option)
-                              : attributeFilters[attr.name] === option;
-
-                            return (
-                              <div
-                                key={idx}
-                                className="flex items-center justify-between rounded px-2 py-1 transition-colors hover:bg-gray-50"
-                              >
-                                <div className="left flex w-full cursor-pointer items-center">
-                                  <div className="block-input relative">
-                                    <input
-                                      type="checkbox"
-                                      id={`${attr.name}-${option}`}
-                                      checked={isSelected}
-                                      onChange={() => {
-                                        handleAttributeChange(
-                                          attr.name,
-                                          option,
-                                        );
-                                      }}
-                                      className="h-5 w-5 accent-orange-500"
-                                    />
-                                    <CheckSquare
-                                      size={20}
-                                      weight="fill"
-                                      className="icon-checkbox absolute left-0 top-0 text-brand-primary"
-                                    />
-                                  </div>
-                                  <label
-                                    htmlFor={`${attr.name}-${option}`}
-                                    className="cursor-pointer pl-3 capitalize"
-                                  >
-                                    {option}
-                                  </label>
+                    ) : safeCategoryBrands.length === 0 ? (
+                      <div className="my-1 text-gray-500">
+                        No brands available
+                      </div>
+                    ) : (
+                      <div className="max-h-[250px] min-h-[120px] space-y-0.5 overflow-y-auto pr-1">
+                        {safeCategoryBrands.map(
+                          (item: string, index: number) => (
+                            <div key={index} className="brand-item">
+                              <div className="left flex w-full cursor-pointer items-center rounded px-2 py-1 transition-colors hover:text-brand-primary">
+                                <div className="block-input relative">
+                                  <input
+                                    type="checkbox"
+                                    name={item}
+                                    id={item}
+                                    checked={brands.includes(item)}
+                                    onChange={() => handleBrand(item)}
+                                    className="h-5 w-5 rounded border-gray-300 accent-orange-500"
+                                  />
+                                  <CheckSquare
+                                    size={20}
+                                    weight="fill"
+                                    className="icon-checkbox absolute left-0 top-0 text-brand-primary"
+                                  />
                                 </div>
+                                <label
+                                  htmlFor={item}
+                                  className="brand-name cursor-pointer pl-3 capitalize"
+                                >
+                                  {item}
+                                </label>
                               </div>
-                            );
-                          })}
-                        </div>
+                            </div>
+                          ),
+                        )}
                       </div>
                     )}
                   </div>
-                );
-              },
-            )}
-          </>
-        )}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Specifications Section - collapsible with improved styling */}
+          {category && categoryId && safeCategoryAttributes.length > 0 && (
+            <>
+              {safeCategoryAttributes.map(
+                (attr: CategoryAttribute, index: number) => {
+                  // Skip if no available options
+                  const options = attr.options;
+                  if (options.length === 0) {
+                    return null;
+                  }
+
+                  // Format attribute name for display
+                  const displayName = attr.name
+                    .replace(/_/g, " ")
+                    .replace(/\b\w/g, (c) => c.toUpperCase());
+
+                  const isExpanded = expandedAttributes[attr.name] !== false;
+
+                  return (
+                    <div
+                      key={index}
+                      className="filter-section mb-2 overflow-hidden rounded-lg border border-gray-200 shadow-sm"
+                    >
+                      <div
+                        className="cursor-pointer bg-gray-50 px-3 py-2 hover:bg-gray-100"
+                        onClick={() => toggleAttributeSection(attr.name)}
+                      >
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base font-medium text-gray-800">
+                            {displayName}
+                          </h3>
+                          {isExpanded ? (
+                            <CaretUp size={16} className="text-gray-600" />
+                          ) : (
+                            <CaretDown size={16} className="text-gray-600" />
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Content area - shown when expanded with increased min-height */}
+                      {isExpanded && (
+                        <div className="bg-white py-1">
+                          <div className="flex max-h-[250px] min-h-[120px] flex-col overflow-y-auto">
+                            {options.map((option: string, idx: number) => {
+                              // Check if this option is selected
+                              const isSelected = Array.isArray(
+                                attributeFilters[attr.name],
+                              )
+                                ? (
+                                    attributeFilters[attr.name] as string[]
+                                  )?.includes(option)
+                                : attributeFilters[attr.name] === option;
+
+                              return (
+                                <div
+                                  key={idx}
+                                  className="flex items-center justify-between rounded px-2 py-1 transition-colors hover:bg-gray-50"
+                                >
+                                  <div className="left flex w-full cursor-pointer items-center">
+                                    <div className="block-input relative">
+                                      <input
+                                        type="checkbox"
+                                        id={`${attr.name}-${option}`}
+                                        checked={isSelected}
+                                        onChange={() => {
+                                          handleAttributeChange(
+                                            attr.name,
+                                            option,
+                                          );
+                                        }}
+                                        className="h-5 w-5 accent-orange-500"
+                                      />
+                                      <CheckSquare
+                                        size={20}
+                                        weight="fill"
+                                        className="icon-checkbox absolute left-0 top-0 text-brand-primary"
+                                      />
+                                    </div>
+                                    <label
+                                      htmlFor={`${attr.name}-${option}`}
+                                      className="cursor-pointer pl-3 capitalize"
+                                    >
+                                      {option}
+                                    </label>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                },
+              )}
+            </>
+          )}
+        </div>
       </>
     );
   }
