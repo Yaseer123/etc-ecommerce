@@ -468,7 +468,20 @@ export default function ProductDetails({
     variants = productMain.variants as ProductVariant[];
   }
 
-  // Variant selection state
+  // --- Variant selection state ---
+  // New: Ton selection state
+  // Ensure defaultTon is always included as the first option in availableTons
+  const uniqueTons = Array.from(
+    new Set([
+      ...(productMain.defaultTon ? [productMain.defaultTon] : []),
+      ...variants.map((v) => v.ton).filter((t): t is string => !!t),
+    ]),
+  );
+  const hasTon = uniqueTons.length > 0;
+  const [selectedTon, setSelectedTon] = useState<string | undefined>(
+    hasTon ? (productMain.defaultTon ?? uniqueTons[0]) : undefined,
+  );
+
   const [selectedColorHex, setSelectedColorHex] = useState<string | undefined>(
     productMain.defaultColorHex ?? productMain.defaultColor ?? undefined,
   );
@@ -479,26 +492,32 @@ export default function ProductDetails({
     productMain.defaultSize ?? undefined,
   );
 
-  // Show default color swatch and name
-  const defaultColorHex =
-    productMain.defaultColorHex ?? productMain.defaultColor ?? undefined;
-  const defaultColorName =
-    productMain.defaultColor ?? productMain.defaultColorHex ?? undefined;
+  // --- Available tons/colors/sizes logic ---
+  // If ton is present, filter variants by selected ton
+  // If selectedTon is the defaultTon, show variants that match defaultTon or no ton (for default product)
+  const filteredVariants =
+    hasTon && selectedTon
+      ? variants.filter((v) =>
+          selectedTon === productMain.defaultTon
+            ? !v.ton || v.ton === productMain.defaultTon
+            : v.ton === selectedTon,
+        )
+      : variants;
 
-  // Get available colors and sizes based on current selection
-  const availableColors = variants
-    ? variants
+  const availableTons = uniqueTons;
+  const availableColors = filteredVariants
+    ? filteredVariants
         .map((v) => ({
           colorHex: v.colorHex ?? v.colorName ?? "#ffffff",
           colorName: v.colorName ?? v.colorHex ?? "Unnamed",
         }))
         .filter((v) => v.colorHex && v.colorName)
     : [];
-  console.log(availableColors);
-  const availableSizes = variants
+
+  const availableSizes = filteredVariants
     ? [
         ...new Set(
-          variants
+          filteredVariants
             .filter((v) =>
               selectedColorHex ? v.colorHex === selectedColorHex : true,
             )
@@ -508,9 +527,17 @@ export default function ProductDetails({
       ]
     : [];
 
-  // Find the most specific variant (for now, only by color)
+  // --- Find the most specific variant (by ton, color, size) ---
   let activeVariant: ProductVariant | undefined = undefined;
-  if (selectedColorHex) {
+  if (hasTon && selectedTon) {
+    if (selectedColorHex) {
+      activeVariant = variants.find(
+        (v) => v.ton === selectedTon && v.colorHex === selectedColorHex,
+      );
+    } else {
+      activeVariant = variants.find((v) => v.ton === selectedTon);
+    }
+  } else if (selectedColorHex) {
     activeVariant = variants.find((v) => v.colorHex === selectedColorHex);
   }
   console.log("Active Variant:", activeVariant);
@@ -542,10 +569,10 @@ export default function ProductDetails({
 
   // Build a unified color list: default color (if set) + unique variant colors (excluding duplicate with default)
   const unifiedColors: { colorHex: string; colorName: string }[] = [];
-  if (defaultColorHex) {
+  if (productMain.defaultColorHex) {
     unifiedColors.push({
-      colorHex: defaultColorHex,
-      colorName: defaultColorName ?? defaultColorHex,
+      colorHex: productMain.defaultColorHex,
+      colorName: productMain.defaultColor ?? productMain.defaultColorHex,
     });
   }
   if (availableColors.length > 0) {
@@ -640,7 +667,112 @@ export default function ProductDetails({
           <div className="flex flex-col gap-y-6 lg:flex-row lg:items-start lg:gap-x-8">
             <div className="w-full lg:w-1/2 lg:pr-10">
               {/* Unified Color Selector */}
-              {unifiedColors.length > 0 && (
+              {hasTon && (
+                <div className="mb-4 flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">Ton:</span>
+                    {availableTons.map((ton, idx) => (
+                      <Button
+                        key={`ton-${ton ?? "none"}-${idx}`}
+                        className={`rounded border px-3 py-1 ${selectedTon === ton ? "border-2 border-blue-500 bg-black text-white" : "bg-white text-black"}`}
+                        onClick={() => {
+                          console.log("Ton selected:", ton);
+                          setSelectedTon(ton);
+                          // Reset color selection when ton changes
+                          setSelectedColorHex(undefined);
+                          setSelectedColorName(undefined);
+                          setSelectedSize(undefined);
+                        }}
+                        variant="outline"
+                      >
+                        {ton}
+                      </Button>
+                    ))}
+                  </div>
+                  {/* Show color selector only if there are multiple colors for the selected ton */}
+                  {availableColors.length > 1 && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="font-semibold">Color:</span>
+                      {availableColors.map((colorObj, idx) => (
+                        <div
+                          key={String(colorObj.colorHex) + idx}
+                          className="mx-1 flex flex-col items-center"
+                        >
+                          <Button
+                            className={`rounded-full border p-0 ${selectedColorHex === colorObj.colorHex ? "border-2 border-blue-500 ring-2 ring-blue-400" : "border"}`}
+                            style={{
+                              width: 28,
+                              height: 28,
+                              backgroundColor: colorObj.colorHex,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                            onClick={() => {
+                              setSelectedColorHex(colorObj.colorHex);
+                              setSelectedColorName(colorObj.colorName);
+                              setSelectedSize(undefined);
+                            }}
+                            aria-label={colorObj.colorName}
+                            title={colorObj.colorName}
+                            variant="outline"
+                          >
+                            <span
+                              style={{
+                                display: "inline-block",
+                                width: 20,
+                                height: 20,
+                                backgroundColor: colorObj.colorHex,
+                                borderRadius: "50%",
+                              }}
+                            />
+                          </Button>
+                          <span
+                            className="mt-1 text-center text-xs"
+                            style={{ maxWidth: 48, wordBreak: "break-word" }}
+                          >
+                            {colorObj.colorName}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {/* Size selector (only if sizes available for selected color) */}
+                  {availableSizes.length > 0 && (
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="font-semibold">Size:</span>
+                      {availableSizes.map((size, idx) =>
+                        size ? (
+                          <Button
+                            key={size + idx}
+                            className={`rounded border px-3 py-1 ${selectedSize === size ? "border-2 border-blue-500 bg-black text-white" : "bg-white text-black"} ${size === productMain.defaultSize ? "ring-2 ring-blue-400" : ""}`}
+                            onClick={() => setSelectedSize(size)}
+                            variant="outline"
+                          >
+                            {size}
+                            {size === productMain.defaultSize ? (
+                              <span className="ml-1 text-xs text-blue-600">
+                                (default)
+                              </span>
+                            ) : null}
+                          </Button>
+                        ) : null,
+                      )}
+                      {productMain.defaultSize && (
+                        <Button
+                          className={`rounded border px-3 py-1 ${!selectedSize ? "bg-black text-white" : "bg-white text-black"}`}
+                          onClick={() => setSelectedSize(undefined)}
+                          variant="outline"
+                        >
+                          {productMain.defaultSize}
+                        </Button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* If no ton, show color selector as before */}
+              {!hasTon && unifiedColors.length > 0 && (
                 <div className="mb-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2">
                     <span className="font-semibold">Color:</span>
@@ -722,11 +854,11 @@ export default function ProductDetails({
                 </div>
               )}
               {/* Ton info (displayed if available) */}
-              {(activeVariant?.ton ?? productMain.defaultTon) && (
+              {(selectedTon ?? productMain.defaultTon) && (
                 <div className="mb-2 flex items-center gap-2">
                   <span className="font-semibold">Ton:</span>
                   <span className="text-base text-gray-700">
-                    {activeVariant?.ton ?? productMain.defaultTon}
+                    {selectedTon ?? productMain.defaultTon}
                   </span>
                 </div>
               )}
