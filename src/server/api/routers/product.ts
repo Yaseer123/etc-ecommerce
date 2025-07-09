@@ -19,6 +19,8 @@ import { z } from "zod";
 function isVariant(v: unknown): v is Variant {
   return (
     typeof v === "object" && v !== null && !Array.isArray(v) && "sku" in v // 'sku' is a property of Variant
+    // Optionally, check for 'ton' as well (not required for type guard, but for clarity):
+    // && ("ton" in v)
   );
 }
 

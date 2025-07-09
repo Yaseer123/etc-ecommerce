@@ -44,6 +44,7 @@ type ProductVariant = {
   discountedPrice?: number;
   stock?: number;
   images?: string[];
+  ton?: string; // Added ton to the type
 };
 
 // Utility to get category prefix (with mapping and fallback)
@@ -720,6 +721,15 @@ export default function ProductDetails({
                   )}
                 </div>
               )}
+              {/* Ton info (displayed if available) */}
+              {(activeVariant?.ton ?? productMain.defaultTon) && (
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="font-semibold">Ton:</span>
+                  <span className="text-base text-gray-700">
+                    {activeVariant?.ton ?? productMain.defaultTon}
+                  </span>
+                </div>
+              )}
               {/* Main Embla Carousel */}
               <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
                 <div className="flex">
@@ -981,6 +991,25 @@ export default function ProductDetails({
                   <h3 className="mb-4 whitespace-nowrap text-sm font-bold">
                     Specifications
                   </h3>
+                  {/* Ton in specifications if available and not already present */}
+                  {(activeVariant?.ton ?? productMain.defaultTon) &&
+                    !(
+                      productMain.attributes &&
+                      Object.keys(productMain.attributes).some(
+                        (k) => k.toLowerCase() === "ton",
+                      )
+                    ) && (
+                      <div
+                        className={`bg-surface flex flex-col border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 md:flex-row md:items-center md:gap-4 lg:justify-between`}
+                      >
+                        <div className="text-title mb-1 break-words text-left font-semibold md:mb-0 md:w-1/3">
+                          Ton
+                        </div>
+                        <div className="break-words text-left md:w-2/3">
+                          {activeVariant?.ton ?? productMain.defaultTon}
+                        </div>
+                      </div>
+                    )}
                   {productMain.attributes &&
                     Object.entries(productMain.attributes).map(
                       ([key, value], index) => (

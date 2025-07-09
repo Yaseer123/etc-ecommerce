@@ -14,6 +14,7 @@ export interface Variant {
   colorName?: string;
   colorHex?: string;
   size?: string;
+  ton?: string;
   images?: string[];
   price?: number;
   discountedPrice?: number;

@@ -12,6 +12,7 @@ export const variantSchema = z.object({
   colorName: z.string().optional(),
   colorHex: z.string().optional(),
   size: z.string().optional(),
+  ton: z.string().optional(), // <-- Add this line
   images: z.array(z.string()).optional(),
   price: z.number().optional(),
   discountedPrice: z.number().optional(),
