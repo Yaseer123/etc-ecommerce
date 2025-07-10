@@ -80,6 +80,7 @@ export interface ProductType {
   descriptionImageId?: string | null;
   categoryAttributes?: JsonValue;
   position?: number;
+  relatedTonProductIds?: string[]; // For admin linking of related ton-variant products
 }
 
 export type ProductWithCategory = Product & {
@@ -88,4 +89,5 @@ export type ProductWithCategory = Product & {
   defaultColorHex?: string | null;
   defaultSize?: string | null;
   variants?: Variant[] | null;
+  relatedTonProducts?: Product[];
 };

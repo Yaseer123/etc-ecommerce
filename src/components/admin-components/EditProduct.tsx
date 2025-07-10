@@ -4,6 +4,9 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 import { uploadFile } from "@/app/actions/file";
+import MultipleSelector, {
+  type Option as MultipleSelectorOption,
+} from "@/components/ui/multiple-selector";
 import {
   Select,
   SelectContent,
@@ -674,6 +677,7 @@ export default function EditProductForm({ productId }: { productId: string }) {
                   : undefined,
             }))
           : undefined,
+      relatedTonProductIds,
     });
   };
 
@@ -695,6 +699,27 @@ export default function EditProductForm({ productId }: { productId: string }) {
   // In the EditProductForm component, add state for variant specifications modals
   const [variantSpecsOpen, setVariantSpecsOpen] = useState<number | null>(null);
   const [variantSpecsText, setVariantSpecsText] = useState<string>("");
+
+  // Fetch all products for related ton selection
+  const {
+    data: allProductsData = { products: [] },
+    isLoading: allProductsLoading,
+  } = api.product.getAll.useQuery({ page: 1, limit: 100 });
+  // Prepare options, exclude current product
+  const relatedTonOptions: MultipleSelectorOption[] = (
+    allProductsData.products ?? []
+  )
+    .filter((p: import("@prisma/client").Product) => p.id !== productId)
+    .map((p: import("@prisma/client").Product) => ({
+      value: p.id,
+      label: `${p.title}${p.defaultTon ? ` (${p.defaultTon})` : ""}`,
+    }));
+  // State for selected related ton products
+  const [relatedTonProductIds, setRelatedTonProductIds] = useState<string[]>(
+    product?.relatedTonProducts?.map(
+      (p: import("@prisma/client").Product) => p.id,
+    ) ?? [],
+  );
 
   if (!product) return null;
 
@@ -1141,6 +1166,29 @@ export default function EditProductForm({ productId }: { productId: string }) {
               setTextValue={setVariantSpecsText}
             />
           )}
+
+        {/* Link Other Ton Variants */}
+        <div className="col-span-2 mt-4">
+          <Label>Link Other Ton Variants</Label>
+          {allProductsLoading ? (
+            <div className="text-sm text-gray-500">Loading products...</div>
+          ) : (
+            <MultipleSelector
+              options={relatedTonOptions}
+              value={relatedTonOptions.filter((opt) =>
+                relatedTonProductIds.includes(opt.value),
+              )}
+              onChange={(opts) =>
+                setRelatedTonProductIds(opts.map((opt) => opt.value))
+              }
+              placeholder="Select related ton products..."
+            />
+          )}
+          <p className="mt-1 text-xs text-gray-500">
+            Select other ton-variant products to link with this product. These
+            will be shown as ton options on the product page.
+          </p>
+        </div>
       </div>
     </RichEditor>
   );
