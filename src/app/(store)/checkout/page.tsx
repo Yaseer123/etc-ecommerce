@@ -59,6 +59,7 @@ type CartItem = {
   color?: string;
   colorName?: string;
   size?: string;
+  ton?: string; // <-- Added this line
   // add other fields as needed
 };
 
