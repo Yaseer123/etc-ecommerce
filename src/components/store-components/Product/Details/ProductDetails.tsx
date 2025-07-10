@@ -918,7 +918,7 @@ export default function ProductDetails({
                 </div>
               )}
               {/* if selectedTon is defaultTon, show default color */}
-              {selectedTon === productMain.defaultTon &&
+              {/* {selectedTon === productMain.defaultTon &&
                 productMain.defaultColor && (
                   <div className="mt-2 flex items-center gap-2">
                     <span className="font-semibold">Color:</span>
@@ -970,9 +970,9 @@ export default function ProductDetails({
                       </span>
                     </div>
                   </div>
-                )}
+                )} */}
               {/* if selectedTon is defaultTon, show default size */}
-              {selectedTon === productMain.defaultTon &&
+              {/* {selectedTon === productMain.defaultTon &&
                 productMain.defaultSize && (
                   <div className="mb-2 flex items-center gap-2">
                     <span className="font-semibold">Size:</span>
@@ -980,7 +980,7 @@ export default function ProductDetails({
                       {productMain.defaultSize}
                     </span>
                   </div>
-                )}
+                )} */}
 
               {/* Main Embla Carousel */}
               <div className="overflow-hidden rounded-2xl" ref={emblaRef}>

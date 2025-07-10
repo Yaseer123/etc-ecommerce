@@ -741,6 +741,10 @@ export const productRouter = createTRPCRouter({
             typeof input.defaultColor === "string"
               ? input.defaultColor
               : undefined,
+          defaultColorHex:
+            typeof input.defaultColorHex === "string"
+              ? input.defaultColorHex
+              : undefined,
           defaultTon:
             typeof input.defaultTon === "string" ? input.defaultTon : undefined,
           defaultSize:
