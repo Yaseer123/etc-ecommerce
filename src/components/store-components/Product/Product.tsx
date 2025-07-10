@@ -293,7 +293,7 @@ export default function Product({ data }: ProductProps) {
         )}
 
         <Link href={`/products/${data.slug}`}>
-          <div className="relative overflow-hidden rounded-xl">
+          <div className="relative overflow-hidden">
             <Image
               className="aspect-square w-full cursor-pointer object-cover transition-transform duration-500 ease-in-out hover:scale-105"
               width={5000}
