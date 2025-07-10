@@ -630,10 +630,10 @@ export default function ProductsPage() {
 
   return (
     <>
-      <div className="mb-[-3.5%] ml-[35%] flex w-full items-start">
+      <div className="mt-20 flex items-start md:mt-0 lg:mb-[-3.5%]">
         <CategoryBreadcrumb categoryId={category?.id} pageTitle="Shop" />
       </div>
-      <div className="shop-product breadcrumb1 w-[67%] py-10 md:py-14 lg:py-20">
+      <div className="shop-product breadcrumb1 py-10 md:py-14 lg:py-20">
         <div className="container">
           <div className="flex gap-y-8 max-md:flex-col-reverse max-md:flex-wrap">
             {/* Desktop Sidebar - hidden on mobile */}
@@ -848,7 +848,7 @@ export default function ProductsPage() {
 
               {/* Product list with loading state */}
               {isLoading ? (
-                <div className="flex h-60 items-center justify-center">
+                <div className="flex h-60 w-[50vw] items-center justify-center">
                   <div className="h-10 w-10 animate-spin rounded-full border-4 border-brand-primary border-t-transparent"></div>
                 </div>
               ) : (
@@ -939,7 +939,7 @@ export default function ProductsPage() {
   function renderFilterContent() {
     return (
       <>
-        <div className="filter-content w-[285px]">
+        <div className="filter-content overflow-hidden">
           {/* Price Range Section - Always visible, not collapsible */}
           <div className="filter-section mb-3 overflow-hidden rounded-lg border border-gray-200 shadow-sm">
             <div className="bg-gray-50 px-3 py-2">
@@ -967,7 +967,7 @@ export default function ProductsPage() {
                 handleStyle={[sliderStyle.handleStyle, sliderStyle.handleStyle]}
               />
               {/* Responsive, flexible, and single price-block with editable Min/Max */}
-              <div className="price-block mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="price-block mt-2 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
                 <div className="min mb-2 flex w-full items-center rounded-md border border-gray-200 bg-gray-50 px-3 py-2 sm:mb-0 sm:w-auto">
                   <div className="mr-1 whitespace-nowrap text-sm text-gray-500">
                     Min:

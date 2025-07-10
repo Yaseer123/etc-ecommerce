@@ -1,215 +1,231 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FaLocationDot, FaXTwitter } from "react-icons/fa6";
+import { HiPhone } from "react-icons/hi";
 import { SiTiktok } from "react-icons/si";
 
 const Footer = () => {
   return (
-    <>
-      <div id="footer" className="footer mt-5 bg-white">
-        <div className="footer-main bg-surface">
-          <div className="container">
-            <div className="content-footer flex flex-wrap justify-between gap-y-8 pt-[60px]">
-              <div className="company-infor basis-1/4 pr-7 max-lg:basis-full">
-                <Link href={"/"} className="logo">
-                  <Image
-                    src="/images/brand/RINORS.png"
-                    alt="Rinors"
-                    width={120}
-                    height={40}
-                    priority
-                    className="h-auto w-[120px] object-contain"
-                  />
-                </Link>
-                <div className="mt-3 flex gap-3">
-                  <div className="flex flex-col">
-                    <span className="text-button">Mail:</span>
-                    <span className="text-button mt-3">Phone:</span>
-                    <span className="text-button mt-3">Address:</span>
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="">contact@etcbangladesh.com</span>
-                    <span className="mt-3">01312223452</span>
-                    <span className="mt-3 pt-px">
-                      41/5 east badda Dhaka, Bangladesh
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div className="list-nav flex basis-2/4 justify-between gap-4 max-lg:basis-full">
-                <div className="item flex basis-1/3 flex-col">
-                  <div className="text-button-uppercase pb-3">Infomation</div>
-                  <Link
-                    className="caption1 has-line-before w-fit duration-300"
-                    href={"/contact"}
-                  >
-                    Contact us
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/contact"}
-                  >
-                    Career
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/my-account"}
-                  >
-                    My Account
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/order-tracking"}
-                  >
-                    Order Tracking
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/faqs"}
-                  >
-                    FAQs
-                  </Link>
-                </div>
-                <div className="item flex basis-1/3 flex-col">
-                  <div className="text-button-uppercase pb-3">Quick Shop</div>
-                  <Link
-                    className="caption1 has-line-before w-fit duration-300"
-                    href={"/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"}
-                  >
-                    Home Electricals
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"}
-                  >
-                    Energy Solutions
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"}
-                  >
-                    Smart Gadget
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"}
-                  >
-                    Health and Fitness
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"}
-                  >
-                    Smart Appliances
-                  </Link>
-                </div>
-                <div className="item flex basis-1/3 flex-col">
-                  <div className="text-button-uppercase pb-3">
-                    Customer Services
-                  </div>
-                  <Link
-                    className="caption1 has-line-before w-fit duration-300"
-                    href={"/faqs"}
-                  >
-                    Orders FAQs
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/pages/faqs"}
-                  >
-                    Shipping
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/privacy-policy"}
-                  >
-                    Privacy Policy
-                  </Link>
-                  <Link
-                    className="caption1 has-line-before w-fit pt-2 duration-300"
-                    href={"/order-tracking"}
-                  >
-                    Return & Refund
-                  </Link>
-                </div>
-              </div>
-              <div className="support-block mb-8 flex basis-1/4 flex-col pr-12 max-lg:basis-full">
-                <div>
-                  <h4 className="mb-4 text-lg font-semibold">Support</h4>
-                  <Link
-                    href="tel:01312223452"
-                    className="helpline-btn footer-big-btn mb-4 flex items-center gap-4 rounded-3xl border border-[#ddd] bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] focus:border-[#ddd]"
-                  >
-                    <div className="ic border- border-[#ddd] text-2xl text-[#ef4a23]">
-                      <i className="icon-phone-call"></i>
-                    </div>
-                    <div className="flex flex-col border-l-2 border-[#ddd] pl-4">
-                      <p className="text-xs text-[#838383]">9 AM - 8 PM</p>
-                      <h5 className="text-lg font-bold text-[#081621]">
-                        01312223452
-                      </h5>
-                    </div>
-                  </Link>
-                </div>
-                <a
-                  href="https://g.co/kgs/MX7BqyL"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="store-locator-btn footer-big-btn flex items-center gap-4 rounded-3xl border border-[#ddd] bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] focus:border-[#ddd]"
-                >
-                  <div className="ic text-2xl text-[#3749bb]">
-                    <FaLocationDot />
-                  </div>
-                  <div className="flex flex-col border-l-2 border-[#ddd] pl-4">
-                    <p className="text-xs text-[#838383]">Store Locator</p>
-                    <h3 className="whitespace-nowrap text-lg font-bold text-[#081621]">
-                      Find Our Store
-                    </h3>
-                  </div>
-                </a>
-              </div>
+    <footer className="bg-white bg-map-pattern bg-[length:auto_100%] bg-right bg-no-repeat text-black transition-colors duration-300 dark:bg-black dark:text-white">
+      <div className="container mx-auto px-4 py-12">
+        {/* Top Grid Section */}
+        <div className="mb-10 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          {/* Logo + Contact */}
+          <div>
+            <Link href="/" className="mb-4 inline-block">
+              <Image
+                src="/light.png"
+                alt="Rinors Light"
+                width={120}
+                height={40}
+                priority
+                className="dark:hidden"
+              />
+              <Image
+                src="/dark.png"
+                alt="Rinors Dark"
+                width={120}
+                height={40}
+                priority
+                className="hidden dark:block"
+              />
+            </Link>
+            <div className="mt-4 space-y-2 text-sm font-medium">
+              <p>
+                <strong>Mail:</strong> contact@rinors.com
+              </p>
+              <p>
+                <strong>Phone:</strong> 01312223452
+              </p>
+              <p>
+                <strong>Address:</strong> 41/5 east badda Dhaka, Bangladesh
+              </p>
             </div>
-            <div className="footer-bottom flex items-center justify-between gap-5 border-t border-[#ddd] py-3 focus:border-[#ddd] max-lg:flex-col max-lg:justify-center">
-              <div className="copyright caption1 text-secondary">
-                ©{new Date().getFullYear()} Rinors Corporation. All Rights
-                Reserved.
+          </div>
+
+          {/* Info */}
+          <div>
+            <h4 className="mb-4 text-base font-semibold">INFORMATION</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/contact" className="hover:underline">
+                  Contact us
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:underline">
+                  Career
+                </Link>
+              </li>
+              <li>
+                <Link href="/my-account" className="hover:underline">
+                  My Account
+                </Link>
+              </li>
+              <li>
+                <Link href="/order-tracking" className="hover:underline">
+                  Order Tracking
+                </Link>
+              </li>
+              <li>
+                <Link href="/faqs" className="hover:underline">
+                  FAQs
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Quick Shop */}
+          <div>
+            <h4 className="mb-4 text-base font-semibold">QUICK SHOP</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  href="/products?category=cmbb6pxmn000gpfkk10p0fv0l&page=0"
+                  className="hover:underline"
+                >
+                  Home Electricals
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=cmbb6dq3y000epfkkjn0sie9j&page=0"
+                  className="hover:underline"
+                >
+                  Energy Solutions
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=cmbb78cte000mpfkkt0cyt53d&page=0"
+                  className="hover:underline"
+                >
+                  Smart Gadget
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=cmbb7dno0000opfkk9ttqrmxj&page=0"
+                  className="hover:underline"
+                >
+                  Health and Fitness
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/products?category=cmbb6x8b3000ipfkkcas967g6&page=0"
+                  className="hover:underline"
+                >
+                  Smart Appliances
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Customer Services */}
+          <div>
+            <h4 className="mb-4 text-base font-semibold">CUSTOMER SERVICES</h4>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/faqs" className="hover:underline">
+                  Orders FAQs
+                </Link>
+              </li>
+              <li>
+                <Link href="/pages/faqs" className="hover:underline">
+                  Shipping
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:underline">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/order-tracking" className="hover:underline">
+                  Return & Refund
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Support */}
+          <div>
+            <h4 className="mb-4 text-base font-semibold">Support</h4>
+
+            {/* Phone Support */}
+            <Link
+              href="tel:01312223452"
+              className="mb-4 flex items-center gap-4 rounded-2xl border border-[#ddd] bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] dark:border-[#333] dark:bg-[#1a1a1a] dark:hover:bg-[#2a2a2a]"
+            >
+              <HiPhone className="text-2xl text-[#081621] dark:text-white" />
+              <div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  9 AM - 8 PM
+                </p>
+                <h5 className="text-lg font-bold text-[#081621] dark:text-white">
+                  01312223452
+                </h5>
               </div>
-              <div className="list-social flex items-center gap-4">
-                <Link
-                  href={
-                    "https://www.facebook.com/profile.php?id=61572946813700"
-                  }
-                  target="_blank"
-                >
-                  <div className="icon-facebook text-2xl text-black transition hover:text-[#1877f3]"></div>
-                </Link>
-                <Link
-                  href={"https://www.instagram.com/rinors_electronic_store/"}
-                  target="_blank"
-                >
-                  <div className="icon-instagram text-2xl text-black transition hover:text-[#e4405f]"></div>
-                </Link>
-                <Link href={"https://x.com/Rinors_Corpor"} target="_blank">
-                  <FaXTwitter className="text-xl text-black transition hover:text-[#1da1f2]" />
-                </Link>
-                <Link
-                  href={"https://www.tiktok.com/@rinors_ecommerce"}
-                  target="_blank"
-                >
-                  <SiTiktok className="text-xl text-black transition hover:text-[#010101]" />
-                </Link>
-                <Link
-                  href={"https://www.youtube.com/@rinorsecommerce"}
-                  target="_blank"
-                >
-                  <div className="icon-youtube text-3xl text-black transition hover:text-[#ff0000]"></div>
-                </Link>
+            </Link>
+
+            {/* Store Locator */}
+            <a
+              href="https://g.co/kgs/MX7BqyL"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-4 rounded-2xl border border-[#ddd] bg-[#f2f4f8] p-4 transition hover:bg-[#e6e8ee] dark:border-[#333] dark:bg-[#1a1a1a] dark:hover:bg-[#2a2a2a]"
+            >
+              <FaLocationDot className="text-2xl text-[#081621] dark:text-white" />
+              <div>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Store Locator
+                </p>
+                <h5 className="text-lg font-bold text-[#081621] dark:text-white">
+                  Find Our Store
+                </h5>
               </div>
-            </div>
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom Section */}
+        <div className="flex flex-col items-center justify-between border-t border-[#ddd] pb-4 pt-6 text-sm dark:border-[#333] md:flex-row">
+          <p className="text-secondary dark:text-white">
+            ©2025 Rinors Corporation. All Rights Reserved.
+          </p>
+          <div className="mt-4 flex items-center gap-4 md:mt-0">
+            <Link
+              href="https://www.facebook.com/profile.php?id=61572946813700"
+              target="_blank"
+            >
+              <div className="icon-facebook text-xl transition hover:text-[#1877f3]" />
+            </Link>
+            <Link
+              href="https://www.instagram.com/rinors_electronic_store/"
+              target="_blank"
+            >
+              <div className="icon-instagram text-xl transition hover:text-[#e4405f]" />
+            </Link>
+            <Link href="https://x.com/Rinors_Corpor" target="_blank">
+              <FaXTwitter className="text-xl transition hover:text-[#1da1f2]" />
+            </Link>
+            <Link
+              href="https://www.tiktok.com/@rinors_ecommerce"
+              target="_blank"
+            >
+              <SiTiktok className="text-xl transition hover:text-[#010101]" />
+            </Link>
+            <Link
+              href="https://www.youtube.com/@rinorsecommerce"
+              target="_blank"
+            >
+              <div className="icon-youtube text-xl transition hover:text-[#ff0000]" />
+            </Link>
           </div>
         </div>
       </div>
-    </>
+    </footer>
   );
 };
 
