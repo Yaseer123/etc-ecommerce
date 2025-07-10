@@ -1,6 +1,5 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { api } from "@/trpc/react";
 import { Minus, Plus } from "@phosphor-icons/react/dist/ssr";
@@ -60,6 +59,7 @@ type CartItem = {
   color?: string;
   colorName?: string;
   size?: string;
+  ton?: string; // <-- Added this line
   // add other fields as needed
 };
 
@@ -119,10 +119,29 @@ const Checkout = () => {
   }, [checkoutItems]);
 
   const handleQuantityChange = (itemId: string, newQuantity: number) => {
-    if (newQuantity > 0) {
-      updateCart(itemId, newQuantity);
+    if (buyNowProduct && buyNowProduct.id === itemId) {
+      // Update buyNowProduct quantity directly
+      if (newQuantity > 0) {
+        setBuyNowProduct({ ...buyNowProduct, quantity: newQuantity });
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            "buyNowProduct",
+            JSON.stringify({ ...buyNowProduct, quantity: newQuantity }),
+          );
+        }
+      } else {
+        setBuyNowProduct(null);
+        if (typeof window !== "undefined") {
+          window.sessionStorage.removeItem("buyNowProduct");
+        }
+      }
     } else {
-      removeFromCart(itemId);
+      // Fallback to cart logic
+      if (newQuantity > 0) {
+        updateCart(itemId, newQuantity);
+      } else {
+        removeFromCart(itemId);
+      }
     }
   };
 
@@ -571,8 +590,8 @@ const Checkout = () => {
           deliveryMethod,
         })),
         addressId,
-        notes: note,
-        shippingCost,
+        // notes: note, // Commented out for now
+        // shippingCost, // Commented out for now
       });
     } else {
       placeGuestOrder.mutate({
@@ -585,8 +604,8 @@ const Checkout = () => {
           deliveryMethod,
         })),
         addressId,
-        notes: note,
-        shippingCost,
+        // notes: note, // Commented out for now
+        // shippingCost, // Commented out for now
       });
       // Auto-register guest user after order
       await fetch("/api/auth/auto-register", {
@@ -727,7 +746,10 @@ const Checkout = () => {
                             </div>
                           </div>
 
-                          {(product.sku ?? product.color ?? product.size) && (
+                          {(product.sku ??
+                            product.color ??
+                            product.size ??
+                            product.ton) && (
                             <div className="mt-1 text-xs text-gray-500">
                               {product.sku && <span>SKU: {product.sku}</span>}
                               {(product.colorName ?? product.color) && (
@@ -739,6 +761,9 @@ const Checkout = () => {
                                 <span className="ml-2">
                                   Size: {product.size}
                                 </span>
+                              )}
+                              {product.ton && (
+                                <span className="ml-2">Ton: {product.ton}</span>
                               )}
                             </div>
                           )}
@@ -789,14 +814,14 @@ const Checkout = () => {
                     -{formatPrice(discountValue)}
                   </div>
                 </div>
-                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
+                {/* <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Shipping
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     {shippingCost === 0 ? "Free" : formatPrice(shippingCost)}
                   </div>
-                </div>
+                </div> */}
                 <div className="flex justify-between pt-5">
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                     Total
