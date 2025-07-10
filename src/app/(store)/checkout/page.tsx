@@ -590,8 +590,8 @@ const Checkout = () => {
           deliveryMethod,
         })),
         addressId,
-        notes: note,
-        shippingCost,
+        // notes: note, // Commented out for now
+        // shippingCost, // Commented out for now
       });
     } else {
       placeGuestOrder.mutate({
@@ -604,8 +604,8 @@ const Checkout = () => {
           deliveryMethod,
         })),
         addressId,
-        notes: note,
-        shippingCost,
+        // notes: note, // Commented out for now
+        // shippingCost, // Commented out for now
       });
       // Auto-register guest user after order
       await fetch("/api/auth/auto-register", {
