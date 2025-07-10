@@ -119,10 +119,29 @@ const Checkout = () => {
   }, [checkoutItems]);
 
   const handleQuantityChange = (itemId: string, newQuantity: number) => {
-    if (newQuantity > 0) {
-      updateCart(itemId, newQuantity);
+    if (buyNowProduct && buyNowProduct.id === itemId) {
+      // Update buyNowProduct quantity directly
+      if (newQuantity > 0) {
+        setBuyNowProduct({ ...buyNowProduct, quantity: newQuantity });
+        if (typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            "buyNowProduct",
+            JSON.stringify({ ...buyNowProduct, quantity: newQuantity }),
+          );
+        }
+      } else {
+        setBuyNowProduct(null);
+        if (typeof window !== "undefined") {
+          window.sessionStorage.removeItem("buyNowProduct");
+        }
+      }
     } else {
-      removeFromCart(itemId);
+      // Fallback to cart logic
+      if (newQuantity > 0) {
+        updateCart(itemId, newQuantity);
+      } else {
+        removeFromCart(itemId);
+      }
     }
   };
 
@@ -795,14 +814,14 @@ const Checkout = () => {
                     -{formatPrice(discountValue)}
                   </div>
                 </div>
-                <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
+                {/* <div className="flex justify-between border-b border-[#ddd] py-5 focus:border-[#ddd]">
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     Shipping
                   </div>
                   <div className="text-base font-medium capitalize leading-6 md:text-base md:leading-5">
                     {shippingCost === 0 ? "Free" : formatPrice(shippingCost)}
                   </div>
-                </div>
+                </div> */}
                 <div className="flex justify-between pt-5">
                   <div className="text-[24px] font-semibold capitalize leading-[30px] md:text-base md:leading-[26px] lg:text-[22px] lg:leading-[28px]">
                     Total
