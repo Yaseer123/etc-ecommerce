@@ -918,7 +918,7 @@ export default function ProductDetails({
                 </div>
               )}
               {/* if selectedTon is defaultTon, show default color */}
-              {selectedTon === productMain.defaultTon &&
+              {/* {selectedTon === productMain.defaultTon &&
                 productMain.defaultColor && (
                   <div className="mt-2 flex items-center gap-2">
                     <span className="font-semibold">Color:</span>
@@ -970,9 +970,9 @@ export default function ProductDetails({
                       </span>
                     </div>
                   </div>
-                )}
+                )} */}
               {/* if selectedTon is defaultTon, show default size */}
-              {selectedTon === productMain.defaultTon &&
+              {/* {selectedTon === productMain.defaultTon &&
                 productMain.defaultSize && (
                   <div className="mb-2 flex items-center gap-2">
                     <span className="font-semibold">Size:</span>
@@ -980,7 +980,7 @@ export default function ProductDetails({
                       {productMain.defaultSize}
                     </span>
                   </div>
-                )}
+                )} */}
 
               {/* Main Embla Carousel */}
               <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
@@ -1084,8 +1084,7 @@ export default function ProductDetails({
                   <div className="product-price heading5 font-bold text-red-500">
                     Out Of Stock
                   </div>
-                ) : displayDiscountedPrice &&
-                  displayDiscountedPrice < displayPrice ? (
+                ) : (
                   <>
                     <div className="product-price heading5 discounted-price">
                       {formatPrice(displayDiscountedPrice)}
@@ -1095,10 +1094,6 @@ export default function ProductDetails({
                       <del>{formatPrice(displayPrice)}</del>
                     </div>
                   </>
-                ) : (
-                  <div className="product-price heading5">
-                    {formatPrice(displayPrice)}
-                  </div>
                 )}
               </div>
               <div
