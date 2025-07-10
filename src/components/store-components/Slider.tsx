@@ -5,8 +5,6 @@ import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import "swiper/css/bundle";
-import "swiper/css/effect-fade";
 import { SaleBanner } from "./SaleBanner";
 
 // Add a type for the slide data
