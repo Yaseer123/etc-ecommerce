@@ -278,6 +278,7 @@ export default function ProductDetails({
       colorName: selectedColorName, // for display
       size: selectedSize,
       productId: productMain.id,
+      ton: selectedTon, // Add this line
     };
     // Add to cart (allow multiple variants)
     if (!cartArray.find((item) => item.id === cartItem.id)) {
@@ -409,6 +410,7 @@ export default function ProductDetails({
       colorName: selectedColorName, // for display
       size: selectedSize,
       productId: productMain.id,
+      ton: selectedTon, // Add this line
     };
     // Store in sessionStorage for checkout page
     if (typeof window !== "undefined") {

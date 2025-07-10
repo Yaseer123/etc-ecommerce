@@ -259,6 +259,7 @@ model OrderItem {
     price     Float // Price at the time of purchase
     color     String?
     size      String?
+    ton       String? // Add this field for ton
     sku       String?
     deliveryMethod String? // Delivery method for this item (e.g., home, pickup, express)
     createdAt DateTime @default(now())
