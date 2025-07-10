@@ -28,7 +28,7 @@ const Footer = () => {
                     <span className="text-button mt-3">Address:</span>
                   </div>
                   <div className="flex flex-col">
-                    <span className="">contact@rinors.com</span>
+                    <span className="">contact@etcbangladesh.com</span>
                     <span className="mt-3">01312223452</span>
                     <span className="mt-3 pt-px">
                       41/5 east badda Dhaka, Bangladesh

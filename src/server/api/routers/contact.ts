@@ -35,7 +35,7 @@ export const contactRouter = createTRPCRouter({
       `;
       await resend.emails.send({
         from: "no-reply@etcbangladesh.com",
-        to: "contact@rinors.com",
+        to: "contact@etcbangladesh.com",
         subject: "New Contact Form Submission",
         html,
       });
