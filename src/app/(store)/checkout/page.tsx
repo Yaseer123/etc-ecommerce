@@ -1,6 +1,5 @@
 "use client";
 import Breadcrumb from "@/components/store-components/Breadcrumb/Breadcrumb";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCartStore } from "@/context/store-context/CartContext";
 import { api } from "@/trpc/react";
 import { Minus, Plus } from "@phosphor-icons/react/dist/ssr";
@@ -727,7 +726,10 @@ const Checkout = () => {
                             </div>
                           </div>
 
-                          {(product.sku ?? product.color ?? product.size) && (
+                          {(product.sku ??
+                            product.color ??
+                            product.size ??
+                            product.ton) && (
                             <div className="mt-1 text-xs text-gray-500">
                               {product.sku && <span>SKU: {product.sku}</span>}
                               {(product.colorName ?? product.color) && (
@@ -739,6 +741,9 @@ const Checkout = () => {
                                 <span className="ml-2">
                                   Size: {product.size}
                                 </span>
+                              )}
+                              {product.ton && (
+                                <span className="ml-2">Ton: {product.ton}</span>
                               )}
                             </div>
                           )}
