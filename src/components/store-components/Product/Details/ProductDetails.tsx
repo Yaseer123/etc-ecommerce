@@ -1084,8 +1084,7 @@ export default function ProductDetails({
                   <div className="product-price heading5 font-bold text-red-500">
                     Out Of Stock
                   </div>
-                ) : displayDiscountedPrice &&
-                  displayDiscountedPrice < displayPrice ? (
+                ) : (
                   <>
                     <div className="product-price heading5 discounted-price">
                       {formatPrice(displayDiscountedPrice)}
@@ -1095,10 +1094,6 @@ export default function ProductDetails({
                       <del>{formatPrice(displayPrice)}</del>
                     </div>
                   </>
-                ) : (
-                  <div className="product-price heading5">
-                    {formatPrice(displayPrice)}
-                  </div>
                 )}
               </div>
               <div
