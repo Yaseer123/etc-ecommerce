@@ -1,6 +1,6 @@
 "use client";
 
-import Globe from "@/components/globe/Globe";
+// import Globe from "@/components/globe/Globe";
 import FeaturedProducts from "@/components/store-components/FeaturedProducts";
 import TrendingNow from "@/components/store-components/TrendingNow";
 import { motion } from "motion/react";
