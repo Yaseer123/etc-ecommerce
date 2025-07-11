@@ -69,7 +69,10 @@ function toProductWithCategory(product: unknown): ProductWithCategory {
   if (!product || typeof product !== "object" || !("category" in product)) {
     throw new Error("Invalid product object");
   }
-  const prod = product as Product & { category: Category | null };
+  const prod = product as Product & {
+    category: Category | null;
+    relatedTonProducts?: Product[];
+  };
   let variants: Variant[] | null = null;
   if (Array.isArray(prod.variants)) {
     variants = normalizeVariants(prod.variants);
@@ -92,6 +95,7 @@ function toProductWithCategory(product: unknown): ProductWithCategory {
   return {
     ...prod,
     variants: variants,
+    relatedTonProducts: prod.relatedTonProducts ?? [], // Add this line
   };
 }
 
@@ -105,7 +109,7 @@ export const productRouter = createTRPCRouter({
     .query(async ({ ctx, input }): Promise<ProductWithCategory | null> => {
       const product = await ctx.db.product.findUnique({
         where: { id: input.id },
-        include: { category: true },
+        include: { category: true, relatedTonProducts: true }, // Add relatedTonProducts
       });
 
       if (!product) return null;
@@ -472,142 +476,165 @@ export const productRouter = createTRPCRouter({
       return products;
     }),
 
-  add: adminProcedure.input(productSchema).mutation(async ({ ctx, input }) => {
-    const { categoryAttributes, categoryId } = input;
+  add: adminProcedure
+    .input(
+      productSchema.extend({
+        relatedTonProductIds: z.array(z.string().cuid()).optional(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { categoryAttributes, categoryId, relatedTonProductIds } = input;
 
-    // Get category details to validate attributes
-    if (categoryId) {
-      const category = await ctx.db.category.findUnique({
-        where: { id: categoryId },
-        select: { attributes: true },
-      });
+      // Get category details to validate attributes
+      if (categoryId) {
+        const category = await ctx.db.category.findUnique({
+          where: { id: categoryId },
+          select: { attributes: true },
+        });
 
-      if (category) {
-        // Parse the category attributes
-        let categoryAttributeDefinitions: CategoryAttribute[] = [];
+        if (category) {
+          // Parse the category attributes
+          let categoryAttributeDefinitions: CategoryAttribute[] = [];
 
-        try {
-          if (typeof category.attributes === "string") {
-            categoryAttributeDefinitions = JSON.parse(
-              category.attributes,
-            ) as CategoryAttribute[];
-          } else if (Array.isArray(category.attributes)) {
-            categoryAttributeDefinitions =
-              category.attributes as CategoryAttribute[];
-          }
+          try {
+            if (typeof category.attributes === "string") {
+              categoryAttributeDefinitions = JSON.parse(
+                category.attributes,
+              ) as CategoryAttribute[];
+            } else if (Array.isArray(category.attributes)) {
+              categoryAttributeDefinitions =
+                category.attributes as CategoryAttribute[];
+            }
 
-          // Validate that the product satisfies the category's required attributes
-          const validation = validateCategoryAttributes(
-            categoryAttributes || {},
-            categoryAttributeDefinitions,
-          );
-
-          if (!validation.isValid) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: `Category attribute validation failed: ${validation.errors.join(", ")}`,
-            });
-          }
-        } catch (error: unknown) {
-          if (error instanceof TRPCError) throw error;
-          if (error instanceof Error) {
-            console.error(
-              "Failed to parse category attributes:",
-              error.message,
+            // Validate that the product satisfies the category's required attributes
+            const validation = validateCategoryAttributes(
+              categoryAttributes || {},
+              categoryAttributeDefinitions,
             );
-          } else {
-            console.error("Failed to parse category attributes:", error);
+
+            if (!validation.isValid) {
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: `Category attribute validation failed: ${validation.errors.join(", ")}`,
+              });
+            }
+          } catch (error: unknown) {
+            if (error instanceof TRPCError) throw error;
+            if (error instanceof Error) {
+              console.error(
+                "Failed to parse category attributes:",
+                error.message,
+              );
+            } else {
+              console.error("Failed to parse category attributes:", error);
+            }
           }
         }
       }
-    }
 
-    // --- Stock status auto logic ---
-    let stockStatus: "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER" = "IN_STOCK";
-    if ("stockStatus" in input && input.stockStatus === "PRE_ORDER") {
-      stockStatus = "PRE_ORDER";
-    } else if (input.stock === 0) {
-      stockStatus = "OUT_OF_STOCK";
-    } else {
-      stockStatus = "IN_STOCK";
-    }
-    // --- End stock status auto logic ---
+      // --- Stock status auto logic ---
+      let stockStatus: "IN_STOCK" | "OUT_OF_STOCK" | "PRE_ORDER" = "IN_STOCK";
+      if ("stockStatus" in input && input.stockStatus === "PRE_ORDER") {
+        stockStatus = "PRE_ORDER";
+      } else if (input.stock === 0) {
+        stockStatus = "OUT_OF_STOCK";
+      } else {
+        stockStatus = "IN_STOCK";
+      }
+      // --- End stock status auto logic ---
 
-    // Prepare categoryName for SKU
-    let categoryName = "XX";
-    if (input.categoryId) {
-      const cat = await ctx.db.category.findUnique({
-        where: { id: input.categoryId },
+      // Prepare categoryName for SKU
+      let categoryName = "XX";
+      if (input.categoryId) {
+        const cat = await ctx.db.category.findUnique({
+          where: { id: input.categoryId },
+        });
+        if (cat?.name) categoryName = cat.name;
+      }
+
+      // Create product without SKU first to get the ID
+      const createdProduct = await ctx.db.product.create({
+        data: {
+          title: input.title,
+          shortDescription: input.shortDescription,
+          slug: input.slug,
+          description: input.description,
+          price: input.price,
+          categoryId: input.categoryId,
+          imageId: input.imageId,
+          images: input.images,
+          descriptionImageId: input.descriptionImageId,
+          stock: input.stock,
+          discountedPrice: input.discountedPrice,
+          brand: input.brand,
+          defaultColor: input.defaultColor,
+          defaultTon: input.defaultTon,
+          defaultSize: input.defaultSize,
+          estimatedDeliveryTime: input.estimatedDeliveryTime,
+          attributes: input.attributes, // Store regular specifications
+          categoryAttributes: categoryAttributes || {}, // Store category-specific attributes
+          stockStatus, // <-- always set
+          variants: input.variants ?? undefined, // Store variants if present
+          relatedTonProducts:
+            relatedTonProductIds && relatedTonProductIds.length > 0
+              ? { connect: relatedTonProductIds.map((id) => ({ id })) }
+              : undefined,
+        },
+        include: { relatedTonProducts: true, category: true },
       });
-      if (cat?.name) categoryName = cat.name;
-    }
 
-    // Create product without SKU first to get the ID
-    const createdProduct = await ctx.db.product.create({
-      data: {
-        title: input.title,
-        shortDescription: input.shortDescription,
-        slug: input.slug,
-        description: input.description,
-        price: input.price,
-        categoryId: input.categoryId,
-        imageId: input.imageId,
-        images: input.images,
-        descriptionImageId: input.descriptionImageId,
-        stock: input.stock,
-        discountedPrice: input.discountedPrice,
-        brand: input.brand,
-        defaultColor: input.defaultColor,
-        defaultTon: input.defaultTon,
-        defaultSize: input.defaultSize,
-        estimatedDeliveryTime: input.estimatedDeliveryTime,
-        attributes: input.attributes, // Store regular specifications
-        categoryAttributes: categoryAttributes || {}, // Store category-specific attributes
-        stockStatus, // <-- always set
-        variants: input.variants ?? undefined, // Store variants if present
-      },
-    });
-
-    // Update variants with SKUs
-    const updatedVariants = normalizeVariants(createdProduct.variants).map(
-      (v) => ({
-        ...v,
-        sku: generateSKU({
-          categoryName,
-          productId: createdProduct.id,
-          color: typeof v.colorName === "string" ? v.colorName : "UNNAMED",
-          size: typeof v.size === "string" ? v.size : undefined,
+      // Update variants with SKUs
+      const updatedVariants = normalizeVariants(createdProduct.variants).map(
+        (v) => ({
+          ...v,
+          sku: generateSKU({
+            categoryName,
+            productId: createdProduct.id,
+            color: typeof v.colorName === "string" ? v.colorName : "UNNAMED",
+            size: typeof v.size === "string" ? v.size : undefined,
+          }),
         }),
-      }),
-    );
-    // Now update with the real SKU (using the new product ID) and updated variants
-    const realSKU = generateSKU({
-      categoryName,
-      productId: createdProduct.id,
-      color:
-        typeof input.defaultColor === "string" ? input.defaultColor : "UNNAMED",
-      size:
-        typeof input.defaultSize === "string" ? input.defaultSize : undefined,
-    });
-    const allSkus = [
-      realSKU,
-      ...updatedVariants.map((v) =>
-        typeof v.sku === "string" ? v.sku : undefined,
-      ),
-    ].filter((sku): sku is string => typeof sku === "string");
-    const product = await ctx.db.product.update({
-      where: { id: createdProduct.id },
-      data: { sku: realSKU, variants: updatedVariants, allSkus },
-      include: { category: true },
-    });
+      );
+      // Now update with the real SKU (using the new product ID) and updated variants
+      const realSKU = generateSKU({
+        categoryName,
+        productId: createdProduct.id,
+        color:
+          typeof input.defaultColor === "string"
+            ? input.defaultColor
+            : "UNNAMED",
+        size:
+          typeof input.defaultSize === "string" ? input.defaultSize : undefined,
+      });
+      const allSkus = [
+        realSKU,
+        ...updatedVariants.map((v) =>
+          typeof v.sku === "string" ? v.sku : undefined,
+        ),
+      ].filter((sku): sku is string => typeof sku === "string");
+      const product = await ctx.db.product.update({
+        where: { id: createdProduct.id },
+        data: { sku: realSKU, variants: updatedVariants, allSkus },
+        include: { relatedTonProducts: true, category: true },
+      });
 
-    return product;
-  }),
+      return product;
+    }),
 
   update: adminProcedure
-    .input(updateProductSchema)
+    .input(
+      updateProductSchema.extend({
+        relatedTonProductIds: z.array(z.string().cuid()).optional(),
+      }),
+    )
     .mutation(async ({ ctx, input }) => {
-      const { id, categoryId, categoryAttributes, ...updateData } = input;
+      const {
+        id,
+        categoryId,
+        categoryAttributes,
+        relatedTonProductIds,
+        ...updateData
+      } = input;
 
       // If category or attributes are being updated, validate them
       if (categoryId && categoryAttributes) {
@@ -761,7 +788,12 @@ export const productRouter = createTRPCRouter({
           variants: updatedVariantsFromInput ?? undefined, // Update variants with SKUs
           sku: newSKU ?? undefined, // Always set the correct SKU, ensure type safety
           allSkus,
+          relatedTonProducts:
+            relatedTonProductIds && relatedTonProductIds.length > 0
+              ? { set: relatedTonProductIds.map((id) => ({ id })) }
+              : undefined,
         },
+        include: { relatedTonProducts: true, category: true },
       });
       return product;
     }),

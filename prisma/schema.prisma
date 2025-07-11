@@ -106,6 +106,10 @@ model Product {
     sku                   String?   @unique // Add this line for SKU
     allSkus               String[]  // Add this line to store all SKUs (main + variants)
 
+    // New: Self-relation for related ton-variant products
+    relatedTonProducts    Product[]  @relation("RelatedTonVariants")
+    relatedToTonProducts  Product[]  @relation("RelatedTonVariants")
+
     reviews   Review[]
     orders    OrderItem[]
     questions Question[]

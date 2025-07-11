@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import SlideNavbar from "./SlideNavbar";
-import CategoryNav from "./CategoryNav";
 import { type Session } from "next-auth"; // ✅ Use proper type
+import { useEffect, useRef, useState } from "react";
+import CategoryNav from "./CategoryNav";
+import SlideNavbar from "./SlideNavbar";
 
 interface StickyHeaderProps {
   session: Session | null;
@@ -12,6 +12,7 @@ interface StickyHeaderProps {
 export default function StickyHeader({ session }: StickyHeaderProps) {
   const [isSticky, setIsSticky] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const throttleTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -19,20 +20,28 @@ export default function StickyHeader({ session }: StickyHeaderProps) {
     };
 
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsSticky(scrollY > 60); // Adjust threshold as needed
+      if (throttleTimeout.current) return;
+      throttleTimeout.current = setTimeout(() => {
+        const scrollY = window.scrollY;
+        setIsSticky(scrollY > 60); // Adjust threshold as needed
+        throttleTimeout.current = null;
+      }, 16); // ~60fps
     };
 
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
 
     if (isDesktop) {
-      window.addEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll, { passive: true });
     }
 
     return () => {
       window.removeEventListener("resize", checkScreenSize);
       window.removeEventListener("scroll", handleScroll);
+      if (throttleTimeout.current) {
+        clearTimeout(throttleTimeout.current);
+        throttleTimeout.current = null;
+      }
     };
   }, [isDesktop]);
 

@@ -2,6 +2,9 @@
 
 import { uploadFile } from "@/app/actions/file";
 import { Input } from "@/components/ui/input";
+import MultipleSelector, {
+  type Option as MultipleSelectorOption,
+} from "@/components/ui/multiple-selector";
 import {
   Select,
   SelectContent,
@@ -637,6 +640,23 @@ export default function AddProductForm(_unused?: unknown) {
     });
   };
 
+  // Fetch all products for related ton selection
+  const {
+    data: allProductsData = { products: [] },
+    isLoading: allProductsLoading,
+  } = api.product.getAll.useQuery({ page: 1, limit: 100 });
+  // Prepare options
+  const relatedTonOptions: MultipleSelectorOption[] = (
+    allProductsData.products || []
+  ).map((p) => ({
+    value: p.id,
+    label: `${p.title}${p.defaultTon ? ` (${p.defaultTon})` : ""}`,
+  }));
+  // State for selected related ton products
+  const [relatedTonProductIds, setRelatedTonProductIds] = useState<string[]>(
+    [],
+  );
+
   const handleSubmit = async (content: string) => {
     setPending(true);
     const newErrors = validateAllFields();
@@ -707,6 +727,7 @@ export default function AddProductForm(_unused?: unknown) {
                   : undefined,
             }))
           : undefined,
+      relatedTonProductIds,
     });
     // Do not clear the form here! Only clear on success.
   };
@@ -1280,6 +1301,27 @@ Material: Cotton`}
               </Button>
             </div>
           </div>
+        </div>
+        <div className="col-span-2 mt-4">
+          <Label>Link Other Ton Variants</Label>
+          {allProductsLoading ? (
+            <div className="text-sm text-gray-500">Loading products...</div>
+          ) : (
+            <MultipleSelector
+              options={relatedTonOptions}
+              value={relatedTonOptions.filter((opt) =>
+                relatedTonProductIds.includes(opt.value),
+              )}
+              onChange={(opts) =>
+                setRelatedTonProductIds(opts.map((opt) => opt.value))
+              }
+              placeholder="Select related ton products..."
+            />
+          )}
+          <p className="mt-1 text-xs text-gray-500">
+            Select other ton-variant products to link with this product. These
+            will be shown as ton options on the product page.
+          </p>
         </div>
       </div>
     </RichEditor>

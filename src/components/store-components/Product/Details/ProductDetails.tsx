@@ -613,7 +613,7 @@ export default function ProductDetails({
   const displayPrice =
     typeof activeVariant?.price === "number"
       ? activeVariant.price
-      : (productMain.discountedPrice ?? productMain.price);
+      : productMain.price;
   const displayDiscountedPrice =
     typeof activeVariant?.discountedPrice === "number"
       ? activeVariant.discountedPrice
