@@ -1066,9 +1066,9 @@ export default function ProductDetails({
             <div className="product-infor mt-8 w-full lg:mt-0 lg:w-1/2 lg:pl-6">
               <div className="flex justify-between">
                 <div>
-                  <div className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
+                  <h1 className="mt-1 text-[30px] font-semibold capitalize leading-[42px] md:text-[18px] md:leading-[28px] lg:text-[26px] lg:leading-[32px]">
                     {productMain.title}
-                  </div>
+                  </h1>
                 </div>
               </div>
               <div className="mt-3 flex items-center">
@@ -1231,15 +1231,14 @@ export default function ProductDetails({
               <div
                 className={`desc-item description ${activeTab === "description" ? "open" : ""}`}
               >
+                <h2 className="sr-only">Description</h2>
                 <ParseContent content={productMain.description} />
               </div>
               <div
                 className={`desc-item specifications ${activeTab === "specifications" ? "open" : ""}`}
               >
                 <div className="w-full overflow-x-auto">
-                  <h3 className="mb-4 whitespace-nowrap text-sm font-bold">
-                    Specifications
-                  </h3>
+                  <h2 className="mb-4 text-xl font-bold">Specifications</h2>
                   {/* Show variant specifications if available, else default product specifications */}
                   {activeVariant?.specifications &&
                   activeVariant.specifications.length > 0 ? (
@@ -1417,6 +1416,7 @@ export default function ProductDetails({
               <div
                 className={`desc-item review-block ${activeTab === "review" ? "open" : ""}`}
               >
+                <h2 className="mb-6 text-xl font-bold">Reviews</h2>
                 <div className="top-overview border-b border-[#ddd] pb-6 focus:border-[#ddd]">
                   <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     <div className="rating-summary bg-surface rounded-xl p-5 shadow-sm transition-all duration-300 hover:shadow-md">
