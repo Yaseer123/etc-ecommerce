@@ -8,7 +8,7 @@ Disallow: /admin
 Disallow: /admin/*
 
 # Host
-Host: https://rinors.com
+Host: https://etcbangladesh.com
 
 # Sitemaps
-Sitemap: https://rinors.com/sitemap.xml
+Sitemap: https://etcbangladesh.com/sitemap.xml

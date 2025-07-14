@@ -15,7 +15,7 @@ if (
 }
 
 export default {
-  siteUrl: process.env.NEXTAUTH_URL ?? "https://rinors.com",
+  siteUrl: "https://etcbangladesh.com",
   generateRobotsTxt: true,
   exclude: ["/admin", "/admin/*"],
   robotsTxtOptions: {
