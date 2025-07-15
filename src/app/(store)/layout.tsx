@@ -20,7 +20,9 @@ export default async function layout({
     <HydrateClient>
       <StickyHeader session={session} />
       <NextTopLoader />
-      <AuroraBackground>{children}</AuroraBackground>
+      {/* <AuroraBackground> */}
+      {children}
+      {/* </AuroraBackground> */}
       <WhatsAppWidget />
       <Footer />
       <ModalWrapper />

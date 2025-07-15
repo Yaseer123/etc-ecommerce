@@ -29,10 +29,10 @@ const HomeAnimatedContent: React.FC<HomeAnimatedContentProps> = ({
       <TrendingNow />
       <FeaturedProducts />
       <RecentlyAdded />
-      <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" />
+      {/* <Benefit props="md:mt-20 mt-10 py-10 px-2.5 bg-surface rounded-[32px]" /> */}
       {newsInsight}
 
-      <motion.div
+      {/* <motion.div
         initial={{
           opacity: 0,
           y: 20,
@@ -53,14 +53,14 @@ const HomeAnimatedContent: React.FC<HomeAnimatedContentProps> = ({
           This globe is interactive and customizable. Have fun with it, and
           don&apos;t forget to share it. :)
         </p>
-      </motion.div>
+      </motion.div> */}
 
-      <div className="relative flex min-h-[400px] w-full items-center justify-center py-8 md:min-h-[600px]">
+      {/* <div className="relative flex min-h-[400px] w-full items-center justify-center py-8 md:min-h-[600px]">
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-40 w-full select-none bg-gradient-to-b from-transparent to-white dark:to-black" />
-        {/* <div className="absolute z-10 h-full w-full">
+        <div className="absolute z-10 h-full w-full">
           <Globe />
-        </div> */}
-      </div>
+        </div>
+      </div> */}
     </motion.div>
   );
 };
