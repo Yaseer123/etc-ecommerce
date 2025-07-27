@@ -1125,7 +1125,17 @@ export const productRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const product = await ctx.db.product.findUnique({
         where: { slug: input.slug },
-        include: { category: true },
+        include: {
+          category: true,
+          relatedTonProducts: {
+            include: {
+              category: true,
+            },
+            where: {
+              deletedAt: null,
+            },
+          },
+        },
       });
       if (product?.deletedAt) return null;
       return product;

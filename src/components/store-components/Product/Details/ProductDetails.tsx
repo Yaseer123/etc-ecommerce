@@ -33,7 +33,9 @@ import { v4 as uuid } from "uuid";
 import { formatPrice } from "../../../../utils/format";
 import ParseContent from "../../Blog/ParseContent";
 import Rate from "../../Rate";
+import LinkedProducts from "../LinkedProducts";
 import RelatedProductsSidebar from "../RelatedProductsSidebar";
+import TonSelector from "../TonSelector";
 
 // Define a type for product variants
 type ProductVariant = {
@@ -1104,6 +1106,17 @@ export default function ProductDetails({
               >
                 {productMain.shortDescription}
               </div>
+
+              {/* Ton Selector for linked products */}
+              {productMain.relatedTonProducts &&
+                productMain.relatedTonProducts.length > 0 && (
+                  <TonSelector
+                    products={productMain.relatedTonProducts}
+                    currentProductId={productMain.id}
+                    currentProductTon={productMain.defaultTon}
+                  />
+                )}
+
               <div className="mt-6">
                 <div className="text-title mt-5">Quantity:</div>
                 <div className="mt-3 flex flex-row items-center gap-3 lg:justify-between">
@@ -1703,6 +1716,15 @@ export default function ProductDetails({
             excludeProductId={productMain.id}
           />
         </div>
+
+        {/* Linked Ton Products */}
+        {productMain.relatedTonProducts &&
+          productMain.relatedTonProducts.length > 0 && (
+            <LinkedProducts
+              products={productMain.relatedTonProducts}
+              currentProductId={productMain.id}
+            />
+          )}
       </div>
     </>
   );

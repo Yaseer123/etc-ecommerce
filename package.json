@@ -25,12 +25,7 @@
     "prepare": "husky",
     "tsc:watch": "tsc --w"
   },
-  "lint-staged": {
-    "*.{ts,tsx,js,jsx,mdx}": [
-      "prettier --write",
-      "next lint --fix"
-    ]
-  },
+
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
   },

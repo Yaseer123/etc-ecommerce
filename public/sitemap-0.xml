@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://etcbangladesh.com/verify-email</loc><lastmod>2025-07-14T11:01:27.937Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://etcbangladesh.com/auth/verify-required</loc><lastmod>2025-07-14T11:01:27.938Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/auth/verify-required</loc><lastmod>2025-07-27T10:41:42.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/verify-email</loc><lastmod>2025-07-27T10:41:42.255Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/about</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/blog</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/blog/[slug]</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
@@ -26,16 +26,32 @@
 <url><loc>https://etcbangladesh.com/products/panasonic-vrf-system</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-split-cassette-type-4-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-vrf-system-ras-series</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-1-5-ton-split-wall-mounted-inverter-air-conditioner-gs-18xpuv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-1-5-ton-split-wall-mounted-inverter-air-conditioner-gs-18xlmv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/premium-ac-1-ton</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/premium-ac-1-5-ton</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/premium-ac-2-ton</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-vrf-system-fsnp-fsns-series</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-vrf-system-cncq-series</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-2-0-ton-split-wall-mounted-inverter-air-conditioner-gs-24xlmv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-split-cassette-type-4-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-split-ducted-type-4-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/panasonic-split-cassette-type-4-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hitachi-split-wall-mounted-2-5-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/panasonic-split-wall-mounted-2-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://etcbangladesh.com/products/panasonic-floor-stand-2-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/panasonic-split-wall-mounted-1-5-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hyundai-split-wall-mounted-1-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/panasonic-floor-stand-2-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hyundai-split-wall-mounted-1-5-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 <url><loc>https://etcbangladesh.com/products/hyundai-split-wall-mounted-2-0-ton-air-conditioner</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-2-0-ton-split-wall-mounted-inverter-air-conditioner-gs-24xpuv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-2-5-ton-split-wall-mounted-inverter-air-conditioner-gs-30xpuv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-1-0-ton-split-wall-mounted-inverter-air-conditioner-gs-12xlmv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-1-5-ton-split-cassette-type-air-conditioner-gs-18xtwv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-2-5-ton-split-cassette-type-air-conditioner-gs-30xtwv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-4-0-ton-split-cassette-type-air-conditioner-gs-48xtwv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-5-0-ton-split-cassette-type-air-conditioner-gs-60xtwv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-2-0-ton-split-cassette-type-air-conditioner-gs-24xtwv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-3-0-ton-split-cassette-type-air-conditioner-gs-36xtwv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://etcbangladesh.com/products/gree-1-0-ton-split-wall-mounted-inverter-air-conditioner-gs-12xpuv32</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

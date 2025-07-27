@@ -11,7 +11,7 @@ const config = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "etc-ecommerce-bucket.s3.ap-southeast-1.amazonaws.com",
+        hostname: "packetbd.s3.ap-southeast-1.amazonaws.com",
         pathname: "/**",
       },
       {
@@ -22,6 +22,11 @@ const config = {
       {
         protocol: "https",
         hostname: "rinorsestore.s3.ap-southeast-1.amazonaws.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "via.placeholder.com",
         pathname: "/**",
       },
       { protocol: "https", hostname: "res.cloudinary.com" },
