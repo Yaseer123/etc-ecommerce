@@ -26,7 +26,7 @@ import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { FaPinterestP, FaWhatsapp } from "react-icons/fa6";
 import { toast } from "sonner";
 import { v4 as uuid } from "uuid";
@@ -35,7 +35,6 @@ import ParseContent from "../../Blog/ParseContent";
 import Rate from "../../Rate";
 import LinkedProducts from "../LinkedProducts";
 import RelatedProductsSidebar from "../RelatedProductsSidebar";
-import TonSelector from "../TonSelector";
 
 // Define a type for product variants
 type ProductVariant = {
@@ -539,25 +538,35 @@ export default function ProductDetails({
   }
 
   // --- NEW: Build availableSizes for ton, always include defaultSize for defaultTon ---
-  let availableSizes = [
-    ...new Set(
-      filteredVariants
-        .filter((v) =>
-          selectedColorHex ? v.colorHex === selectedColorHex : true,
-        )
-        .map((v) => v.size)
-        .filter(Boolean),
-    ),
-  ];
-  // If ton is present and selectedTon is defaultTon, prepend defaultSize if not already present
-  if (
-    hasTon &&
-    selectedTon === productMain.defaultTon &&
-    productMain.defaultSize &&
-    !availableSizes.includes(productMain.defaultSize)
-  ) {
-    availableSizes = [productMain.defaultSize, ...availableSizes];
-  }
+  const availableSizes = useMemo(() => {
+    let sizes = [
+      ...new Set(
+        filteredVariants
+          .filter((v) =>
+            selectedColorHex ? v.colorHex === selectedColorHex : true,
+          )
+          .map((v) => v.size)
+          .filter(Boolean),
+      ),
+    ];
+    // If ton is present and selectedTon is defaultTon, prepend defaultSize if not already present
+    if (
+      hasTon &&
+      selectedTon === productMain.defaultTon &&
+      productMain.defaultSize &&
+      !sizes.includes(productMain.defaultSize)
+    ) {
+      sizes = [productMain.defaultSize, ...sizes];
+    }
+    return sizes;
+  }, [
+    filteredVariants,
+    selectedColorHex,
+    hasTon,
+    selectedTon,
+    productMain.defaultTon,
+    productMain.defaultSize,
+  ]);
 
   // --- Auto-select default color/size for default ton if not already selected ---
   useEffect(() => {
@@ -1110,11 +1119,38 @@ export default function ProductDetails({
               {/* Ton Selector for linked products */}
               {productMain.relatedTonProducts &&
                 productMain.relatedTonProducts.length > 0 && (
-                  <TonSelector
-                    products={productMain.relatedTonProducts}
-                    currentProductId={productMain.id}
-                    currentProductTon={productMain.defaultTon}
-                  />
+                  <div className="mb-6">
+                    <h4 className="mb-3 text-lg font-semibold text-gray-900">
+                      Choose Ton
+                    </h4>
+                    <div className="flex gap-3">
+                      {productMain.relatedTonProducts.map((product) => {
+                        const isCurrent = product.id === productMain.id;
+                        const isAvailable = product.stock > 0;
+
+                        return (
+                          <Link
+                            key={product.id}
+                            href={`/products/${product.slug}`}
+                            className={`flex h-16 w-32 items-center justify-center rounded-lg border-2 px-4 py-2 text-center font-medium transition-all ${
+                              isCurrent
+                                ? "border-red-500 bg-white text-black"
+                                : isAvailable
+                                  ? "border-gray-300 bg-white text-black hover:border-gray-400"
+                                  : "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-400"
+                            }`}
+                            onClick={(e) => {
+                              if (isCurrent || !isAvailable) {
+                                e.preventDefault();
+                              }
+                            }}
+                          >
+                            {product.defaultTon ?? "Standard"}
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
                 )}
 
               <div className="mt-6">
