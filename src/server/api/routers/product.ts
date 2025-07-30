@@ -145,6 +145,7 @@ export const productRouter = createTRPCRouter({
 
       // Build where filter for search
       const where: Prisma.ProductWhereInput = {
+        deletedAt: null, // Filter out soft-deleted products
         ...(search
           ? {
               OR: [
@@ -172,7 +173,7 @@ export const productRouter = createTRPCRouter({
       if (sort === "priceAsc") orderBy = { price: "asc" };
       if (sort === "priceDesc") orderBy = { price: "desc" };
 
-      const [productsRaw] = await Promise.all([
+      const [productsRaw, totalCount] = await Promise.all([
         ctx.db.product.findMany({
           where,
           include: { category: true },
@@ -180,6 +181,7 @@ export const productRouter = createTRPCRouter({
           skip,
           take: limit,
         }),
+        ctx.db.product.count({ where }),
       ]);
       const products: (Product & { category: Category | null })[] =
         Array.isArray(productsRaw)
@@ -188,14 +190,12 @@ export const productRouter = createTRPCRouter({
                 !!p && typeof p === "object" && "category" in p,
             )
           : [];
-      // Filter out soft-deleted products
-      const filteredProducts = products.filter((p) => p.deletedAt === null);
-      const filteredTotal = filteredProducts.length;
-      const totalPages = Math.ceil(filteredTotal / limit);
+
+      const totalPages = Math.ceil(totalCount / limit);
 
       return {
-        products: filteredProducts.map(toProductWithCategory),
-        total: filteredTotal,
+        products: products.map(toProductWithCategory),
+        total: totalCount,
         page,
         limit,
         totalPages,

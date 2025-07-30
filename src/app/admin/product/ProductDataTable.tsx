@@ -10,15 +10,34 @@ import { columns, type ProductColumns } from "./Columns";
 export default function ProductDataTable() {
   const [page, setPage] = React.useState(1);
   const [limit, setLimit] = React.useState(50);
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = React.useState("");
 
-  const [productsWithCategory] = api.product.getAll.useSuspenseQuery({
-    page,
-    limit,
-  });
-  const [items, setItems] = React.useState(productsWithCategory.products);
+  // Debounce search term to avoid API calls on every keystroke
   React.useEffect(() => {
-    setItems(productsWithCategory.products);
-  }, [productsWithCategory.products]);
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Use search endpoint when there's a search term, otherwise use getAll with pagination
+  const { data: productsWithCategory, isLoading } = api.product.getAll.useQuery(
+    {
+      page,
+      limit,
+      search: debouncedSearchTerm || undefined,
+    },
+  );
+
+  const [items, setItems] = React.useState(
+    productsWithCategory?.products ?? [],
+  );
+
+  React.useEffect(() => {
+    setItems(productsWithCategory?.products ?? []);
+  }, [productsWithCategory?.products]);
 
   const utils = api.useUtils();
   const updatePositions = api.product.updateProductPositions.useMutation({
@@ -51,6 +70,12 @@ export default function ProductDataTable() {
     setPage(1);
   };
 
+  // Handle search from DataTable
+  const handleSearch = (value: string) => {
+    setSearchTerm(value);
+    setPage(1); // Reset to first page when searching
+  };
+
   return (
     <DataTable<ProductColumns>
       columns={columns}
@@ -63,9 +88,12 @@ export default function ProductDataTable() {
       onDragEnd={handleDragEnd}
       page={page}
       limit={limit}
-      total={productsWithCategory.total}
+      total={productsWithCategory?.total ?? 0}
       onPageChange={handlePageChange}
       onLimitChange={handleLimitChange}
+      onSearch={handleSearch}
+      searchValue={searchTerm}
+      isLoading={isLoading}
     />
   );
 }

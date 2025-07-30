@@ -60,6 +60,9 @@ interface DataTableProps<TData> {
   total?: number;
   onPageChange?: (page: number) => void;
   onLimitChange?: (limit: number) => void;
+  onSearch?: (value: string) => void;
+  searchValue?: string;
+  isLoading?: boolean;
 }
 
 type DraggableTableRowProps<TData> = {
@@ -118,6 +121,9 @@ export function DataTable<TData>({
   total = 0,
   onPageChange,
   onLimitChange,
+  onSearch,
+  searchValue,
+  isLoading = false,
 }: DataTableProps<TData>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -125,6 +131,14 @@ export function DataTable<TData>({
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+  const [searchValueState, setSearchValueState] = React.useState("");
+
+  // Sync internal state with prop value
+  React.useEffect(() => {
+    if (searchValue !== undefined) {
+      setSearchValueState(searchValue);
+    }
+  }, [searchValue]);
 
   const table = useReactTable({
     data,
@@ -157,11 +171,15 @@ export function DataTable<TData>({
       <div className="flex items-center py-4">
         <Input
           placeholder={searchPlaceHolder}
-          value={(table.getColumn(filterBy)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(filterBy)?.setFilterValue(event.target.value)
-          }
+          value={searchValueState}
+          onChange={(event) => {
+            const value = event.target.value;
+            setSearchValueState(value);
+            table.getColumn(filterBy)?.setFilterValue(value);
+            onSearch?.(value);
+          }}
           className="max-w-sm"
+          disabled={isLoading}
         />
         <DataTableViewOptions table={table} />
         {addButton && (
