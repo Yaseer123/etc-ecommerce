@@ -59,6 +59,51 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Textarea } from "../ui/textarea";
 
+// Utility functions for handling specifications with order preservation
+const convertSpecificationsToObject = (
+  specifications: Array<{ key: string; value: string }>,
+) => {
+  return specifications.reduce(
+    (acc, { key, value }, index) => {
+      if (key) {
+        // Use a special key format that preserves order
+        acc[`spec_${index}_${key}`] = value;
+      }
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+};
+
+const convertObjectToSpecifications = (
+  attrs: Record<string, string> | undefined,
+) => {
+  if (!attrs) return [];
+
+  const entries = Object.entries(attrs);
+
+  // Check if we're using the new format (spec_index_key)
+  const hasNewFormat = entries.some(([key]) => key.startsWith("spec_"));
+
+  if (hasNewFormat) {
+    // New format: extract order from spec_index_key format
+    return entries
+      .filter(([key]) => key.startsWith("spec_"))
+      .map(([key, value]) => {
+        // Extract the original key from spec_index_key format
+        const keyParts = key.split("_");
+        const originalKey = keyParts.slice(2).join("_"); // Everything after spec_index_
+        const index = parseInt(keyParts[1] ?? "0");
+        return { key: originalKey, value, index };
+      })
+      .sort((a, b) => a.index - b.index)
+      .map(({ key, value }) => ({ key, value }));
+  } else {
+    // Old format: direct key-value pairs (fallback for existing products)
+    return entries.map(([key, value]) => ({ key, value }));
+  }
+};
+
 // Sortable item component for specifications
 function SortableSpecificationItem({
   id,
@@ -272,13 +317,7 @@ export default function AddProductForm(_unused?: unknown) {
         images: images.map((image) => image.src),
         categoryId,
         descriptionImageId,
-        attributes: specifications.reduce(
-          (acc, { key, value }) => {
-            if (key) acc[key] = value;
-            return acc;
-          },
-          {} as Record<string, string>,
-        ),
+        attributes: convertSpecificationsToObject(specifications),
         estimatedDeliveryTime,
         categoryAttributes: attributeValues,
         description: "", // RichEditor content, validated separately if needed
@@ -667,16 +706,8 @@ export default function AddProductForm(_unused?: unknown) {
       toast.error(errorMessages.join(" | "));
       return;
     }
-    // Convert specifications array back to object for submission
-    const specsObject = specifications.reduce(
-      (acc, { key, value }) => {
-        if (key) {
-          acc[key] = value;
-        }
-        return acc;
-      },
-      {} as Record<string, string>,
-    );
+    // Convert specifications array to object while preserving order
+    const specsObject = convertSpecificationsToObject(specifications);
     // Log the image order being submitted to database
     console.log(
       "Submitting images in order:",

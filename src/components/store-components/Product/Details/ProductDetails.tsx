@@ -1310,23 +1310,59 @@ export default function ProductDetails({
                     )
                   ) : productMain.attributes &&
                     Object.keys(productMain.attributes).length > 0 ? (
-                    Object.entries(productMain.attributes).map(
-                      ([key, value], index) => (
-                        <div
-                          key={index}
-                          className={`border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 sm:px-5 ${
-                            index % 2 === 0 ? "bg-surface" : ""
-                          } flex flex-col md:flex-row md:items-center md:gap-4 lg:justify-between`}
-                        >
-                          <div className="text-title mb-1 break-words text-left font-semibold md:mb-0 md:w-1/3">
-                            {key}
+                    (() => {
+                      const entries = Object.entries(
+                        productMain.attributes,
+                      ) as [string, string | number | boolean][];
+                      const hasNewFormat = entries.some(([key]) =>
+                        key.startsWith("spec_"),
+                      );
+
+                      if (hasNewFormat) {
+                        // New format: extract and sort by index
+                        return entries
+                          .filter(([key]) => key.startsWith("spec_"))
+                          .map(([key, value]) => {
+                            const keyParts = key.split("_");
+                            const originalKey = keyParts.slice(2).join("_");
+                            const index = parseInt(keyParts[1] ?? "0");
+                            return { key: originalKey, value, index };
+                          })
+                          .sort((a, b) => a.index - b.index)
+                          .map(({ key, value }, index) => (
+                            <div
+                              key={index}
+                              className={`border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 sm:px-5 ${
+                                index % 2 === 0 ? "bg-surface" : ""
+                              } flex flex-col md:flex-row md:items-center md:gap-4 lg:justify-between`}
+                            >
+                              <div className="text-title mb-1 break-words text-left font-semibold md:mb-0 md:w-1/3">
+                                {key}
+                              </div>
+                              <div className="break-words text-left md:w-2/3">
+                                {value}
+                              </div>
+                            </div>
+                          ));
+                      } else {
+                        // Old format: direct key-value pairs
+                        return entries.map(([key, value], index) => (
+                          <div
+                            key={index}
+                            className={`border-b border-t border-gray-200 px-3 py-3 transition-colors duration-200 hover:bg-gray-100 sm:px-5 ${
+                              index % 2 === 0 ? "bg-surface" : ""
+                            } flex flex-col md:flex-row md:items-center md:gap-4 lg:justify-between`}
+                          >
+                            <div className="text-title mb-1 break-words text-left font-semibold md:mb-0 md:w-1/3">
+                              {key}
+                            </div>
+                            <div className="break-words text-left md:w-2/3">
+                              {value}
+                            </div>
                           </div>
-                          <div className="break-words text-left md:w-2/3">
-                            {value}
-                          </div>
-                        </div>
-                      ),
-                    )
+                        ));
+                      }
+                    })()
                   ) : (
                     <div className="px-3 py-3 text-gray-500">
                       No specifications available.
